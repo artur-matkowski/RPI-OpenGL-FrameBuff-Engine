@@ -55,23 +55,26 @@ namespace asapgl
 				glClear(GL_COLOR_BUFFER_BIT);
  
 				glLoadIdentity();
-
+				glColor3f(0.5, 1.0, 0.0); 
 				glRotatef(rotation, 0.0, 0.0, 1.0);
 				glBegin(GL_TRIANGLES);
+				//glBegin(GL_LINES);
 					glVertex3f(-1, -.5, 0);
 					glVertex3f(0, 1, 0);
 					glVertex3f(1, 0, 0);
 				glEnd();
 				
 
-				context->DrawBuffer();
+				context->SwapBuffer();
 			}
 
-			Debug::Trace << "frameDeltaTime: "  << frameDeltaTime.count() << "s" << std::endl;
 
 
 			std::chrono::duration<double> calculationTime = std::chrono::high_resolution_clock::now() - frameStart;
 			std::chrono::duration<double> diffToFrameEnd = m_frameDelay - calculationTime;
+
+
+			Debug::Trace << "frameDeltaTime: "  << frameDeltaTime.count() << "s, Calculation time: " << calculationTime.count() << "s" << std::endl;
 
 			std::this_thread::sleep_for(diffToFrameEnd);
 

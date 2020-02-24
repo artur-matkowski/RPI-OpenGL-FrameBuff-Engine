@@ -13,7 +13,7 @@ namespace asapgl
 		ContextBase(){};
 		~ContextBase();
 
-		virtual void DrawBuffer() = 0;
+		virtual void SwapBuffer() = 0;
 
 	};
 }

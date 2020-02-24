@@ -14,7 +14,6 @@ namespace asapgl
 		glutCreateWindow(a.NAME.c_str());
 		//glutIdleFunc(render);
 		
-		Debug::Trace(DebugLevel::WARNING) << "here" << a.ARGV[0] << std::endl;
 	}
 
 
@@ -23,7 +22,7 @@ namespace asapgl
 
 	}
 
-    void GLUT_ContextType::DrawBuffer()
+    void GLUT_ContextType::SwapBuffer()
     {
     	glutSwapBuffers();
     }

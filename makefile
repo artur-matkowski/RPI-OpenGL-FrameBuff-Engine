@@ -1,7 +1,7 @@
 OUT		  	= ogle
 VERSION	 	= .1.0.0
 
-CC 		  	= g++ -std=c++11 -fpermissive
+CC 		  	= g++ -std=c++11  -ldrm -lgbm -lEGL -lGLESv2 -lGL -I/usr/include/libdrm -I/opt/vc/include 
 
 CPPFLAGS 	= -I/usr/include/freetype2 -I/usr/include/freetype2/freetype
 

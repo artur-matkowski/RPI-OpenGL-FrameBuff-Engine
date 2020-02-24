@@ -33,13 +33,15 @@ int main(int argc, char** argv)
 	    	x.ARGV = argv;
 	    	x.NAME = "Window name";
 	    	x.DISPLAY_MODE = GLUT_DOUBLE | GLUT_RGB;
-	    }  );
+	    });
 	}
 	else
 	{
-		Debug::Trace(DebugLevel::INFO) << "No DISPLAY found. Initializing fbdev-OSmesa context" << std::endl;
+		Debug::Trace(DebugLevel::INFO) << "No DISPLAY found. Initializing DRM GBM EGL context" << std::endl;
 
-		c.init<asapgl::FBOSmesa_ContextType>([] ( asapgl::FBOSmesa_ContextType::Args& x ) {    });
+		c.init<asapgl::DRM_GBM_EGL_ContextType>([&] ( asapgl::DRM_GBM_EGL_ContextType::Args& x ) {
+			
+		});
 	}
 
 

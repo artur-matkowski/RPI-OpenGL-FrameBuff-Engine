@@ -3,6 +3,7 @@
 #include <chrono>
 #include "GlutContext.hpp"
 #include "FBOSmesa_ContextType.hpp"
+#include "DRM_GBM_EGL_ContextType.hpp"
 
 namespace asapgl
 {
@@ -36,6 +37,12 @@ namespace asapgl
 			{
 				f(a);
 				context = new T(a);
+				//glewInit();
+
+				Debug::Trace(DebugLevel::INFO) << "GL initialized with version: " << glGetString(GL_VERSION) << std::endl;
+				Debug::Trace(DebugLevel::INFO) << "GL vendor: " << glGetString(GL_VENDOR) << std::endl;
+				Debug::Trace(DebugLevel::INFO) << "GL renderer: " << glGetString(GL_RENDERER) << std::endl;
+				Debug::Trace(DebugLevel::INFO) << "GL shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 			}
 			else
 			{

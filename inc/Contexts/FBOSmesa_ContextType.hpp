@@ -7,27 +7,37 @@ namespace asapgl
 
 	class FBOSmesa_ContextType: public ContextBase
 	{
-		int fbfd = 0;
-	    //struct fb_var_screeninfo vinfo;
-	    //struct fb_fix_screeninfo finfo;
-	    long int screensize = 0;
-	    char *fbp = 0;
-	    int x = 0, y = 0;
-	    long int location = 0;
+		//fbdev
+		int 		fbfd = 0;
+	    long int 	screensize = 0;
+	    void 		*fbp = 0;
+	    int 		width = 0;
+	    int 		height = 0;
+
+	    void BindTo_DEV_FB0();
 
 
+	    //osmesa
 	    OSMesaContext ctx;
 
+
+	    //render target
+	    GLuint FramebufferName = 0;
+	    GLuint renderedTexture;
+	    GLuint depthrenderbuffer;
+
+	    void InitRT();
 	public:
 		class Args: public object{
+		public:
+			int 			ARGC;
+			char** 			ARGV;
 		};
 
 		FBOSmesa_ContextType(FBOSmesa_ContextType::Args &f);
 		~FBOSmesa_ContextType();
 
-		void* getBufferp();
-
-		void DrawBuffer();
+		void SwapBuffer();
 	};
 
 }

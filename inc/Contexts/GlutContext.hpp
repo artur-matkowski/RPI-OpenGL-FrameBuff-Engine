@@ -22,7 +22,7 @@ namespace asapgl
 		GLUT_ContextType(GLUT_ContextType::Args &f );
 		~GLUT_ContextType();
 		
-		void DrawBuffer();
+		void SwapBuffer();
 	};
 }
 
