@@ -2,7 +2,6 @@
 #define _H_CONTEXT
 #include <chrono>
 #include "GlutContext.hpp"
-#include "FBOSmesa_ContextType.hpp"
 #include "DRM_GBM_EGL_ContextType.hpp"
 
 namespace asapgl

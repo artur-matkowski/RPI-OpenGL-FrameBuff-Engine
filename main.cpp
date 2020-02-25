@@ -15,13 +15,14 @@ void signalHandler( int signum )
 
 int main(int argc, char** argv)
 {
+
 	signal(SIGINT, signalHandler);
 
 	char* display = getenv("DISPLAY");
 
 	bool hasDisplay = display != 0;
 
-
+/*
 	if(hasDisplay)
 	{
 		Debug::Trace(DebugLevel::INFO) << "DISPLAY=" << display << " Initializing GLUT context" << std::endl;
@@ -35,7 +36,7 @@ int main(int argc, char** argv)
 	    	x.DISPLAY_MODE = GLUT_DOUBLE | GLUT_RGB;
 	    });
 	}
-	else
+	else*/
 	{
 		Debug::Trace(DebugLevel::INFO) << "No DISPLAY found. Initializing DRM GBM EGL context" << std::endl;
 

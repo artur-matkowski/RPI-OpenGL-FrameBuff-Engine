@@ -6,7 +6,8 @@
 //#include <GL/glu_mangle.h>
 //#include <GL/glx_mangle.h>
 
-#include <GL/osmesa.h>
+//#include <GL/osmesa.h>
+#include <GLES2/gl2.h>
 
 //#include <GL/gl.h>
 //#include <GL/glu.h>

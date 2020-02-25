@@ -5,7 +5,8 @@
 #include <gbm.h>
 //#include <GL/glew.h>
 #include <EGL/egl.h>
-#include <GL/gl.h>
+//#include <GL/gl.h>
+#include <GLES2/gl2.h>
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -73,22 +74,45 @@ static struct gbm_surface *gbm_surface;
 static EGLSurface egl_surface;
 
 static void setup_opengl () {
+
+	std::cout<<__FILE__<<":"<<__LINE__<<std::endl<<std::flush;
+
 	gbm_device = gbm_create_device (device);
+	std::cout<<__FILE__<<":"<<__LINE__<<std::endl<<std::flush;
 	display = eglGetDisplay (gbm_device);
+	std::cout<<__FILE__<<":"<<__LINE__<<std::endl<<std::flush;
 	eglInitialize (display, NULL, NULL);
 	
+	std::cout<<__FILE__<<":"<<__LINE__<<std::endl<<std::flush;
 	// create an OpenGL context
 	eglBindAPI (EGL_OPENGL_API);
 	EGLint attributes[] = {
+    EGL_BLUE_SIZE, 8, EGL_GREEN_SIZE, 8,
+    EGL_RED_SIZE, 8,
+
+    // Uncomment the following to enable MSAA
+    // EGL_SAMPLE_BUFFERS, 1, // <-- Must be set to 1 to enable multisampling!
+    // EGL_SAMPLES, 4, // <-- Number of samples
+
+    // Uncomment the following to enable stencil buffer
+    // EGL_STENCIL_SIZE, 1,
+
+    EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT, EGL_NONE};
+    /*{
 		EGL_RED_SIZE, 8,
 		EGL_GREEN_SIZE, 8,
 		EGL_BLUE_SIZE, 8,
-	EGL_NONE};
+	EGL_NONE};*/
+	EGLint contextAttribs[] = {EGL_CONTEXT_CLIENT_VERSION, 2,
+            EGL_NONE};
 	EGLConfig config;
 	EGLint num_config;
+	std::cout<<__FILE__<<":"<<__LINE__<<std::endl<<std::flush;
 	eglChooseConfig (display, attributes, &config, 1, &num_config);
-	context = eglCreateContext (display, config, EGL_NO_CONTEXT, NULL);
+	context = eglCreateContext (display, config, EGL_NO_CONTEXT, contextAttribs);
+	//context = eglCreateContext (display, config, EGL_NO_CONTEXT, 0);
 	
+	std::cout<<__FILE__<<":"<<__LINE__<<std::endl<<std::flush;
 	// create the GBM and EGL surface
 	gbm_surface = gbm_surface_create (gbm_device, mode_info.hdisplay, mode_info.vdisplay, GBM_BO_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT|GBM_BO_USE_RENDERING);
 	egl_surface = eglCreateWindowSurface (display, config, gbm_surface, NULL);
@@ -138,13 +162,17 @@ namespace asapgl
 
 	DRM_GBM_EGL_ContextType::DRM_GBM_EGL_ContextType(DRM_GBM_EGL_ContextType::Args &f)
 	{
+
 		device = open ("/dev/dri/card0", O_RDWR|O_CLOEXEC);
+
+
 
 		if(device == 0)
 			Debug::Trace(DebugLevel::ERROR) << "Can not open dri/card0, is Full KMS anabled on RPI?" << std::endl;
 
 
 		find_display_configuration ();
+
 		setup_opengl ();
 	}
 	
