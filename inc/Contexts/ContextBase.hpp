@@ -1,6 +1,6 @@
 #ifndef _H_CONTEXTBASE
 #define _H_CONTEXTBASE
-#include "OpenGLWrapper.hpp"
+#include "PrecompiledHeaders.hpp"
 #include "object.hpp"
 
 namespace asapgl

@@ -1,7 +1,4 @@
 #include "Context.hpp"
-#include <chrono>
-#include <thread>
-#include <iostream>
 
 namespace asapgl
 {

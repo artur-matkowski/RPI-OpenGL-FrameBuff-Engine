@@ -1,7 +1,6 @@
 #ifndef _H_GLUTCONTEXT
 #define _H_GLUTCONTEXT
 #include "ContextBase.hpp"
-#include <cstring>
 
 namespace asapgl
 {

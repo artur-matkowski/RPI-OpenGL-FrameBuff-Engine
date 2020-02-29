@@ -1,17 +1,5 @@
 #include "DRM_GBM_EGL_ContextType.hpp"
 
-#include <xf86drm.h>
-#include <xf86drmMode.h>
-#include <gbm.h>
-//#include <GL/glew.h>
-#include <EGL/egl.h>
-//#include <GL/gl.h>
-#include <GLES2/gl2.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <iostream>
 
 
 #define EXIT(msg) { fputs (msg, stderr); exit (EXIT_FAILURE); }

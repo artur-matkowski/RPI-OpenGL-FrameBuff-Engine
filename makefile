@@ -1,7 +1,7 @@
 OUT		  	= ogle
 VERSION	 	= .1.0.0
 
-CC 		  	= g++ -std=c++11  -ldrm -lgbm -I/usr/include/libdrm -I/opt/vc/include 
+CC 		  	= g++ -std=c++11  -I/usr/include/libdrm -I/opt/vc/include 
 
 CPPFLAGS 	= -I/usr/include/freetype2 -I/usr/include/freetype2/freetype
 
@@ -15,7 +15,7 @@ SOURCES		= $(shell find $(SRCDIR) -type f | grep cpp | cut -f 1 -d '.')
 DIRSTRUCTURE = $(shell find $(INCDIR) -type d)
 INCSTRUCTURE = $(patsubst %, -I%, $(DIRSTRUCTURE))
 
-DEPGL 		=  -lpng -lglut -lGL -lGLU -lGLEW -lEGL -lGLESv2
+DEPGL 		=  -lpng -lglut -lGL -lGLU -lGLEW -lEGL -lGLESv2  -ldrm -lgbm
 #DEPGL 		=  -lpng -lbrcmEGL -lbrcmGLESv2  -L/opt/vc/lib
 
 OBJECTS 	= $(SOURCES:%.cpp=$(OBJDIR)%.o)
@@ -32,6 +32,9 @@ HEADER_DEPS += 	-I./libs/glm/
 
 #STATIC_LINK	= ./libs/libjpeg-turbo/build/libturbojpeg.a
 
+DEBUG_CC 	+= -g -DLOG_LEVEL=DebugLevel::ALL
+RELEASE_CC	+= -O3 -DLOG_LEVEL=DebugLevel::INFO -DNOTRACE
+
 #################################################################################
 
 
@@ -40,7 +43,9 @@ all:
 	make debug
 	make release
 
-debug: CC 			+= -g -DLOG_LEVEL=DebugLevel::ALL
+
+
+debug: CC 			+= $(DEBUG_CC)
 #debug: CC 			+= -DPROFILER_ACTIVE
 debug: BUILDPATH 	= build/dbg/
 debug: OBJDIR 		= build/dbg/obj/
@@ -49,7 +54,7 @@ debug: STATIC_LINK	= $(BUILDPATH)lib/*.a
 debug:  $(OUT) 
 #	ar rcs build/dbg/lib/lib$(OUT).a build/dbg/obj/*.o
 
-release: CC 			+= -O3 -DLOG_LEVEL=DebugLevel::INFO -DNOTRACE
+release: CC 			+= $(RELEASE_CC)
 release: BUILDPATH 		= build/rel/
 release: OBJDIR 		= build/rel/obj/
 release: OBJECTS 		= $(SOURCES:%.cpp=$(OBJDIR)%.o)
@@ -58,14 +63,18 @@ release: $(OUT)
 #	ar rcs build/rel/lib/lib$(OUT).a build/rel/obj/*.o
 
 
-$(OUT): $(SOURCES)
+$(OUT): pch $(SOURCES)
 	$(CC) -shared -o $(BUILDPATH)$@.so $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* $(DEPGL) -lturbojpeg -lpthread -lfreetype -Iglm -llogger -ludpsocket -lnetworkedEvents
-	$(CC) -o $(BUILDPATH)$@.out $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* main.cpp $(DEPGL) -lturbojpeg -lpthread -lfreetype -Iglm -llogger -ludpsocket -lnetworkedEvents
+	$(CC) -o $(BUILDPATH)$@ $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* main.cpp $(DEPGL) -lturbojpeg -lpthread -lfreetype -Iglm -llogger -ludpsocket -lnetworkedEvents
 
 
-$(SOURCES): $(INCDIR)$(@.hpp) $(SRCDIR)$@
+$(SOURCES): pch $(INCDIR)$(@.hpp) $(SRCDIR)$@
 	$(CC) -c $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(DEPGL) $(@).cpp -o $(OBJDIR)$(notdir $@).o $(DEPGL) -lpthread -lfreetype -Iglm -llogger -ludpsocket -lnetworkedEvents -fpic
 	
+
+pch: 
+	$(CC) inc/PrecompiledHeaders.hpp
+
 test:
 	@$(MAKE) ${OUT} -B
 	@$(MAKE) r
