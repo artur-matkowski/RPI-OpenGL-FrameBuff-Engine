@@ -103,7 +103,6 @@ void render()
 		GLfloat rotation = 0.0;
 		while(m_isRunning)
 		{
-			//m_isRunning = false;
 			std::chrono::duration<double> frameDeltaTime = frameEnd - frameStart;
 			frameStart = std::chrono::high_resolution_clock::now();
 

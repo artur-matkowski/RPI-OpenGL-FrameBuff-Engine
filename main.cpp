@@ -1,4 +1,6 @@
 #include "Context.hpp"
+#include "Systems.hpp"
+#include <SerializeJSON.hpp>
 
 asapgl::Context c;
 
@@ -7,11 +9,15 @@ void signalHandler( int signum )
 	c.CleanUp();
 }
 
+
+
+using namespace asapgl;
+
 int main(int argc, char** argv)
 {
 
 	signal(SIGINT, signalHandler);
-
+/*
 	char* display = getenv("DISPLAY");
 
 	bool hasDisplay = display != 0;
@@ -43,9 +49,24 @@ int main(int argc, char** argv)
 
 
     c.MainLoop();
+*/
+	SERIALIZABLE_VAR_VECTOR(float, var);
+	SERIALIZABLE_VAR_VECTOR(float, var2);
+
+	var.push_back(1.2);
+	var.push_back(1.1);
+	var.push_back(3.2);
+	var.push_back(13.2);
+
+	std::string json = var.Serialize();
 
 
+	Debug::Trace(DebugLevel::INFO) << "testing  var  " << var.Serialize() << std::endl;
 
+
+	var2.Deserialize(json.c_str(), json.size());
+
+	Debug::Trace(DebugLevel::INFO) << "testing  var2  " << var2.Serialize() << std::endl;
 
     return 0;
 }
