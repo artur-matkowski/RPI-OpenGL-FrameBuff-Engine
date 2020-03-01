@@ -1,6 +1,7 @@
 #include "Context.hpp"
 #include "Systems.hpp"
 #include <SerializeJSON.hpp>
+#include "Tests.hpp"
 
 asapgl::Context c;
 
@@ -9,9 +10,9 @@ void signalHandler( int signum )
 	c.CleanUp();
 }
 
-
-
 using namespace asapgl;
+
+
 
 int main(int argc, char** argv)
 {
@@ -50,23 +51,39 @@ int main(int argc, char** argv)
 
     c.MainLoop();
 */
-	SERIALIZABLE_VAR_VECTOR(float, var);
-	SERIALIZABLE_VAR_VECTOR(float, var2);
-
-	var.push_back(1.2);
-	var.push_back(1.1);
-	var.push_back(3.2);
-	var.push_back(13.2);
-
-	std::string json = var.Serialize();
 
 
-	Debug::Trace(DebugLevel::INFO) << "testing  var  " << var.Serialize() << std::endl;
+	TESTSerializableVar(bool, false);
+	TESTSerializableVar(bool, true);
+
+	TESTSerializableVar(float, 2);
+	TESTSerializableVar(float, -2.342);
 
 
-	var2.Deserialize(json.c_str(), json.size());
+	TESTSerializableVar(int, 2);
+	TESTSerializableVar(int, -20);
 
-	Debug::Trace(DebugLevel::INFO) << "testing  var2  " << var2.Serialize() << std::endl;
+	TESTSerializableVar(std::string, "gowno test 213.ad,das");
+
+
+	
+
+	TESTSerializableVarVector(bool, true, false, true, true); 
+
+	TESTSerializableVarVector(float, 1.2, 2.3, 3.4, 4,5 ); 
+
+	TESTSerializableVarVector(int, 1, 2, 3, 4, 7 ); 
+
+	TESTSerializableVarVector(std::string, "test 1", "test 2", "test 3", "test 4", "test 5" ); 
+
+
+	{
+		testClass obj;
+
+
+		Debug::Trace(DebugLevel::INFO) << "testing  obj  " << obj.Serialize() << std::endl;
+	}
+
 
     return 0;
 }
