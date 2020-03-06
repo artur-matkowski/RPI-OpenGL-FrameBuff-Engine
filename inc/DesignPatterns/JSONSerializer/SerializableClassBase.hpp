@@ -3,10 +3,16 @@
 #include "PrecompiledHeaders.hpp"
 #include "SerializableBase.hpp"
 
+struct cmpByStringLength {
+    bool operator()(const char* a, const char* b) const {
+    	return std::strcmp(a, b) < 0;
+    }
+};
+
 class SerializableClassBase: public SerializableBase
 {
 	//member name, member reference
-	std::map<const char*, SerializableBase*> m_membersMap;
+	std::map<const char*, SerializableBase*, cmpByStringLength> m_membersMap;
 
 	friend class JSONStream;
 

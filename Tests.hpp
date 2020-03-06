@@ -118,6 +118,7 @@ bool _TESTJSONStream(const char* _typename, const T& val)
 	}
 }
 
+
 #define TESTJSONStream(T,v) _TESTJSONStream<T>(#T, v)
 
 

@@ -29,6 +29,21 @@ class JSONStream{
   }
 
 public:
+
+  inline bool isOneOf(const char* str)
+  {
+    int size = strlen(str);
+    
+    for(int i=0; i<size; ++i)
+    {
+      if(*current==str[i])
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
   inline void skipToOneOf(const char* str)
   {
     while( current!=last && !isOneOf(current, str) ) {
@@ -85,7 +100,7 @@ public:
     skipToOneOf("-.0123456789");
 
     current += sscanf(current, "%f", &val);
-    skipToOneOf(",]");
+    skipToOneOf(",]}");
 
     return *this;
   }
@@ -95,7 +110,7 @@ public:
     skipToOneOf("-0123456789");
 
     current += sscanf(current, "%d", &val);
-    skipToOneOf(",]");
+    skipToOneOf(",]}");
 
     return *this;
   }
@@ -113,7 +128,7 @@ public:
       val = false;
     }
     
-    skipToOneOf(",]");
+    skipToOneOf(",]}");
 
     return *this;
   }
@@ -138,7 +153,7 @@ public:
     val.assign(current+1, skipper);
 
     current = skipper;
-    skipToOneOf(",]");
+    skipToOneOf(":,]}");
 
     return *this;
   }
