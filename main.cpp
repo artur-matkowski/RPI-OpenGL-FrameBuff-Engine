@@ -1,6 +1,6 @@
 #include "Context.hpp"
 #include "Systems.hpp"
-#include <SerializeJSON.hpp>
+#include <SerializableVarVector.hpp>
 #include "Tests.hpp"
 
 asapgl::Context c;
@@ -8,6 +8,7 @@ asapgl::Context c;
 void signalHandler( int signum )
 {
 	c.CleanUp();
+	exit(0);
 }
 
 using namespace asapgl;
@@ -52,7 +53,7 @@ int main(int argc, char** argv)
     c.MainLoop();
 */
 
-
+/*
 	TESTSerializableVar(bool, false);
 	TESTSerializableVar(bool, true);
 
@@ -75,13 +76,54 @@ int main(int argc, char** argv)
 	TESTSerializableVarVector(int, 1, 2, 3, 4, 7 ); 
 
 	TESTSerializableVarVector(std::string, "test 1", "test 2", "test 3", "test 4", "test 5" ); 
+*/
+	bool test = true;
+	
+	test = test &= TESTJSONStream(float, -2.342);
+	test = test &= TESTJSONStream(float, 2);
 
 
+	test = test &= TESTJSONStream(int, 3);
+	test = test &= TESTJSONStream(int, -2);
+
+
+	test = test &= TESTJSONStream(bool, false);
+	test = test &= TESTJSONStream(bool, true);
+
+
+	test = test &= TESTJSONStream(std::string, "gowno test \\\"213.ad,das");
+
+
+
+	test = test &= TESTJSONStreamVector(bool, true, false, true, true); 
+
+	test = test &= TESTJSONStreamVector(float, 1.2, -2.3, 3.4, -4.5 ); 
+
+	test = test &= TESTJSONStreamVector(int, 1, -2, 3, -4, 7 ); 
+
+	test = test &= TESTJSONStreamVector(std::string, "test 1", "test 2", "test 3", "test 4", "test 5" ); 
+
+
+
+	if( test )
+	{
+		Debug::Trace(DebugLevel::WARNING) << "<<<<<<<<<<<<<<<< TESTS concluded : SUCCES\n" << std::endl;
+	}
+	else
+	{
+		Debug::Trace(DebugLevel::ERROR) << "<<<<<<<<<<<<<<<< TESTS concluded : FAILED\n" << std::endl;	
+	}
+
+	
 	{
 		testClass obj;
+		JSONStream json;
+
+		json << obj;
+		json.SetCursonPos(0);
 
 
-		Debug::Trace(DebugLevel::INFO) << "testing  obj  " << obj.Serialize() << std::endl;
+		Debug::Trace(DebugLevel::INFO) << "testing  obj  " << json.str() << std::endl;
 	}
 
 

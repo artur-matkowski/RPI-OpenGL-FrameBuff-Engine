@@ -1,81 +1,83 @@
 #ifndef _H_SerializableVarVector
 #define _H_SerializableVarVector
-#include "JSONSerializerBase.hpp"
 #include "SerializableVar.hpp"
 
 
-namespace asapgl
+template<class T>
+class SerializableVarVector: public std::vector<SerializableVar<T>>, public SerializableBase
 {
-	template<class T>
-	class SerializableVarVector: public std::vector<SerializableVar<T>>, public SerializableBase
+	SerializableVarVector()
+		:std::vector<SerializableVar<T>>()
+	{}
+public:
+
+	SerializableVarVector(const char* Name, SerializableClassBase* parent)
+		:std::vector<SerializableVar<T>>()
 	{
-		SerializableVarVector()
-			:std::vector<SerializableVar<T>>()
-		{}
-	public:
+		if(parent!=0)
+			parent->PushReferenceToMap(Name, this);
+	}
 
-		SerializableVarVector(const char* Name, SerializableClassBase* parent)
-			:std::vector<SerializableVar<T>>()
+
+	//TODO optimize me:
+	SerializableVarVector<T>& operator=(const std::vector<T>& in)
+	{
+		this->clear();
+
+		for(auto it = in.begin(); it != in.end(); ++it)
 		{
-			if(parent!=0)
-				parent->PushReferenceToMap(Name, this);
+			this->push_back(*it);
 		}
 
+		return *this;
+	}
 
-		//TODO optimize me:
-		SerializableVarVector<T>& operator=(const std::vector<T>& in)
+	void Serialize(JSONStream& stream) override
+	{
+		stream.sprintf("[");
+
+		if( this->begin() != this->end() )
 		{
-			this->clean();
-
-			for(auto it = in.begin(); it != in.end(); ++it)
+			for(auto it = this->begin(); ; )
 			{
-				this->push_back(*it);
-			}
+				stream << *it;
 
-			return *this;
-		}
+				++it;
 
-		virtual std::string Serialize()
-		{
-			std::stringstream ret;
-			ret << "[";
-
-			int size = this->size();
-
-			for(int i=0; i<size; ++i)
-			{
-				ret << this->operator[](i).Serialize();
-
-				if(i < size-1)
+				if( it != this->end() )
 				{
-					ret << ", ";
+					stream.sprintf(", ");
+				}
+				else
+				{
+					break;
 				}
 			}
-
-			ret << "]";
-
-			return ret.str();
 		}
 
-		virtual void Deserialize(const char* str, const int size)
+		stream.sprintf("]");
+	}
+
+
+	void Deserialize(JSONStream& stream) override
+	{
+		this->clear();
+
+		stream.skipTo('[');
+		stream.skip( 1 );
+
+		SerializableVar<T> deserializationCache("", 0);
+
+		while(stream.peak() != ']')
 		{
-			this->clear();
+			deserializationCache.Deserialize(stream);
 
-			T val;
-			std::string tmp; 
-			std::istringstream ss(str+1);
-			std::vector<std::string> words;
-
-			while(getline(ss, tmp, ',')){
-				std::istringstream iss(tmp);
-
-				iss >> val;
-
-				this->push_back(val);
-			}
+			this->push_back( deserializationCache );
 		}
-	};
 
-}
+
+	}
+};
+
 
 #endif

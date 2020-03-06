@@ -1,150 +1,222 @@
 #ifndef _H_SerializableVar
 #define _H_SerializableVar
-#include "JSONSerializerBase.hpp"
+#include "JSONStream.hpp"
+#include "SerializableClassBase.hpp"
 
-namespace asapgl
+
+template<class T>
+class SerializableVar: public SerializableBase
 {
+	T m_var;
+	
+	SerializableVar()
+	{}
+public:
 
-	template<class T>
-	class SerializableVar: public SerializableBase
+	SerializableVar(const T& val)
 	{
-		T m_var;
-	public:
+		m_var = val;
+	}
 
-		SerializableVar(const char* Name, SerializableClassBase* parent)
-		{
-			if(parent!=0)
-				parent->PushReferenceToMap(Name, this);
-		}
-
-		inline operator T() const
-		{
-			return m_var;
-		}
-
-		inline SerializableVar<T>& operator=(const T& val)
-		{
-			m_var = val;
-			return *this;
-		}
-
-		virtual std::string Serialize()
-		{
-			std::stringstream ret;
-			ret << m_var;
-			return ret.str();
-		}
-
-		virtual void Deserialize(const char* str, const int size)
-		{
-			std::istringstream iss(str);
-
-			iss >> m_var;
-		}	
-	};
-
-	template<>
-	class SerializableVar<bool>: public SerializableBase
+	SerializableVar(const char* Name, SerializableClassBase* parent)
 	{
-		bool m_var;
-		char buff[6] = {0};
-	public:
+		if(parent!=0)
+			parent->PushReferenceToMap(Name, this);
+	}
 
-		SerializableVar(const char* Name, SerializableClassBase* parent)
-		{
-			if(parent!=0)
-				parent->PushReferenceToMap(Name, this);
-		}
-
-		inline operator bool() const
-		{
-			return m_var;
-		}
-
-		inline SerializableVar<bool>& operator=(const bool& val)
-		{
-			m_var = val;
-			return *this;
-		}
-
-		virtual std::string Serialize()
-		{
-			std::stringstream ret;
-			ret << (m_var ? "true" : "false");
-			return ret.str();
-		}
-
-		virtual void Deserialize(const char* str, const int size)
-		{
-			std::istringstream iss(str);
-
-			iss >> buff;
-
-			if( 0 == std::strcmp("true", buff) )
-			{
-				m_var = true;
-			}
-			else if( 0 == std::strcmp("false", buff) )
-			{
-				m_var = false;
-			}
-			else
-			{
-				Debug::Trace(DebugLevel::WARNING) << "JSON Deserialize failed with bool string: " << str << std::endl;
-			}
-		}	
-	};
-
-
-	template<>
-	class SerializableVar<std::string>: public SerializableBase, public std::string
+	inline operator T() const
 	{
-		SerializableVar()
-			:std::string()
-			{};
-	public:
+		return m_var;
+	}
 
-		SerializableVar(const char* Name, SerializableClassBase* parent)
-			:std::string()
-		{
-			if(parent!=0)
-				parent->PushReferenceToMap(Name, this);
-		}
+	inline SerializableVar<T>& operator=(const T& val)
+	{
+		m_var = val;
+		return *this;
+	}
 
-		inline operator std::string() const
-		{
-			return *this;
-		}
+	virtual void Serialize(JSONStream& stream)
+	{
+		stream << m_var;
+	}
+	
+	virtual void Deserialize(JSONStream& stream)
+	{
+		stream >> m_var;
+	}
+};
 
-		inline SerializableVar<std::string>& operator=(const std::string& val)
-		{
-			this->assign(val);
-			return *this;
-		}
+template<>
+class SerializableVar<int>: public SerializableBase
+{
+	int m_var;
+public:
 
-		inline SerializableVar<std::string>& operator=(const char* val)
-		{
-			this->assign(val);
-			return *this;
-		}
+	SerializableVar(const int& val)
+	{
+		m_var = val;
+	}
+
+	SerializableVar(const char* Name, SerializableClassBase* parent)
+	{
+		if(parent!=0)
+			parent->PushReferenceToMap(Name, this);
+	}
+
+	inline operator int() const
+	{
+		return m_var;
+	}
+
+	inline SerializableVar<int>& operator=(const int& val)
+	{
+		m_var = val;
+		return *this;
+	}
+
+	virtual void Serialize(JSONStream& stream)
+	{
+		stream.Serialize(m_var);
+	}
+	
+	virtual void Deserialize(JSONStream& stream)
+	{
+		stream.Deserialize(m_var);
+	}
+};
+
+template<>
+class SerializableVar<float>: public SerializableBase
+{
+	float m_var;
+public:
+
+	SerializableVar(const float& val)
+	{
+		m_var = val;
+	}
+
+	SerializableVar(const char* Name, SerializableClassBase* parent)
+	{
+		if(parent!=0)
+			parent->PushReferenceToMap(Name, this);
+	}
+
+	inline operator float() const
+	{
+		return m_var;
+	}
+
+	inline SerializableVar<float>& operator=(const float& val)
+	{
+		m_var = val;
+		return *this;
+	}
+
+	virtual void Serialize(JSONStream& stream)
+	{
+		stream.Serialize(m_var);
+	}
+	
+	virtual void Deserialize(JSONStream& stream)
+	{
+		stream.Deserialize(m_var);
+	}
+};
+
+template<>
+class SerializableVar<bool>: public SerializableBase
+{
+	bool m_var;
+	char buff[6] = {0};
+public:
+
+	SerializableVar(const bool& val)
+	{
+		m_var = val;
+	}
+
+	SerializableVar(const char* Name, SerializableClassBase* parent)
+	{
+		if(parent!=0)
+			parent->PushReferenceToMap(Name, this);
+	}
+
+	inline operator bool() const
+	{
+		return m_var;
+	}
+
+	inline SerializableVar<bool>& operator=(const bool& val)
+	{
+		m_var = val;
+		return *this;
+	}
+
+	virtual void Serialize(JSONStream& stream)
+	{
+		stream.Serialize(m_var);
+	}
 
 
-		virtual std::string Serialize()
-		{
-			std::stringstream ret;
-			ret << "\"" << *this << "\"";
-			return ret.str();
-		}
+	virtual void Deserialize(JSONStream& stream)
+	{
+		stream.Deserialize(m_var);
+	}
+};
 
-		virtual void Deserialize(const char* str, const int size)
-		{
-			int length = 0;
 
-			while( str[++length] != '\"' );
+template<>
+class SerializableVar<std::string>: public SerializableBase, public std::string
+{
+	SerializableVar()
+		:std::string()
+		{};
+public:
 
-			this->assign(str+1, length-1);
-		}	
-	};
-}
+	SerializableVar(const std::string& val)
+	{
+		this->assign( val );
+	}
+
+
+	SerializableVar(const char* Name, SerializableClassBase* parent)
+		:std::string()
+	{
+		if(parent!=0)
+			parent->PushReferenceToMap(Name, this);
+	}
+
+	inline operator std::string() const
+	{
+		return *this;
+	}
+
+	inline SerializableVar<std::string>& operator=(const std::string& val)
+	{
+		this->assign(val);
+		return *this;
+	}
+
+	inline SerializableVar<std::string>& operator=(const char* val)
+	{
+		this->assign(val);
+		return *this;
+	}
+
+
+	virtual void Serialize(JSONStream& stream)
+	{
+		stream.Serialize( *(std::string*)this );
+	}
+
+
+	virtual void Deserialize(JSONStream& stream)
+	{
+		stream.Deserialize( *(std::string*)this );
+	}
+};
+
+
 
 #endif

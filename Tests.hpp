@@ -3,12 +3,12 @@
 
 #include "Context.hpp"
 #include "Systems.hpp"
-#include <SerializeJSON.hpp>
+#include "JSONStream.hpp"
 
 
 using namespace asapgl;
 
-class testClass: public SerializableToJSON
+class testClass2: public SerializableClassBase
 {
 public:
 	SerializableVar<bool> m_var;
@@ -18,8 +18,9 @@ public:
 
 
 public:
-	testClass()
-		:m_var("m_var",this)
+	testClass2()
+		:SerializableClassBase()
+		,m_var("m_var",this)
 		,m_var2("m_var2",this)
 		,m_var3("m_var3",this)
 	{
@@ -28,74 +29,133 @@ public:
 
 		m_var3.push_back(1.2);
 		m_var3.push_back(1.1);
-		m_var3.push_back(3.2);
-		m_var3.push_back(13.2);
+	}
+
+	testClass2(const testClass2& copy)
+		:SerializableClassBase()
+		,m_var("m_var",this)
+		,m_var2("m_var2",this)
+		,m_var3("m_var3",this)
+	{
+		m_var = true;
+		m_var2 = 2.00123;
+
+		m_var3.push_back(1.2);
+		m_var3.push_back(1.1);
 	}
 };
 
 
-template<typename T>
-void _TESTSerializableVar(const T& val, const char* _typename)
+class testClass: public SerializableClassBase
 {
-	SerializableVar<T> var("var",0);
-	SerializableVar<T> var2("var2",0);
+public:
+	SerializableVar<bool> m_var;
+	SerializableVar<float> m_var2;
+	SerializableVarVector<float> m_var3;
 
-	var = val;
+	SerializableVar<testClass2> m_var4;
+	SerializableVarVector<testClass2> m_var5;
 
-	std::string json = var.Serialize();
 
-	Debug::Trace(DebugLevel::INFO) << "testing SerializableVar " << _typename << " Serialize()> " << var.Serialize() << std::endl;
 
-	var2.Deserialize(json.c_str(), json.size());
+public:
+	testClass()
+		:SerializableClassBase()
+		,m_var("m_var",this)
+		,m_var2("m_var2",this)
+		,m_var3("m_var3",this)
+		,m_var4("m_var4",this)
+		,m_var5("m_var5",this)
+	{
+		m_var = true;
+		m_var2 = 2.00123;
 
-	Debug::Trace(DebugLevel::INFO) << "testing SerializableVar " << _typename << " Deserialize()> " << var2.Serialize() << std::endl;
+		m_var3.push_back(1.2);
+		m_var3.push_back(1.1);
+		m_var3.push_back(3.2);
+		m_var3.push_back(13.2);
 
-	std::string json2 = var2.Serialize();
 
-	if( std::strcmp(json.c_str(),json2.c_str())==0 )
+		m_var5.push_back( testClass2() );
+		m_var5.push_back(testClass2());
+		m_var5.push_back(testClass2());
+	}
+};
+
+
+
+template<typename T>
+bool _TESTJSONStream(const char* _typename, const T& val)
+{
+	JSONStream json;
+	JSONStream json2;
+	SerializableVar<T> tt(_typename, 0);
+	SerializableVar<T> tt2(_typename, 0);
+	tt = val;
+
+	json << tt;
+
+	json.SetCursonPos(0);
+
+	json >> tt2;
+	json2 << tt2;
+
+	Debug::Trace(DebugLevel::INFO) << "Testing: " << _typename << "\n\tOriginal input:\n\t\t>" << tt 
+	 		<< "<\n\tSerialized to JSON:\n\t\t>" << json.str()  
+	 		<< "<\n\tDeserialized back to type:\n\t\t>" << tt2
+	 		<< "<\n\tSerialized to JSON2:\n\t\t>" << json2.str()  
+			<< "<\n" << std::endl;
+
+	if( std::strcmp(json.str().c_str(), json2.str().c_str() )==0 )
 	{
 		Debug::Trace(DebugLevel::WARNING) << "<<<<<<<<<<<<<<<< Test concluded : SUCCES\n" << std::endl;
+		return true;
 	}
 	else
 	{
-		Debug::Trace(DebugLevel::ERROR) << "<<<<<<<<<<<<<<<< Test concluded : FAILED\n" << std::endl;		
+		Debug::Trace(DebugLevel::ERROR) << "<<<<<<<<<<<<<<<< Test concluded : FAILED\n" << std::endl;
+		return false;		
 	}
 }
 
-#define TESTSerializableVar(T,v) _TESTSerializableVar<T>(v, #T)
-
-
+#define TESTJSONStream(T,v) _TESTJSONStream<T>(#T, v)
 
 
 template<typename T>
-void _TESTSerializableVarVector(const char* _typename, const std::vector<T> input)
+bool _TESTJSONStreamVector(const char* _typename, const std::vector<T> input)
 {
+	JSONStream json;
+	JSONStream json2;
+
 	SerializableVarVector<T> var("var",0);
 	SerializableVarVector<T> var2("var2",0);
-
 	var = input;
 
-	std::string json = var.Serialize();
+	json << var;
 
-	Debug::Trace(DebugLevel::INFO) << "testing SerializableVarVector " << _typename << " Serialize()> " << var.Serialize() << std::endl;
+	json.SetCursonPos(0);
 
-	var2.Deserialize(json.c_str(), json.size());
+	json >> var2;
+	json2 << var2;
 
-	Debug::Trace(DebugLevel::INFO) << "testing SerializableVarVector " << _typename << " Deserialize()> " << var2.Serialize() << std::endl;
+	Debug::Trace(DebugLevel::INFO) << "Testing: " << _typename
+	 		<< "<\n\tSerialized to JSON:\n\t\t>" << json.str()  
+	 		<< "<\n\tSerialized to JSON:\n\t\t>" << json2.str()  
+			<< "<\n" << std::endl;
 
-	std::string json2 = var2.Serialize();
 
-	if( std::strcmp(json.c_str(),json2.c_str())==0 )
+	if( std::strcmp(json.str().c_str(), json2.str().c_str() )==0 )
 	{
 		Debug::Trace(DebugLevel::WARNING) << "<<<<<<<<<<<<<<<< Test concluded : SUCCES\n" << std::endl;
+		return true;
 	}
 	else
 	{
 		Debug::Trace(DebugLevel::ERROR) << "<<<<<<<<<<<<<<<< Test concluded : FAILED\n" << std::endl;		
+		return false;		
 	}
 }
 
-#define TESTSerializableVarVector(T,...) _TESTSerializableVarVector<T>( #T , {__VA_ARGS__})
-
+#define TESTJSONStreamVector(T,...) _TESTJSONStreamVector<T>( #T , {__VA_ARGS__})
 
 #endif
