@@ -156,7 +156,7 @@ namespace asapgl
 
 
 		if(device == 0)
-			Debug::Trace(DebugLevel::ERROR) << "Can not open dri/card0, is Full KMS anabled on RPI?" << std::endl;
+			log::error << "Can not open dri/card0, is Full KMS anabled on RPI?" << std::endl;
 
 
 		find_display_configuration ();

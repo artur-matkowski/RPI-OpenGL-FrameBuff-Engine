@@ -136,7 +136,7 @@ void render()
 			std::chrono::duration<double> diffToFrameEnd = m_frameDelay - calculationTime;
 
 
-			Debug::Trace << "frameDeltaTime: "  << frameDeltaTime.count() << "s, Calculation time: " << calculationTime.count() << "s" << std::endl;
+			log::debug << "frameDeltaTime: "  << (float)frameDeltaTime.count() << "s, Calculation time: " << (float)calculationTime.count() << "s" << std::endl;
 
 			std::this_thread::sleep_for(diffToFrameEnd);
 

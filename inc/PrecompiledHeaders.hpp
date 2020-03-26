@@ -1,9 +1,10 @@
 #ifndef _H_PRECOMPLIED_HEADERS
 #define _H_PRECOMPLIED_HEADERS
 
+
+
 #define GLEW_OSMESA
 
-#include <logger/Log.hpp>
 
 
 //#include <GL/glu_mangle.h>
@@ -50,5 +51,6 @@
 #include <vector>
 
 
+#include <BFutils/bfu.hpp>
 
 #endif

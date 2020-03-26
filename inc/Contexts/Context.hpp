@@ -38,14 +38,14 @@ namespace asapgl
 				context = new T(a);
 				//glewInit();
 
-				Debug::Trace(DebugLevel::INFO) << "GL initialized with version: " << glGetString(GL_VERSION) << std::endl;
-				Debug::Trace(DebugLevel::INFO) << "GL vendor: " << glGetString(GL_VENDOR) << std::endl;
-				Debug::Trace(DebugLevel::INFO) << "GL renderer: " << glGetString(GL_RENDERER) << std::endl;
-				Debug::Trace(DebugLevel::INFO) << "GL shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+				//log::info << "GL initialized with version: " << glGetString(GL_VERSION) << std::endl;
+				//log::info << "GL vendor: " << glGetString(GL_VENDOR) << std::endl;
+				//log::info << "GL renderer: " << glGetString(GL_RENDERER) << std::endl;
+				//log::info << "GL shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 			}
 			else
 			{
-				Debug::Trace(DebugLevel::WARNING) << "Context already initialized, skipping" << std::endl;
+				//log::warning << "Context already initialized, skipping" << std::endl;
 			}
 		}
 

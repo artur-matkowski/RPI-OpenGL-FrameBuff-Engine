@@ -15,7 +15,7 @@ SOURCES		= $(shell find $(SRCDIR) -type f | grep cpp | cut -f 1 -d '.')
 DIRSTRUCTURE = $(shell find $(INCDIR) -type d)
 INCSTRUCTURE = $(patsubst %, -I%, $(DIRSTRUCTURE))
 
-DEPGL 		=  -lpng -lglut -lGL -lGLU -lGLEW -lEGL -lGLESv2  -ldrm -lgbm
+DEPGL 		=  -lpng -lglut -lGL -lGLU -lGLEW -lEGL -lGLESv2  -ldrm -lgbm -lBFutils
 #DEPGL 		=  -lpng -lbrcmEGL -lbrcmGLESv2  -L/opt/vc/lib
 
 OBJECTS 	= $(SOURCES:%.cpp=$(OBJDIR)%.o)
