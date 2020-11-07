@@ -64,8 +64,8 @@ release: $(OUT)
 
 
 $(OUT): pch $(SOURCES)
-	$(CC) -shared -o $(BUILDPATH)$@.so $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* $(DEPGL) -lturbojpeg -lpthread -lfreetype -Iglm -llogger -ludpsocket -lnetworkedEvents
-	$(CC) -o $(BUILDPATH)$@ $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* main.cpp $(DEPGL) -lturbojpeg -lpthread -lfreetype -Iglm -llogger -ludpsocket -lnetworkedEvents
+	$(CC) -shared -o $(BUILDPATH)$@.so $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* $(DEPGL) -lturbojpeg -lpthread -lfreetype -Iglm 
+	$(CC) -o $(BUILDPATH)$@ $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* main.cpp $(DEPGL) -lturbojpeg -lpthread -lfreetype -Iglm 
 
 
 $(SOURCES): pch $(INCDIR)$(@.hpp) $(SRCDIR)$@
