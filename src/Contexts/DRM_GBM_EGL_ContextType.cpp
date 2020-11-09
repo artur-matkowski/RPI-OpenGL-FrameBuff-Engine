@@ -73,7 +73,7 @@ static void setup_opengl () {
 	
 	std::cout<<__FILE__<<":"<<__LINE__<<std::endl<<std::flush;
 	// create an OpenGL context
-	eglBindAPI (EGL_OPENGL_API);
+	//eglBindAPI (EGL_OPENGL_API);
 	EGLint attributes[] = {
     EGL_BLUE_SIZE, 8, EGL_GREEN_SIZE, 8,
     EGL_RED_SIZE, 8,
@@ -97,6 +97,7 @@ static void setup_opengl () {
 	EGLint num_config;
 	std::cout<<__FILE__<<":"<<__LINE__<<std::endl<<std::flush;
 	eglChooseConfig (display, attributes, &config, 1, &num_config);
+	eglBindAPI(EGL_OPENGL_ES_API);
 	context = eglCreateContext (display, config, EGL_NO_CONTEXT, contextAttribs);
 	//context = eglCreateContext (display, config, EGL_NO_CONTEXT, 0);
 	
