@@ -1,10 +1,10 @@
-#include "DRM_GBM_EGL_ContextType.hpp"
+#include "Xlib_EGL_ContextType.hpp"
 
 
 
 #define EXIT(msg) { fputs (msg, stderr); exit (EXIT_FAILURE); }
 
-int device = -1;
+static int device = -1;
 
 static drmModeConnector *find_connector (drmModeRes *resources) {
 	// iterate the connectors
@@ -112,8 +112,6 @@ static uint32_t previous_fb;
 
 static void swap_buffers () {
 	eglSwapBuffers (display, egl_surface);
-	glFlush();
-
 	struct gbm_bo *bo = gbm_surface_lock_front_buffer (gbm_surface);
 	uint32_t handle = gbm_bo_get_handle (bo).u32;
 	uint32_t pitch = gbm_bo_get_stride (bo);
@@ -150,7 +148,7 @@ static void clean_up () {
 namespace asapgl
 {
 
-	DRM_GBM_EGL_ContextType::DRM_GBM_EGL_ContextType(DRM_GBM_EGL_ContextType::Args &f)
+	Xlib_EGL_ContextType::Xlib_EGL_ContextType(Xlib_EGL_ContextType::Args &f)
 	{
 
 		device = open ("/dev/dri/card0", O_RDWR|O_CLOEXEC);
@@ -166,13 +164,13 @@ namespace asapgl
 		setup_opengl ();
 	}
 	
-	DRM_GBM_EGL_ContextType::~DRM_GBM_EGL_ContextType()
+	Xlib_EGL_ContextType::~Xlib_EGL_ContextType()
 	{
 		clean_up ();
 		close (device);
 	}
 
-	void DRM_GBM_EGL_ContextType::SwapBuffer()
+	void Xlib_EGL_ContextType::SwapBuffer()
 	{
 		swap_buffers();
 	}
