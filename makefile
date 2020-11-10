@@ -1,7 +1,7 @@
 OUT		  	= ogle
 VERSION	 	= .1.0.0
 
-CC 		  	= g++ -std=c++11 -fpermissive -I/usr/include/libdrm -I/opt/vc/include 
+CC 		  	= g++ -std=c++11 -fpermissive -I/usr/include/libdrm 
 
 CPPFLAGS 	= -I/usr/include/freetype2 -I/usr/include/freetype2/freetype
 
@@ -69,7 +69,7 @@ $(OUT): pch $(SOURCES)
 
 
 $(SOURCES): pch $(INCDIR)$(@.hpp) $(SRCDIR)$@
-	$(CC) -c $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(DEPGL) $(@).cpp -o $(OBJDIR)$(notdir $@).o $(DEPGL) -lpthread -lfreetype -Iglm -llogger -ludpsocket -lnetworkedEvents -fpic
+	$(CC) -c $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(DEPGL) $(@).cpp -o $(OBJDIR)$(notdir $@).o $(DEPGL) -lpthread -lfreetype -Iglm -fpic
 	
 
 pch: 
