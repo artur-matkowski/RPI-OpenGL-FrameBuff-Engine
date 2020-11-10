@@ -1,7 +1,7 @@
 OUT		  	= ogle
 VERSION	 	= .1.0.0
 
-CC 		  	= g++ -std=c++11  -I/usr/include/libdrm -I/opt/vc/include 
+CC 		  	= g++ -std=c++11 -fpermissive -I/usr/include/libdrm -I/opt/vc/include 
 
 CPPFLAGS 	= -I/usr/include/freetype2 -I/usr/include/freetype2/freetype
 
@@ -15,7 +15,7 @@ SOURCES		= $(shell find $(SRCDIR) -type f | grep cpp | cut -f 1 -d '.')
 DIRSTRUCTURE = $(shell find $(INCDIR) -type d)
 INCSTRUCTURE = $(patsubst %, -I%, $(DIRSTRUCTURE))
 
-DEPGL 		=  -lpng -lglut -lGL -lGLU -lGLEW -lEGL -lGLESv2  -ldrm -lgbm -lBFutils
+DEPGL 		=  -lpng -lglut -lGL -lGLU -lGLEW -lEGL -lGLESv2  -ldrm -lgbm -lBFutils  -lX11 -lXext
 #DEPGL 		=  -lpng -lbrcmEGL -lbrcmGLESv2  -L/opt/vc/lib
 
 OBJECTS 	= $(SOURCES:%.cpp=$(OBJDIR)%.o)

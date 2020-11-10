@@ -1,8 +1,9 @@
 #ifndef _H_CONTEXT
 #define _H_CONTEXT
 #include <chrono>
-#include "GlutContext.hpp"
 #include "DRM_GBM_EGL_ContextType.hpp"
+#include "Xlib_EGL_ContextType.hpp"
+
 
 namespace asapgl
 {

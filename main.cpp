@@ -27,13 +27,14 @@ int main(int argc, char** argv)
 	{
 		log::info << "DISPLAY=" << display << " Initializing GLUT context" << std::endl;
 
-	    c.init<asapgl::GLUT_ContextType>( [&] (asapgl::GLUT_ContextType::Args &x) {  
+	    c.init<asapgl::Xlib_EGL_ContextType>( [&] (asapgl::Xlib_EGL_ContextType::Args &x) {  
+	    	/*
 	    	x.WIDTH = 1024;
 	    	x.HEIGHT = 680;
 	    	x.ARGC = argc;
 	    	x.ARGV = argv;
 	    	x.NAME = "Window name";
-	    	x.DISPLAY_MODE = GLUT_DOUBLE | GLUT_RGB;
+	    	x.DISPLAY_MODE = GLUT_DOUBLE | GLUT_RGB;*/
 	    });
 	}
 	else

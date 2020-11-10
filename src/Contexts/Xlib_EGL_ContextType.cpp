@@ -1,177 +1,246 @@
+
+
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+#include <X11/Xlib.h>
+#include <EGL/egl.h>
+#include <GLES2/gl2.h>
+
 #include "Xlib_EGL_ContextType.hpp"
 
 
+struct display {
+	Display *x11;
+	EGLDisplay egl;
+};
 
-#define EXIT(msg) { fputs (msg, stderr); exit (EXIT_FAILURE); }
+static struct display *display_open(void)
+{
+	struct display *display;
+	EGLint major, minor;
 
-static int device = -1;
+	display = calloc(1, sizeof(*display));
+	if (!display)
+		return NULL;
 
-static drmModeConnector *find_connector (drmModeRes *resources) {
-	// iterate the connectors
-	int i;
-	for (i=0; i<resources->count_connectors; i++) {
-		drmModeConnector *connector = drmModeGetConnector (device, resources->connectors[i]);
-		// pick the first connected connector
-		if (connector->connection == DRM_MODE_CONNECTED) {
-			return connector;
-		}
-		drmModeFreeConnector (connector);
+	display->x11 = XOpenDisplay(NULL);
+	if (!display->x11) {
+		free(display);
+		return NULL;
 	}
-	// no connector found
-	return NULL;
+
+	display->egl = eglGetDisplay(display->x11);
+	if (display->egl == EGL_NO_DISPLAY) {
+		XCloseDisplay(display->x11);
+		free(display);
+		return NULL;
+	}
+
+	if (!eglInitialize(display->egl, &major, &minor)) {
+		XCloseDisplay(display->x11);
+		free(display);
+		return NULL;
+	}
+
+	printf("EGL: %d.%d\n", major, minor);
+
+	return display;
 }
 
-static drmModeEncoder *find_encoder (drmModeRes *resources, drmModeConnector *connector) {
-	if (connector->encoder_id) {
-		return drmModeGetEncoder (device, connector->encoder_id);
-	}
-	// no encoder found
-	return NULL;
+static void display_close(struct display *display)
+{
+	if (!display)
+		return;
+
+	eglTerminate(display->egl);
+	XCloseDisplay(display->x11);
+	free(display);
 }
 
-static uint32_t connector_id;
-static drmModeModeInfo mode_info;
-static drmModeCrtc *crtc;
+struct window {
+	struct display *display;
+	Window x11;
+	EGLContext context;
+	EGLSurface surface;
+	unsigned int width;
+	unsigned int height;
+};
 
-static void find_display_configuration () {
-	drmModeRes *resources = drmModeGetResources (device);
-	// find a connector
-	drmModeConnector *connector = find_connector (resources);
-	if (!connector) EXIT ("no connector found\n");
-	// save the connector_id
-	connector_id = connector->connector_id;
-	// save the first mode
-	mode_info = connector->modes[0];
-	printf ("resolution: %ix%i\n", mode_info.hdisplay, mode_info.vdisplay);
-	// find an encoder
-	drmModeEncoder *encoder = find_encoder (resources, connector);
-	if (!encoder) EXIT ("no encoder found\n");
-	// find a CRTC
-	if (encoder->crtc_id) {
-		crtc = drmModeGetCrtc (device, encoder->crtc_id);
-	}
-	drmModeFreeEncoder (encoder);
-	drmModeFreeConnector (connector);
-	drmModeFreeResources (resources);
-}
-
-static struct gbm_device *gbm_device;
-static EGLDisplay display;
-static EGLContext context;
-static struct gbm_surface *gbm_surface;
-static EGLSurface egl_surface;
-
-static void setup_opengl () {
-
-	std::cout<<__FILE__<<":"<<__LINE__<<std::endl<<std::flush;
-
-	gbm_device = gbm_create_device (device);
-	std::cout<<__FILE__<<":"<<__LINE__<<std::endl<<std::flush;
-	display = eglGetDisplay (gbm_device);
-	std::cout<<__FILE__<<":"<<__LINE__<<std::endl<<std::flush;
-	eglInitialize (display, NULL, NULL);
-	
-	std::cout<<__FILE__<<":"<<__LINE__<<std::endl<<std::flush;
-	// create an OpenGL context
-	eglBindAPI (EGL_OPENGL_API);
-	EGLint attributes[] = {
-    EGL_BLUE_SIZE, 8, EGL_GREEN_SIZE, 8,
-    EGL_RED_SIZE, 8,
-
-    // Uncomment the following to enable MSAA
-    // EGL_SAMPLE_BUFFERS, 1, // <-- Must be set to 1 to enable multisampling!
-    // EGL_SAMPLES, 4, // <-- Number of samples
-
-    // Uncomment the following to enable stencil buffer
-    // EGL_STENCIL_SIZE, 1,
-
-    EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT, EGL_NONE};
-    /*{
-		EGL_RED_SIZE, 8,
-		EGL_GREEN_SIZE, 8,
-		EGL_BLUE_SIZE, 8,
-	EGL_NONE};*/
-	EGLint contextAttribs[] = {EGL_CONTEXT_CLIENT_VERSION, 2,
-            EGL_NONE};
+static struct window *window_create(struct display *display, const char *name,
+				    unsigned int x, unsigned int y,
+				    unsigned int width, unsigned int height)
+{
+	static const EGLint attribs[] = {
+		EGL_RED_SIZE, 1,
+		EGL_GREEN_SIZE, 1,
+		EGL_BLUE_SIZE, 1,
+		EGL_DEPTH_SIZE, 1,
+		EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
+		EGL_NONE
+	};
+	static const EGLint attrs[] = {
+		EGL_CONTEXT_CLIENT_VERSION, 2,
+		EGL_NONE
+	};
+	XSetWindowAttributes attr;
+	struct window *window;
+	unsigned long mask;
+	XVisualInfo visual;
+	EGLint num_configs;
+	XVisualInfo* _INFO;
+	XSizeHints hints;
 	EGLConfig config;
-	EGLint num_config;
-	std::cout<<__FILE__<<":"<<__LINE__<<std::endl<<std::flush;
-	eglChooseConfig (display, attributes, &config, 1, &num_config);
-	context = eglCreateContext (display, config, EGL_NO_CONTEXT, contextAttribs);
-	//context = eglCreateContext (display, config, EGL_NO_CONTEXT, 0);
-	
-	std::cout<<__FILE__<<":"<<__LINE__<<std::endl<<std::flush;
-	// create the GBM and EGL surface
-	gbm_surface = gbm_surface_create (gbm_device, mode_info.hdisplay, mode_info.vdisplay, GBM_BO_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT|GBM_BO_USE_RENDERING);
-	egl_surface = eglCreateWindowSurface (display, config, gbm_surface, NULL);
-	eglMakeCurrent (display, egl_surface, egl_surface, context);
-}
+	int num_visuals;
+	EGLint version;
+	Window root;
+	int screen;
+	EGLint vid;
 
-static struct gbm_bo *previous_bo = NULL;
-static uint32_t previous_fb;
+	window = calloc(1, sizeof(*window));
+	if (!window)
+		return NULL;
 
-static void swap_buffers () {
-	eglSwapBuffers (display, egl_surface);
-	struct gbm_bo *bo = gbm_surface_lock_front_buffer (gbm_surface);
-	uint32_t handle = gbm_bo_get_handle (bo).u32;
-	uint32_t pitch = gbm_bo_get_stride (bo);
-	uint32_t fb;
-	drmModeAddFB (device, mode_info.hdisplay, mode_info.vdisplay, 24, 32, pitch, handle, &fb);
-	drmModeSetCrtc (device, crtc->crtc_id, fb, 0, 0, &connector_id, 1, &mode_info);
-	
-	if (previous_bo) {
-		drmModeRmFB (device, previous_fb);
-		gbm_surface_release_buffer (gbm_surface, previous_bo);
+	window->display = display;
+
+	screen = DefaultScreen(display->x11);
+	root = RootWindow(display->x11, screen);
+
+	if (!eglChooseConfig(display->egl, attribs, &config, 1, &num_configs)) {
+		free(window);
+		return NULL;
 	}
-	previous_bo = bo;
-	previous_fb = fb;
-}
 
-
-static void clean_up () {
-	// set the previous crtc
-	drmModeSetCrtc (device, crtc->crtc_id, crtc->buffer_id, crtc->x, crtc->y, &connector_id, 1, &crtc->mode);
-	drmModeFreeCrtc (crtc);
-	
-	if (previous_bo) {
-		drmModeRmFB (device, previous_fb);
-		gbm_surface_release_buffer (gbm_surface, previous_bo);
+	if (!eglGetConfigAttrib(display->egl, config, EGL_NATIVE_VISUAL_ID, &vid)) {
+		free(window);
+		return NULL;
 	}
-	
-	eglDestroySurface (display, egl_surface);
-	gbm_surface_destroy (gbm_surface);
-	eglDestroyContext (display, context);
-	eglTerminate (display);
-	gbm_device_destroy (gbm_device);
+
+	visual.visualid = vid;
+
+	_INFO = XGetVisualInfo(display->x11, VisualIDMask, &visual, &num_visuals);
+	if (!_INFO) {
+		free(window);
+		return NULL;
+	}
+
+	memset(&attr, 0, sizeof(attr));
+	attr.background_pixel = 0;
+	attr.border_pixel = 0;
+	attr.colormap = XCreateColormap(display->x11, root, _INFO->visual, AllocNone);
+	attr.event_mask = StructureNotifyMask | ExposureMask | KeyPressMask;
+	mask = CWBackPixel | CWBorderPixel | CWColormap | CWEventMask;
+
+	window->x11 = XCreateWindow(display->x11, root, 0, 0, width, height,
+				    0, _INFO->depth, InputOutput, _INFO->visual,
+				    mask, &attr);
+	if (!window->x11) {
+		free(window);
+		return NULL;
+	}
+
+	memset(&hints, 0, sizeof(hints));
+	hints.x = x;
+	hints.y = y;
+	hints.width = width;
+	hints.height = height;
+	hints.flags = USSize | USPosition;
+
+	XSetNormalHints(display->x11, window->x11, &hints);
+	XSetStandardProperties(display->x11, window->x11, name, name, None,
+			       NULL, 0, &hints);
+
+	eglBindAPI(EGL_OPENGL_ES_API);
+
+	window->context = eglCreateContext(display->egl, config,
+					   EGL_NO_CONTEXT, attrs);
+	if (window->context == EGL_NO_CONTEXT) {
+		free(window);
+		return NULL;
+	}
+
+	eglQueryContext(display->egl, window->context, EGL_CONTEXT_CLIENT_VERSION, &version);
+	printf("OpenGL ES: %d\n", version);
+
+	window->surface = eglCreateWindowSurface(display->egl, config,
+						 window->x11, NULL);
+	if (window->surface == EGL_NO_SURFACE) {
+		free(window);
+		return NULL;
+	}
+
+	XFree(_INFO);
+
+	window->width = width;
+	window->height = height;
+
+	return window;
 }
+
+static void window_close(struct window *window)
+{
+	if (!window)
+		return;
+
+	eglDestroySurface(window->display->egl, window->surface);
+	eglDestroyContext(window->display->egl, window->context);
+	XDestroyWindow(window->display->x11, window->x11);
+
+	free(window);
+}
+
+static void window_show(struct window *window)
+{
+	XMapWindow(window->display->x11, window->x11);
+
+	if (!eglMakeCurrent(window->display->egl, window->surface, window->surface, window->context))
+		fprintf(stderr, "eglMakeCurrent():\n");
+
+	XFlush(window->display->x11);
+}
+
+
+
 
 namespace asapgl
 {
+	struct display *display;
+	struct window *window;
 
 	Xlib_EGL_ContextType::Xlib_EGL_ContextType(Xlib_EGL_ContextType::Args &f)
 	{
+		const unsigned int width = 640;
+		const unsigned int height = 480;
 
-		device = open ("/dev/dri/card0", O_RDWR|O_CLOEXEC);
+		display = display_open();
+		if (!display) {
+			fprintf(stderr, "failed to open display\n");
+			return;
+		}
+
+		window = window_create(display, "argv[0]", 0, 0, width, height);
+		if (!window) {
+			fprintf(stderr, "failed to create window\n");
+			return;
+		}
+
+		window_show(window);
 
 
-
-		if(device == 0)
-			log::error << "Can not open dri/card0, is Full KMS anabled on RPI?" << std::endl;
-
-
-		find_display_configuration ();
-
-		setup_opengl ();
 	}
 	
 	Xlib_EGL_ContextType::~Xlib_EGL_ContextType()
 	{
-		clean_up ();
-		close (device);
+		window_close(window);
+		display_close(display);
 	}
 
 	void Xlib_EGL_ContextType::SwapBuffer()
 	{
-		swap_buffers();
+		eglSwapBuffers(window->display->egl, window->surface);
+		glFlush();
 	}
 }
