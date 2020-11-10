@@ -25,7 +25,7 @@ int main(int argc, char** argv)
 
 	if(hasDisplay)
 	{
-		log::info << "DISPLAY=" << display << " Initializing GLUT context" << std::endl;
+		//log::info << "DISPLAY=" << display << " Initializing GLUT context" << std::endl;
 
 	    c.init<asapgl::Xlib_EGL_ContextType>( [&] (asapgl::Xlib_EGL_ContextType::Args &x) {  
 	    	/*
@@ -39,7 +39,7 @@ int main(int argc, char** argv)
 	}
 	else
 	{
-		log::info << "No DISPLAY found. Initializing DRM GBM EGL context" << std::endl;
+		//log::info << "No DISPLAY found. Initializing DRM GBM EGL context" << std::endl;
 
 		c.init<asapgl::DRM_GBM_EGL_ContextType>([&] ( asapgl::DRM_GBM_EGL_ContextType::Args& x ) {
 			

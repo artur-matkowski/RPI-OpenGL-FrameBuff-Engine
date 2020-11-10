@@ -1,5 +1,15 @@
 #include "Context.hpp"
 
+#include <xf86drm.h>
+#include <xf86drmMode.h>
+#include <gbm.h>
+//#include <GL/glew.h>
+#include <EGL/egl.h>
+//#include <GL/gl.h>
+#include <GLES2/gl2.h>
+
+
+
 namespace asapgl
 {
 	static const GLfloat vertices[] = {
@@ -154,9 +164,10 @@ void render()
 	Context::Context()
 		:context(0)
 		,m_frameDelay(1.0/60.0)
-		,m_isRunning(true)
+		//,m_isRunning(true)
 	{
 
+		m_isRunning = true;
 	}
 
 	Context::~Context()
@@ -172,7 +183,7 @@ void render()
 		m_isRunning = false;
 	}
 
-	void Context::SetFPS(GLfloat FPS)
+	void Context::SetFPS(float FPS)
 	{
 		m_frameDelay = std::chrono::duration<double> (1.0/FPS);
 	}
@@ -222,7 +233,7 @@ void render()
 			std::chrono::duration<double> diffToFrameEnd = m_frameDelay - calculationTime;
 
 
-			log::debug << "frameDeltaTime: "  << (float)frameDeltaTime.count() << "s, Calculation time: " << (float)calculationTime.count() << "s" << std::endl;
+			//log::debug << "frameDeltaTime: "  << (float)frameDeltaTime.count() << "s, Calculation time: " << (float)calculationTime.count() << "s" << std::endl;
 
 			std::this_thread::sleep_for(diffToFrameEnd);
 

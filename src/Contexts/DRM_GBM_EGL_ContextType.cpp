@@ -1,6 +1,16 @@
 #include "DRM_GBM_EGL_ContextType.hpp"
 
 
+#include <xf86drm.h>
+#include <xf86drmMode.h>
+#include <gbm.h>
+//#include <GL/glew.h>
+#include <EGL/egl.h>
+//#include <GL/gl.h>
+#include <GLES2/gl2.h>
+
+
+
 
 #define EXIT(msg) { fputs (msg, stderr); exit (EXIT_FAILURE); }
 
@@ -158,8 +168,8 @@ namespace asapgl
 
 
 
-		if(device == 0)
-			log::error << "Can not open dri/card0, is Full KMS anabled on RPI?" << std::endl;
+		//if(device == 0)
+		//	log::error << "Can not open dri/card0, is Full KMS anabled on RPI?" << std::endl;
 
 
 		find_display_configuration ();

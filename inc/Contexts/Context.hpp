@@ -14,14 +14,14 @@ namespace asapgl
 		ContextBase* 		context;
 		std::chrono::duration<double> 
 							m_frameDelay;
-		GLboolean			m_isRunning;
+		bool				m_isRunning;
 
 	public:
 		Context();
 		~Context();
 
 
-		void SetFPS(GLfloat FPS);
+		void SetFPS(float FPS);
 		void CleanUp();
 
 		void MainLoop();

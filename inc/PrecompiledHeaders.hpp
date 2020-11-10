@@ -6,13 +6,6 @@
 
 
 
-#include <xf86drm.h>
-#include <xf86drmMode.h>
-#include <gbm.h>
-//#include <GL/glew.h>
-#include <EGL/egl.h>
-//#include <GL/gl.h>
-#include <GLES2/gl2.h>
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -33,6 +26,6 @@
 #include <vector>
 
 
-#include <BFutils/bfu.hpp>
+//#include <BFutils/bfu.hpp>
 
 #endif
