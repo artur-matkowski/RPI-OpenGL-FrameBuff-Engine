@@ -93,11 +93,7 @@ static void setup_opengl () {
     // EGL_STENCIL_SIZE, 1,
 
     EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT, EGL_NONE};
-    /*{
-		EGL_RED_SIZE, 8,
-		EGL_GREEN_SIZE, 8,
-		EGL_BLUE_SIZE, 8,
-	EGL_NONE};*/
+    
 	EGLint contextAttribs[] = {EGL_CONTEXT_CLIENT_VERSION, 2,
             EGL_NONE};
 	EGLConfig config;

@@ -14,70 +14,55 @@
 
 namespace asapgl
 {
-	struct Xlib_EGL_ContextType::InternalData
+	struct Xlib_EGL_ContextType::XlibData
 	{
-		int i;
+		Display *x11;
 	};
-}
 
-struct display {
-	Display *x11;
-	EGLDisplay egl;
-};
+	struct Xlib_EGL_ContextType::EGLData
+	{
+		EGLDisplay egl;
 
-static struct display *display_open(void)
-{
-	struct display *display;
-	EGLint major, minor;
 
-	display = calloc(1, sizeof(*display));
-	if (!display)
-		return NULL;
+		EGLContext context;
+		EGLSurface surface;
+		unsigned int width;
+		unsigned int height;
 
-	display->x11 = XOpenDisplay(NULL);
-	if (!display->x11) {
-		free(display);
-		return NULL;
+
+		Display *x11;
+	};
+
+
+	bool Xlib_EGL_ContextType::DisplayOpen(void)
+	{
+		EGLint major, minor;
+
+		m_XlibData->x11 = XOpenDisplay(NULL);
+		if (!m_XlibData->x11) {
+			return false;
+		}
+
+		m_eglData->egl = eglGetDisplay(m_XlibData->x11);
+		if (m_eglData->egl == EGL_NO_DISPLAY) {
+			XCloseDisplay(m_XlibData->x11);
+			return false;
+		}
+
+		if (!eglInitialize(m_eglData->egl, &major, &minor)) {
+			XCloseDisplay(m_XlibData->x11);
+			return false;
+		}
+
+		printf("EGL: %d.%d\n", major, minor);
+
+		return true;
 	}
 
-	display->egl = eglGetDisplay(display->x11);
-	if (display->egl == EGL_NO_DISPLAY) {
-		XCloseDisplay(display->x11);
-		free(display);
-		return NULL;
-	}
 
-	if (!eglInitialize(display->egl, &major, &minor)) {
-		XCloseDisplay(display->x11);
-		free(display);
-		return NULL;
-	}
 
-	printf("EGL: %d.%d\n", major, minor);
 
-	return display;
-}
-
-static void display_close(struct display *display)
-{
-	if (!display)
-		return;
-
-	eglTerminate(display->egl);
-	XCloseDisplay(display->x11);
-	free(display);
-}
-
-struct window {
-	struct display *display;
-	Window x11;
-	EGLContext context;
-	EGLSurface surface;
-	unsigned int width;
-	unsigned int height;
-};
-
-static struct window *window_create(struct display *display, const char *name,
+bool Xlib_EGL_ContextType::window_create(const char *name,
 				    unsigned int x, unsigned int y,
 				    unsigned int width, unsigned int height)
 {
@@ -94,7 +79,6 @@ static struct window *window_create(struct display *display, const char *name,
 		EGL_NONE
 	};
 	XSetWindowAttributes attr;
-	struct window *window;
 	unsigned long mask;
 	XVisualInfo visual;
 	EGLint num_configs;
@@ -107,46 +91,37 @@ static struct window *window_create(struct display *display, const char *name,
 	int screen;
 	EGLint vid;
 
-	window = calloc(1, sizeof(*window));
-	if (!window)
-		return NULL;
 
-	window->display = display;
+	screen = DefaultScreen(m_XlibData->x11);
+	root = RootWindow(m_XlibData->x11, screen);
 
-	screen = DefaultScreen(display->x11);
-	root = RootWindow(display->x11, screen);
-
-	if (!eglChooseConfig(display->egl, attribs, &config, 1, &num_configs)) {
-		free(window);
-		return NULL;
+	if (!eglChooseConfig(m_eglData->egl, attribs, &config, 1, &num_configs)) {
+		return false;
 	}
 
-	if (!eglGetConfigAttrib(display->egl, config, EGL_NATIVE_VISUAL_ID, &vid)) {
-		free(window);
-		return NULL;
+	if (!eglGetConfigAttrib(m_eglData->egl, config, EGL_NATIVE_VISUAL_ID, &vid)) {
+		return false;
 	}
 
 	visual.visualid = vid;
 
-	_INFO = XGetVisualInfo(display->x11, VisualIDMask, &visual, &num_visuals);
+	_INFO = XGetVisualInfo(m_XlibData->x11, VisualIDMask, &visual, &num_visuals);
 	if (!_INFO) {
-		free(window);
-		return NULL;
+		return false;
 	}
 
 	memset(&attr, 0, sizeof(attr));
 	attr.background_pixel = 0;
 	attr.border_pixel = 0;
-	attr.colormap = XCreateColormap(display->x11, root, _INFO->visual, AllocNone);
+	attr.colormap = XCreateColormap(m_XlibData->x11, root, _INFO->visual, AllocNone);
 	attr.event_mask = StructureNotifyMask | ExposureMask | KeyPressMask;
 	mask = CWBackPixel | CWBorderPixel | CWColormap | CWEventMask;
 
-	window->x11 = XCreateWindow(display->x11, root, 0, 0, width, height,
+	m_eglData->x11 = XCreateWindow(m_XlibData->x11, root, 0, 0, width, height,
 				    0, _INFO->depth, InputOutput, _INFO->visual,
 				    mask, &attr);
-	if (!window->x11) {
-		free(window);
-		return NULL;
+	if (!m_eglData->x11) {
+		return false;
 	}
 
 	memset(&hints, 0, sizeof(hints));
@@ -156,98 +131,86 @@ static struct window *window_create(struct display *display, const char *name,
 	hints.height = height;
 	hints.flags = USSize | USPosition;
 
-	XSetNormalHints(display->x11, window->x11, &hints);
-	XSetStandardProperties(display->x11, window->x11, name, name, None,
+	XSetNormalHints(m_XlibData->x11, m_eglData->x11, &hints);
+	XSetStandardProperties(m_XlibData->x11, m_eglData->x11, name, name, None,
 			       NULL, 0, &hints);
 
 	eglBindAPI(EGL_OPENGL_ES_API);
 
-	window->context = eglCreateContext(display->egl, config,
+	m_eglData->context = eglCreateContext(m_eglData->egl, config,
 					   EGL_NO_CONTEXT, attrs);
-	if (window->context == EGL_NO_CONTEXT) {
-		free(window);
-		return NULL;
+	if (m_eglData->context == EGL_NO_CONTEXT) {
+		return false;
 	}
 
-	eglQueryContext(display->egl, window->context, EGL_CONTEXT_CLIENT_VERSION, &version);
+	eglQueryContext(m_eglData->egl, m_eglData->context, EGL_CONTEXT_CLIENT_VERSION, &version);
 	printf("OpenGL ES: %d\n", version);
 
-	window->surface = eglCreateWindowSurface(display->egl, config,
-						 window->x11, NULL);
-	if (window->surface == EGL_NO_SURFACE) {
-		free(window);
-		return NULL;
+	m_eglData->surface = eglCreateWindowSurface(m_eglData->egl, config,
+						 m_eglData->x11, NULL);
+	if (m_eglData->surface == EGL_NO_SURFACE) {
+		return false;
 	}
 
 	XFree(_INFO);
 
-	window->width = width;
-	window->height = height;
+	m_eglData->width = width;
+	m_eglData->height = height;
 
-	return window;
+	return true;
 }
 
-static void window_close(struct window *window)
+
+void Xlib_EGL_ContextType::window_show()
 {
-	if (!window)
-		return;
+	XMapWindow(m_XlibData->x11, m_eglData->x11);
 
-	eglDestroySurface(window->display->egl, window->surface);
-	eglDestroyContext(window->display->egl, window->context);
-	XDestroyWindow(window->display->x11, window->x11);
-
-	free(window);
-}
-
-static void window_show(struct window *window)
-{
-	XMapWindow(window->display->x11, window->x11);
-
-	if (!eglMakeCurrent(window->display->egl, window->surface, window->surface, window->context))
+	if (!eglMakeCurrent(m_eglData->egl, m_eglData->surface, m_eglData->surface, m_eglData->context))
 		fprintf(stderr, "eglMakeCurrent():\n");
 
-	XFlush(window->display->x11);
+	XFlush(m_XlibData->x11);
 }
 
 
-
-
-namespace asapgl
-{
-	struct display *display;
-	struct window *window;
-
 	Xlib_EGL_ContextType::Xlib_EGL_ContextType(Xlib_EGL_ContextType::Args &f)
+		:m_XlibData(new struct XlibData)
+		,m_eglData(new struct EGLData)
 	{
 		const unsigned int width = 640;
 		const unsigned int height = 480;
 
-		display = display_open();
+		DisplayOpen();
+		/*
 		if (!display) {
 			fprintf(stderr, "failed to open display\n");
 			return;
-		}
+		}*/
 
-		window = window_create(display, "argv[0]", 0, 0, width, height);
-		if (!window) {
+		window_create( "argv[0]", 0, 0, width, height);
+		/*if (!window) {
 			fprintf(stderr, "failed to create window\n");
 			return;
-		}
+		}*/
 
-		window_show(window);
+		window_show();
 
 
 	}
 	
 	Xlib_EGL_ContextType::~Xlib_EGL_ContextType()
 	{
-		window_close(window);
-		display_close(display);
+		eglDestroySurface(m_eglData->egl, m_eglData->surface);
+		eglDestroyContext(m_eglData->egl, m_eglData->context);
+		XDestroyWindow(m_XlibData->x11, m_eglData->x11);
+
+
+		eglTerminate(m_eglData->egl);
+		XCloseDisplay(m_XlibData->x11);
 	}
 
 	void Xlib_EGL_ContextType::SwapBuffer()
 	{
-		eglSwapBuffers(window->display->egl, window->surface);
+		eglSwapBuffers(m_eglData->egl, m_eglData->surface);
 		glFlush();
 	}
 }
