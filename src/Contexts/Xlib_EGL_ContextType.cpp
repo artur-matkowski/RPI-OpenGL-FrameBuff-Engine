@@ -30,7 +30,7 @@ namespace asapgl
 		unsigned int height;
 
 
-		Display *x11;
+		long unsigned int x11;
 	};
 
 

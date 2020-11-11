@@ -1,7 +1,7 @@
 OUT		  	= asapi
 VERSION	 	= .1.0.0
 
-CC 		  	= g++ -std=c++11 -fpermissive -I/usr/include/libdrm 
+CC 		  	= g++ -std=c++11 -I/usr/include/libdrm 
 
 CPPFLAGS 	= -I/usr/include/freetype2 -I/usr/include/freetype2/freetype
 

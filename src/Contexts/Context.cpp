@@ -185,7 +185,7 @@ void render()
 
 	bool Context::InitEGL()
 	{
-
+		return false;
 	}
 
 	void Context::MainLoop()
