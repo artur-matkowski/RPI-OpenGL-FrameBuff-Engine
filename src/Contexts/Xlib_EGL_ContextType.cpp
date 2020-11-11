@@ -172,7 +172,7 @@ void Xlib_EGL_ContextType::window_show()
 }
 
 
-	Xlib_EGL_ContextType::Xlib_EGL_ContextType(Xlib_EGL_ContextType::Args &f)
+	Xlib_EGL_ContextType::Xlib_EGL_ContextType(const int* attributes, const int* contextAttribs, const int argc, const char** argv)
 		:m_XlibData(new struct XlibData)
 		,m_eglData(new struct EGLData)
 	{

@@ -15,16 +15,36 @@
 namespace asapgl
 {
 	static const GLfloat vertices[] = {
-    -1.0f,
-    -1.0f,
-    0.0f,
-    1.0f,
-    -1.0f,
-    0.0f,
-    0.0f,
-    1.0f,
-    0.0f,
-};
+	    -1.0f,
+	    -1.0f,
+	    0.0f,
+	    1.0f,
+	    -1.0f,
+	    0.0f,
+	    0.0f,
+	    1.0f,
+	    0.0f,
+	};
+
+	const EGLint attributes[] = {
+	    EGL_BLUE_SIZE, 8, 
+	    EGL_GREEN_SIZE, 8,
+	    EGL_RED_SIZE, 8,
+
+	    // Uncomment the following to enable MSAA
+	    // EGL_SAMPLE_BUFFERS, 1, // <-- Must be set to 1 to enable multisampling!
+	    // EGL_SAMPLES, 4, // <-- Number of samples
+
+	    // Uncomment the following to enable stencil buffer
+	    // EGL_STENCIL_SIZE, 1,
+
+	    EGL_RENDERABLE_TYPE, 
+	    EGL_OPENGL_ES2_BIT, 
+	    EGL_NONE};
+	    
+	const EGLint contextAttribs[] = {
+		EGL_CONTEXT_CLIENT_VERSION, 2,
+        EGL_NONE};
 
 
 static void draw()
@@ -183,10 +203,42 @@ void render()
 	}
 
 
-	bool Context::InitEGL()
+
+	void Context::initXlib(const int argc, const char** argv)
 	{
-		return false;
+		if(context==0)
+		{
+			context = new Xlib_EGL_ContextType( attributes, contextAttribs, argc, argv );
+
+			//log::info << "GL initialized with version: " << glGetString(GL_VERSION) << std::endl;
+			//log::info << "GL vendor: " << glGetString(GL_VENDOR) << std::endl;
+			//log::info << "GL renderer: " << glGetString(GL_RENDERER) << std::endl;
+			//log::info << "GL shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+		}
+		else
+		{
+			//log::warning << "Context already initialized, skipping" << std::endl;
+		}
 	}
+
+	void Context::initDRM(const int argc, const char** argv)
+	{
+		if(context==0)
+		{
+			context = new DRM_GBM_EGL_ContextType( attributes, contextAttribs, argc, argv );
+
+			//log::info << "GL initialized with version: " << glGetString(GL_VERSION) << std::endl;
+			//log::info << "GL vendor: " << glGetString(GL_VENDOR) << std::endl;
+			//log::info << "GL renderer: " << glGetString(GL_RENDERER) << std::endl;
+			//log::info << "GL shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+		}
+		else
+		{
+			//log::warning << "Context already initialized, skipping" << std::endl;
+		}
+	}
+
+
 
 	void Context::MainLoop()
 	{

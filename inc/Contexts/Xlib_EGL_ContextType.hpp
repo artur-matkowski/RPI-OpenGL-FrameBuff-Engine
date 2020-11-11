@@ -21,11 +21,8 @@ namespace asapgl
 		void window_show();
 
 	public:
-		class Args: public object{
-		public:
-		};
 
-		Xlib_EGL_ContextType(Xlib_EGL_ContextType::Args &f);
+		Xlib_EGL_ContextType(const int* attributes, const int* contextAttribs, const int argc, const char** argv);
 		~Xlib_EGL_ContextType();
 
 		void SwapBuffer();

@@ -153,7 +153,7 @@ static void clean_up () {
 namespace asapgl
 {
 
-	DRM_GBM_EGL_ContextType::DRM_GBM_EGL_ContextType(DRM_GBM_EGL_ContextType::Args &f)
+	DRM_GBM_EGL_ContextType::DRM_GBM_EGL_ContextType(const int* attributes, const int* contextAttribs, const int argc, const char** argv)
 	{
 
 		device = open ("/dev/dri/card0", O_RDWR|O_CLOEXEC);

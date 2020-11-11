@@ -8,11 +8,8 @@ namespace asapgl
 	class DRM_GBM_EGL_ContextType: public ContextBase
 	{
 	public:
-		class Args: public object{
-		public:
-		};
 
-		DRM_GBM_EGL_ContextType(DRM_GBM_EGL_ContextType::Args &f);
+		DRM_GBM_EGL_ContextType(const int* attributes, const int* contextAttribs, const int argc, const char** argv);
 		~DRM_GBM_EGL_ContextType();
 
 		void SwapBuffer();
