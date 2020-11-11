@@ -1,4 +1,4 @@
-OUT		  	= ogle
+OUT		  	= asapi
 VERSION	 	= .1.0.0
 
 CC 		  	= g++ -std=c++11 -fpermissive -I/usr/include/libdrm 
@@ -15,7 +15,7 @@ SOURCES		= $(shell find $(SRCDIR) -type f | grep cpp | cut -f 1 -d '.')
 DIRSTRUCTURE = $(shell find $(INCDIR) -type d)
 INCSTRUCTURE = $(patsubst %, -I%, $(DIRSTRUCTURE))
 
-DEPGL 		=  -lpng -lGL -lEGL -lGLESv2  -ldrm -lgbm -lBFutils  -lX11 -lXext
+DEPGL 		= -lGL -lEGL -lGLESv2  -ldrm -lgbm -lX11 -lXext
 #DEPGL 		=  -lpng -lbrcmEGL -lbrcmGLESv2  -L/opt/vc/lib
 
 OBJECTS 	= $(SOURCES:%.cpp=$(OBJDIR)%.o)
@@ -64,12 +64,12 @@ release: $(OUT)
 
 
 $(OUT): pch $(SOURCES)
-	$(CC) -shared -o $(BUILDPATH)$@.so $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* $(DEPGL) -lturbojpeg -lpthread -lfreetype -Iglm 
-	$(CC) -o $(BUILDPATH)$@ $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* main.cpp $(DEPGL) -lturbojpeg -lpthread -lfreetype -Iglm 
+	$(CC) -shared -o $(BUILDPATH)$@.so $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* $(DEPGL) 
+	$(CC) -o $(BUILDPATH)$@ $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* main.cpp $(DEPGL) 
 
 
 $(SOURCES): pch $(INCDIR)$(@.hpp) $(SRCDIR)$@
-	$(CC) -c $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(DEPGL) $(@).cpp -o $(OBJDIR)$(notdir $@).o $(DEPGL) -lpthread -lfreetype -Iglm -fpic
+	$(CC) -c $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS) $(@).cpp -o $(OBJDIR)$(notdir $@).o -fPIC
 	
 
 pch: 

@@ -1,5 +1,7 @@
 #include "Context.hpp"
 
+#include <thread>
+
 #include <xf86drm.h>
 #include <xf86drmMode.h>
 #include <gbm.h>
@@ -24,13 +26,6 @@ namespace asapgl
     0.0f,
 };
 
-// The following are GLSL shaders for rendering a triangle on the screen
-#define STRINGIFY(x) #x
-static const char *vertexShaderCode = STRINGIFY(
-    attribute vec3 pos; void main() { gl_Position = vec4(pos, 1.0); });
-
-static const char *fragmentShaderCode =
-    STRINGIFY(uniform vec4 color; void main() { gl_FragColor = vec4(color); });
 
 static void draw()
 {
@@ -84,40 +79,40 @@ static void draw()
 	glBindAttribLocation(program, 0, "position");
 	glBindAttribLocation(program, 1, "color");
 
-	printf("=== Calling glLinkProgram()\n");
+
 	glLinkProgram(program);
 	glFlush();
-	printf("=== Calling glUseProgram()\n");
+
 	glUseProgram(program);
 	glFlush();
-	printf("=== calling glViewport()\n");
+
 	glViewport(0, 0, 1024, 600);
 	glFlush();
-	printf("=== calling glClearColor()\n");
+
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glFlush();
-	printf("=== calling glClear()\n");
+
 	glClear(GL_COLOR_BUFFER_BIT);
 	glFlush();
 
-	printf("=== Calling glVertexAttribPointer(0)\n");
+
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vertices);
 	glFlush();
-	printf("=== Calling glEnableVertexAttribArray(0)\n");
+
 	glEnableVertexAttribArray(0);
 	glFlush();
-	printf("=== Calling glVertexAttribPointer(1)\n");
+
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, colors);
 	glFlush();
-	printf("=== Calling glEnableVertexAttribArray(1)\n");
+
 	glEnableVertexAttribArray(1);
 	glFlush();
-	printf("=== Calling glDrawArrays(GL_TRIANGLES, 0, 3)\n");
+
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 	glFlush();
-	printf("=== calling eglSwapBuffers()\n");
-}
 
+}
+/*
 void render()
 {
 
@@ -160,11 +155,10 @@ void render()
     // Render a triangle consisting of 3 vertices:
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }
-
+*/
 	Context::Context()
 		:context(0)
 		,m_frameDelay(1.0/60.0)
-		//,m_isRunning(true)
 	{
 
 		m_isRunning = true;
@@ -188,6 +182,12 @@ void render()
 		m_frameDelay = std::chrono::duration<double> (1.0/FPS);
 	}
 
+
+	bool Context::InitEGL()
+	{
+
+	}
+
 	void Context::MainLoop()
 	{
 		auto frameEnd =  std::chrono::system_clock::now();
@@ -209,18 +209,8 @@ void render()
 				rotation += frameDeltaTime.count();
 				glClearColor(1.0,0.0, 0.0, 0.0);
 				glClear(GL_COLOR_BUFFER_BIT);
- 
- /*
-				glLoadIdentity();
-				glColor3f(0.5, 1.0, 0.0); 
-				glRotatef(rotation, 0.0, 0.0, 1.0);
-				glBegin(GL_TRIANGLES);
-				//glBegin(GL_LINES);
-					glVertex3f(-1, -.5, 0);
-					glVertex3f(0, 1, 0);
-					glVertex3f(1, 0, 0);
-				glEnd();
-*/
+
+
 				//render();
 				draw();
 

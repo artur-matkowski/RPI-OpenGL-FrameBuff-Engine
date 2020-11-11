@@ -1,5 +1,5 @@
 #include "DRM_GBM_EGL_ContextType.hpp"
-
+#include <cstdio>
 
 #include <xf86drm.h>
 #include <xf86drmMode.h>
@@ -52,7 +52,7 @@ static void find_display_configuration () {
 	connector_id = connector->connector_id;
 	// save the first mode
 	mode_info = connector->modes[0];
-	printf ("resolution: %ix%i\n", mode_info.hdisplay, mode_info.vdisplay);
+
 	// find an encoder
 	drmModeEncoder *encoder = find_encoder (resources, connector);
 	if (!encoder) EXIT ("no encoder found\n");
@@ -73,19 +73,16 @@ static EGLSurface egl_surface;
 
 static void setup_opengl () {
 
-	std::cout<<__FILE__<<":"<<__LINE__<<std::endl<<std::flush;
 
 	gbm_device = gbm_create_device (device);
-	std::cout<<__FILE__<<":"<<__LINE__<<std::endl<<std::flush;
 	display = eglGetDisplay (gbm_device);
-	std::cout<<__FILE__<<":"<<__LINE__<<std::endl<<std::flush;
 	eglInitialize (display, NULL, NULL);
 	
-	std::cout<<__FILE__<<":"<<__LINE__<<std::endl<<std::flush;
 	// create an OpenGL context
 	//eglBindAPI (EGL_OPENGL_API);
 	EGLint attributes[] = {
-    EGL_BLUE_SIZE, 8, EGL_GREEN_SIZE, 8,
+    EGL_BLUE_SIZE, 8, 
+    EGL_GREEN_SIZE, 8,
     EGL_RED_SIZE, 8,
 
     // Uncomment the following to enable MSAA
@@ -105,13 +102,12 @@ static void setup_opengl () {
             EGL_NONE};
 	EGLConfig config;
 	EGLint num_config;
-	std::cout<<__FILE__<<":"<<__LINE__<<std::endl<<std::flush;
+
 	eglChooseConfig (display, attributes, &config, 1, &num_config);
 	eglBindAPI(EGL_OPENGL_ES_API);
 	context = eglCreateContext (display, config, EGL_NO_CONTEXT, contextAttribs);
 	//context = eglCreateContext (display, config, EGL_NO_CONTEXT, 0);
 	
-	std::cout<<__FILE__<<":"<<__LINE__<<std::endl<<std::flush;
 	// create the GBM and EGL surface
 	gbm_surface = gbm_surface_create (gbm_device, mode_info.hdisplay, mode_info.vdisplay, GBM_BO_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT|GBM_BO_USE_RENDERING);
 	egl_surface = eglCreateWindowSurface (display, config, gbm_surface, NULL);

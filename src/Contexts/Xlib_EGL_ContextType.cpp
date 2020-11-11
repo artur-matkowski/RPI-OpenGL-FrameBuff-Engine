@@ -12,6 +12,13 @@
 
 #include "Xlib_EGL_ContextType.hpp"
 
+namespace asapgl
+{
+	struct Xlib_EGL_ContextType::InternalData
+	{
+		int i;
+	};
+}
 
 struct display {
 	Display *x11;
@@ -75,10 +82,10 @@ static struct window *window_create(struct display *display, const char *name,
 				    unsigned int width, unsigned int height)
 {
 	static const EGLint attribs[] = {
-		EGL_RED_SIZE, 1,
-		EGL_GREEN_SIZE, 1,
-		EGL_BLUE_SIZE, 1,
-		EGL_DEPTH_SIZE, 1,
+		EGL_RED_SIZE, 8,
+		EGL_GREEN_SIZE, 8,
+		EGL_BLUE_SIZE, 8,
+		//EGL_DEPTH_SIZE, 1,
 		EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
 		EGL_NONE
 	};

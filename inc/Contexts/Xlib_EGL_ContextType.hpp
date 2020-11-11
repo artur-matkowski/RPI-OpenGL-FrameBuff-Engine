@@ -5,8 +5,12 @@
 namespace asapgl
 {
 
+
 	class Xlib_EGL_ContextType: public ContextBase
 	{
+		struct InternalData;	
+		struct InternalData *m_data;
+
 	public:
 		class Args: public object{
 		public:

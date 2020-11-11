@@ -16,6 +16,8 @@ namespace asapgl
 							m_frameDelay;
 		bool				m_isRunning;
 
+		bool InitEGL();
+
 	public:
 		Context();
 		~Context();
