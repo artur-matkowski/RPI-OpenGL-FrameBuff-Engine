@@ -4,11 +4,10 @@
 #include <xf86drm.h>
 #include <xf86drmMode.h>
 #include <gbm.h>
-//#include <GL/glew.h>
 #include <EGL/egl.h>
-//#include <GL/gl.h>
 #include <GLES2/gl2.h>
 
+#include <bitforge/utils/bfu.hpp>
 
 
 
@@ -73,10 +72,14 @@ static EGLSurface egl_surface;
 
 static void setup_opengl () {
 
+	EGLint major, minor;
+	EGLint version;
 
 	gbm_device = gbm_create_device (device);
 	display = eglGetDisplay (gbm_device);
-	eglInitialize (display, NULL, NULL);
+	eglInitialize (display, &major, &minor);
+
+	log::info << "EGL: " << major << "." << minor << std::endl;
 	
 	// create an OpenGL context
 	//eglBindAPI (EGL_OPENGL_API);
@@ -103,6 +106,10 @@ static void setup_opengl () {
 	eglBindAPI(EGL_OPENGL_ES_API);
 	context = eglCreateContext (display, config, EGL_NO_CONTEXT, contextAttribs);
 	//context = eglCreateContext (display, config, EGL_NO_CONTEXT, 0);
+
+
+	eglQueryContext(display, context, EGL_CONTEXT_CLIENT_VERSION, &version);
+	log::info << "OpenGL ES: " << version << std::endl;
 	
 	// create the GBM and EGL surface
 	gbm_surface = gbm_surface_create (gbm_device, mode_info.hdisplay, mode_info.vdisplay, GBM_BO_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT|GBM_BO_USE_RENDERING);

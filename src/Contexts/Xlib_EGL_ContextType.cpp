@@ -1,4 +1,4 @@
-
+#include "Xlib_EGL_ContextType.hpp"
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -10,7 +10,8 @@
 #include <EGL/egl.h>
 #include <GLES2/gl2.h>
 
-#include "Xlib_EGL_ContextType.hpp"
+#include <bitforge/utils/bfu.hpp>
+
 
 namespace asapgl
 {
@@ -54,7 +55,9 @@ namespace asapgl
 			return false;
 		}
 
-		printf("EGL: %d.%d\n", major, minor);
+		log::info << "EGL: " << major << "." << minor << std::endl;
+
+		//printf("EGL: %d.%d\n", major, minor);
 
 		return true;
 	}
@@ -144,7 +147,9 @@ bool Xlib_EGL_ContextType::window_create(const char *name,
 	}
 
 	eglQueryContext(m_eglData->egl, m_eglData->context, EGL_CONTEXT_CLIENT_VERSION, &version);
-	printf("OpenGL ES: %d\n", version);
+	log::info << "OpenGL ES: " << version << std::endl;
+	
+	//printf("OpenGL ES: %d\n", version);
 
 	m_eglData->surface = eglCreateWindowSurface(m_eglData->egl, config,
 						 m_eglData->x11, NULL);

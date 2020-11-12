@@ -10,7 +10,7 @@
 //#include <GL/gl.h>
 #include <GLES2/gl2.h>
 
-
+#include <bitforge/utils/bfu.hpp>
 
 namespace asapgl
 {
@@ -210,14 +210,14 @@ void render()
 		{
 			context = new Xlib_EGL_ContextType( attributes, contextAttribs, argc, argv );
 
-			//log::info << "GL initialized with version: " << glGetString(GL_VERSION) << std::endl;
-			//log::info << "GL vendor: " << glGetString(GL_VENDOR) << std::endl;
-			//log::info << "GL renderer: " << glGetString(GL_RENDERER) << std::endl;
-			//log::info << "GL shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+			log::info << "GL initialized with version: " << glGetString(GL_VERSION) << std::endl;
+			log::info << "GL vendor: " << glGetString(GL_VENDOR) << std::endl;
+			log::info << "GL renderer: " << glGetString(GL_RENDERER) << std::endl;
+			log::info << "GL shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 		}
 		else
 		{
-			//log::warning << "Context already initialized, skipping" << std::endl;
+			log::warning << "Context already initialized, skipping" << std::endl;
 		}
 	}
 
@@ -227,14 +227,14 @@ void render()
 		{
 			context = new DRM_GBM_EGL_ContextType( attributes, contextAttribs, argc, argv );
 
-			//log::info << "GL initialized with version: " << glGetString(GL_VERSION) << std::endl;
-			//log::info << "GL vendor: " << glGetString(GL_VENDOR) << std::endl;
-			//log::info << "GL renderer: " << glGetString(GL_RENDERER) << std::endl;
-			//log::info << "GL shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+			log::info << "GL initialized with version: " << glGetString(GL_VERSION) << std::endl;
+			log::info << "GL vendor: " << glGetString(GL_VENDOR) << std::endl;
+			log::info << "GL renderer: " << glGetString(GL_RENDERER) << std::endl;
+			log::info << "GL shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 		}
 		else
 		{
-			//log::warning << "Context already initialized, skipping" << std::endl;
+			log::warning << "Context already initialized, skipping" << std::endl;
 		}
 	}
 
