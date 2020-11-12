@@ -7,6 +7,9 @@
 #include <EGL/egl.h>
 #include <GLES2/gl2.h>
 
+#include <fcntl.h>    /* For O_RDWR */
+#include <unistd.h>   /* For open(), creat() */
+
 #include <bitforge/utils/bfu.hpp>
 
 

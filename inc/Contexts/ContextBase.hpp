@@ -1,6 +1,5 @@
 #ifndef _H_CONTEXTBASE
 #define _H_CONTEXTBASE
-#include "PrecompiledHeaders.hpp"
 #include "object.hpp"
 
 namespace asapgl

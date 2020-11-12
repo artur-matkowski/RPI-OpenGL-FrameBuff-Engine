@@ -1,5 +1,8 @@
 #include "Context.hpp"
 #include "Systems.hpp"
+#include <cstdio>
+#include <cstdlib>
+#include <csignal>
 
 asapgl::Context c;
 

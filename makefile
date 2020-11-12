@@ -63,17 +63,14 @@ release: $(OUT)
 #	ar rcs build/rel/lib/lib$(OUT).a build/rel/obj/*.o
 
 
-$(OUT): pch $(SOURCES)
+$(OUT): $(SOURCES)
 	$(CC) -shared -o $(BUILDPATH)$@.so $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* $(DEPGL) 
 	$(CC) -o $(BUILDPATH)$@ $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* main.cpp $(DEPGL) 
 
 
-$(SOURCES): pch $(INCDIR)$(@.hpp) $(SRCDIR)$@
+$(SOURCES): $(INCDIR)$(@.hpp) $(SRCDIR)$@
 	$(CC) -c $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS) $(@).cpp -o $(OBJDIR)$(notdir $@).o -fPIC
 	
-
-pch: 
-	$(CC) inc/PrecompiledHeaders.hpp
 
 test:
 	@$(MAKE) ${OUT} -B
