@@ -18,6 +18,7 @@ namespace asapgl
 	struct Xlib_EGL_ContextType::XlibData
 	{
 		Display *x11;
+		Window root;
 	};
 
 	struct Xlib_EGL_ContextType::EGLData
@@ -79,13 +80,12 @@ bool Xlib_EGL_ContextType::window_create(const char *name,
 	EGLConfig config;
 	int num_visuals;
 	EGLint version;
-	Window root;
 	int screen;
 	EGLint vid;
 
 
 	screen = DefaultScreen(m_XlibData->x11);
-	root = RootWindow(m_XlibData->x11, screen);
+	m_XlibData->root = RootWindow(m_XlibData->x11, screen);
 
 	if (!eglChooseConfig(m_eglData->egl, attributes, &config, 1, &num_configs)) {
 		return false;
@@ -105,11 +105,11 @@ bool Xlib_EGL_ContextType::window_create(const char *name,
 	memset(&attr, 0, sizeof(attr));
 	attr.background_pixel = 0;
 	attr.border_pixel = 0;
-	attr.colormap = XCreateColormap(m_XlibData->x11, root, _INFO->visual, AllocNone);
+	attr.colormap = XCreateColormap(m_XlibData->x11, m_XlibData->root, _INFO->visual, AllocNone);
 	attr.event_mask = StructureNotifyMask | ExposureMask | KeyPressMask;
 	mask = CWBackPixel | CWBorderPixel | CWColormap | CWEventMask;
 
-	m_eglData->x11 = XCreateWindow(m_XlibData->x11, root, 0, 0, width, height,
+	m_eglData->x11 = XCreateWindow(m_XlibData->x11, m_XlibData->root, 0, 0, width, height,
 				    0, _INFO->depth, InputOutput, _INFO->visual,
 				    mask, &attr);
 	if (!m_eglData->x11) {
@@ -170,8 +170,8 @@ void Xlib_EGL_ContextType::window_show()
 		:m_XlibData(new struct XlibData)
 		,m_eglData(new struct EGLData)
 	{
-		const unsigned int width = 640;
-		const unsigned int height = 480;
+		const unsigned int width = 1024;
+		const unsigned int height = 600;
 
 		DisplayOpen();
 		/*
@@ -206,5 +206,15 @@ void Xlib_EGL_ContextType::window_show()
 	{
 		eglSwapBuffers(m_eglData->egl, m_eglData->surface);
 		glFlush();
+	}
+
+	void Xlib_EGL_ContextType::GetResolution(int & width, int & height)
+	{
+		XWindowAttributes attr;
+
+		XGetWindowAttributes(m_XlibData->x11, m_eglData->x11, &attr);
+
+		width = attr.width;
+		height = attr.height;
 	}
 }

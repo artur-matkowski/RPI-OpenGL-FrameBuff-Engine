@@ -170,4 +170,11 @@ namespace asapgl
 	{
 		swap_buffers();
 	}
+
+
+	void DRM_GBM_EGL_ContextType::GetResolution(int & width, int & height)
+	{
+		width = mode_info.hdisplay;
+		height = mode_info.vdisplay;
+	}
 }

@@ -27,6 +27,7 @@ namespace asapgl
 		~Xlib_EGL_ContextType();
 
 		void SwapBuffer();
+		void GetResolution(int & width, int & height);
 	};
 
 }

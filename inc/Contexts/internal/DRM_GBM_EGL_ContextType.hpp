@@ -13,6 +13,7 @@ namespace asapgl
 		~DRM_GBM_EGL_ContextType();
 
 		void SwapBuffer();
+		void GetResolution(int & width, int & height);
 	};
 
 }

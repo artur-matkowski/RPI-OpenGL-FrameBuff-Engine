@@ -45,7 +45,7 @@ namespace asapgl
         EGL_NONE};
 
 
-static void draw()
+static void draw(const int & width, const int & height)
 {
 	static const char *vertex_source =
 		"attribute vec4 position;\n"
@@ -104,7 +104,7 @@ static void draw()
 	glUseProgram(program);
 	glFlush();
 
-	glViewport(0, 0, 1024, 600);
+	glViewport(0, 0, width, height);
 	glFlush();
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -243,6 +243,10 @@ void render()
 		auto frameEnd =  std::chrono::system_clock::now();
 		auto frameStart = std::chrono::high_resolution_clock::now();
 
+		context->GetResolution(m_width, m_height);
+
+		log::debug << "resolution: " << m_width << "x" << m_height << std::endl;
+
 
 		std::chrono::duration<double> elapsed;
 
@@ -262,7 +266,7 @@ void render()
 
 
 				//render();
-				draw();
+				draw(m_width, m_height);
 
 				context->SwapBuffer();
 			}

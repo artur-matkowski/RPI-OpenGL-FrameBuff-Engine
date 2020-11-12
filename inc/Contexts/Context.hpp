@@ -16,6 +16,9 @@ namespace asapgl
 							m_frameDelay;
 		bool				m_isRunning;
 
+		int 				m_width;
+		int 				m_height;
+
 
 	public:
 		Context();
