@@ -70,10 +70,13 @@ static EGLContext context;
 static struct gbm_surface *gbm_surface;
 static EGLSurface egl_surface;
 
-static void setup_opengl () {
-
+static void setup_opengl (const int* attributes, const int* contextAttribs) 
+{
 	EGLint major, minor;
 	EGLint version;
+	EGLConfig config;
+	EGLint num_config;
+
 
 	gbm_device = gbm_create_device (device);
 	display = eglGetDisplay (gbm_device);
@@ -82,31 +85,9 @@ static void setup_opengl () {
 	log::info << "EGL: " << major << "." << minor << std::endl;
 	
 	// create an OpenGL context
-	//eglBindAPI (EGL_OPENGL_API);
-	EGLint attributes[] = {
-    EGL_BLUE_SIZE, 8, 
-    EGL_GREEN_SIZE, 8,
-    EGL_RED_SIZE, 8,
-
-    // Uncomment the following to enable MSAA
-    // EGL_SAMPLE_BUFFERS, 1, // <-- Must be set to 1 to enable multisampling!
-    // EGL_SAMPLES, 4, // <-- Number of samples
-
-    // Uncomment the following to enable stencil buffer
-    // EGL_STENCIL_SIZE, 1,
-
-    EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT, EGL_NONE};
-    
-	EGLint contextAttribs[] = {EGL_CONTEXT_CLIENT_VERSION, 2,
-            EGL_NONE};
-	EGLConfig config;
-	EGLint num_config;
-
 	eglChooseConfig (display, attributes, &config, 1, &num_config);
 	eglBindAPI(EGL_OPENGL_ES_API);
 	context = eglCreateContext (display, config, EGL_NO_CONTEXT, contextAttribs);
-	//context = eglCreateContext (display, config, EGL_NO_CONTEXT, 0);
-
 
 	eglQueryContext(display, context, EGL_CONTEXT_CLIENT_VERSION, &version);
 	log::info << "OpenGL ES: " << version << std::endl;
@@ -173,7 +154,7 @@ namespace asapgl
 
 		find_display_configuration ();
 
-		setup_opengl ();
+		setup_opengl(attributes, contextAttribs);
 	}
 	
 	DRM_GBM_EGL_ContextType::~DRM_GBM_EGL_ContextType()

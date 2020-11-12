@@ -17,7 +17,8 @@ namespace asapgl
 		bool DisplayOpen(void);
 		bool window_create(const char *name,
 				    unsigned int x, unsigned int y,
-				    unsigned int width, unsigned int height);
+				    unsigned int width, unsigned int height,
+				    const int* attributes, const int* contextAttribs);
 		void window_show();
 
 	public:

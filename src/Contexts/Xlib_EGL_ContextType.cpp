@@ -67,20 +67,9 @@ namespace asapgl
 
 bool Xlib_EGL_ContextType::window_create(const char *name,
 				    unsigned int x, unsigned int y,
-				    unsigned int width, unsigned int height)
+				    unsigned int width, unsigned int height,
+				    const int* attributes, const int* contextAttribs)
 {
-	static const EGLint attribs[] = {
-		EGL_RED_SIZE, 8,
-		EGL_GREEN_SIZE, 8,
-		EGL_BLUE_SIZE, 8,
-		//EGL_DEPTH_SIZE, 1,
-		EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
-		EGL_NONE
-	};
-	static const EGLint attrs[] = {
-		EGL_CONTEXT_CLIENT_VERSION, 2,
-		EGL_NONE
-	};
 	XSetWindowAttributes attr;
 	unsigned long mask;
 	XVisualInfo visual;
@@ -98,7 +87,7 @@ bool Xlib_EGL_ContextType::window_create(const char *name,
 	screen = DefaultScreen(m_XlibData->x11);
 	root = RootWindow(m_XlibData->x11, screen);
 
-	if (!eglChooseConfig(m_eglData->egl, attribs, &config, 1, &num_configs)) {
+	if (!eglChooseConfig(m_eglData->egl, attributes, &config, 1, &num_configs)) {
 		return false;
 	}
 
@@ -141,7 +130,7 @@ bool Xlib_EGL_ContextType::window_create(const char *name,
 	eglBindAPI(EGL_OPENGL_ES_API);
 
 	m_eglData->context = eglCreateContext(m_eglData->egl, config,
-					   EGL_NO_CONTEXT, attrs);
+					   EGL_NO_CONTEXT, contextAttribs);
 	if (m_eglData->context == EGL_NO_CONTEXT) {
 		return false;
 	}
@@ -191,7 +180,7 @@ void Xlib_EGL_ContextType::window_show()
 			return;
 		}*/
 
-		window_create( "argv[0]", 0, 0, width, height);
+		window_create( "argv[0]", 0, 0, width, height, attributes, contextAttribs);
 		/*if (!window) {
 			fprintf(stderr, "failed to create window\n");
 			return;
