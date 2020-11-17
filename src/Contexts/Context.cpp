@@ -1,4 +1,3 @@
-#include "Context.hpp"
 
 #include <thread>
 
@@ -8,7 +7,12 @@
 #include <EGL/egl.h>
 #include <GLES2/gl2.h>
 
-#include <bitforge/utils/bfu.hpp>
+
+#include "Context.hpp"
+
+#include <Systems.hpp>
+
+
 
 namespace asapgl
 {
@@ -208,6 +212,8 @@ void render()
 		{
 			context = new Xlib_EGL_ContextType( attributes, contextAttribs, argc, argv );
 
+			//SYSTEMS::EVENTS.InitEvent<ResizeWindowArgs>("ResizeWindowArgs");
+
 			log::info << "GL initialized with version: " << glGetString(GL_VERSION) << std::endl;
 			log::info << "GL vendor: " << glGetString(GL_VENDOR) << std::endl;
 			log::info << "GL renderer: " << glGetString(GL_RENDERER) << std::endl;
@@ -240,12 +246,21 @@ void render()
 
 	void Context::MainLoop()
 	{
+		bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
 		auto frameEnd =  std::chrono::system_clock::now();
 		auto frameStart = std::chrono::high_resolution_clock::now();
+    	bfu::CallbackId id;
 
 		context->GetResolution(m_width, m_height);
 
-		log::debug << "resolution: " << m_width << "x" << m_height << std::endl;
+		events.InitEvent<ResizeWindowArgs>("ResizeWindow");
+		events.RegisterCallback<ResizeWindowArgs>(id, [&](bfu::EventArgsBase& a)
+	    {
+		    ResizeWindowArgs* args = (ResizeWindowArgs*)&a;
+	    	m_width = args->m_width; 
+	    	m_height = args->m_height; 
+			log::debug << "resolution update invoked " << m_width << "x" << m_height  << std::endl;
+	    });
 
 
 		std::chrono::duration<double> elapsed;
@@ -256,7 +271,7 @@ void render()
 			std::chrono::duration<double> frameDeltaTime = frameEnd - frameStart;
 			frameStart = std::chrono::high_resolution_clock::now();
 
-			
+			context->HandleContextEvents();
 
 			//TODO frame stuff
 			{

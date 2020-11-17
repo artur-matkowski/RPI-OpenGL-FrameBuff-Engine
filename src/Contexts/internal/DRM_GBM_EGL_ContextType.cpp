@@ -1,4 +1,4 @@
-#include "DRM_GBM_EGL_ContextType.hpp"
+
 #include <cstdio>
 
 #include <xf86drm.h>
@@ -12,6 +12,7 @@
 
 #include <bitforge/utils/bfu.hpp>
 
+#include "DRM_GBM_EGL_ContextType.hpp"
 
 
 #define EXIT(msg) { fputs (msg, stderr); exit (EXIT_FAILURE); }
@@ -176,5 +177,10 @@ namespace asapgl
 	{
 		width = mode_info.hdisplay;
 		height = mode_info.vdisplay;
+	}
+
+	void DRM_GBM_EGL_ContextType::HandleContextEvents()
+	{
+		
 	}
 }

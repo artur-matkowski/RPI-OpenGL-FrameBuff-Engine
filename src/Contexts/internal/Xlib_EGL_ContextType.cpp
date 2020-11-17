@@ -10,7 +10,7 @@
 #include <EGL/egl.h>
 #include <GLES2/gl2.h>
 
-#include <bitforge/utils/bfu.hpp>
+#include <Systems.hpp>
 
 
 namespace asapgl
@@ -216,5 +216,43 @@ void Xlib_EGL_ContextType::window_show()
 
 		width = attr.width;
 		height = attr.height;
+	}
+	void Xlib_EGL_ContextType::HandleContextEvents()
+	{
+		char buffer[16];
+		XEvent event;
+		static bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
+
+	
+
+		while( XCheckMaskEvent(m_XlibData->x11, ExposureMask | StructureNotifyMask | SubstructureNotifyMask | KeyPressMask, &event) )
+		{
+
+			switch (event.type) 
+			{
+			case Expose:
+				//redraw = true;
+				break;
+
+			case ConfigureNotify:
+			    events.Invoke<ResizeWindowArgs>([&](ResizeWindowArgs& args) 
+			    {
+			    	args.m_width = (GLint)event.xconfigure.width; 
+			    	args.m_height = (GLint)event.xconfigure.height; 
+			    });
+				break;
+
+			case KeyPress:
+				XLookupString(&event.xkey, buffer, sizeof(buffer), NULL, NULL);
+				if (buffer[0] == 27)
+					exit(0);
+				break;
+
+			default:
+				break;
+			}
+		}
+
+		
 	}
 }

@@ -14,6 +14,7 @@ namespace asapgl
 
 		void SwapBuffer();
 		void GetResolution(int & width, int & height);
+		void HandleContextEvents();
 	};
 
 }
