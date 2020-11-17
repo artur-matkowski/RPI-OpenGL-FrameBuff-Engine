@@ -212,7 +212,7 @@ void render()
 		{
 			context = new Xlib_EGL_ContextType( attributes, contextAttribs, argc, argv );
 
-			//SYSTEMS::EVENTS.InitEvent<ResizeWindowArgs>("ResizeWindowArgs");
+			events.InitEvent<ResizeWindowArgs>("ResizeWindow");
 
 			log::info << "GL initialized with version: " << glGetString(GL_VERSION) << std::endl;
 			log::info << "GL vendor: " << glGetString(GL_VENDOR) << std::endl;
@@ -253,7 +253,6 @@ void render()
 
 		context->GetResolution(m_width, m_height);
 
-		events.InitEvent<ResizeWindowArgs>("ResizeWindow");
 		events.RegisterCallback<ResizeWindowArgs>(id, [&](bfu::EventArgsBase& a)
 	    {
 		    ResizeWindowArgs* args = (ResizeWindowArgs*)&a;

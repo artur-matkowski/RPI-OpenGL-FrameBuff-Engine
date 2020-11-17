@@ -26,9 +26,9 @@ namespace asapgl
 		Xlib_EGL_ContextType(const int* attributes, const int* contextAttribs, const int argc, const char** argv);
 		~Xlib_EGL_ContextType();
 
-		void SwapBuffer();
-		void GetResolution(int & width, int & height);
-		void HandleContextEvents();
+		virtual void SwapBuffer();
+		virtual void GetResolution(int & width, int & height);
+		virtual void HandleContextEvents();
 	};
 
 }
