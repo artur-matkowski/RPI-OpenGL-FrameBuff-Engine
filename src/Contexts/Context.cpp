@@ -210,6 +210,8 @@ void render()
 	{
 		if(context==0)
 		{
+			bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
+
 			context = new Xlib_EGL_ContextType( attributes, contextAttribs, argc, argv );
 
 			events.InitEvent<ResizeWindowArgs>("ResizeWindow");
