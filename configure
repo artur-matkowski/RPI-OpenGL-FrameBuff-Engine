@@ -1,0 +1,2 @@
+apt update
+apt install libgbm-dev libegl1-mesa-dev libgles2-mesa-dev
