@@ -1,3 +1,5 @@
+#ifndef _TARGET
+
 #include "Xlib_EGL_ContextType.hpp"
 
 #include <stdbool.h>
@@ -256,3 +258,5 @@ void Xlib_EGL_ContextType::window_show()
 		
 	}
 }
+
+#endif

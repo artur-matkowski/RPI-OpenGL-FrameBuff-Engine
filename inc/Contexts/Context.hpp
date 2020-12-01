@@ -2,8 +2,9 @@
 #define _H_CONTEXT
 #include <chrono>
 #include "DRM_GBM_EGL_ContextType.hpp"
+#ifndef _TARGET
 #include "Xlib_EGL_ContextType.hpp"
-
+#endif
 
 namespace asapgl
 {
@@ -31,7 +32,10 @@ namespace asapgl
 		void MainLoop();
 
 
+		#ifndef _TARGET
 		void initXlib(const int argc, const char** argv);
+		#endif
+		
 		void initDRM(const int argc, const char** argv);
 	};
 

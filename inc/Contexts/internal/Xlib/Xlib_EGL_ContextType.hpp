@@ -1,6 +1,8 @@
 #ifndef _H_Xlib_EGL_ContextType
 #define _H_Xlib_EGL_ContextType
+#ifndef _TARGET
 #include "ContextBase.hpp"
+
 
 namespace asapgl
 {
@@ -32,5 +34,7 @@ namespace asapgl
 	};
 
 }
+
+#endif
 
 #endif

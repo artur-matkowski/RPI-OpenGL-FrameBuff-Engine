@@ -37,7 +37,6 @@ RELEASE_CC	+= -O3 -DLOG_LEVEL=DebugLevel::INFO -DNOTRACE
 
 #################################################################################
 
-
 all:
 	./prebuild.sh
 	make debug
@@ -45,6 +44,9 @@ all:
 
 
 
+ifeq ($(_IS_TARGET),TRUE)
+debug: DEBUG_CC 	+= -D_TARGET 
+endif
 debug: CC 			+= $(DEBUG_CC)
 #debug: CC 			+= -DPROFILER_ACTIVE
 debug: BUILDPATH 	= build/dbg/
@@ -54,6 +56,9 @@ debug: STATIC_LINK	= $(BUILDPATH)lib/*.a
 debug:  $(OUT) 
 #	ar rcs build/dbg/lib/lib$(OUT).a build/dbg/obj/*.o
 
+ifeq ($(_IS_TARGET),TRUE)
+release: RELEASE_CC 	+= -D_TARGET 
+endif
 release: CC 			+= $(RELEASE_CC)
 release: BUILDPATH 		= build/rel/
 release: OBJDIR 		= build/rel/obj/

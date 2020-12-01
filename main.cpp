@@ -21,6 +21,8 @@ int main(const int argc, const char** argv)
 
 	signal(SIGINT, signalHandler);
 
+
+#ifndef _TARGET
 	char* display = getenv("DISPLAY");
 
 	bool hasDisplay = display != 0;
@@ -33,6 +35,7 @@ int main(const int argc, const char** argv)
 	    c.initXlib( argc, argv );
 	}
 	else
+#endif
 	{
 		//log::info << "No DISPLAY found. Initializing DRM GBM EGL context" << std::endl;
 

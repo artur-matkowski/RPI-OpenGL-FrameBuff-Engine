@@ -206,6 +206,7 @@ void render()
 
 
 
+	#ifndef _TARGET
 	void Context::initXlib(const int argc, const char** argv)
 	{
 		if(context==0)
@@ -226,6 +227,7 @@ void render()
 			log::warning << "Context already initialized, skipping" << std::endl;
 		}
 	}
+	#endif
 
 	void Context::initDRM(const int argc, const char** argv)
 	{
