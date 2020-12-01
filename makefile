@@ -1,5 +1,6 @@
 OUT		  	= asapi
 VERSION	 	= .1.0.0
+ARCHITECTURE = $(shell dpkg --print-architecture)
 
 CC 		  	= g++ -std=c++11 -I/usr/include/libdrm 
 
@@ -44,7 +45,7 @@ all:
 
 
 
-ifeq ($(_IS_TARGET),TRUE)
+ifeq ($(ARCHITECTURE),TRUE)
 	@echo -----Build for target
 debug: DEBUG_CC 	+= -D_TARGET 
 endif
@@ -57,7 +58,7 @@ debug: STATIC_LINK	= $(BUILDPATH)lib/*.a
 debug:  $(OUT) 
 #	ar rcs build/dbg/lib/lib$(OUT).a build/dbg/obj/*.o
 
-ifeq ($(_IS_TARGET),TRUE)
+ifeq ($(ARCHITECTURE),TRUE)
 	@echo -----Build for target
 release: RELEASE_CC 	+= -D_TARGET 
 endif
