@@ -45,6 +45,7 @@ all:
 
 
 ifeq ($(_IS_TARGET),TRUE)
+	@echo -----Build for target
 debug: DEBUG_CC 	+= -D_TARGET 
 endif
 debug: CC 			+= $(DEBUG_CC)
@@ -57,6 +58,7 @@ debug:  $(OUT)
 #	ar rcs build/dbg/lib/lib$(OUT).a build/dbg/obj/*.o
 
 ifeq ($(_IS_TARGET),TRUE)
+	@echo -----Build for target
 release: RELEASE_CC 	+= -D_TARGET 
 endif
 release: CC 			+= $(RELEASE_CC)
