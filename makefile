@@ -45,7 +45,7 @@ all:
 
 
 
-ifeq ($(ARCHITECTURE),TRUE)
+ifeq ($(ARCHITECTURE),armhf)
 	@echo -----Build for target
 debug: DEBUG_CC 	+= -D_TARGET 
 endif
@@ -58,7 +58,7 @@ debug: STATIC_LINK	= $(BUILDPATH)lib/*.a
 debug:  $(OUT) 
 #	ar rcs build/dbg/lib/lib$(OUT).a build/dbg/obj/*.o
 
-ifeq ($(ARCHITECTURE),TRUE)
+ifeq ($(ARCHITECTURE),armhf)
 	@echo -----Build for target
 release: RELEASE_CC 	+= -D_TARGET 
 endif
