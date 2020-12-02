@@ -14,7 +14,6 @@ namespace asapgl
 		~ContextBase();
 
 		virtual void SwapBuffer() = 0;
-		virtual void GetResolution(int & width, int & height) = 0;
 		virtual void HandleContextEvents() = 0;
 
 

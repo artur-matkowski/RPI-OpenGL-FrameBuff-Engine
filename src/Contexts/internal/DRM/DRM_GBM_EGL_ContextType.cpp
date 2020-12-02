@@ -13,6 +13,7 @@
 #include <bitforge/utils/bfu.hpp>
 
 #include "DRM_GBM_EGL_ContextType.hpp"
+#include "Systems.hpp"
 
 
 #define EXIT(msg) { fputs (msg, stderr); exit (EXIT_FAILURE); }
@@ -149,6 +150,7 @@ namespace asapgl
 	{
 
 		device = open ("/dev/dri/card0", O_RDWR|O_CLOEXEC);
+		bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
 
 
 
@@ -159,6 +161,14 @@ namespace asapgl
 		find_display_configuration ();
 
 		setup_opengl(attributes, contextAttribs);
+
+
+
+		events.Invoke<ResizeWindowArgs>([&](ResizeWindowArgs& args) 
+	    {
+	    	args.m_width = mode_info.hdisplay; 
+	    	args.m_height = mode_info.vdisplay; 
+	    });
 	}
 	
 	DRM_GBM_EGL_ContextType::~DRM_GBM_EGL_ContextType()
@@ -172,12 +182,6 @@ namespace asapgl
 		swap_buffers();
 	}
 
-
-	void DRM_GBM_EGL_ContextType::GetResolution(int & width, int & height)
-	{
-		width = mode_info.hdisplay;
-		height = mode_info.vdisplay;
-	}
 
 	void DRM_GBM_EGL_ContextType::HandleContextEvents()
 	{

@@ -174,6 +174,7 @@ void Xlib_EGL_ContextType::window_show()
 	{
 		const unsigned int width = 1024;
 		const unsigned int height = 600;
+		bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
 
 		DisplayOpen();
 		/*
@@ -189,6 +190,12 @@ void Xlib_EGL_ContextType::window_show()
 		}*/
 
 		window_show();
+
+		events.Invoke<ResizeWindowArgs>([&](ResizeWindowArgs& args) 
+	    {
+	    	args.m_width = width; 
+	    	args.m_height = height; 
+	    });
 
 
 	}
@@ -210,15 +217,6 @@ void Xlib_EGL_ContextType::window_show()
 		glFlush();
 	}
 
-	void Xlib_EGL_ContextType::GetResolution(int & width, int & height)
-	{
-		XWindowAttributes attr;
-
-		XGetWindowAttributes(m_XlibData->x11, m_eglData->x11, &attr);
-
-		width = attr.width;
-		height = attr.height;
-	}
 	void Xlib_EGL_ContextType::HandleContextEvents()
 	{
 		char buffer[16];

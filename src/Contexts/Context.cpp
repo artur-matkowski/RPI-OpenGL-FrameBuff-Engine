@@ -209,13 +209,20 @@ void render()
 	#ifndef _TARGET
 	void Context::initXlib(const int argc, const char** argv)
 	{
+    	bfu::CallbackId id;
 		if(context==0)
 		{
 			bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
-
-			context = new Xlib_EGL_ContextType( attributes, contextAttribs, argc, argv );
-
 			events.InitEvent<ResizeWindowArgs>("ResizeWindow");
+			events.RegisterCallback<ResizeWindowArgs>(id, [&](bfu::EventArgsBase& a)
+		    {
+			    ResizeWindowArgs* args = (ResizeWindowArgs*)&a;
+		    	m_width = args->m_width; 
+		    	m_height = args->m_height; 
+				log::debug << "resolution update invoked " << m_width << "x" << m_height  << std::endl;
+		    });
+
+			context = new Xlib_EGL_ContextType( attributes, contextAttribs, argc, argv );			
 
 			log::info << "GL initialized with version: " << glGetString(GL_VERSION) << std::endl;
 			log::info << "GL vendor: " << glGetString(GL_VENDOR) << std::endl;
@@ -231,8 +238,19 @@ void render()
 
 	void Context::initDRM(const int argc, const char** argv)
 	{
+    	bfu::CallbackId id;
 		if(context==0)
 		{
+			bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
+			events.InitEvent<ResizeWindowArgs>("ResizeWindow");
+			events.RegisterCallback<ResizeWindowArgs>(id, [&](bfu::EventArgsBase& a)
+		    {
+			    ResizeWindowArgs* args = (ResizeWindowArgs*)&a;
+		    	m_width = args->m_width; 
+		    	m_height = args->m_height; 
+				log::debug << "resolution update invoked " << m_width << "x" << m_height  << std::endl;
+		    });
+
 			context = new DRM_GBM_EGL_ContextType( attributes, contextAttribs, argc, argv );
 
 			log::info << "GL initialized with version: " << glGetString(GL_VERSION) << std::endl;
@@ -253,17 +271,6 @@ void render()
 		bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
 		auto frameEnd =  std::chrono::system_clock::now();
 		auto frameStart = std::chrono::high_resolution_clock::now();
-    	bfu::CallbackId id;
-
-		context->GetResolution(m_width, m_height);
-
-		events.RegisterCallback<ResizeWindowArgs>(id, [&](bfu::EventArgsBase& a)
-	    {
-		    ResizeWindowArgs* args = (ResizeWindowArgs*)&a;
-	    	m_width = args->m_width; 
-	    	m_height = args->m_height; 
-			log::debug << "resolution update invoked " << m_width << "x" << m_height  << std::endl;
-	    });
 
 
 		std::chrono::duration<double> elapsed;
