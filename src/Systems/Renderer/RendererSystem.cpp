@@ -1,6 +1,13 @@
+#include <xf86drm.h>
+#include <xf86drmMode.h>
+#include <gbm.h>
+#include <EGL/egl.h>
+#include <GLES2/gl2.h>
+
 #include "RendererSystem.hpp"
 #include "ContextBase.hpp"
 #include "Systems.hpp"
+
 
 
 namespace asapgl{
@@ -26,14 +33,14 @@ namespace asapgl{
 		    ResizeWindowArgs* args = (ResizeWindowArgs*)&a;
 	    	m_width = args->m_width; 
 	    	m_height = args->m_height; 
-			log::debug << "resolution update invoked " << m_width << "x" << m_height  << std::endl;
+			log::debug << "resolution update invoked on RendererSystem: " << m_width << "x" << m_height  << std::endl;
 	    });
 	}
 
 
 	void RendererSystem::Render()
 	{
-		/*
+		
 
 	static const char *vertex_source =
 		"attribute vec4 position;\n"
@@ -92,7 +99,7 @@ namespace asapgl{
 	glUseProgram(program);
 	glFlush();
 
-	glViewport(0, 0, width, height);
+	glViewport(0, 0, m_width, m_height);
 	glFlush();
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -116,7 +123,7 @@ namespace asapgl{
 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 	glFlush();
-*/
+
 
 	}
 			

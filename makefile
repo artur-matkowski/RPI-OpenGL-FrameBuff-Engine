@@ -43,6 +43,8 @@ all:
 	make debug
 	make release
 
+print:
+	$(OBJECTS)
 
 
 ifeq ($(ARCHITECTURE),armhf)
