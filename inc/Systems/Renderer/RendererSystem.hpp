@@ -9,10 +9,27 @@ namespace asapgl{
 		int 				m_width;
 		int 				m_height;
 
+
+
+
+
+		bool m_hasAlpha;
+		bool m_hasCompletedWithNoErrors = true;
+		int m_sizeOfImage;
+
+		int mi_width, mi_height;
+		void *m_textureImage = 0;
+
+		uint m_textureID = -1;
+	
+		void SendTextureToGPU(void *textureImage);
+		void BindTexture();
+
 	public:
 		RendererSystem();
 		~RendererSystem();
 
+		void Init();
 		void SetupEvents();
 		void Render();
 	};

@@ -27,6 +27,9 @@ namespace asapgl
 			CONTEXT.initDRM( argc, argv );
 		}
 
+		RENDERER.Init();
+
+
 		return true;
 
 	}
