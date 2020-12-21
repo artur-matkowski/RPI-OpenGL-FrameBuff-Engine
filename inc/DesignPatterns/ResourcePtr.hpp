@@ -1,0 +1,88 @@
+#ifndef _H_ResourcePtr
+#define _H_ResourcePtr
+
+
+template < typename T > class ResourcePtr
+{
+private:
+    T*    pData = 0;
+    int* reference = 0;
+
+public:
+    ResourcePtr()
+   		:pData(0)
+   		,reference(0)
+   	{
+	}
+    ResourcePtr(T* pValue)
+   		:pData(pValue)
+   		,reference(new int(1))
+   	{
+	}
+    ResourcePtr(const ResourcePtr<T>& sp) 
+    	:pData(sp.pData)
+    	,reference(sp.reference)
+    {
+	    ++(*reference);
+	}
+
+	void Rebuild(T* pValue);
+
+    ~ResourcePtr();
+
+    T& operator* ()
+	{
+	    return *pData;
+	}
+
+    T* operator-> ()
+	{
+	    return pData;
+	}
+
+	void* GetRawPtr()
+	{
+		return (void*)pData;
+	}
+
+    
+    ResourcePtr<T>& operator = (const ResourcePtr<T>& sp);
+
+
+
+	template<typename C>
+	ResourcePtr(const ResourcePtr<C>& sp) 
+    	:pData((T*)sp.pData)
+    	,reference(sp.reference)
+    {
+	    ++(*reference);
+	}
+
+	template<typename C>
+	ResourcePtr<T>& operator = (const ResourcePtr<C>& sp)
+	{
+	    if (this != &sp)
+	    {
+	    	if( reference != 0 )
+	    	{
+	            --(*reference);
+		        if( *reference == 0 )
+		        {
+		            delete pData;
+		            delete reference;
+		        }
+	    	}
+
+	        pData = (T*)sp.pData;
+	        reference = sp.reference;
+	        ++(*reference);
+	    }
+	    return *this;
+	}
+
+	template<typename> friend class ResourcePtr;
+};
+
+
+
+#endif

@@ -5,6 +5,7 @@
 #include <bitforge/utils/bfu.hpp>
 #include "RendererSystem.hpp"
 #include "Context.hpp"
+#include "ResourceSystem.hpp"
 
 namespace asapgl
 {
@@ -14,6 +15,8 @@ namespace asapgl
 		bfu::EventSystem 	EVENTS;
 		RendererSystem 		RENDERER;
 		Context  			CONTEXT;
+		ResourceSystem		RESOURCES;
+
 
 		bool init(const int argc, const char** argv);
 		void cloaseApp();
