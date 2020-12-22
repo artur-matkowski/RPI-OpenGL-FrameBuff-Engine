@@ -1,6 +1,7 @@
 #ifndef _H_RENDERERSYSTEM
 #define _H_RENDERERSYSTEM
 #include "object.hpp"
+#include "Texture.hpp"
 
 namespace asapgl{
 
@@ -21,6 +22,8 @@ namespace asapgl{
 		void *m_textureImage = 0;
 
 		uint m_textureID = -1;
+
+		Texture* texture = 0;
 	
 		void SendTextureToGPU(void *textureImage);
 		void BindTexture();
