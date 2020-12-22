@@ -2,6 +2,8 @@
 #define _H_RENDERERSYSTEM
 #include "object.hpp"
 #include "Texture.hpp"
+#include "Shader.hpp"
+#include "Mesh.hpp"
 
 namespace asapgl{
 
@@ -12,18 +14,10 @@ namespace asapgl{
 
 
 
-
-
-		bool m_hasAlpha;
-		bool m_hasCompletedWithNoErrors = true;
-		int m_sizeOfImage;
-
-		int mi_width, mi_height;
-		void *m_textureImage = 0;
-
-		uint m_textureID = -1;
-
 		Texture* texture = 0;
+		Shader* shader = 0;
+		Mesh* mesh = 0;
+
 	
 		void SendTextureToGPU(void *textureImage);
 		void BindTexture();
