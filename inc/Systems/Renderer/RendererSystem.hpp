@@ -4,6 +4,8 @@
 #include "Texture.hpp"
 #include "Shader.hpp"
 #include "Mesh.hpp"
+#include "MaterialComponent.hpp"
+
 
 namespace asapgl{
 
@@ -14,9 +16,10 @@ namespace asapgl{
 
 
 
-		Texture* texture = 0;
-		Shader* shader = 0;
 		Mesh* mesh = 0;
+
+
+		MaterialComponent* mat = 0;
 
 	
 		void SendTextureToGPU(void *textureImage);

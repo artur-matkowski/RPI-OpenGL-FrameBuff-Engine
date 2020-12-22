@@ -1,3 +1,6 @@
+#include "Texture.hpp"
+#include "Shader.hpp"
+
 #include "ResourcePtr.hpp"
 #include "Systems.hpp"
 
@@ -75,4 +78,5 @@ ResourcePtr<T>& ResourcePtr<T>::operator = (const ResourcePtr<T>& sp)
 }
 
 
-template class ResourcePtr<int>;
+template class ResourcePtr<asapgl::Texture>;
+template class ResourcePtr<asapgl::Shader>;

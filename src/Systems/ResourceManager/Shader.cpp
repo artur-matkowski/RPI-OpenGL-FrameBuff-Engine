@@ -65,6 +65,7 @@ namespace asapgl
 			// Provide the infolog in whatever manor you deem best.
 			// Exit with failure.
 			glDeleteShader(fragment); // Don't leak the shader.
+			return;
 		}
 
 

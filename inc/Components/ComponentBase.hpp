@@ -1,12 +1,19 @@
 #ifndef _H_ComponentBase
 #define _H_ComponentBase
+#include <bitforge/utils/bfu.hpp>	
+
 
 namespace asapgl
 {
-	class ComponentBase
+	class ComponentBase: public bfu::SerializableClassBase
 	{
 	public:
-		ComponentBase(){};
+		ComponentBase()
+			:bfu::SerializableClassBase()
+		{};
+		ComponentBase(const ComponentBase& copy)
+			:bfu::SerializableClassBase()
+		{};		
 		~ComponentBase(){};
 		
 		virtual void OnAttach() = 0;

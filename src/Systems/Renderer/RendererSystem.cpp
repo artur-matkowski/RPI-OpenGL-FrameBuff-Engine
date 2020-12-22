@@ -28,9 +28,9 @@ namespace asapgl{
 
 	void RendererSystem::Init()
 	{
-		texture = new Texture("debug.png");
-		shader = new Shader("---");
 		mesh = new Mesh("---");
+
+		mat = new MaterialComponent();
 	}
 
 	RendererSystem::RendererSystem()
@@ -56,16 +56,8 @@ namespace asapgl{
 
 
 
+		mat->Render();
 
-		shader->UseProgram();
-
-		GLint texUnitLoc = glGetUniformLocation(shader->Get(), "texUnit");
-		GLint blendLoc = glGetUniformLocation(shader->Get(), "blend");
-
-
-		texture->BindTexture();
-		glUniform1i(texUnitLoc , 0);
-		glUniform1f(blendLoc , 1.0);
 
 
 		mesh->Render();
