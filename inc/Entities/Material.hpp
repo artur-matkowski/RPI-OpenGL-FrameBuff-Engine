@@ -1,14 +1,14 @@
-#ifndef _H_MaterialComponent
-#define _H_MaterialComponent
-#include "ComponentBase.hpp"
+#ifndef _H_Material
+#define _H_Material
+#include "ResourcePtr.hpp"
 #include "Shader.hpp"
 #include "Texture.hpp"
-#include <bitforge/utils/bfu.hpp>
-#include "ResourcePtr.hpp"
+#include "object.hpp"
+
 
 namespace asapgl
 {
-	class MaterialComponent: public ComponentBase
+	class Material: public bfu::SerializableClassBase, public object
 	{
 		bfu::SerializableVar<std::string> 			m_usedShader;
 		bfu::SerializableVarVector<std::string> 	m_usedTextures;
@@ -16,18 +16,12 @@ namespace asapgl
 		ResourcePtr< Shader > 						m_shader;
 		std::vector< ResourcePtr< Texture > > 		m_textures;
 
-
-
 	public:
-		MaterialComponent();
-		~MaterialComponent(){};
+		Material(const char*);
+		~Material(){};		
 
 
-		virtual void OnAttach(){};
-		virtual void OnDetach(){};
-
-
-		inline void Render()
+		inline void BindMaterial()
 		{
 			m_shader->UseProgram();
 
@@ -39,13 +33,12 @@ namespace asapgl
 			}
 
 			
-			GLint texUnitLoc = glGetUniformLocation(m_shader->Get(), "texUnit");
-			GLint blendLoc = glGetUniformLocation(m_shader->Get(), "blend");
+			GLint texUnitLoc = glGetUniformLocation(m_shader->GetProgramID(), "texUnit");
+			GLint blendLoc = glGetUniformLocation(m_shader->GetProgramID(), "blend");
 
 			glUniform1i(texUnitLoc , 0);
 			glUniform1f(blendLoc , 1.0);
-		};
-		
+		}
 	};
 }
 

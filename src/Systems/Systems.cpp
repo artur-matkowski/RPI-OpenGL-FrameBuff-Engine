@@ -1,10 +1,13 @@
 #include "Systems.hpp"
+#include <stdlib.h>
+#include <time.h>
 
 
 namespace asapgl
 {
 	bool SYSTEMS::init(const int argc, const char** argv)
 	{
+		srand (time(NULL));
 		RENDERER.SetupEvents();
 
 	#ifndef _TARGET

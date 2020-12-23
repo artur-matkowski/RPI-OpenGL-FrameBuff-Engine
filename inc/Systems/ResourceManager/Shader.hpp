@@ -16,7 +16,7 @@ namespace asapgl
 			glUseProgram(m_programID);
 		}
 
-		inline uint32_t Get()
+		inline uint32_t GetProgramID()
 		{
 			return m_programID;
 		}
