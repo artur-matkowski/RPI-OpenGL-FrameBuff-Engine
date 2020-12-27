@@ -16,7 +16,7 @@ namespace asapgl
 		std::map<std::string, ResourcePtr<Texture> > 	m_textures;
 		std::map<std::string, ResourcePtr<Shader> > 	m_shaders;
 		std::map<std::string, ResourcePtr<Material> > 	m_materials;
-		std::map<std::string, ResourcePtr<Mesh> > 	m_meshes;
+		std::map<std::string, ResourcePtr<Mesh> > 		m_meshes;
 
 	public:
 
