@@ -5,6 +5,17 @@
 
 namespace asapgl
 {
+
+	Material::~Material()
+	{
+		for( std::map<std::string, UniformBase*>::iterator it = m_uniformMap.begin();
+			 it != m_uniformMap.end();
+			 ++it)
+		{
+			delete it->second;
+		}
+	}
+
 	Material::Material(const char* materialName)
 		:bfu::SerializableClassBase()
 		,m_usedShader("m_usedShader", this)

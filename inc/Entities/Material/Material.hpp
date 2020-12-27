@@ -24,7 +24,7 @@ namespace asapgl
 
 	public:
 		Material(const char*);
-		~Material(){};		
+		~Material();		
 
 		inline void SetUniformDirty(UniformBase* dirty)
 		{
