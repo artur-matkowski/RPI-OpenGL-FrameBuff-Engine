@@ -46,10 +46,15 @@ all:
 print:
 	$(OBJECTS)
 
+debug-player: DEBUG_CC 	+= -D_PLAYER
+debug-player: debug
+
+debug-player: DEBUG_CC 	+= -D_PLAYER
+debug-player: debug
 
 ifeq ($(ARCHITECTURE),armhf)
 	@echo -----Build for target
-debug: DEBUG_CC 	+= -D_TARGET 
+debug: DEBUG_CC 	+= -D_PLAYER
 endif
 debug: CC 			+= $(DEBUG_CC)
 #debug: CC 			+= -DPROFILER_ACTIVE
@@ -62,7 +67,7 @@ debug:  $(OUT)
 
 ifeq ($(ARCHITECTURE),armhf)
 	@echo -----Build for target
-release: RELEASE_CC 	+= -D_TARGET 
+release: RELEASE_CC 	+= -D_PLAYER 
 endif
 release: CC 			+= $(RELEASE_CC)
 release: BUILDPATH 		= build/rel/

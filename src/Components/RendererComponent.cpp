@@ -5,8 +5,8 @@ namespace asapgl
 {
 	RendererComponent::RendererComponent()
 		:ComponentBase()
-		,m_usedMaterial("m_usedMaterial",this)
-		,m_usedMesh("m_usedMesh",this)
+		,SERIALIZABLE_VAR_CONSTRUCTOR(m_usedMaterial,this)
+		,SERIALIZABLE_VAR_CONSTRUCTOR(m_usedMesh,this)
 	{
 		SYSTEMS& systems = SYSTEMS::GetObject();
 		

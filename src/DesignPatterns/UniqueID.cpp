@@ -5,8 +5,7 @@
 namespace asapgl
 {
 	UniqueID::UniqueID()
-			:bfu::SerializableClassBase()
-			,ID("ID",this)
+			:SERIALIZABLE_VAR_CONSTRUCTOR(ID,this)
 	{
 		ID32[0] = time(NULL);
 		ID32[1] = rand();
@@ -14,6 +13,7 @@ namespace asapgl
 	}
 
 
+	#ifndef _PLAYER
 	void UniqueID::Serialize(bfu::JSONStream& stream)
 	{
 		ID = ID64;
@@ -25,4 +25,5 @@ namespace asapgl
 		bfu::SerializableClassBase::Deserialize(stream);
 		ID64 = ID;
 	}
+	#endif
 }

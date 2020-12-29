@@ -4,16 +4,16 @@
 #include "Shader.hpp"
 #include "Texture.hpp"
 #include "UniformList.hpp"
-#include "object.hpp"
+#include "Serialization.hpp"
 #include <map>
 
 
 namespace asapgl
 {
-	class MaterialType: public bfu::SerializableClassBase, public object
+	class MaterialType: public SERIALIZABLR_CLASS_BASE
 	{
-		bfu::SerializableVar<std::string> 			m_usedShader;
-		bfu::SerializableVarVector<std::string> 	m_usedTextures;
+		SERIALIZABLE_VAR( std::string ) 			m_usedShader;
+		SERIALIZABLE_VAR_VEC( std::string )		 	m_usedTextures;
 
 		ResourcePtr< Shader > 						m_shader;
 		std::vector< ResourcePtr< Texture > > 		m_textures;

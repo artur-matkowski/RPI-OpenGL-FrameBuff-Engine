@@ -2,12 +2,13 @@
 #define _H_UniformOverride
 #include "MaterialInstance.hpp"
 #include "MaterialType.hpp"
+#include "Serialization.hpp"
 
 namespace asapgl
 {
 	class MaterialInstance;
 
-	class UniformOverrideBase: public object, public bfu::SerializableClassBase
+	class UniformOverrideBase: public SERIALIZABLR_CLASS_BASE
 	{
 	protected:
 		MaterialInstance* m_owner = 0;
@@ -29,7 +30,7 @@ namespace asapgl
 	{
 	protected:
 		const Uniform<T>* 				m_targetUniform;
-		bfu::SerializableVar<T>			m_data;
+		SERIALIZABLE_VAR(T)				m_data;
 	public:
 		UniformOverride( const Uniform<T>* targetUniform, MaterialInstance* owner);
 		~UniformOverride(){};

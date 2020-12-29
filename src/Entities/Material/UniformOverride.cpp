@@ -6,7 +6,7 @@ namespace asapgl
 	UniformOverride<T>::UniformOverride( const Uniform<T>* targetUniform, MaterialInstance* owner)
 		:UniformOverrideBase(owner)
 		,m_targetUniform(targetUniform)
-		,m_data("m_data", this)
+		,SERIALIZABLE_VAR_CONSTRUCTOR(m_data, this)
 	{
 
 	}
