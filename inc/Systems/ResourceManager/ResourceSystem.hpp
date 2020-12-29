@@ -5,7 +5,7 @@
 #include "ResourcePtr.hpp"
 #include "Texture.hpp"
 #include "Shader.hpp"
-#include "Material.hpp"
+#include "MaterialType.hpp"
 #include "Mesh.hpp"
 
 namespace asapgl
@@ -13,10 +13,10 @@ namespace asapgl
 
 	class ResourceSystem
 	{
-		std::map<std::string, ResourcePtr<Texture> > 	m_textures;
-		std::map<std::string, ResourcePtr<Shader> > 	m_shaders;
-		std::map<std::string, ResourcePtr<Material> > 	m_materials;
-		std::map<std::string, ResourcePtr<Mesh> > 		m_meshes;
+		std::map<std::string, ResourcePtr<Texture> > 		m_textures;
+		std::map<std::string, ResourcePtr<Shader> > 		m_shaders;
+		std::map<std::string, ResourcePtr<MaterialType> > 	m_materials;
+		std::map<std::string, ResourcePtr<Mesh> > 			m_meshes;
 
 	public:
 
@@ -92,15 +92,15 @@ namespace asapgl
 			}
 		}
 
-		bool requestResource(ResourcePtr<Material>* res, const char* str)
+		bool requestResource(ResourcePtr<MaterialType>* res, const char* str)
 		{
 			std::string id(str);
 
-			std::map<std::string, ResourcePtr<Material> >::iterator it = m_materials.find(id);
+			std::map<std::string, ResourcePtr<MaterialType> >::iterator it = m_materials.find(id);
 
 			if( it==m_materials.end() )
 			{
-				res->Rebuild( new Material(str) );
+				res->Rebuild( new MaterialType(str) );
 				m_materials[id] = *res;
 			}
 			else
@@ -111,9 +111,9 @@ namespace asapgl
 			return true;
 		}
 
-		void dispouseResource(ResourcePtr<Material>* res)
+		void dispouseResource(ResourcePtr<MaterialType>* res)
 		{
-			for(std::map<std::string, ResourcePtr<Material> >::iterator it = m_materials.begin() ;
+			for(std::map<std::string, ResourcePtr<MaterialType> >::iterator it = m_materials.begin() ;
 				it!=m_materials.end();
 				++it)
 			{

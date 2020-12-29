@@ -1,6 +1,6 @@
 #include "Texture.hpp"
 #include "Shader.hpp"
-#include "Material.hpp"
+#include "MaterialType.hpp"
 #include "Mesh.hpp"
 
 #include "ResourcePtr.hpp"
@@ -82,5 +82,5 @@ ResourcePtr<T>& ResourcePtr<T>::operator = (const ResourcePtr<T>& sp)
 
 template class ResourcePtr<asapgl::Texture>;
 template class ResourcePtr<asapgl::Shader>;
-template class ResourcePtr<asapgl::Material>;
+template class ResourcePtr<asapgl::MaterialType>;
 template class ResourcePtr<asapgl::Mesh>;

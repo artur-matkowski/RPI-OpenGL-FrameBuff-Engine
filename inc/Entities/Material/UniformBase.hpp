@@ -5,15 +5,17 @@
 
 namespace asapgl
 {
-	class Material;
+	class MaterialType;
+	class MaterialInstance;
+	class UniformOverrideBase;
 
 	class UniformBase: public object, public bfu::SerializableClassBase
 	{
 	protected:
 		uint32_t 				m_location = -1;
-		Material* 				m_owner;	
+		MaterialType* 			m_owner;	
 	public:
-		UniformBase(uint32_t location, Material* owner)
+		UniformBase(uint32_t location, MaterialType* owner)
 			:m_location(location)
 			,m_owner(owner)
 		{};
@@ -25,6 +27,8 @@ namespace asapgl
 		{
 			m_location = location;
 		}
+
+		virtual UniformOverrideBase* BuildUniformOverride(MaterialInstance* materialInstanceOverrideOwner) = 0;
 	};
 
 	template<typename T>
@@ -32,13 +36,14 @@ namespace asapgl
 	{
 		bfu::SerializableVar<T>	m_data;
 	public:
-		Uniform(uint32_t location, Material* owner)
+		Uniform(uint32_t location, MaterialType* owner)
 			:UniformBase(location, owner)
 			,m_data("m_data", this)
 		{};
 		~Uniform(){};
 
 		virtual void SendUniform();
+		virtual void SendUniform(const T& override) const;
 
 		virtual void SetUniform(const T& in);
 		
@@ -46,6 +51,8 @@ namespace asapgl
 		{
 			out = m_data;
 		}
+
+		virtual UniformOverrideBase* BuildUniformOverride(MaterialInstance* materialInstanceOverrideOwner);
 
 	};
 }

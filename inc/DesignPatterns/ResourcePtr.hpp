@@ -59,26 +59,7 @@ public:
 	}
 
 	template<typename C>
-	ResourcePtr<T>& operator = (const ResourcePtr<C>& sp)
-	{
-	    if (this != &sp)
-	    {
-	    	if( reference != 0 )
-	    	{
-	            --(*reference);
-		        if( *reference == 0 )
-		        {
-		            delete pData;
-		            delete reference;
-		        }
-	    	}
-
-	        pData = (T*)sp.pData;
-	        reference = sp.reference;
-	        ++(*reference);
-	    }
-	    return *this;
-	}
+	ResourcePtr<T>& operator = (const ResourcePtr<C>& sp);
 
 	template<typename> friend class ResourcePtr;
 };

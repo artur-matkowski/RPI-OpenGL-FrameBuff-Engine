@@ -1,4 +1,4 @@
-#include "Material.hpp"
+#include "MaterialType.hpp"
 #include "Systems.hpp"
 #include <GLES2/gl2.h>
 
@@ -6,7 +6,7 @@
 namespace asapgl
 {
 
-	Material::~Material()
+	MaterialType::~MaterialType()
 	{
 		for( std::map<std::string, UniformBase*>::iterator it = m_uniformMap.begin();
 			 it != m_uniformMap.end();
@@ -16,7 +16,7 @@ namespace asapgl
 		}
 	}
 
-	Material::Material(const char* materialName)
+	MaterialType::MaterialType(const char* materialName)
 		:bfu::SerializableClassBase()
 		,m_usedShader("m_usedShader", this)
 		,m_usedTextures("m_usedTextures", this)

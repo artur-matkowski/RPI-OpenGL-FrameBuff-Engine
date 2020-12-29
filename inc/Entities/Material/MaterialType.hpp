@@ -1,5 +1,5 @@
-#ifndef _H_Material
-#define _H_Material
+#ifndef _H_MaterialType
+#define _H_MaterialType
 #include "ResourcePtr.hpp"
 #include "Shader.hpp"
 #include "Texture.hpp"
@@ -10,7 +10,7 @@
 
 namespace asapgl
 {
-	class Material: public bfu::SerializableClassBase, public object
+	class MaterialType: public bfu::SerializableClassBase, public object
 	{
 		bfu::SerializableVar<std::string> 			m_usedShader;
 		bfu::SerializableVarVector<std::string> 	m_usedTextures;
@@ -19,17 +19,32 @@ namespace asapgl
 		std::vector< ResourcePtr< Texture > > 		m_textures;
 
 		std::map<std::string, UniformBase*>			m_uniformMap;
-		std::vector<UniformBase*>					m_dirtyUniforms;
+
+		std::vector< UniformBase* >					m_dirtyUniforms;
 		bool 										m_isDirty = false;
 
 	public:
-		Material(const char*);
-		~Material();		
+		MaterialType(const char*);
+		~MaterialType();		
 
 		inline void SetUniformDirty(UniformBase* dirty)
 		{
 			m_dirtyUniforms.push_back( dirty );
 			m_isDirty = true;
+		}
+
+		inline UniformBase* GetUniformPtr(const std::string& uniformName)
+		{
+			std::map<std::string, UniformBase*>::iterator it( m_uniformMap.find(uniformName) );
+			if( it != m_uniformMap.end() )
+			{
+				return it->second;
+			}
+			else
+			{
+				log::warning << "Could not find uniform " << uniformName << std::endl;
+				return 0;
+			}
 		}
 
 
