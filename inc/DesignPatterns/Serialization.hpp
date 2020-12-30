@@ -8,7 +8,7 @@
 namespace asapgl
 {
 	#ifdef _PLAYER
-		#define SERIALIZABLR_CLASS_BASE							object
+		#define SERIALIZABLE_CLASS_BASE							object
 
 		#define SERIALIZABLE_VAR(TYPE) 							TYPE
 		#define SERIALIZABLE_VAR_CONSTRUCTOR(NAME,PTR) 			NAME()
@@ -17,9 +17,9 @@ namespace asapgl
 		#define SERIALIZABLE_VAR_VEC_CONSTRUCTOR(NAME,PTR) 		NAME()
 
 
-	
+
 	#else
-		#define SERIALIZABLR_CLASS_BASE							object, public bfu::SerializableClassBase
+		#define SERIALIZABLE_CLASS_BASE							object, public bfu::SerializableClassBase
 
 		#define SERIALIZABLE_VAR(TYPE) 							bfu::SerializableVar<TYPE>
 		#define SERIALIZABLE_VAR_CONSTRUCTOR(NAME,PTR) 			NAME(#NAME, PTR)

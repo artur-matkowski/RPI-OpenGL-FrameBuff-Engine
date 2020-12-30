@@ -1,11 +1,12 @@
 #ifndef _H_UniqueID
 #define _H_UniqueID
 #include "Serialization.hpp"
+#include "SerializationBinary.hpp"
 #include <cstdint>
 
 namespace asapgl
 {
-	class UniqueID: public SERIALIZABLR_CLASS_BASE
+	class UniqueID: public SERIALIZABLE_CLASS_BASE
 	{
 		SERIALIZABLE_VAR(uint64_t) ID;
 
@@ -21,9 +22,11 @@ namespace asapgl
 		
 		#ifndef _PLAYER
 			virtual void Serialize(bfu::JSONStream& stream);
-
 			virtual void Deserialize(bfu::JSONStream& stream);
 		#endif
+
+		virtual void Serialize(std::ofstream& stream);
+		virtual void Deserialize(std::ifstream& stream);
 	};
 }
 

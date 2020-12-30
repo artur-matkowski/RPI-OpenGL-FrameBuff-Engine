@@ -8,7 +8,7 @@ namespace asapgl
 {
 	class MaterialInstance;
 
-	class UniformOverrideBase: public SERIALIZABLR_CLASS_BASE
+	class UniformOverrideBase: public SERIALIZABLE_CLASS_BASE
 	{
 	protected:
 		MaterialInstance* m_owner = 0;

@@ -19,7 +19,7 @@ namespace asapgl
 {
 	struct Xlib_EGL_ContextType::XlibData
 	{
-		Display *x11;
+		Display *display;
 		Window root;
 	};
 
@@ -42,19 +42,19 @@ namespace asapgl
 	{
 		EGLint major, minor;
 
-		m_XlibData->x11 = XOpenDisplay(NULL);
-		if (!m_XlibData->x11) {
+		m_XlibData->display = XOpenDisplay(NULL);
+		if (!m_XlibData->display) {
 			return false;
 		}
 
-		m_eglData->egl = eglGetDisplay(m_XlibData->x11);
+		m_eglData->egl = eglGetDisplay(m_XlibData->display);
 		if (m_eglData->egl == EGL_NO_DISPLAY) {
-			XCloseDisplay(m_XlibData->x11);
+			XCloseDisplay(m_XlibData->display);
 			return false;
 		}
 
 		if (!eglInitialize(m_eglData->egl, &major, &minor)) {
-			XCloseDisplay(m_XlibData->x11);
+			XCloseDisplay(m_XlibData->display);
 			return false;
 		}
 
@@ -86,8 +86,8 @@ bool Xlib_EGL_ContextType::window_create(const char *name,
 	EGLint vid;
 
 
-	screen = DefaultScreen(m_XlibData->x11);
-	m_XlibData->root = RootWindow(m_XlibData->x11, screen);
+	screen = DefaultScreen(m_XlibData->display);
+	m_XlibData->root = RootWindow(m_XlibData->display, screen);
 
 	if (!eglChooseConfig(m_eglData->egl, attributes, &config, 1, &num_configs)) {
 		return false;
@@ -99,7 +99,7 @@ bool Xlib_EGL_ContextType::window_create(const char *name,
 
 	visual.visualid = vid;
 
-	_INFO = XGetVisualInfo(m_XlibData->x11, VisualIDMask, &visual, &num_visuals);
+	_INFO = XGetVisualInfo(m_XlibData->display, VisualIDMask, &visual, &num_visuals);
 	if (!_INFO) {
 		return false;
 	}
@@ -107,11 +107,11 @@ bool Xlib_EGL_ContextType::window_create(const char *name,
 	memset(&attr, 0, sizeof(attr));
 	attr.background_pixel = 0;
 	attr.border_pixel = 0;
-	attr.colormap = XCreateColormap(m_XlibData->x11, m_XlibData->root, _INFO->visual, AllocNone);
+	attr.colormap = XCreateColormap(m_XlibData->display, m_XlibData->root, _INFO->visual, AllocNone);
 	attr.event_mask = StructureNotifyMask | ExposureMask | KeyPressMask;
 	mask = CWBackPixel | CWBorderPixel | CWColormap | CWEventMask;
 
-	m_eglData->x11 = XCreateWindow(m_XlibData->x11, m_XlibData->root, 0, 0, width, height,
+	m_eglData->x11 = XCreateWindow(m_XlibData->display, m_XlibData->root, 0, 0, width, height,
 				    0, _INFO->depth, InputOutput, _INFO->visual,
 				    mask, &attr);
 	if (!m_eglData->x11) {
@@ -125,8 +125,8 @@ bool Xlib_EGL_ContextType::window_create(const char *name,
 	hints.height = height;
 	hints.flags = USSize | USPosition;
 
-	XSetNormalHints(m_XlibData->x11, m_eglData->x11, &hints);
-	XSetStandardProperties(m_XlibData->x11, m_eglData->x11, name, name, None,
+	XSetNormalHints(m_XlibData->display, m_eglData->x11, &hints);
+	XSetStandardProperties(m_XlibData->display, m_eglData->x11, name, name, None,
 			       NULL, 0, &hints);
 
 	eglBindAPI(EGL_OPENGL_ES_API);
@@ -159,12 +159,24 @@ bool Xlib_EGL_ContextType::window_create(const char *name,
 
 void Xlib_EGL_ContextType::window_show()
 {
-	XMapWindow(m_XlibData->x11, m_eglData->x11);
+    /* select kind of events we are interested in */
+    XSelectInput(m_XlibData->display, m_eglData->x11, ExposureMask
+			| StructureNotifyMask 
+			| SubstructureNotifyMask 
+			| KeyPressMask
+			//| PointerMotionHintMask
+			| ButtonPressMask
+			| ButtonReleaseMask
+			| PointerMotionMask
+			| EnterWindowMask);
+
+
+	XMapWindow(m_XlibData->display, m_eglData->x11);
 
 	if (!eglMakeCurrent(m_eglData->egl, m_eglData->surface, m_eglData->surface, m_eglData->context))
 		fprintf(stderr, "eglMakeCurrent():\n");
 
-	XFlush(m_XlibData->x11);
+	XFlush(m_XlibData->display);
 }
 
 
@@ -204,11 +216,11 @@ void Xlib_EGL_ContextType::window_show()
 	{
 		eglDestroySurface(m_eglData->egl, m_eglData->surface);
 		eglDestroyContext(m_eglData->egl, m_eglData->context);
-		XDestroyWindow(m_XlibData->x11, m_eglData->x11);
+		XDestroyWindow(m_XlibData->display, m_eglData->x11);
 
 
 		eglTerminate(m_eglData->egl);
-		XCloseDisplay(m_XlibData->x11);
+		XCloseDisplay(m_XlibData->display);
 	}
 
 	void Xlib_EGL_ContextType::SwapBuffer()
@@ -223,15 +235,26 @@ void Xlib_EGL_ContextType::window_show()
 		XEvent event;
 		static bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
 
-	
 
-		while( XCheckMaskEvent(m_XlibData->x11, ExposureMask | StructureNotifyMask | SubstructureNotifyMask | KeyPressMask, &event) )
+
+
+		while( XPending(m_XlibData->display) )
 		{
-
+			XNextEvent(m_XlibData->display, &event);			
 			switch (event.type) 
 			{
 			case Expose:
 				//redraw = true;
+				break;
+
+			case MotionNotify:
+				log::debug << "MotionNotify: " << event.xmotion.x << " " << event.xmotion.y << std::endl;
+				break;	
+
+			case ButtonPress:
+			case ButtonRelease:
+				log::debug << "Button: " << event.xbutton.x << " " << event.xbutton.y 
+					<< " " << event.xbutton.state << " " << event.xbutton.button << std::endl;
 				break;
 
 			case ConfigureNotify:
@@ -251,8 +274,8 @@ void Xlib_EGL_ContextType::window_show()
 			default:
 				break;
 			}
+		
 		}
-
 		
 	}
 }

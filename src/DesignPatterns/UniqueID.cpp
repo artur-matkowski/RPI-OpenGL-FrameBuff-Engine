@@ -26,4 +26,16 @@ namespace asapgl
 		ID64 = ID;
 	}
 	#endif
+
+	void UniqueID::Serialize(std::ofstream& stream)
+	{
+		ID = ID64;
+		stream << bits(ID);
+	}
+
+	void UniqueID::Deserialize(std::ifstream& stream)
+	{
+		stream >> bits(ID);
+		ID64 = ID;
+	}
 }

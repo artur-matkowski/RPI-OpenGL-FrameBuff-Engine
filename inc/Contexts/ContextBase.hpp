@@ -46,7 +46,35 @@ namespace asapgl
 			m_height = copy.m_height;
 		}
 	};
+/*
 
+	class MouseMoveEvent: public bfu::EventArgsBase
+	{
+	public:
+		bfu::SerializableVar<int> m_Xpos;
+		bfu::SerializableVar<int> m_Ypos;
+
+
+	public:
+		ResizeWindowArgs()
+			:bfu::EventArgsBase()
+			,m_Xpos("m_Xpos",this)
+			,m_Ypos("m_Ypos",this)
+		{
+			m_width = -1;
+			m_Ypos = -1;
+		}
+
+		ResizeWindowArgs(const ResizeWindowArgs& copy)
+			:bfu::EventArgsBase()
+			,m_width("m_width",this)
+			,m_height("m_height",this)
+		{
+			m_width = copy.m_width;
+			m_height = copy.m_height;
+		}
+	};
+*/
 }
 
 #endif

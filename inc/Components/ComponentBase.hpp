@@ -5,7 +5,7 @@
 
 namespace asapgl
 {
-	class ComponentBase: public SERIALIZABLR_CLASS_BASE
+	class ComponentBase: public SERIALIZABLE_CLASS_BASE
 	{
 	public:	
 		~ComponentBase(){};

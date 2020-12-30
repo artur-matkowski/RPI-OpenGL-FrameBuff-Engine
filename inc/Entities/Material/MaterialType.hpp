@@ -10,7 +10,7 @@
 
 namespace asapgl
 {
-	class MaterialType: public SERIALIZABLR_CLASS_BASE
+	class MaterialType: public SERIALIZABLE_CLASS_BASE
 	{
 		SERIALIZABLE_VAR( std::string ) 			m_usedShader;
 		SERIALIZABLE_VAR_VEC( std::string )		 	m_usedTextures;
