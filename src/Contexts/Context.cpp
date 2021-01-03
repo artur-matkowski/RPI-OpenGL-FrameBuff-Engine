@@ -53,7 +53,6 @@ namespace asapgl
 		:context(0)
 		,m_frameDelay(1.0/60.0)
 	{
-
 		m_isRunning = true;
 	}
 
@@ -85,6 +84,10 @@ namespace asapgl
 		{
 			bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
 			events.InitEvent<ResizeWindowArgs>("ResizeWindow");
+			events.InitEvent<MouseMoveEvent>("MouseMoveEvent");
+			events.InitEvent<MouseClickEvent>("MouseClickEvent");
+			events.InitEvent<KeyboardEvent>("KeyboardEvent");
+
 			events.RegisterCallback<ResizeWindowArgs>(id, [&](bfu::EventArgsBase& a)
 		    {
 			    ResizeWindowArgs* args = (ResizeWindowArgs*)&a;
@@ -114,6 +117,10 @@ namespace asapgl
 		{
 			bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
 			events.InitEvent<ResizeWindowArgs>("ResizeWindow");
+			events.InitEvent<MouseMoveEvent>("MouseMoveEvent");
+			events.InitEvent<MouseClickEvent>("MouseClickEvent");
+			events.InitEvent<KeyboardEvent>("KeyboardEvent");
+
 			events.RegisterCallback<ResizeWindowArgs>(id, [&](bfu::EventArgsBase& a)
 		    {
 			    ResizeWindowArgs* args = (ResizeWindowArgs*)&a;
