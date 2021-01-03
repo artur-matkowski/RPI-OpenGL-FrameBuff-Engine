@@ -269,7 +269,7 @@ void Xlib_EGL_ContextType::window_show()
 				KeySym keysym;
 				XLookupString(&event.xkey, buffer, sizeof(buffer), &keysym, NULL);
 				//int key = XKeycodeToKeysym(m_XlibData->display, event.xkey.key, 0);
-				log::debug << "inputed key: " << keysym << std::endl;
+				log::debug << "inputed key: " << (uint64_t)keysym << std::endl;
 				if (buffer[0] == 27)
 					exit(0);
 				break;
