@@ -1,7 +1,10 @@
 #ifndef _h_snapicodes
 #define _h_snapicodes
+#include <bitforge/utils/bfu.hpp>
 
-namespace snapi{
+namespace asapgl{
+
+	
 
 	enum class keystates
 	{
@@ -277,6 +280,101 @@ namespace snapi{
 		snapi_micmute				= 248,
 		unknown						= 249
 	};
+
+
+
+	class MouseMoveEvent: public bfu::EventArgsBase
+	{
+	public:
+		bfu::SerializableVar<int> m_Xpos;
+		bfu::SerializableVar<int> m_Ypos;
+
+
+	public:
+		MouseMoveEvent()
+			:bfu::EventArgsBase()
+			,m_Xpos("m_Xpos",this)
+			,m_Ypos("m_Ypos",this)
+		{
+			m_Xpos = -1;
+			m_Ypos = -1;
+		}
+
+		MouseMoveEvent(const MouseMoveEvent& copy)
+			:bfu::EventArgsBase()
+			,m_Xpos("m_Xpos",this)
+			,m_Ypos("m_Ypos",this)
+		{
+			m_Xpos = copy.m_Xpos;
+			m_Ypos = copy.m_Ypos;
+		}
+	};
+
+	class MouseClickEvent: public bfu::EventArgsBase
+	{
+	public:
+		bfu::SerializableVar<int> m_Xpos;
+		bfu::SerializableVar<int> m_Ypos;
+		bfu::SerializableVar<int> m_key;
+		bfu::SerializableVar<int> m_state;
+
+
+	public:
+		MouseClickEvent()
+			:bfu::EventArgsBase()
+			,m_Xpos("m_Xpos",this)
+			,m_Ypos("m_Ypos",this)
+			,m_key("m_key",this)
+			,m_state("m_state",this)
+		{
+			m_Xpos = -1;
+			m_Ypos = -1;
+			m_key = (int) asapgl::mousecodes::unknown;
+			m_state = (int) asapgl::keystates::unknown;
+		}
+
+		MouseClickEvent(const MouseClickEvent& copy)
+			:bfu::EventArgsBase()
+			,m_Xpos("m_Xpos",this)
+			,m_Ypos("m_Ypos",this)
+			,m_key("m_key",this)
+			,m_state("m_state",this)
+		{
+			m_Xpos = copy.m_Xpos;
+			m_Ypos = copy.m_Ypos;
+			m_key = copy.m_key;
+			m_state = copy.m_state;
+		}
+	};
+
+	class KeyboardEvent: public bfu::EventArgsBase
+	{
+	public:
+		bfu::SerializableVar<int> m_key;
+		bfu::SerializableVar<int> m_state;
+
+
+	public:
+		KeyboardEvent()
+			:bfu::EventArgsBase()
+			,m_key("m_key",this)
+			,m_state("m_state",this)
+		{
+			m_key = (int) asapgl::mousecodes::unknown;
+			m_key = (int) asapgl::keystates::unknown;
+		}
+
+		KeyboardEvent(const KeyboardEvent& copy)
+			:bfu::EventArgsBase()
+			,m_key("m_key",this)
+			,m_state("m_state",this)
+		{
+			m_key = copy.m_key;
+			m_state = copy.m_state;
+		}
+	};
+
+
 };
 
 #endif

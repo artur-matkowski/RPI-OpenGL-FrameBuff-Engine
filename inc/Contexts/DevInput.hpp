@@ -8,7 +8,7 @@
 
 #define AsciMap 
 
-namespace snapi
+namespace asapgl
 {
 	class devinput
 	{
@@ -25,13 +25,9 @@ namespace snapi
 		int 				m_mouseXmax = -1;
 		int 				m_mouseYmax = -1;
 
-		snapi::keycodes		m_keyCodeMap[1+(int)snapi::keycodes::unknown] = {snapi::keycodes::unknown};
-		std::map<int, snapi::mousecodes>
+		asapgl::keycodes		m_keyCodeMap[1+(int)asapgl::keycodes::unknown] = {asapgl::keycodes::unknown};
+		std::map<int, asapgl::mousecodes>
 							m_mouseCodeMap;
-
-		void (*m_mouseMoveCallback)(int posX, int posY) = 0;
-		void (*m_mouseClickCallback)(int posX, int posY, snapi::mousecodes key, snapi::keystates state) = 0;
-		void (*m_keyboardCallback)(snapi::keycodes key, snapi::keystates state) = 0;
 
 
 		void openDevice(const char* path, std::vector<int>& devices);
@@ -41,9 +37,6 @@ namespace snapi
 
 		void SetDisplaySize(int mouseXmax, int mouseYmax);
 
-		void SetMouseMoveCallback(void (*mouseMoveCallback)(int posX, int posY) );
-		void SetMuseClickCallback(void (*mouseClickCallback)(int posX, int posY, snapi::mousecodes key, snapi::keystates state) );
-		void SetKeyboardCallback(void (*keyboardCallback)(snapi::keycodes key, snapi::keystates state) );
 
 		void poolEvents();
 

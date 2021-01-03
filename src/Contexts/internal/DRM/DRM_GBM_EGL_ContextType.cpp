@@ -185,6 +185,6 @@ namespace asapgl
 
 	void DRM_GBM_EGL_ContextType::HandleContextEvents()
 	{
-		
+		m_devinput.poolEvents();
 	}
 }
