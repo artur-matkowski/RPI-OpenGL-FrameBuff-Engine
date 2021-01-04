@@ -560,7 +560,7 @@ void Xlib_EGL_ContextType::window_show()
 				break;
 
 			case KeyPress:
-				log::debug << "inputed key keycode: " << event.xkey.keycode << std::endl;
+				//log::debug << "inputed key keycode: " << event.xkey.keycode << std::endl;
 				key = (int)asapgl::keycodes::unknown;
 
 				if(event.xkey.keycode < (int)asapgl::keycodes::unknown){
