@@ -190,7 +190,7 @@ bool Xlib_EGL_ContextType::window_create(const char *name,
 	m_keyCodeMap[ 34 ]							= asapgl::keycodes::snapi_leftbrace;
 	m_keyCodeMap[ 35 ]							= asapgl::keycodes::snapi_rightbrace;
 	m_keyCodeMap[ 36 ]							= asapgl::keycodes::snapi_enter;
-	m_keyCodeMap[ 31 ]							= asapgl::keycodes::snapi_leftctrl;
+	m_keyCodeMap[ 37 ]							= asapgl::keycodes::snapi_leftctrl;
 	m_keyCodeMap[ 38 ]							= asapgl::keycodes::snapi_a;
 	m_keyCodeMap[ 39 ]							= asapgl::keycodes::snapi_s;
 	m_keyCodeMap[ 40 ]							= asapgl::keycodes::snapi_d;
@@ -495,8 +495,6 @@ void Xlib_EGL_ContextType::window_show()
 
 	void Xlib_EGL_ContextType::HandleContextEvents()
 	{
-
-		char buffer[16];
 		XEvent event;
 		static bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
 
@@ -513,6 +511,11 @@ void Xlib_EGL_ContextType::window_show()
 			{
 			case Expose:
 				//redraw = true;
+				break;
+
+			case DestroyNotify:
+				XAutoRepeatOn(m_XlibData->display);
+				log::debug << "-------------------Window killed!" << std::endl;
 				break;
 
 			case MotionNotify:
@@ -557,11 +560,7 @@ void Xlib_EGL_ContextType::window_show()
 				break;
 
 			case KeyPress:
-				//KeySym keysym;
-				////XLookupString(&event.xkey, buffer, sizeof(buffer), &keysym, NULL);
-				//int key = XKeycodeToKeysym(m_XlibData->display, event.xkey.key, 0);
-				//log::debug << "inputed key: " << (uint64_t)keysym << " keycode: " << event.xkey.keycode << std::endl;
-
+				log::debug << "inputed key keycode: " << event.xkey.keycode << std::endl;
 				key = (int)asapgl::keycodes::unknown;
 
 				if(event.xkey.keycode < (int)asapgl::keycodes::unknown){
@@ -573,10 +572,6 @@ void Xlib_EGL_ContextType::window_show()
 			    	args.m_key = (int)key; 
 			    	args.m_state = (int)asapgl::keystates::snapi_down; 
 			    });
-				
-
-				if (buffer[0] == 27)
-					exit(0);
 				break;
 
 			case KeyRelease:
@@ -595,12 +590,10 @@ void Xlib_EGL_ContextType::window_show()
 			
 			case FocusIn:
 				XAutoRepeatOff(m_XlibData->display);
-				//log::debug << " FocusIn " << std::endl;
 			    break;
 
 			case FocusOut:
 				XAutoRepeatOn(m_XlibData->display);
-				//log::debug << " FocusOut " << std::endl;
 			    break;
 
 			default:
