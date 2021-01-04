@@ -54,7 +54,7 @@ namespace asapgl
 				    		//printf(toPrint(EV_KEY));
 				    		//printf("EVENT: type:%d code:%d value:%d\n", evp->type, evp->code, evp->value);
 
-				    		asapgl::keystates state = (evp->value == 1) ? asapgl::keystates::snapi_up : asapgl::keystates::snapi_down;
+				    		asapgl::keystates state = (evp->value != 1) ? asapgl::keystates::snapi_up : asapgl::keystates::snapi_down;
 			        		if(evp->code < 255)
 			        		{
 							    events.Invoke<KeyboardEvent>([&](KeyboardEvent& args) 
@@ -586,6 +586,7 @@ namespace asapgl
 		m_keyCodeMap[ KEY_WIMAX ]					= asapgl::keycodes::snapi_wimax;
 		m_keyCodeMap[ KEY_RFKILL ]					= asapgl::keycodes::snapi_rfkill;
 		m_keyCodeMap[ KEY_MICMUTE ]					= asapgl::keycodes::snapi_micmute;
+
 
     	bfu::CallbackId id;
 		SYSTEMS::GetObject().EVENTS.RegisterCallback<ResizeWindowArgs>(id, [&](bfu::EventArgsBase& a)

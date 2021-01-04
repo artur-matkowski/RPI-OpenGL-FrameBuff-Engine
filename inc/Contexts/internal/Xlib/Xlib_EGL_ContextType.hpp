@@ -2,6 +2,7 @@
 #define _H_Xlib_EGL_ContextType
 #ifndef _TARGET
 #include "ContextBase.hpp"
+#include "KeyCodes.hpp"
 
 
 namespace asapgl
@@ -15,6 +16,13 @@ namespace asapgl
 
 		struct EGLData;	
 		struct EGLData *m_eglData;
+
+
+		asapgl::keycodes		m_keyCodeMap[1+(int)asapgl::keycodes::unknown] = {asapgl::keycodes::unknown};
+		std::map<int, asapgl::mousecodes>
+							m_mouseCodeMap;
+
+
 
 		bool DisplayOpen(void);
 		bool window_create(const char *name,
