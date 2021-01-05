@@ -18,11 +18,8 @@ namespace asapgl
 		struct EGLData *m_eglData;
 
 
-		asapgl::keycodes		m_keyCodeMap[1+(int)asapgl::keycodes::unknown] = {asapgl::keycodes::unknown};
-		std::map<int, asapgl::mousecodes>
-							m_mouseCodeMap;
 
-
+		void InitMaps();
 
 		bool DisplayOpen(void);
 		bool window_create(const char *name,

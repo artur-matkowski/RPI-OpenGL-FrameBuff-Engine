@@ -16,6 +16,11 @@ SOURCES		= $(shell find $(SRCDIR) -type f | grep cpp | cut -f 1 -d '.')
 DIRSTRUCTURE = $(shell find $(INCDIR) -type d)
 INCSTRUCTURE = $(patsubst %, -I%, $(DIRSTRUCTURE))
 
+
+IMGUI_DIR = ./vendor/imgui/
+SOURCES += $(IMGUI_DIR)/imgui $(IMGUI_DIR)/imgui_demo $(IMGUI_DIR)/imgui_draw $(IMGUI_DIR)/imgui_tables $(IMGUI_DIR)/imgui_widgets
+SOURCES += $(IMGUI_DIR)/backends/imgui_impl_opengl2
+
 DEPGL 		= -lGL -lEGL -lGLESv2  -ldrm -lgbm -lX11 -lXext -lbitforgeutils -lpng
 #DEPGL 		=  -lpng -lbrcmEGL -lbrcmGLESv2  -L/opt/vc/lib
 
@@ -26,7 +31,7 @@ OBJECTS 	= $(OBJECTS2:%.cpp=$(OBJDIR)%.o)
 #INCLUDES += $(SOURCES:%.cpp=$(OBJDIR)%.hpp)
 
 #HEADER_DEPS += 	-I./libs/libjpeg-turbo
-HEADER_DEPS += 	-I./libs/glm/
+HEADER_DEPS += 	-I$(IMGUI_DIR)
 #DEPS 		+= 	../02_Common/01_C-Logger
 #DEPS 		+= 	../02_Common/03_UdpSocket
 #DEPS 		+=	../02_Common/05_EventSystem
@@ -79,14 +84,13 @@ release: $(OUT)
 
 
 $(OUT): $(SOURCES)
-	$(CC) -shared -o $(BUILDPATH)$@.so $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* $(DEPGL) 
-	$(CC) -o $(BUILDPATH)$@ $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* main.cpp $(DEPGL) 
+	$(CC) -shared -o $(BUILDPATH)$@.so $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)*  $(DEPGL) 
+	$(CC) -o $(BUILDPATH)$@ $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* main.cpp  $(DEPGL) 
 
 
-$(SOURCES): $(INCDIR)$(@.hpp) $(SRCDIR)$@
+$(SOURCES): $(INCDIR)$(@.hpp) $(SRCDIR)$@ 
 	$(CC) -c $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS) $(@).cpp -o $(OBJDIR)$(notdir $@).o -fPIC
 	
-
 test:
 	@$(MAKE) ${OUT} -B
 	@$(MAKE) r
