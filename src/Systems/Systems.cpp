@@ -10,7 +10,7 @@ namespace asapgl
 		srand (time(NULL));
 		RENDERER.SetupEvents();
 
-	#ifndef _TARGET
+	#ifndef IS_PLAYER
 		char* display = getenv("DISPLAY");
 
 		bool hasDisplay = display != 0;

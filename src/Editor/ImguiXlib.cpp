@@ -1,3 +1,4 @@
+#ifndef IS_PLAYER
 #include "ImguiXlib.hpp"
 #include "KeyCodes.hpp"
 
@@ -106,4 +107,12 @@ namespace asapgl
 	    g_ClientApi = client_api;*/
 	    return true;
 	}
+/*
+	static void ImGui_ImplGlfw_CreateWindow(ImGuiViewport* viewport)
+	{
+		
+	}*/
+
 }
+
+#endif

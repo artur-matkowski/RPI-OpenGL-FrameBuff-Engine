@@ -1,4 +1,4 @@
-#ifndef _TARGET
+#ifndef IS_PLAYER
 
 #include "Xlib_EGL_ContextType.hpp"
 
@@ -8,63 +8,50 @@
 #include <string.h>
 #include <unistd.h>
 
-#include <X11/Xlib.h>
-#include <EGL/egl.h>
-#include <GLES2/gl2.h>
 
 #include <Systems.hpp>
 
 
 namespace asapgl
 {
-	struct Xlib_EGL_ContextType::XlibData
-	{
-		Display *display;
-		Window root;
-	};
-
-	struct Xlib_EGL_ContextType::EGLData
-	{
-		EGLDisplay egl;
-
-
-		EGLContext context;
-		EGLSurface surface;
-		unsigned int width;
-		unsigned int height;
-
-
-		long unsigned int x11;
-	};
+	
 
 
 	static asapgl::keycodes		m_keyCodeMap[1+(int)asapgl::keycodes::unknown] = {asapgl::keycodes::unknown};
 	static std::map<int, asapgl::mousecodes>
-						m_mouseCodeMap;
+								m_mouseCodeMap;
 
 
 
 	bool Xlib_EGL_ContextType::DisplayOpen(void)
 	{
+		int screen;
 		EGLint major, minor;
 
-		m_XlibData->display = XOpenDisplay(NULL);
-		if (!m_XlibData->display) {
+		m_XDisplay.display = XOpenDisplay(NULL);
+		if (!m_XDisplay.display) {
 			return false;
 		}
 
-		m_eglData->egl = eglGetDisplay(m_XlibData->display);
-		if (m_eglData->egl == EGL_NO_DISPLAY) {
-			XCloseDisplay(m_XlibData->display);
+
+		screen = DefaultScreen(m_XDisplay.display);
+		m_XDisplay.root = RootWindow(m_XDisplay.display, screen);
+
+
+		m_XDisplay.egl = eglGetDisplay(m_XDisplay.display);
+		if (m_XDisplay.egl == EGL_NO_DISPLAY) {
+			XCloseDisplay(m_XDisplay.display);
 			return false;
 		}
 
-		if (!eglInitialize(m_eglData->egl, &major, &minor)) {
-			XCloseDisplay(m_XlibData->display);
+		if (!eglInitialize(m_XDisplay.egl, &major, &minor)) {
+			XCloseDisplay(m_XDisplay.display);
 			return false;
 		}
 
 		log::info << "EGL: " << major << "." << minor << std::endl;
+
+
 
 		//printf("EGL: %d.%d\n", major, minor);
 
@@ -74,130 +61,133 @@ namespace asapgl
 
 
 
-bool Xlib_EGL_ContextType::window_create(const char *name,
-				    unsigned int x, unsigned int y,
-				    unsigned int width, unsigned int height,
-				    const int* attributes, const int* contextAttribs)
-{
-	XSetWindowAttributes attr;
-	unsigned long mask;
-	XVisualInfo visual;
-	EGLint num_configs;
-	XVisualInfo* _INFO;
-	XSizeHints hints;
-	EGLConfig config;
-	int num_visuals;
-	EGLint version;
-	int screen;
-	EGLint vid;
+	bool Xlib_EGL_ContextType::window_create(const char *name,
+					    unsigned int x, unsigned int y,
+					    unsigned int width, unsigned int height,
+					    const int* attributes, const int* contextAttribs,
+					    EGLWindow& eglWindow)
+	{
+		XSetWindowAttributes attr;
+		unsigned long mask;
+		XVisualInfo visual;
+		EGLint num_configs;
+		XVisualInfo* _INFO;
+		XSizeHints hints;
+		EGLConfig config;
+		int num_visuals;
+		EGLint version;
+		EGLint vid;
 
 
-	screen = DefaultScreen(m_XlibData->display);
-	m_XlibData->root = RootWindow(m_XlibData->display, screen);
+		if (!eglChooseConfig(m_XDisplay.egl, attributes, &config, 1, &num_configs)) {
+			return false;
+		}
 
-	if (!eglChooseConfig(m_eglData->egl, attributes, &config, 1, &num_configs)) {
-		return false;
+		if (!eglGetConfigAttrib(m_XDisplay.egl, config, EGL_NATIVE_VISUAL_ID, &vid)) {
+			return false;
+		}
+
+		visual.visualid = vid;
+
+		_INFO = XGetVisualInfo(m_XDisplay.display, VisualIDMask, &visual, &num_visuals);
+		if (!_INFO) {
+			return false;
+		}
+
+		memset(&attr, 0, sizeof(attr));
+		attr.background_pixel = 0;
+		attr.border_pixel = 0;
+		//attr.override_redirect = true; 
+		attr.colormap = XCreateColormap(m_XDisplay.display, m_XDisplay.root, _INFO->visual, AllocNone);
+		attr.event_mask = StructureNotifyMask | ExposureMask | KeyPressMask;
+		mask = CWBackPixel | CWBorderPixel | CWColormap | CWEventMask;// | CWOverrideRedirect;
+
+		eglWindow.x11 = XCreateWindow(m_XDisplay.display, m_XDisplay.root, x, y, width, height,
+					    0, _INFO->depth, InputOutput, _INFO->visual,
+					    mask, &attr);
+		if (!eglWindow.x11) {
+			return false;
+		}
+
+		memset(&hints, 0, sizeof(hints));
+		hints.x = x;
+		hints.y = y;
+		hints.width = width;
+		hints.height = height;
+		hints.flags = USSize | USPosition;
+
+		XSetNormalHints(m_XDisplay.display, eglWindow.x11, &hints);
+		XSetStandardProperties(m_XDisplay.display, eglWindow.x11, name, name, None,
+				       NULL, 0, &hints);
+
+		eglBindAPI(EGL_OPENGL_ES_API);
+
+		eglWindow.context = eglCreateContext(m_XDisplay.egl, config,
+						   EGL_NO_CONTEXT, contextAttribs);
+		if (eglWindow.context == EGL_NO_CONTEXT) {
+			return false;
+		}
+
+		eglQueryContext(m_XDisplay.egl, eglWindow.context, EGL_CONTEXT_CLIENT_VERSION, &version);
+		log::info << "OpenGL ES: " << version << std::endl;
+		
+		//printf("OpenGL ES: %d\n", version);
+
+		eglWindow.surface = eglCreateWindowSurface(m_XDisplay.egl, config,
+							 eglWindow.x11, NULL);
+		if (eglWindow.surface == EGL_NO_SURFACE) {
+			return false;
+		}
+
+		XFree(_INFO);
+
+		eglWindow.width = width;
+		eglWindow.height = height;
+
+		log::debug << "\tegl: " << *(int*)m_XDisplay.egl << " \tcontext: " << *(int*)eglWindow.context << std::endl;
+
+
+		return true;
 	}
 
-	if (!eglGetConfigAttrib(m_eglData->egl, config, EGL_NATIVE_VISUAL_ID, &vid)) {
-		return false;
+
+	void Xlib_EGL_ContextType::window_show(EGLWindow& eglWindow)
+	{
+	    /* select kind of events we are interested in */
+	    XSelectInput(m_XDisplay.display, eglWindow.x11, ExposureMask
+				| StructureNotifyMask 
+				| SubstructureNotifyMask 
+				| KeyPressMask
+				| KeyReleaseMask
+				//| PointerMotionHintMask
+				| ButtonPressMask
+				| ButtonReleaseMask
+				| PointerMotionMask
+				| EnterWindowMask
+				| FocusChangeMask);
+
+
+		XMapWindow(m_XDisplay.display, eglWindow.x11);
+
+		if (!eglMakeCurrent(m_XDisplay.egl, eglWindow.surface, eglWindow.surface, eglWindow.context))
+			log::error << "eglMakeCurrent():\n" << std::endl;
+			
+
+		XFlush(m_XDisplay.display);
+
 	}
-
-	visual.visualid = vid;
-
-	_INFO = XGetVisualInfo(m_XlibData->display, VisualIDMask, &visual, &num_visuals);
-	if (!_INFO) {
-		return false;
-	}
-
-	memset(&attr, 0, sizeof(attr));
-	attr.background_pixel = 0;
-	attr.border_pixel = 0;
-	attr.colormap = XCreateColormap(m_XlibData->display, m_XlibData->root, _INFO->visual, AllocNone);
-	attr.event_mask = StructureNotifyMask | ExposureMask | KeyPressMask;
-	mask = CWBackPixel | CWBorderPixel | CWColormap | CWEventMask;
-
-	m_eglData->x11 = XCreateWindow(m_XlibData->display, m_XlibData->root, 0, 0, width, height,
-				    0, _INFO->depth, InputOutput, _INFO->visual,
-				    mask, &attr);
-	if (!m_eglData->x11) {
-		return false;
-	}
-
-	memset(&hints, 0, sizeof(hints));
-	hints.x = x;
-	hints.y = y;
-	hints.width = width;
-	hints.height = height;
-	hints.flags = USSize | USPosition;
-
-	XSetNormalHints(m_XlibData->display, m_eglData->x11, &hints);
-	XSetStandardProperties(m_XlibData->display, m_eglData->x11, name, name, None,
-			       NULL, 0, &hints);
-
-	eglBindAPI(EGL_OPENGL_ES_API);
-
-	m_eglData->context = eglCreateContext(m_eglData->egl, config,
-					   EGL_NO_CONTEXT, contextAttribs);
-	if (m_eglData->context == EGL_NO_CONTEXT) {
-		return false;
-	}
-
-	eglQueryContext(m_eglData->egl, m_eglData->context, EGL_CONTEXT_CLIENT_VERSION, &version);
-	log::info << "OpenGL ES: " << version << std::endl;
-	
-	//printf("OpenGL ES: %d\n", version);
-
-	m_eglData->surface = eglCreateWindowSurface(m_eglData->egl, config,
-						 m_eglData->x11, NULL);
-	if (m_eglData->surface == EGL_NO_SURFACE) {
-		return false;
-	}
-
-	XFree(_INFO);
-
-	m_eglData->width = width;
-	m_eglData->height = height;
-
-
-
-	return true;
-}
-
-
-void Xlib_EGL_ContextType::window_show()
-{
-    /* select kind of events we are interested in */
-    XSelectInput(m_XlibData->display, m_eglData->x11, ExposureMask
-			| StructureNotifyMask 
-			| SubstructureNotifyMask 
-			| KeyPressMask
-			| KeyReleaseMask
-			//| PointerMotionHintMask
-			| ButtonPressMask
-			| ButtonReleaseMask
-			| PointerMotionMask
-			| EnterWindowMask
-			| FocusChangeMask);
-
-
-	XMapWindow(m_XlibData->display, m_eglData->x11);
-
-	if (!eglMakeCurrent(m_eglData->egl, m_eglData->surface, m_eglData->surface, m_eglData->context))
-		fprintf(stderr, "eglMakeCurrent():\n");
-
-	XFlush(m_XlibData->display);
-
-}
 
 
 	Xlib_EGL_ContextType::Xlib_EGL_ContextType(const int* attributes, const int* contextAttribs, const int argc, const char** argv)
-		:m_XlibData(new struct XlibData)
-		,m_eglData(new struct EGLData)
 	{
 		const unsigned int width = 1024;
 		const unsigned int height = 600;
 		bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
+
+		m_eglWindows.reserve(8);
+		m_eglWindows.push_back( EGLWindow() );
+		m_eglWindows.push_back( EGLWindow() );
+
 		InitMaps();
 
 		DisplayOpen();
@@ -207,13 +197,15 @@ void Xlib_EGL_ContextType::window_show()
 			return;
 		}*/
 
-		window_create( "argv[0]", 0, 0, width, height, attributes, contextAttribs);
+		window_create( "argv[0]", 0, 100, width, height, attributes, contextAttribs, m_eglWindows[0]);
+		window_show(m_eglWindows[0]);
+		window_create( "argv[01]", 1300, 600, width, height, attributes, contextAttribs, m_eglWindows[1]);
 		/*if (!window) {
 			fprintf(stderr, "failed to create window\n");
 			return;
 		}*/
 
-		window_show();
+		window_show(m_eglWindows[1]);
 
 		events.Invoke<ResizeWindowArgs>([&](ResizeWindowArgs& args) 
 	    {
@@ -221,25 +213,47 @@ void Xlib_EGL_ContextType::window_show()
 	    	args.m_height = height; 
 	    });
 
+		bfu::CallbackId id;
+	    events.RegisterCallback<KeyboardEvent>(id, [&](bfu::EventArgsBase& a)
+	    {
+		    KeyboardEvent* args = (KeyboardEvent*)&a;
+
+		    if(args->m_key == (int)asapgl::keycodes::snapi_space && args->m_state == (int)asapgl::keystates::snapi_down)
+		    {
+			    if(renderTgt==0)
+			    	renderTgt=1;
+			    else
+			    	renderTgt=0;
+
+			    log::debug << "new render target window index: " << renderTgt << std::endl;
+		    }
+
+	    });
 
 	}
 	
 	Xlib_EGL_ContextType::~Xlib_EGL_ContextType()
 	{
-		XAutoRepeatOn(m_XlibData->display);
+		XAutoRepeatOn(m_XDisplay.display);
 
-		eglDestroySurface(m_eglData->egl, m_eglData->surface);
-		eglDestroyContext(m_eglData->egl, m_eglData->context);
-		XDestroyWindow(m_XlibData->display, m_eglData->x11);
+		for(int i=0; i<m_eglWindows.size(); ++i)
+		{
+			eglDestroySurface(m_XDisplay.egl, m_eglWindows[i].surface);
+			eglDestroyContext(m_XDisplay.egl, m_eglWindows[i].context);
+			XDestroyWindow(m_XDisplay.display, m_eglWindows[i].x11);
 
 
-		eglTerminate(m_eglData->egl);
-		XCloseDisplay(m_XlibData->display);
+		}
+
+		eglTerminate(m_XDisplay.egl);
+
+		XCloseDisplay(m_XDisplay.display);
 	}
 
 	void Xlib_EGL_ContextType::SwapBuffer()
 	{
-		eglSwapBuffers(m_eglData->egl, m_eglData->surface);
+		//for(int i=0; i<m_eglWindows.size(); ++i)
+			eglSwapBuffers(m_XDisplay.egl, m_eglWindows[renderTgt].surface);
 		glFlush();
 	}
 
@@ -251,9 +265,9 @@ void Xlib_EGL_ContextType::window_show()
 
 
 
-		while( XPending(m_XlibData->display) )
+		while( XPending(m_XDisplay.display) )
 		{
-			XNextEvent(m_XlibData->display, &event);
+			XNextEvent(m_XDisplay.display, &event);
 			int key;
 
 
@@ -261,11 +275,6 @@ void Xlib_EGL_ContextType::window_show()
 			{
 			case Expose:
 				//redraw = true;
-				break;
-
-			case DestroyNotify:
-				XAutoRepeatOn(m_XlibData->display);
-				log::debug << "-------------------Window killed!" << std::endl;
 				break;
 
 			case MotionNotify:
@@ -339,11 +348,11 @@ void Xlib_EGL_ContextType::window_show()
 			    break;
 			
 			case FocusIn:
-				XAutoRepeatOff(m_XlibData->display);
+				XAutoRepeatOff(m_XDisplay.display);
 			    break;
 
 			case FocusOut:
-				XAutoRepeatOn(m_XlibData->display);
+				XAutoRepeatOn(m_XDisplay.display);
 			    break;
 
 			default:
@@ -353,6 +362,22 @@ void Xlib_EGL_ContextType::window_show()
 		}
 		
 	}
+
+
+	#ifndef IS_PLAYER
+	void Xlib_EGL_ContextType::RenderImGui()
+	{
+		EGLDisplay egl = eglGetCurrentDisplay();
+		EGLContext context = eglGetCurrentContext();
+		//log::debug << "\tegl: " << *(int*)egl << " \tcontext: " << *(int*)context << std::endl;
+		//if (!eglMakeCurrent(m_eglWindows[renderTgt].egl, m_eglWindows[renderTgt].surface, m_eglWindows[renderTgt].surface, m_eglWindows[renderTgt].context))
+		//if (!eglMakeCurrent(eglGetCurrentDisplay(), m_eglWindows[renderTgt].surface, m_eglWindows[renderTgt].surface, eglGetCurrentContext()))
+		if (!eglMakeCurrent(egl, m_eglWindows[renderTgt].surface, m_eglWindows[renderTgt].surface, context))
+			log::error << "eglMakeCurrent():\n" << std::endl;
+	}
+	#endif
+
+
 	void Xlib_EGL_ContextType::InitMaps()
 	{
 

@@ -76,7 +76,7 @@ namespace asapgl
 
 
 
-	#ifndef _TARGET
+	#ifndef IS_PLAYER
 	void Context::initXlib(const int argc, const char** argv)
 	{
     	bfu::CallbackId id;
@@ -165,9 +165,14 @@ namespace asapgl
 			//TODO frame stuff
 			{
 				rotation += frameDeltaTime.count();
-				
-				rendererSystem.Render();
 
+
+				#ifndef IS_PLAYER
+				context->RenderImGui();
+				#endif
+
+				rendererSystem.Render();
+				
 				context->SwapBuffer();
 			}
 

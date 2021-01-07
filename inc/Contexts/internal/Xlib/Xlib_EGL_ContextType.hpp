@@ -1,8 +1,12 @@
 #ifndef _H_Xlib_EGL_ContextType
 #define _H_Xlib_EGL_ContextType
-#ifndef _TARGET
+#ifndef IS_PLAYER
 #include "ContextBase.hpp"
 #include "KeyCodes.hpp"
+
+#include <X11/Xlib.h>
+#include <EGL/egl.h>
+#include <GLES2/gl2.h>
 
 
 namespace asapgl
@@ -11,11 +15,30 @@ namespace asapgl
 
 	class Xlib_EGL_ContextType: public ContextBase
 	{
-		struct XlibData;	
-		struct XlibData *m_XlibData;
+		struct XDisplay
+		{
+			Display *display;
+			EGLDisplay egl;
+			Window root;
+		};
 
-		struct EGLData;	
-		struct EGLData *m_eglData;
+		struct EGLWindow
+		{
+			EGLContext context;
+			EGLSurface surface;
+			unsigned int width;
+			unsigned int height;
+
+
+			long unsigned int x11;
+		};
+
+		int renderTgt = 0;
+
+
+		struct XDisplay m_XDisplay;
+
+		std::vector<struct EGLWindow> m_eglWindows;
 
 
 
@@ -25,8 +48,9 @@ namespace asapgl
 		bool window_create(const char *name,
 				    unsigned int x, unsigned int y,
 				    unsigned int width, unsigned int height,
-				    const int* attributes, const int* contextAttribs);
-		void window_show();
+				    const int* attributes, const int* contextAttribs,
+				    EGLWindow& eglWindow);
+		void window_show(EGLWindow& eglWindow);
 
 	public:
 
@@ -35,6 +59,10 @@ namespace asapgl
 
 		virtual void SwapBuffer();
 		virtual void HandleContextEvents();
+
+		#ifndef IS_PLAYER
+		virtual void RenderImGui() override;
+		#endif
 	};
 
 }

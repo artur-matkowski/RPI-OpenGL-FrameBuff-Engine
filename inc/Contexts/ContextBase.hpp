@@ -8,7 +8,8 @@ namespace asapgl
 
 	class ContextBase: public object
 	{
-
+	protected:
+		
 	public:
 		ContextBase(){};
 		~ContextBase();
@@ -17,6 +18,9 @@ namespace asapgl
 		virtual void HandleContextEvents() = 0;
 
 
+		#ifndef IS_PLAYER
+		virtual void RenderImGui(){};
+		#endif
 	};
 
 	

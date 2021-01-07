@@ -59,7 +59,13 @@ namespace asapgl
 				m_textures[i]->BindTexture();
 			}
 
-			( (Uniform<float>*) (m_uniformMap["blend"]) )->SetUniform(1.0);
+			static float blend = 1.0;
+
+			( (Uniform<float>*) (m_uniformMap["blend"]) )->SetUniform(blend);
+			blend -= 0.01;
+			if(blend < 0.1)
+				blend = 1.0;
+
 
 			if(m_isDirty)
 			{
