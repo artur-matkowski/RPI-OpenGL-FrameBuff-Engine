@@ -1,6 +1,10 @@
 #ifndef _h_snapicodes
 #define _h_snapicodes
 #include <bitforge/utils/bfu.hpp>
+#ifndef IS_PLAYER
+#include <X11/Xlib.h>
+#endif
+
 
 namespace asapgl{
 
@@ -289,6 +293,9 @@ namespace asapgl{
 		bfu::SerializableVar<int> m_Xpos;
 		bfu::SerializableVar<int> m_Ypos;
 
+		#ifndef IS_PLAYER
+		Window 						m_eventSourceWindow = 0;
+		#endif
 
 	public:
 		MouseMoveEvent()
@@ -307,6 +314,9 @@ namespace asapgl{
 		{
 			m_Xpos = copy.m_Xpos;
 			m_Ypos = copy.m_Ypos;
+			#ifndef IS_PLAYER
+			m_eventSourceWindow = copy.m_eventSourceWindow;
+			#endif
 		}
 	};
 
@@ -318,6 +328,9 @@ namespace asapgl{
 		bfu::SerializableVar<int> m_key;
 		bfu::SerializableVar<int> m_state;
 
+		#ifndef IS_PLAYER
+		Window 						m_eventSourceWindow = 0;
+		#endif
 
 	public:
 		MouseClickEvent()
@@ -344,6 +357,9 @@ namespace asapgl{
 			m_Ypos = copy.m_Ypos;
 			m_key = copy.m_key;
 			m_state = copy.m_state;
+			#ifndef IS_PLAYER
+			m_eventSourceWindow = copy.m_eventSourceWindow;
+			#endif
 		}
 	};
 
@@ -353,6 +369,9 @@ namespace asapgl{
 		bfu::SerializableVar<int> m_key;
 		bfu::SerializableVar<int> m_state;
 
+		#ifndef IS_PLAYER
+		Window 						m_eventSourceWindow = 0;
+		#endif
 
 	public:
 		KeyboardEvent()
@@ -371,6 +390,9 @@ namespace asapgl{
 		{
 			m_key = copy.m_key;
 			m_state = copy.m_state;
+			#ifndef IS_PLAYER
+			m_eventSourceWindow = copy.m_eventSourceWindow;
+			#endif
 		}
 	};
 

@@ -2,6 +2,9 @@
 #define _H_CONTEXTBASE
 #include <bitforge/utils/bfu.hpp>
 #include "object.hpp"
+#ifndef IS_PLAYER
+#include <X11/Xlib.h>
+#endif
 
 namespace asapgl
 {
@@ -27,8 +30,13 @@ namespace asapgl
 	class ResizeWindowArgs: public bfu::EventArgsBase
 	{
 	public:
-		bfu::SerializableVar<int> m_width;
-		bfu::SerializableVar<int> m_height;
+		bfu::SerializableVar<int> 	m_width;
+		bfu::SerializableVar<int> 	m_height;
+
+
+		#ifndef IS_PLAYER
+		Window 						m_eventSourceWindow = 0;
+		#endif
 
 
 	public:
@@ -48,6 +56,9 @@ namespace asapgl
 		{
 			m_width = copy.m_width;
 			m_height = copy.m_height;
+			#ifndef IS_PLAYER
+			m_eventSourceWindow = copy.m_eventSourceWindow;
+			#endif
 		}
 	};
 

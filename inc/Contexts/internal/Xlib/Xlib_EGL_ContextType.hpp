@@ -28,15 +28,16 @@ namespace asapgl
 			EGLSurface surface;
 			glm::ivec2 resolution;
 
-			long unsigned int x11;
+			Window x11;
 		};
 
 		int renderTgt = 0;
 
 
-		struct XDisplay m_XDisplay;
+		struct XDisplay 				m_XDisplay;
 
-		std::vector<struct EGLWindow> m_eglWindows;
+		std::vector<struct EGLWindow> 	m_eglWindows;
+		EGLWindow* 						m_mainEglWindow = 0;
 
 
 

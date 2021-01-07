@@ -11,10 +11,10 @@ namespace asapgl{
 
 	class RendererSystem: public object
 	{
-		glm::ivec2 			m_resolution;
+		glm::ivec2			m_resolution;
 
 
-		RendererComponent* m_rendererComponent = 0;
+		RendererComponent* 	m_rendererComponent = 0;
 
 	
 		void SendTextureToGPU(void *textureImage);

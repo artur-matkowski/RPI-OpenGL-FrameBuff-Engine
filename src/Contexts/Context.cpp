@@ -16,19 +16,6 @@
 
 namespace asapgl
 {
-	/*
-	static const GLfloat vertices[] = {
-	    -1.0f,
-	    -1.0f,
-	    0.0f,
-	    1.0f,
-	    -1.0f,
-	    0.0f,
-	    0.0f,
-	    1.0f,
-	    0.0f,
-	};
-*/
 	const EGLint attributes[] = {
 	    EGL_BLUE_SIZE, 8, 
 	    EGL_GREEN_SIZE, 8,

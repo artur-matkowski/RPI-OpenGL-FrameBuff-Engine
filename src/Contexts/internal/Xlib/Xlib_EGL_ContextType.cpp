@@ -207,10 +207,12 @@ namespace asapgl
 
 		window_show(m_eglWindows[1]);
 
+		m_mainEglWindow = &m_eglWindows[0];
 		events.Invoke<ResizeWindowArgs>([&](ResizeWindowArgs& args) 
 	    {
 	    	args.m_width = width; 
 	    	args.m_height = height; 
+			args.m_eventSourceWindow = m_mainEglWindow->x11;
 	    });
 
 		bfu::CallbackId id;
@@ -218,7 +220,9 @@ namespace asapgl
 	    {
 		    KeyboardEvent* args = (KeyboardEvent*)&a;
 
-		    if(args->m_key == (int)asapgl::keycodes::snapi_space && args->m_state == (int)asapgl::keystates::snapi_down)
+		    if(args->m_key == (int)asapgl::keycodes::snapi_space 
+		    	&& args->m_state == (int)asapgl::keystates::snapi_down
+		    	&& args->m_eventSourceWindow == m_mainEglWindow->x11)
 		    {
 			    if(renderTgt==0)
 			    	renderTgt=1;
@@ -283,6 +287,7 @@ namespace asapgl
 			    {
 					args.m_Xpos = (int)event.xmotion.x;
 					args.m_Ypos = (int)event.xmotion.y;
+			    	args.m_eventSourceWindow = event.xmotion.window;
 			    });
 
 				break;	
@@ -294,6 +299,7 @@ namespace asapgl
 					args.m_Ypos = (int)event.xbutton.y;
 					args.m_key = (int)m_mouseCodeMap[event.xbutton.button];
 					args.m_state = (int)asapgl::keystates::snapi_down;
+			    	args.m_eventSourceWindow = event.xbutton.window;
 			    });
 				break;
 
@@ -307,6 +313,7 @@ namespace asapgl
 					args.m_Ypos = (int)event.xbutton.y;
 					args.m_key = (int)m_mouseCodeMap[event.xbutton.button];
 					args.m_state = (int)asapgl::keystates::snapi_up;
+			    	args.m_eventSourceWindow = event.xbutton.window;
 			    });
 				break;
 
@@ -315,6 +322,7 @@ namespace asapgl
 			    {
 			    	args.m_width = (GLint)event.xconfigure.width; 
 			    	args.m_height = (GLint)event.xconfigure.height; 
+			    	args.m_eventSourceWindow = event.xconfigure.window;
 			    });
 				break;
 
@@ -330,6 +338,7 @@ namespace asapgl
 			    {
 			    	args.m_key = (int)key; 
 			    	args.m_state = (int)asapgl::keystates::snapi_down; 
+			    	args.m_eventSourceWindow = event.xkey.window;
 			    });
 				break;
 
@@ -344,6 +353,7 @@ namespace asapgl
 			    {
 			    	args.m_key = (int)key; 
 			    	args.m_state = (int)asapgl::keystates::snapi_up; 
+			    	args.m_eventSourceWindow = event.xkey.window;
 			    });
 			    break;
 			
