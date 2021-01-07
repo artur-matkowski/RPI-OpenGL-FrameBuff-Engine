@@ -32,6 +32,7 @@ OBJECTS 	= $(OBJECTS2:%.cpp=$(OBJDIR)%.o)
 
 #HEADER_DEPS += 	-I./libs/libjpeg-turbo
 HEADER_DEPS += 	-I$(IMGUI_DIR)
+HEADER_DEPS += 	-I./vendor/glm/glm/
 #DEPS 		+= 	../02_Common/01_C-Logger
 #DEPS 		+= 	../02_Common/03_UdpSocket
 #DEPS 		+=	../02_Common/05_EventSystem

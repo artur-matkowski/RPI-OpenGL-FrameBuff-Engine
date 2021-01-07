@@ -141,8 +141,8 @@ namespace asapgl
 
 		XFree(_INFO);
 
-		eglWindow.width = width;
-		eglWindow.height = height;
+		eglWindow.resolution.x = width;
+		eglWindow.resolution.y = height;
 
 		log::debug << "\tegl: " << *(int*)m_XDisplay.egl << " \tcontext: " << *(int*)eglWindow.context << std::endl;
 

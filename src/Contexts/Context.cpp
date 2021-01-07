@@ -16,6 +16,7 @@
 
 namespace asapgl
 {
+	/*
 	static const GLfloat vertices[] = {
 	    -1.0f,
 	    -1.0f,
@@ -27,7 +28,7 @@ namespace asapgl
 	    1.0f,
 	    0.0f,
 	};
-
+*/
 	const EGLint attributes[] = {
 	    EGL_BLUE_SIZE, 8, 
 	    EGL_GREEN_SIZE, 8,
@@ -88,14 +89,6 @@ namespace asapgl
 			events.InitEvent<MouseClickEvent>("MouseClickEvent");
 			events.InitEvent<KeyboardEvent>("KeyboardEvent");
 
-			events.RegisterCallback<ResizeWindowArgs>(id, [&](bfu::EventArgsBase& a)
-		    {
-			    ResizeWindowArgs* args = (ResizeWindowArgs*)&a;
-		    	m_width = args->m_width; 
-		    	m_height = args->m_height; 
-				log::debug << "resolution update invoked " << m_width << "x" << m_height  << std::endl;
-		    });
-
 			context = new Xlib_EGL_ContextType( attributes, contextAttribs, argc, argv );			
 
 			log::info << "GL initialized with version: " << glGetString(GL_VERSION) << std::endl;
@@ -120,14 +113,6 @@ namespace asapgl
 			events.InitEvent<MouseMoveEvent>("MouseMoveEvent");
 			events.InitEvent<MouseClickEvent>("MouseClickEvent");
 			events.InitEvent<KeyboardEvent>("KeyboardEvent");
-
-			events.RegisterCallback<ResizeWindowArgs>(id, [&](bfu::EventArgsBase& a)
-		    {
-			    ResizeWindowArgs* args = (ResizeWindowArgs*)&a;
-		    	m_width = args->m_width; 
-		    	m_height = args->m_height; 
-				log::debug << "resolution update invoked " << m_width << "x" << m_height  << std::endl;
-		    });
 
 			context = new DRM_GBM_EGL_ContextType( attributes, contextAttribs, argc, argv );
 

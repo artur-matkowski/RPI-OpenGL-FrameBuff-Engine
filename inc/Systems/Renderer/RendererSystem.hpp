@@ -11,8 +11,7 @@ namespace asapgl{
 
 	class RendererSystem: public object
 	{
-		int 				m_width;
-		int 				m_height;
+		glm::ivec2 			m_resolution;
 
 
 		RendererComponent* m_rendererComponent = 0;

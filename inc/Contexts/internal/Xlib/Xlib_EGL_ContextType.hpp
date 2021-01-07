@@ -26,9 +26,7 @@ namespace asapgl
 		{
 			EGLContext context;
 			EGLSurface surface;
-			unsigned int width;
-			unsigned int height;
-
+			glm::ivec2 resolution;
 
 			long unsigned int x11;
 		};

@@ -20,27 +20,9 @@ namespace asapgl{
 		events.RegisterCallback<ResizeWindowArgs>(id, [&](bfu::EventArgsBase& a)
 	    {
 		    ResizeWindowArgs* args = (ResizeWindowArgs*)&a;
-	    	m_width = args->m_width; 
-	    	m_height = args->m_height; 
-			log::debug << "resolution update invoked on RendererSystem: " << m_width << "x" << m_height  << std::endl;
-	    });
-
-	    events.RegisterCallback<KeyboardEvent>(id, [&](bfu::EventArgsBase& a)
-	    {
-		    KeyboardEvent* args = (KeyboardEvent*)&a;
-			log::debug << "KeyboardEvent: " << (int)args->m_key << "x" << (int)args->m_state  << std::endl;
-	    });
-
-	    events.RegisterCallback<MouseClickEvent>(id, [&](bfu::EventArgsBase& a)
-	    {
-		    MouseClickEvent* args = (MouseClickEvent*)&a;
-			log::debug << "MouseClickEvent: " << (int)args->m_key << "x" << (int)args->m_state  << "  " <<  (int)args->m_Xpos << "x" << (int)args->m_Ypos  << std::endl;
-	    });
-
-	    events.RegisterCallback<MouseMoveEvent>(id, [&](bfu::EventArgsBase& a)
-	    {
-		    MouseMoveEvent* args = (MouseMoveEvent*)&a;
-			log::debug << "MouseMoveEvent: " <<  (int)args->m_Xpos << "x" << (int)args->m_Ypos  << std::endl;
+	    	m_resolution.x = args->m_width; 
+	    	m_resolution.y = args->m_height; 
+			log::debug << "resolution update invoked on RendererSystem: " << m_resolution.x << "x" << m_resolution.y  << std::endl;
 	    });
 	}
 
@@ -63,7 +45,7 @@ namespace asapgl{
 
 	void RendererSystem::Render()
 	{
-		glViewport(0, 0, m_width, m_height);
+		glViewport(0, 0, m_resolution.x, m_resolution.y);
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
