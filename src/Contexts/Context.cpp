@@ -12,10 +12,14 @@
 
 #include <Systems.hpp>
 
+#ifdef IS_EDITOR
+#include "ImguiXlib.hpp"
+#endif
 
 
 namespace asapgl
 {
+	/*
 	const EGLint attributes[] = {
 	    EGL_BLUE_SIZE, 8, 
 	    EGL_GREEN_SIZE, 8,
@@ -34,7 +38,7 @@ namespace asapgl
 	    
 	const EGLint contextAttribs[] = {
 		EGL_CONTEXT_CLIENT_VERSION, 2,
-        EGL_NONE};
+        EGL_NONE};*/
 
 
 	Context::Context()
@@ -64,24 +68,15 @@ namespace asapgl
 
 
 
-	#ifndef IS_PLAYER
+	#ifdef USE_XLIB
 	void Context::initXlib(const int argc, const char** argv)
 	{
     	bfu::CallbackId id;
 		if(context==0)
 		{
 			bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
-			events.InitEvent<ResizeWindowArgs>("ResizeWindow");
-			events.InitEvent<MouseMoveEvent>("MouseMoveEvent");
-			events.InitEvent<MouseClickEvent>("MouseClickEvent");
-			events.InitEvent<KeyboardEvent>("KeyboardEvent");
 
-			context = new Xlib_EGL_ContextType( attributes, contextAttribs, argc, argv );			
-
-			log::info << "GL initialized with version: " << glGetString(GL_VERSION) << std::endl;
-			log::info << "GL vendor: " << glGetString(GL_VENDOR) << std::endl;
-			log::info << "GL renderer: " << glGetString(GL_RENDERER) << std::endl;
-			log::info << "GL shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+			//context = new Xlib_EGL_ContextType( attributes, contextAttribs, argc, argv );			
 		}
 		else
 		{
@@ -96,17 +91,8 @@ namespace asapgl
 		if(context==0)
 		{
 			bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
-			events.InitEvent<ResizeWindowArgs>("ResizeWindow");
-			events.InitEvent<MouseMoveEvent>("MouseMoveEvent");
-			events.InitEvent<MouseClickEvent>("MouseClickEvent");
-			events.InitEvent<KeyboardEvent>("KeyboardEvent");
 
-			context = new DRM_GBM_EGL_ContextType( attributes, contextAttribs, argc, argv );
-
-			log::info << "GL initialized with version: " << glGetString(GL_VERSION) << std::endl;
-			log::info << "GL vendor: " << glGetString(GL_VENDOR) << std::endl;
-			log::info << "GL renderer: " << glGetString(GL_RENDERER) << std::endl;
-			log::info << "GL shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+			//context = new DRM_GBM_EGL_ContextType( attributes, contextAttribs, argc, argv );
 		}
 		else
 		{
@@ -118,48 +104,59 @@ namespace asapgl
 
 	void Context::MainLoop()
 	{
-		bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
-		RendererSystem& rendererSystem = SYSTEMS::GetObject().RENDERER;
-		auto frameEnd =  std::chrono::system_clock::now();
-		auto frameStart = std::chrono::high_resolution_clock::now();
+		
+		// bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
+		// RendererSystem& rendererSystem = SYSTEMS::GetObject().RENDERER;
+		// auto frameEnd =  std::chrono::system_clock::now();
+		// auto frameStart = std::chrono::high_resolution_clock::now();
+		// bool show_demo_window = true;
+
+		// std::chrono::duration<double> elapsed;
+
+		// GLfloat rotation = 0.0;
+		// while(m_isRunning)
+		// {
+		// 	std::chrono::duration<double> frameDeltaTime = frameEnd - frameStart;
+		// 	frameStart = std::chrono::high_resolution_clock::now();
+
+		// 	context->HandleContextEvents();
+
+		// 	//TODO frame stuff
+		// 	{
+		// 		rotation += frameDeltaTime.count();
 
 
-		std::chrono::duration<double> elapsed;
-
-		GLfloat rotation = 0.0;
-		while(m_isRunning)
-		{
-			std::chrono::duration<double> frameDeltaTime = frameEnd - frameStart;
-			frameStart = std::chrono::high_resolution_clock::now();
-
-			context->HandleContextEvents();
-
-			//TODO frame stuff
-			{
-				rotation += frameDeltaTime.count();
-
-
-				#ifndef IS_PLAYER
-				context->RenderImGui();
-				#endif
-
-				rendererSystem.Render();
+		// 		#ifdef IS_EDITOR
 				
-				context->SwapBuffer();
-			}
+		//         // // Start the Dear ImGui frame
+		//         // ImGui_ImplOpenGL2_NewFrame();
+		//         // ImGui_ImplXlib_NewFrame();
+		//         // ImGui::NewFrame();
+
+		//         // // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
+		//         // if (show_demo_window)
+	 //         //    	ImGui::ShowDemoWindow(&show_demo_window);
+
+		// 		context->RenderImGui();
+		// 		#endif
+
+		// 		rendererSystem.Render();
+				
+		// 		context->SwapBuffer();
+		// 	}
 
 
 
-			std::chrono::duration<double> calculationTime = std::chrono::high_resolution_clock::now() - frameStart;
-			std::chrono::duration<double> diffToFrameEnd = m_frameDelay - calculationTime;
+		// 	std::chrono::duration<double> calculationTime = std::chrono::high_resolution_clock::now() - frameStart;
+		// 	std::chrono::duration<double> diffToFrameEnd = m_frameDelay - calculationTime;
 
 
-			//log::debug << "frameDeltaTime: "  << (float)frameDeltaTime.count() << "s, Calculation time: " << (float)calculationTime.count() << "s" << std::endl;
+		// 	//log::debug << "frameDeltaTime: "  << (float)frameDeltaTime.count() << "s, Calculation time: " << (float)calculationTime.count() << "s" << std::endl;
 
-			std::this_thread::sleep_for(diffToFrameEnd);
+		// 	std::this_thread::sleep_for(diffToFrameEnd);
 
-			frameEnd = std::chrono::high_resolution_clock::now();
-		}
+		// 	frameEnd = std::chrono::high_resolution_clock::now();
+		// }
 		
 	}
 	

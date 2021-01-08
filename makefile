@@ -52,15 +52,15 @@ all:
 print:
 	$(OBJECTS)
 
-debug-player: DEBUG_CC 	+= -D_PLAYER
+debug-player: DEBUG_CC 	+= -DIS_PLAYER
 debug-player: debug
 
-debug-player: DEBUG_CC 	+= -D_PLAYER
+debug-player: DEBUG_CC 	+= -DIS_PLAYER
 debug-player: debug
 
 ifeq ($(ARCHITECTURE),armhf)
 	@echo -----Build for target
-debug: DEBUG_CC 	+= -D_PLAYER
+debug: DEBUG_CC 	+= -DIS_TARGET
 endif
 debug: CC 			+= $(DEBUG_CC)
 #debug: CC 			+= -DPROFILER_ACTIVE
@@ -73,7 +73,7 @@ debug:  $(OUT)
 
 ifeq ($(ARCHITECTURE),armhf)
 	@echo -----Build for target
-release: RELEASE_CC 	+= -D_PLAYER 
+release: RELEASE_CC 	+= -DIS_TARGET
 endif
 release: CC 			+= $(RELEASE_CC)
 release: BUILDPATH 		= build/rel/
@@ -86,11 +86,14 @@ release: $(OUT)
 
 $(OUT): $(SOURCES)
 	$(CC) -shared -o $(BUILDPATH)$@.so $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)*  $(DEPGL) 
+	@echo 
 	$(CC) -o $(BUILDPATH)$@ $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* main.cpp  $(DEPGL) 
+	@echo 
 
 
 $(SOURCES): $(INCDIR)$(@.hpp) $(SRCDIR)$@ 
 	$(CC) -c $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS) $(@).cpp -o $(OBJDIR)$(notdir $@).o -fPIC
+	@echo 
 	
 test:
 	@$(MAKE) ${OUT} -B

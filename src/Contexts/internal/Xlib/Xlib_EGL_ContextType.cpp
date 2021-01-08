@@ -1,16 +1,18 @@
-#ifndef IS_PLAYER
-
 #include "Xlib_EGL_ContextType.hpp"
+
 
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
+#include <thread>
 
 #include <Systems.hpp>
 
+#include "ImguiXlib.hpp"
+
+#ifdef USE_XLIB
 
 namespace asapgl
 {
@@ -20,6 +22,8 @@ namespace asapgl
 	static asapgl::keycodes		m_keyCodeMap[1+(int)asapgl::keycodes::unknown] = {asapgl::keycodes::unknown};
 	static std::map<int, asapgl::mousecodes>
 								m_mouseCodeMap;
+
+	static char keycodes2char[255] = {0};
 
 
 
@@ -178,7 +182,7 @@ namespace asapgl
 	}
 
 
-	Xlib_EGL_ContextType::Xlib_EGL_ContextType(const int* attributes, const int* contextAttribs, const int argc, const char** argv)
+	void Xlib_EGL_ContextType::Init(const int argc, const char** argv)
 	{
 		const unsigned int width = 1024;
 		const unsigned int height = 600;
@@ -234,6 +238,33 @@ namespace asapgl
 
 	    });
 
+
+	    // Setup Dear ImGui context
+	    IMGUI_CHECKVERSION();
+	    ImGui::CreateContext();
+	    ImGuiIO& io = ImGui::GetIO(); (void)io;
+	    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
+	    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+	    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+	    //io.ConfigViewportsNoAutoMerge = true;
+	    //io.ConfigViewportsNoTaskBarIcon = true;
+
+	    // Setup Dear ImGui style
+	    ImGui::StyleColorsDark();
+	    //ImGui::StyleColorsClassic();
+
+	    // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
+	    ImGuiStyle& style = ImGui::GetStyle();
+	    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	    {
+	        style.WindowRounding = 0.0f;
+	        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+	    }
+
+	    // Setup Platform/Renderer backends
+	    ImGui_ImplXlib_InitForOpenGL(m_mainEglWindow);
+	    ImGui_ImplOpenGL2_Init();
 	}
 	
 	Xlib_EGL_ContextType::~Xlib_EGL_ContextType()
@@ -253,6 +284,12 @@ namespace asapgl
 
 		XCloseDisplay(m_XDisplay.display);
 	}
+
+	void Xlib_EGL_ContextType::CleanUp()
+	{
+
+	}
+
 
 	void Xlib_EGL_ContextType::SwapBuffer()
 	{
@@ -338,6 +375,7 @@ namespace asapgl
 			    {
 			    	args.m_key = (int)key; 
 			    	args.m_state = (int)asapgl::keystates::snapi_down; 
+			    	args.m_char = (char)keycodes2char[ key ];
 			    	args.m_eventSourceWindow = event.xkey.window;
 			    });
 				break;
@@ -353,6 +391,7 @@ namespace asapgl
 			    {
 			    	args.m_key = (int)key; 
 			    	args.m_state = (int)asapgl::keystates::snapi_up; 
+			    	args.m_char = (char)keycodes2char[ key ];
 			    	args.m_eventSourceWindow = event.xkey.window;
 			    });
 			    break;
@@ -374,7 +413,7 @@ namespace asapgl
 	}
 
 
-	#ifndef IS_PLAYER
+	#ifdef IS_EDITOR
 	void Xlib_EGL_ContextType::RenderImGui()
 	{
 		EGLDisplay egl = eglGetCurrentDisplay();
@@ -386,6 +425,64 @@ namespace asapgl
 			log::error << "eglMakeCurrent():\n" << std::endl;
 	}
 	#endif
+
+	void Xlib_EGL_ContextType::MainLoop()
+	{
+		
+		bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
+		RendererSystem& rendererSystem = SYSTEMS::GetObject().RENDERER;
+		auto frameEnd =  std::chrono::system_clock::now();
+		auto frameStart = std::chrono::high_resolution_clock::now();
+		bool show_demo_window = true;
+
+		std::chrono::duration<double> elapsed;
+
+		GLfloat rotation = 0.0;
+		while(m_isRunning)
+		{
+			std::chrono::duration<double> frameDeltaTime = frameEnd - frameStart;
+			frameStart = std::chrono::high_resolution_clock::now();
+
+			HandleContextEvents();
+
+			//TODO frame stuff
+			{
+				rotation += frameDeltaTime.count();
+
+
+				#ifdef IS_EDITOR
+				
+		        // // Start the Dear ImGui frame
+		        // ImGui_ImplOpenGL2_NewFrame();
+		        // ImGui_ImplXlib_NewFrame();
+		        // ImGui::NewFrame();
+
+		        // // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
+		        // if (show_demo_window)
+	         //    	ImGui::ShowDemoWindow(&show_demo_window);
+
+				RenderImGui();
+				#endif
+
+				rendererSystem.Render();
+				
+				SwapBuffer();
+			}
+
+
+
+			std::chrono::duration<double> calculationTime = std::chrono::high_resolution_clock::now() - frameStart;
+			std::chrono::duration<double> diffToFrameEnd = m_frameDelay - calculationTime;
+
+
+			//log::debug << "frameDeltaTime: "  << (float)frameDeltaTime.count() << "s, Calculation time: " << (float)calculationTime.count() << "s" << std::endl;
+
+			std::this_thread::sleep_for(diffToFrameEnd);
+
+			frameEnd = std::chrono::high_resolution_clock::now();
+		}
+		
+	}
 
 
 	void Xlib_EGL_ContextType::InitMaps()
@@ -646,6 +743,75 @@ namespace asapgl
 		//m_keyCodeMap[ KEY_WIMAX ]					= asapgl::keycodes::snapi_wimax;
 		//m_keyCodeMap[ KEY_RFKILL ]					= asapgl::keycodes::snapi_rfkill;
 		//m_keyCodeMap[ KEY_MICMUTE ]					= asapgl::keycodes::snapi_micmute;
+
+
+
+
+		keycodes2char[ (int) asapgl::keycodes::snapi_esc ]						= (char)27; //escape
+		keycodes2char[ (int) asapgl::keycodes::snapi_1 ]						= '1';
+		keycodes2char[ (int) asapgl::keycodes::snapi_2 ]						= '2';
+		keycodes2char[ (int) asapgl::keycodes::snapi_3 ]						= '3';
+		keycodes2char[ (int) asapgl::keycodes::snapi_4 ]						= '4';
+		keycodes2char[ (int) asapgl::keycodes::snapi_5 ]						= '5';
+		keycodes2char[ (int) asapgl::keycodes::snapi_6 ]						= '6';
+		keycodes2char[ (int) asapgl::keycodes::snapi_7 ]						= '7';
+		keycodes2char[ (int) asapgl::keycodes::snapi_8 ]						= '8';
+		keycodes2char[ (int) asapgl::keycodes::snapi_9 ]						= '9';
+		keycodes2char[ (int) asapgl::keycodes::snapi_0 ]						= '0';
+		keycodes2char[ (int) asapgl::keycodes::snapi_minus ]					= '-';
+		keycodes2char[ (int) asapgl::keycodes::snapi_equal ]					= '=';
+		keycodes2char[ (int) asapgl::keycodes::snapi_backspace ]				= (char)8; //backspace
+		keycodes2char[ (int) asapgl::keycodes::snapi_q ]						= 'q';
+		keycodes2char[ (int) asapgl::keycodes::snapi_w ]						= 'w';
+		keycodes2char[ (int) asapgl::keycodes::snapi_e ]						= 'e';
+		keycodes2char[ (int) asapgl::keycodes::snapi_r ]						= 'r';
+		keycodes2char[ (int) asapgl::keycodes::snapi_t ]						= 't';
+		keycodes2char[ (int) asapgl::keycodes::snapi_y ]						= 'y';
+		keycodes2char[ (int) asapgl::keycodes::snapi_u ]						= 'u';
+		keycodes2char[ (int) asapgl::keycodes::snapi_i ]						= 'i';
+		keycodes2char[ (int) asapgl::keycodes::snapi_o ]						= 'o';
+		keycodes2char[ (int) asapgl::keycodes::snapi_p ]						= 'p';
+		keycodes2char[ (int) asapgl::keycodes::snapi_leftbrace ]				= '{';
+		keycodes2char[ (int) asapgl::keycodes::snapi_rightbrace ]				= '}';
+		keycodes2char[ (int) asapgl::keycodes::snapi_enter ]					= '\n';
+		keycodes2char[ (int) asapgl::keycodes::snapi_a ]						= 'a';
+		keycodes2char[ (int) asapgl::keycodes::snapi_s ]						= 's';
+		keycodes2char[ (int) asapgl::keycodes::snapi_d ]						= 'd';
+		keycodes2char[ (int) asapgl::keycodes::snapi_f ]						= 'f';
+		keycodes2char[ (int) asapgl::keycodes::snapi_g ]						= 'g';
+		keycodes2char[ (int) asapgl::keycodes::snapi_h ]						= 'h';
+		keycodes2char[ (int) asapgl::keycodes::snapi_j ]						= 'j';
+		keycodes2char[ (int) asapgl::keycodes::snapi_k ]						= 'k';
+		keycodes2char[ (int) asapgl::keycodes::snapi_l ]						= 'l';
+		keycodes2char[ (int) asapgl::keycodes::snapi_semicolon ]				= ';';
+		keycodes2char[ (int) asapgl::keycodes::snapi_apostrophe ]				= '\'';
+		keycodes2char[ (int) asapgl::keycodes::snapi_grave ]					= '`';
+		keycodes2char[ (int) asapgl::keycodes::snapi_backslash ]				= '\\';
+		keycodes2char[ (int) asapgl::keycodes::snapi_z ]						= 'z';
+		keycodes2char[ (int) asapgl::keycodes::snapi_x ]						= 'x';
+		keycodes2char[ (int) asapgl::keycodes::snapi_c ]						= 'c';
+		keycodes2char[ (int) asapgl::keycodes::snapi_v ]						= 'v';
+		keycodes2char[ (int) asapgl::keycodes::snapi_b ]						= 'b';
+		keycodes2char[ (int) asapgl::keycodes::snapi_n ]						= 'n';
+		keycodes2char[ (int) asapgl::keycodes::snapi_m ]						= 'm';
+		keycodes2char[ (int) asapgl::keycodes::snapi_comma ]					= ',';
+		keycodes2char[ (int) asapgl::keycodes::snapi_dot ]						= '.';
+		keycodes2char[ (int) asapgl::keycodes::snapi_slash ]					= '/';
+		keycodes2char[ (int) asapgl::keycodes::snapi_kpasterisk ]				= '*';
+		keycodes2char[ (int) asapgl::keycodes::snapi_space ]					= ' ';
+		keycodes2char[ (int) asapgl::keycodes::snapi_kp7 ]						= '7';
+		keycodes2char[ (int) asapgl::keycodes::snapi_kp8 ]						= '8';
+		keycodes2char[ (int) asapgl::keycodes::snapi_kp9 ]						= '9';
+		keycodes2char[ (int) asapgl::keycodes::snapi_kpminus ]					= '-';
+		keycodes2char[ (int) asapgl::keycodes::snapi_kp4 ]						= '4';
+		keycodes2char[ (int) asapgl::keycodes::snapi_kp5 ]						= '5';
+		keycodes2char[ (int) asapgl::keycodes::snapi_kp6 ]						= '6';
+		keycodes2char[ (int) asapgl::keycodes::snapi_kpplus ]					= '+';
+		keycodes2char[ (int) asapgl::keycodes::snapi_kp1 ]						= '1';
+		keycodes2char[ (int) asapgl::keycodes::snapi_kp2 ]						= '2';
+		keycodes2char[ (int) asapgl::keycodes::snapi_kp3 ]						= '3';
+		keycodes2char[ (int) asapgl::keycodes::snapi_kp0 ]						= '0';
+		keycodes2char[ (int) asapgl::keycodes::snapi_kpdot ]					= ',';
 	}
 }
 

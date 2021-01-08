@@ -1,6 +1,6 @@
 #ifndef _H_Xlib_EGL_ContextType
 #define _H_Xlib_EGL_ContextType
-#ifndef IS_PLAYER
+
 #include "ContextBase.hpp"
 #include "KeyCodes.hpp"
 
@@ -8,6 +8,7 @@
 #include <EGL/egl.h>
 #include <GLES2/gl2.h>
 
+#ifdef USE_XLIB
 
 namespace asapgl
 {
@@ -15,6 +16,7 @@ namespace asapgl
 
 	class Xlib_EGL_ContextType: public ContextBase
 	{
+	public:
 		struct XDisplay
 		{
 			Display *display;
@@ -30,6 +32,7 @@ namespace asapgl
 
 			Window x11;
 		};
+	protected:
 
 		int renderTgt = 0;
 
@@ -51,17 +54,21 @@ namespace asapgl
 				    EGLWindow& eglWindow);
 		void window_show(EGLWindow& eglWindow);
 
+		#ifdef IS_EDITOR
+		void RenderImGui();
+		#endif
 	public:
 
-		Xlib_EGL_ContextType(const int* attributes, const int* contextAttribs, const int argc, const char** argv);
+		Xlib_EGL_ContextType()
+			:ContextBase(){};
 		~Xlib_EGL_ContextType();
 
-		virtual void SwapBuffer();
-		virtual void HandleContextEvents();
+		virtual void Init(const int argc, const char** argv) override;
+		virtual void SwapBuffer() override;
+		virtual void MainLoop() override;
+		virtual void HandleContextEvents() override;
+		virtual void CleanUp() override;
 
-		#ifndef IS_PLAYER
-		virtual void RenderImGui() override;
-		#endif
 	};
 
 }

@@ -2,7 +2,7 @@
 #define _H_CONTEXT
 #include <chrono>
 #include "DRM_GBM_EGL_ContextType.hpp"
-#ifndef IS_PLAYER
+#ifdef USE_XLIB
 #include "Xlib_EGL_ContextType.hpp"
 #endif
 
@@ -28,7 +28,7 @@ namespace asapgl
 		void MainLoop();
 
 
-		#ifndef IS_PLAYER
+		#ifdef USE_XLIB
 		void initXlib(const int argc, const char** argv);
 		#endif
 		

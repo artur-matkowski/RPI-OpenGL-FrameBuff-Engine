@@ -6,6 +6,7 @@
 #include <gbm.h>
 #include <EGL/egl.h>
 #include <GLES2/gl2.h>
+#include <thread>
 
 #include <fcntl.h>    /* For O_RDWR */
 #include <unistd.h>   /* For open(), creat() */
@@ -146,7 +147,7 @@ static void clean_up () {
 namespace asapgl
 {
 
-	DRM_GBM_EGL_ContextType::DRM_GBM_EGL_ContextType(const int* attributes, const int* contextAttribs, const int argc, const char** argv)
+	void DRM_GBM_EGL_ContextType::Init(const int argc, const char** argv)
 	{
 
 		device = open ("/dev/dri/card0", O_RDWR|O_CLOEXEC);
@@ -183,8 +184,57 @@ namespace asapgl
 	}
 
 
+	void DRM_GBM_EGL_ContextType::CleanUp()
+	{
+		
+	}
+
+
 	void DRM_GBM_EGL_ContextType::HandleContextEvents()
 	{
 		m_devinput.poolEvents();
+	}
+
+	void DRM_GBM_EGL_ContextType::MainLoop()
+	{
+		
+		bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
+		RendererSystem& rendererSystem = SYSTEMS::GetObject().RENDERER;
+		auto frameEnd =  std::chrono::system_clock::now();
+		auto frameStart = std::chrono::high_resolution_clock::now();
+		bool show_demo_window = true;
+
+		std::chrono::duration<double> elapsed;
+
+		GLfloat rotation = 0.0;
+		while(m_isRunning)
+		{
+			std::chrono::duration<double> frameDeltaTime = frameEnd - frameStart;
+			frameStart = std::chrono::high_resolution_clock::now();
+
+			HandleContextEvents();
+
+			//TODO frame stuff
+			{
+				rotation += frameDeltaTime.count();
+
+				rendererSystem.Render();
+				
+				SwapBuffer();
+			}
+
+
+
+			std::chrono::duration<double> calculationTime = std::chrono::high_resolution_clock::now() - frameStart;
+			std::chrono::duration<double> diffToFrameEnd = m_frameDelay - calculationTime;
+
+
+			//log::debug << "frameDeltaTime: "  << (float)frameDeltaTime.count() << "s, Calculation time: " << (float)calculationTime.count() << "s" << std::endl;
+
+			std::this_thread::sleep_for(diffToFrameEnd);
+
+			frameEnd = std::chrono::high_resolution_clock::now();
+		}
+		
 	}
 }
