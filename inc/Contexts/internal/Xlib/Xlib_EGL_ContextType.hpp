@@ -97,6 +97,19 @@ namespace asapgl
 		{
 			return m_focusedWindow;
 		}
+		inline void Erase(EGLWindow* data)
+		{
+			for(std::vector<struct EGLWindow>::iterator it = m_eglWindows.begin(); 
+				it!=m_eglWindows.end(); 
+				++it)
+			{
+				if( it->x11 == data->x11 )
+				{
+					m_eglWindows.erase(it);
+					break;
+				}
+			}
+		}
 
 	};
 

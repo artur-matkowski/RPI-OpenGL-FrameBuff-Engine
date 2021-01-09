@@ -203,6 +203,18 @@ namespace asapgl
 
 	static void ImGui_ImplXlib_DestroyWindow(ImGuiViewport* viewport)
 	{
+	    Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*)viewport->PlatformUserData;
+
+
+		eglDestroySurface(g_Context->GetEGLDisplay(), data->surface);
+		eglDestroyContext(g_Context->GetEGLDisplay(), data->context);
+		XDestroyWindow(g_Context->GetDisplay(), data->x11);
+
+		g_Context->Erase(data);
+
+    	viewport->PlatformUserData = viewport->PlatformHandle = NULL;
+		
+		//log::debug << "ImGui_ImplXlib_DestroyWindow" << std::endl;
 	}
 
 	static void ImGui_ImplXlib_ShowWindow(ImGuiViewport* viewport)
@@ -221,7 +233,13 @@ namespace asapgl
 
 	static void ImGui_ImplXlib_SetWindowPos(ImGuiViewport* viewport, ImVec2 pos)
 	{
-		log::debug << "ImGui_ImplXlib_SetWindowPos" << std::endl;
+		Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*) viewport->PlatformUserData;
+		XWindowChanges setup;
+		setup.x = pos.x;
+		setup.y = pos.y;
+
+		XConfigureWindow( g_Context->GetDisplay(), data->x11, CWX | CWY, &setup);
+		//log::debug << "ImGui_ImplXlib_SetWindowPos" << std::endl;
 	}
 
 	static ImVec2 ImGui_ImplXlib_GetWindowSize(ImGuiViewport* viewport)
@@ -231,12 +249,22 @@ namespace asapgl
 
 	static void ImGui_ImplXlib_SetWindowSize(ImGuiViewport* viewport, ImVec2 size)
 	{
-		log::debug << "ImGui_ImplXlib_SetWindowSize" << std::endl;
+		Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*) viewport->PlatformUserData;
+		XWindowChanges setup;
+		setup.width = size.x;
+		setup.height = size.y;
+
+		XConfigureWindow( g_Context->GetDisplay(), data->x11, CWWidth | CWHeight, &setup);
+
+		//log::debug << "ImGui_ImplXlib_SetWindowSize" << std::endl;
 	}
 
 	static void ImGui_ImplXlib_SetWindowTitle(ImGuiViewport* viewport, const char* title)
 	{
-		log::debug << "ImGui_ImplXlib_SetWindowTitle" << std::endl;
+		Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*) viewport->PlatformUserData;
+
+		XStoreName( g_Context->GetDisplay(), data->x11, title );
+		//log::debug << "ImGui_ImplXlib_SetWindowTitle" << std::endl;
 	}
 
 	static void ImGui_ImplXlib_SetWindowFocus(ImGuiViewport* viewport)
@@ -247,7 +275,9 @@ namespace asapgl
 	static bool ImGui_ImplXlib_GetWindowFocus(ImGuiViewport* viewport)
 	{
 		Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*) viewport->PlatformUserData;
-		//log::debug << "ImGui_ImplXlib_GetWindowFocus" << std::endl;
+		// log::debug << "ImGui_ImplXlib_GetWindowFocus" << g_Context->GetFocusedWindow() << std::endl;
+		// log::debug << "ImGui_ImplXlib_GetWindowFocus" << data->x11 << std::endl;
+		// log::debug << " " << std::endl;
 		return g_Context->GetFocusedWindow() == data->x11;
 	}
 

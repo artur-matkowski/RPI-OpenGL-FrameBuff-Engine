@@ -331,7 +331,7 @@ namespace asapgl
 				break;
 
 			case MotionNotify:
-				//log::debug << "MotionNotify: " << event.xmotion.x << " " << event.xmotion.y << std::endl;
+				//log::debug << "MotionNotify: " << event.xmotion.x << " " << event.xmotion.y << " " << event.xmotion.window <<  std::endl;
 				events.Invoke<MouseMoveEvent>([&](MouseMoveEvent& args) 
 			    {
 					args.m_Xpos = (int)event.xmotion.x;
@@ -347,6 +347,7 @@ namespace asapgl
 			    		break;
 			    	}
 			    }
+				m_focusedWindow = event.xmotion.window;
 				break;	
 
 			case ButtonPress:
@@ -431,8 +432,8 @@ namespace asapgl
 			    break;
 			
 			case FocusIn:
+				//log::debug << "FocusIn: " << event.xfocus.window << std::endl;
 				XAutoRepeatOff(m_XDisplay.display);
-				m_focusedWindow = event.xfocus.window;
 			    break;
 
 			case FocusOut:
