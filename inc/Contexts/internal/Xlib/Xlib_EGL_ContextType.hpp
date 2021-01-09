@@ -30,6 +30,7 @@ namespace asapgl
 			EGLSurface 	surface;
 			glm::ivec2 	resolution;
 			glm::ivec2 	position;
+			glm::ivec2 	cursorPos;
 
 			Window 		x11;
     		bool   		WindowOwned;
@@ -83,6 +84,10 @@ namespace asapgl
 		inline EGLDisplay GetEGLDisplay()
 		{
 			return m_XDisplay.egl;
+		}
+		inline Window GetRoot()
+		{
+			return m_XDisplay.root;
 		}
 		inline EGLWindow* GetMainEGLWindow()
 		{

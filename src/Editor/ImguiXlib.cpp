@@ -1,6 +1,8 @@
 #include "ImguiXlib.hpp"
 #include "KeyCodes.hpp"
 #include "Systems.hpp"
+#include <ctime>
+#include <ratio>
 #ifdef USE_XLIB
 #include <X11/Xlib.h>
 #endif
@@ -11,6 +13,7 @@ namespace asapgl
 	static Xlib_EGL_ContextType::EGLWindow* g_Window = 0;
 	static double               			g_Time = 0.0;
 	static bool                 			g_MouseJustPressed[ImGuiMouseButton_COUNT] = {};
+	static bool                 			g_MouseButtonState[ImGuiMouseButton_COUNT] = {};
 	static bool                 			g_WantUpdateMonitors = true;
 	static glm::ivec2 						g_MousePos;
 	static Xlib_EGL_ContextType* 			g_Context = 0;
@@ -73,13 +76,19 @@ namespace asapgl
 		    MouseClickEvent* args = (MouseClickEvent*)&a;
 			static ImGuiIO& io = ImGui::GetIO();
 
-		    if (args->m_state == (int)asapgl::keystates::snapi_down
-		    	&& (int)args->m_key >= 0 
-		    	&& (int)args->m_key < IM_ARRAYSIZE(g_MouseJustPressed))
+		    if (args->m_state == (int)asapgl::keystates::snapi_down &&
+		    	 (int)args->m_key >= 0 &&
+		    	 (int)args->m_key < IM_ARRAYSIZE(g_MouseJustPressed))
 		    {
 		        g_MouseJustPressed[args->m_key] = true;
 		    }
-		    else if( args->m_key == (int)asapgl::mousecodes::snapi_wheelY )
+		    if( (int)args->m_key >= 0 &&
+		    	 (int)args->m_key < IM_ARRAYSIZE(g_MouseJustPressed) )
+		    {
+		    	g_MouseButtonState[args->m_key] = args->m_state == (int)asapgl::keystates::snapi_down;
+		    }
+
+		    if( args->m_key == (int)asapgl::mousecodes::snapi_wheelY )
 		    {
 		    	if( args->m_state == (int)asapgl::keystates::snapi_down )
 			    	io.MouseWheel -= (float)1.0;
@@ -171,7 +180,7 @@ namespace asapgl
 
 	    viewport->PlatformUserData = data;
 	    data->WindowOwned = true;
-	    viewport->PlatformHandle = (void*)data->x11;
+	    viewport->PlatformHandle = (void*)data;
 
 
 /*
@@ -252,14 +261,16 @@ namespace asapgl
 	{
 		Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*) viewport->PlatformUserData;
 
-		eglMakeCurrent(g_Context->GetEGLDisplay(), data->surface, data->surface, data->context);
+		//eglMakeCurrent(g_Context->GetEGLDisplay(), data->surface, data->surface, data->context);
+		eglMakeCurrent( eglGetCurrentDisplay(), data->surface, data->surface, eglGetCurrentContext() );
 	}
 
 	static void ImGui_ImplXlib_SwapBuffers(ImGuiViewport* viewport, void*)
 	{
 		Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*) viewport->PlatformUserData;
 
-		eglMakeCurrent(g_Context->GetEGLDisplay(), data->surface, data->surface, data->context);
+		//eglMakeCurrent(g_Context->GetEGLDisplay(), data->surface, data->surface, data->context);
+		eglMakeCurrent( eglGetCurrentDisplay(), data->surface, data->surface, eglGetCurrentContext() );
 		eglSwapBuffers(g_Context->GetEGLDisplay(), data->surface);
 	}
 
@@ -319,13 +330,13 @@ namespace asapgl
 
 	static void ImGui_ImplXlib_UpdateMousePosAndButtons()
 	{
-		/*
+		
 	    // Update buttons
 	    ImGuiIO& io = ImGui::GetIO();
 	    for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++)
 	    {
 	        // If a mouse press event came, always pass it as "mouse held this frame", so we don't miss click-release events that are shorter than 1 frame.
-	        io.MouseDown[i] = g_MouseJustPressed[i] || glfwGetMouseButton(g_Window, i) != 0;
+	        io.MouseDown[i] = g_MouseJustPressed[i] || g_MouseButtonState[i]!=false;
 	        g_MouseJustPressed[i] = false;
 	    }
 
@@ -337,39 +348,32 @@ namespace asapgl
 	    for (int n = 0; n < platform_io.Viewports.Size; n++)
 	    {
 	        ImGuiViewport* viewport = platform_io.Viewports[n];
-	        GLFWwindow* window = (GLFWwindow*)viewport->PlatformHandle;
+	        Xlib_EGL_ContextType::EGLWindow* window = (Xlib_EGL_ContextType::EGLWindow*)viewport->PlatformHandle;
 	        IM_ASSERT(window != NULL);
-	#ifdef __EMSCRIPTEN__
-	        const bool focused = true;
-	        IM_ASSERT(platform_io.Viewports.Size == 1);
-	#else
-	        const bool focused = glfwGetWindowAttrib(window, GLFW_FOCUSED) != 0;
-	#endif
+
+	        const bool focused = g_Context->GetFocusedWindow() == window->x11;
+
 	        if (focused)
 	        {
 	            if (io.WantSetMousePos)
 	            {
-	                glfwSetCursorPos(window, (double)(mouse_pos_backup.x - viewport->Pos.x), (double)(mouse_pos_backup.y - viewport->Pos.y));
+	            	XWarpPointer(g_Context->GetDisplay(), None, g_Context->GetRoot(), 0, 0, 0, 0, (int)(mouse_pos_backup.x - viewport->Pos.x), (int)(mouse_pos_backup.y - viewport->Pos.y) );
 	            }
 	            else
 	            {
-	                double mouse_x, mouse_y;
-	                glfwGetCursorPos(window, &mouse_x, &mouse_y);
 	                if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 	                {
 	                    // Multi-viewport mode: mouse position in OS absolute coordinates (io.MousePos is (0,0) when the mouse is on the upper-left of the primary monitor)
-	                    int window_x, window_y;
-	                    glfwGetWindowPos(window, &window_x, &window_y);
-	                    io.MousePos = ImVec2((float)mouse_x + window_x, (float)mouse_y + window_y);
+	                    io.MousePos = ImVec2((float)window->cursorPos.x + window->position.x, (float)window->cursorPos.y + window->position.y);
 	                }
 	                else
 	                {
 	                    // Single viewport mode: mouse position in client window coordinates (io.MousePos is (0,0) when the mouse is on the upper-left corner of the app window)
-	                    io.MousePos = ImVec2((float)mouse_x, (float)mouse_y);
+	                    io.MousePos = ImVec2((float)window->cursorPos.x, (float)window->cursorPos.y);
 	                }
 	            }
-	            for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++)
-	                io.MouseDown[i] |= glfwGetMouseButton(window, i) != 0;
+	             for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++)
+	                 io.MouseDown[i] |= g_MouseButtonState[i]!=false;
 	        }
 
 	        // (Optional) When using multiple viewports: set io.MouseHoveredViewport to the viewport the OS mouse cursor is hovering.
@@ -380,15 +384,15 @@ namespace asapgl
 	        // rectangles and last focused time of every viewports it knows about. It will be unaware of other windows that may be sitting between or over your windows.
 	        // [GLFW] FIXME: This is currently only correct on Win32. See what we do below with the WM_NCHITTEST, missing an equivalent for other systems.
 	        // See https://github.com/glfw/glfw/issues/1236 if you want to help in making this a GLFW feature.
-	#if GLFW_HAS_MOUSE_PASSTHROUGH || (GLFW_HAS_WINDOW_HOVERED && defined(_WIN32))
-	        const bool window_no_input = (viewport->Flags & ImGuiViewportFlags_NoInputs) != 0;
-	#if GLFW_HAS_MOUSE_PASSTHROUGH
-	        glfwSetWindowAttrib(window, GLFW_MOUSE_PASSTHROUGH, window_no_input);
-	#endif
-	        if (glfwGetWindowAttrib(window, GLFW_HOVERED) && !window_no_input)
-	            io.MouseHoveredViewport = viewport->ID;
-	#endif
-	    }*/
+	// #if GLFW_HAS_MOUSE_PASSTHROUGH || (GLFW_HAS_WINDOW_HOVERED && defined(_WIN32))
+	//         const bool window_no_input = (viewport->Flags & ImGuiViewportFlags_NoInputs) != 0;
+	// #if GLFW_HAS_MOUSE_PASSTHROUGH
+	//         glfwSetWindowAttrib(window, GLFW_MOUSE_PASSTHROUGH, window_no_input);
+	// #endif
+	//         if (glfwGetWindowAttrib(window, GLFW_HOVERED) && !window_no_input)
+	//             io.MouseHoveredViewport = viewport->ID;
+	// #endif
+	    }
 	}
 
 	void ImGui_ImplXlib_NewFrame()
@@ -407,11 +411,6 @@ namespace asapgl
 	    if (g_WantUpdateMonitors)
 	        ImGui_ImplXlib_UpdateMonitors();
 	   
-	    // Setup time step
-	    double current_time = SYSTEMS::GetObject().TIME.TimeSinceApplicationStart();
-	    io.DeltaTime = g_Time > 0.0 ? (float)(current_time - g_Time) : (float)(1.0f / 60.0f);
-	    g_Time = current_time;
-
 	    ImGui_ImplXlib_UpdateMousePosAndButtons();
 	    //ImGui_ImplXlib_UpdateMouseCursor();
 

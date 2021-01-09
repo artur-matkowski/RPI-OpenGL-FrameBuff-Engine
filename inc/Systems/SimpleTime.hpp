@@ -2,6 +2,7 @@
 #define _H_SimpleTime
 #include <chrono>
 #include <ctime>
+#include <ratio>
 
 
 namespace asapgl
@@ -10,26 +11,13 @@ namespace asapgl
 	{
 		std::chrono::_V2::system_clock::time_point 		m_applicationStartTime;
 		std::chrono::_V2::system_clock::time_point		m_frameStartTime;
+		std::chrono::_V2::system_clock::time_point		m_frameStopTime;
 	public:
 		SimpleTime()
 		{
 			m_applicationStartTime = std::chrono::high_resolution_clock::now();
 		}
 
-		inline void FrameTimerStart()
-		{
-			m_frameStartTime = std::chrono::high_resolution_clock::now();
-		}
-
-		inline double TimeSinceFrameStart()
-		{
-			return (std::chrono::high_resolution_clock::now()-m_frameStartTime).count();
-		}
-
-		inline double TimeSinceApplicationStart()
-		{
-			return (std::chrono::high_resolution_clock::now()-m_applicationStartTime).count();
-		}
 	};
 }
 

@@ -261,7 +261,7 @@ namespace asapgl
 	    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
 	    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 	    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
-	    //io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+	    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
 	    //io.ConfigViewportsNoAutoMerge = true;
 	    //io.ConfigViewportsNoTaskBarIcon = true;
 
@@ -306,8 +306,8 @@ namespace asapgl
 
 	void Xlib_EGL_ContextType::SwapBuffer()
 	{
-		for(int i=0; i<m_eglWindows.size(); ++i)
-			eglSwapBuffers(m_XDisplay.egl, m_eglWindows[i].surface);
+		//for(int i=0; i<m_eglWindows.size(); ++i)
+			eglSwapBuffers(m_XDisplay.egl, m_eglWindows[0].surface);
 		glFlush();
 	}
 
@@ -315,7 +315,6 @@ namespace asapgl
 	{
 		XEvent event;
 		static bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
-
 
 
 
@@ -328,8 +327,7 @@ namespace asapgl
 			switch (event.type) 
 			{
 			case Expose:
-				//redraw = true;
-				log::debug << "Expose" << std::endl;
+				//log::debug << "Expose" << std::endl;
 				break;
 
 			case MotionNotify:
@@ -340,7 +338,15 @@ namespace asapgl
 					args.m_Ypos = (int)event.xmotion.y;
 			    	args.m_eventSourceWindow = event.xmotion.window;
 			    });
-
+			    for(int i=0; i<m_eglWindows.size(); ++i)
+			    {
+			    	if( m_eglWindows[i].x11 == event.xmotion.window )
+			    	{
+			    		m_eglWindows[i].cursorPos.x = (GLint)event.xmotion.x;
+			    		m_eglWindows[i].cursorPos.y = (GLint)event.xmotion.y;
+			    		break;
+			    	}
+			    }
 				break;	
 
 			case ButtonPress:
@@ -369,7 +375,7 @@ namespace asapgl
 				break;
 
 			case ConfigureNotify:
-				log::debug << "ConfigureNotify: " << event.xconfigure.x << " " << event.xconfigure.y << " \\ " << event.xconfigure.width << " " << event.xconfigure.height << std::endl;
+				//log::debug << "ConfigureNotify: " << event.xconfigure.x << " " << event.xconfigure.y << " \\ " << event.xconfigure.width << " " << event.xconfigure.height << std::endl;
 			    events.Invoke<ResizeWindowArgs>([&](ResizeWindowArgs& args) 
 			    {
 			    	args.m_width = (GLint)event.xconfigure.width; 
@@ -439,7 +445,6 @@ namespace asapgl
 			}
 		
 		}
-		
 	}
 
 
@@ -465,8 +470,9 @@ namespace asapgl
 		RendererSystem& rendererSystem = SYSTEMS::GetObject().RENDERER;
 		auto frameEnd =  std::chrono::system_clock::now();
 		auto frameStart = std::chrono::high_resolution_clock::now();
-		bool show_demo_window = false;
+		bool show_demo_window = true;
 		bool show_another_window = true;
+		std::chrono::duration<double> frameDeltaTime( m_frameDelay );
 
 		#ifdef IS_EDITOR
     	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -477,119 +483,24 @@ namespace asapgl
 
 		GLfloat rotation = 0.0;
 
-		// while(m_isRunning)
-		// {
-		// 	std::chrono::duration<double> frameDeltaTime = frameEnd - frameStart;
-		// 	frameStart = std::chrono::high_resolution_clock::now();
+		while(m_isRunning)
+		{
+			frameStart = std::chrono::high_resolution_clock::now();
 
-		// 	HandleContextEvents();
+			HandleContextEvents();
 
-		// 	//TODO frame stuff
-		// 	{
-		// 		rotation += frameDeltaTime.count();
+			//TODO frame stuff
+			{
+				rotation += frameDeltaTime.count();
 
-		// 		//eglMakeCurrent(m_XDisplay.egl, m_mainEglWindow->surface, m_mainEglWindow->surface, m_mainEglWindow->context);
+				//eglMakeCurrent(m_XDisplay.egl, m_mainEglWindow->surface, m_mainEglWindow->surface, m_mainEglWindow->context);
 
-		// 		//#ifdef IS_EDITOR
+				//#ifdef IS_EDITOR
 				
-		// 		// glViewport(0, 0, m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y);
-		// 		// glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		// 		// glClear(GL_COLOR_BUFFER_BIT);
+				// glViewport(0, 0, m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y);
+				// glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+				// glClear(GL_COLOR_BUFFER_BIT);
 				
-		//         // Start the Dear ImGui frame
-		//         ImGui_ImplOpenGL2_NewFrame();
-		//         ImGui_ImplXlib_NewFrame();
-		//         ImGui::NewFrame();
-
-		//         // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-		//         if (show_demo_window)
-	 //            	ImGui::ShowDemoWindow(&show_demo_window);
-
-	 //            {
-		//             static float f = 0.0f;
-		//             static int counter = 0;
-
-		//             ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-		//             ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-		//             ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-		//             ImGui::Checkbox("Another Window", &show_another_window);
-
-		//             ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-		//             ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-		//             if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-		//                 counter++;
-		//             ImGui::SameLine();
-		//             ImGui::Text("counter = %d", counter);
-
-		//             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-		//             ImGui::End();
-		//         }
-
-
-
-		//         // Rendering
-		//         ImGui::Render();
-		//         glViewport(0, 0, m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y);
-		//         glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-		//         glClear(GL_COLOR_BUFFER_BIT);
-
-		//         // If you are using this code with non-legacy OpenGL header/contexts (which you should not, prefer using imgui_impl_opengl3.cpp!!),
-		//         // you may need to backup/reset/restore current shader using the commented lines below.
-		//         //GLint last_program;
-		//         //glGetIntegerv(GL_CURRENT_PROGRAM, &last_program);
-		//         //glUseProgram(0);
-		//         ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
-		//         //glUseProgram(last_program);
-
-		//         // Update and Render additional Platform Windows
-		//         // (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
-		//         //  For this specific demo app we could also call glfwMakeContextCurrent(window) directly)
-		//         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-		//         {
-		//             //GLFWwindow* backup_current_context = glfwGetCurrentContext();
-		//             ImGui::UpdatePlatformWindows();
-		//             ImGui::RenderPlatformWindowsDefault();
-		//             //glfwMakeContextCurrent(backup_current_context);
-
-		//         }
-
-
-		// 		//RenderImGui();
-		// 		//#endif
-
-
-
-		// 		rendererSystem.Render();
-				
-		// 		SwapBuffer();
-		// 	}
-
-
-
-
-
-		// 	std::chrono::duration<double> calculationTime = std::chrono::high_resolution_clock::now() - frameStart;
-		// 	std::chrono::duration<double> diffToFrameEnd = m_frameDelay - calculationTime;
-
-
-		// 	//log::debug << "frameDeltaTime: "  << (float)frameDeltaTime.count() << "s, Calculation time: " << (float)calculationTime.count() << "s" << std::endl;
-
-		// 	std::this_thread::sleep_for(diffToFrameEnd);
-
-		// 	frameEnd = std::chrono::high_resolution_clock::now();
-		// }
-
-			while (m_isRunning)
-		    {
-		        // Poll and handle events (inputs, window resize, etc.)
-		        // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
-		        // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application.
-		        // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application.
-		        // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
-		        HandleContextEvents();
-
 		        // Start the Dear ImGui frame
 		        ImGui_ImplOpenGL3_NewFrame();
 		        ImGui_ImplXlib_NewFrame();
@@ -597,10 +508,9 @@ namespace asapgl
 
 		        // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
 		        if (show_demo_window)
-		            ImGui::ShowDemoWindow(&show_demo_window);
+	            	ImGui::ShowDemoWindow(&show_demo_window);
 
-		        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
-		        {
+	            {
 		            static float f = 0.0f;
 		            static int counter = 0;
 
@@ -622,19 +532,10 @@ namespace asapgl
 		            ImGui::End();
 		        }
 
-		        // 3. Show another simple window.
-		        if (show_another_window)
-		        {
-		            ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-		            ImGui::Text("Hello from another window!");
-		            if (ImGui::Button("Close Me"))
-		                show_another_window = false;
-		            ImGui::End();
-		        }
+
 
 		        // Rendering
 		        ImGui::Render();
-		        //log::debug << "x y : "  << m_mainEglWindow->resolution.x << m_mainEglWindow->resolution.y  << std::endl;
 		        glViewport(0, 0, m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y);
 		        glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 		        glClear(GL_COLOR_BUFFER_BIT);
@@ -658,9 +559,37 @@ namespace asapgl
 		            eglMakeCurrent(m_XDisplay.egl, m_mainEglWindow->surface, m_mainEglWindow->surface, m_mainEglWindow->context);
 		        }
 
-		        SwapBuffer();
-		    }
-		
+
+				//RenderImGui();
+				//#endif
+
+
+
+				rendererSystem.Render();
+				
+				SwapBuffer();
+			}
+
+
+
+
+
+			std::chrono::duration<double> calculationTime = std::chrono::high_resolution_clock::now() - frameStart;
+			std::chrono::duration<double> diffToFrameEnd = m_frameDelay - calculationTime;
+
+
+		    // Setup time step
+		    io.DeltaTime = (float)frameDeltaTime.count();
+
+
+
+			//log::debug << "frameDeltaTime: "  << (float)frameDeltaTime.count() << "s, Calculation time: " << (float)calculationTime.count() << "s" << std::endl;
+
+			std::this_thread::sleep_for(diffToFrameEnd);
+
+			frameEnd = std::chrono::high_resolution_clock::now();
+			frameDeltaTime = frameEnd - frameStart;
+		}		
 	}
 
 
