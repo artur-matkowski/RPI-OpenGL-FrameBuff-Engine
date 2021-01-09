@@ -4,7 +4,7 @@ ARCHITECTURE = $(shell dpkg --print-architecture)
 
 CC 		  	= g++ -std=c++11 -I/usr/include/libdrm 
 
-CPPFLAGS 	= -I/usr/include/freetype2 -I/usr/include/freetype2/freetype
+CPPFLAGS 	= -I/usr/include/freetype2 -I/usr/include/freetype2/freetype -DIMGUI_IMPL_OPENGL_ES2
 
 INCDIR	 	= inc/
 OBJDIR	 	= obj/
@@ -19,7 +19,7 @@ INCSTRUCTURE = $(patsubst %, -I%, $(DIRSTRUCTURE))
 
 IMGUI_DIR = ./vendor/imgui/
 SOURCES += $(IMGUI_DIR)/imgui $(IMGUI_DIR)/imgui_demo $(IMGUI_DIR)/imgui_draw $(IMGUI_DIR)/imgui_tables $(IMGUI_DIR)/imgui_widgets
-SOURCES += $(IMGUI_DIR)/backends/imgui_impl_opengl2
+SOURCES += $(IMGUI_DIR)/backends/imgui_impl_opengl3
 
 DEPGL 		= -lGL -lEGL -lGLESv2  -ldrm -lgbm -lX11 -lXext -lbitforgeutils -lpng
 #DEPGL 		=  -lpng -lbrcmEGL -lbrcmGLESv2  -L/opt/vc/lib

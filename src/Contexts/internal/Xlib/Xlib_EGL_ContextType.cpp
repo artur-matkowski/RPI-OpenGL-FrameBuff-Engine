@@ -279,7 +279,7 @@ namespace asapgl
 
 	    // Setup Platform/Renderer backends
 	    ImGui_ImplXlib_InitForOpenGL(m_mainEglWindow, this);
-	    ImGui_ImplOpenGL2_Init();
+	    ImGui_ImplOpenGL3_Init();
 	}
 	
 	Xlib_EGL_ContextType::~Xlib_EGL_ContextType()
@@ -581,7 +581,6 @@ namespace asapgl
 		// 	frameEnd = std::chrono::high_resolution_clock::now();
 		// }
 
-
 			while (m_isRunning)
 		    {
 		        // Poll and handle events (inputs, window resize, etc.)
@@ -592,7 +591,7 @@ namespace asapgl
 		        HandleContextEvents();
 
 		        // Start the Dear ImGui frame
-		        ImGui_ImplOpenGL2_NewFrame();
+		        ImGui_ImplOpenGL3_NewFrame();
 		        ImGui_ImplXlib_NewFrame();
 		        ImGui::NewFrame();
 
@@ -645,7 +644,7 @@ namespace asapgl
 		        //GLint last_program;
 		        //glGetIntegerv(GL_CURRENT_PROGRAM, &last_program);
 		        //glUseProgram(0);
-		        ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+		        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		        //glUseProgram(last_program);
 
 		        // Update and Render additional Platform Windows

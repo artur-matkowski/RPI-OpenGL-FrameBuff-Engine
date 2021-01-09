@@ -3,6 +3,7 @@
 #include "SharedPtr.hpp"
 #include "glm.hpp"
 
+
 //	Allowed #defines to controll build process
 //	#define IS_EDITOR
 //	#define IS_PLAYER

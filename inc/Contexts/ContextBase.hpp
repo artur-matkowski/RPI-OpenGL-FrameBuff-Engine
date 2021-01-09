@@ -25,10 +25,12 @@ namespace asapgl
 
 	    EGL_RENDERABLE_TYPE, 
 	    EGL_OPENGL_ES2_BIT, 
+	    //EGL_OPENGL_BIT,
 	    EGL_NONE};
 	    
 	const EGLint contextAttribs[] = {
 		EGL_CONTEXT_CLIENT_VERSION, 2,
+		//EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE, EGL_TRUE,
         EGL_NONE};
 
 	class ContextBase: public object

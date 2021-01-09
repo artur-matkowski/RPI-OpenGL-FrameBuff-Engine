@@ -3,7 +3,7 @@
 #include "object.hpp"
 #ifdef IS_EDITOR
 #include "imgui.h"      // IMGUI_IMPL_API
-#include "backends/imgui_impl_opengl2.h"
+#include "backends/imgui_impl_opengl3.h"
 
 
 namespace asapgl
