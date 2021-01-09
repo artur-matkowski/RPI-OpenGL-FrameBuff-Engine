@@ -174,16 +174,14 @@ namespace asapgl
 				| FocusChangeMask);
 
 
-		XMapWindow(m_XDisplay.display, eglWindow.x11);
-
 		if( &eglWindow != m_mainEglWindow )
 		{
 			Atom window_type;
 			long value;
 
-			// window_type = XInternAtom(m_XDisplay.display, "_NET_WM_WINDOW_TYPE", False);
-			// value = XInternAtom(m_XDisplay.display, "_NET_WM_WINDOW_TYPE_DOCK", False);
-			// XChangeProperty(m_XDisplay.display, eglWindow.x11, window_type, XA_ATOM, 32, PropModeReplace, (unsigned char *) &value, 1);
+			window_type = XInternAtom(m_XDisplay.display, "_NET_WM_WINDOW_TYPE", False);
+			value = XInternAtom(m_XDisplay.display, "_NET_WM_WINDOW_TYPE_DOCK", False);
+			XChangeProperty(m_XDisplay.display, eglWindow.x11, window_type, XA_ATOM, 32, PropModeReplace, (unsigned char *) &value, 1);
 			
 			// window_type = XInternAtom(m_XDisplay.display, "_NET_WM_STATE", False);
 			// value = XInternAtom(m_XDisplay.display, "_NET_WM_STATE_HIDDEN", False);
@@ -195,8 +193,10 @@ namespace asapgl
 			
 		}
 
+		XMapWindow(m_XDisplay.display, eglWindow.x11);
+
 		if (!eglMakeCurrent(m_XDisplay.egl, eglWindow.surface, eglWindow.surface, eglWindow.context))
-			log::error << "eglMakeCurrent():\n" << std::endl;
+			log::error << "eglMakeCurrent()" << std::endl;
 			
 		XFlush(m_XDisplay.display);
 	}
