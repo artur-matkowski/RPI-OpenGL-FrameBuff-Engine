@@ -2,6 +2,7 @@
 #define _H_DRM_GBM_EGL_ContextType
 #include "ContextBase.hpp"
 #include "DevInput.hpp"
+#include "glm.hpp"
 
 namespace asapgl
 {
@@ -9,6 +10,7 @@ namespace asapgl
 	class DRM_GBM_EGL_ContextType: public ContextBase
 	{
 		devinput 	m_devinput;
+		glm::ivec2 	resolution;
 	public:
 
 		DRM_GBM_EGL_ContextType()

@@ -73,6 +73,8 @@ namespace asapgl
 	public:
 		bfu::SerializableVar<int> 	m_width;
 		bfu::SerializableVar<int> 	m_height;
+		bfu::SerializableVar<int> 	m_Xpos;
+		bfu::SerializableVar<int> 	m_Ypos;
 
 
 		#ifdef IS_EDITOR
@@ -85,18 +87,26 @@ namespace asapgl
 			:bfu::EventArgsBase()
 			,m_width("m_width",this)
 			,m_height("m_height",this)
+			,m_Xpos("m_Xpos",this)
+			,m_Ypos("m_Ypos",this)
 		{
 			m_width = -1;
 			m_height = -1;
+			m_Xpos = 0;
+			m_Ypos = 0;
 		}
 
 		ResizeWindowArgs(const ResizeWindowArgs& copy)
 			:bfu::EventArgsBase()
 			,m_width("m_width",this)
 			,m_height("m_height",this)
+			,m_Xpos("m_Xpos",this)
+			,m_Ypos("m_Ypos",this)
 		{
 			m_width = copy.m_width;
 			m_height = copy.m_height;
+			m_Xpos = copy.m_Xpos;
+			m_Ypos = copy.m_Ypos;
 			#ifdef IS_EDITOR
 			m_eventSourceWindow = copy.m_eventSourceWindow;
 			#endif

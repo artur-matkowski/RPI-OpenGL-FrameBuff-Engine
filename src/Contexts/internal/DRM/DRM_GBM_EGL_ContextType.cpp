@@ -163,6 +163,8 @@ namespace asapgl
 
 		setup_opengl(attributes, contextAttribs);
 
+		resolution.x = mode_info.hdisplay; 
+	    resolution.y = mode_info.vdisplay; 
 
 
 		events.Invoke<ResizeWindowArgs>([&](ResizeWindowArgs& args) 
@@ -217,6 +219,10 @@ namespace asapgl
 			//TODO frame stuff
 			{
 				rotation += frameDeltaTime.count();
+
+				glViewport(0, 0, resolution.x, resolution.y);
+				glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+				glClear(GL_COLOR_BUFFER_BIT);
 
 				rendererSystem.Render();
 				

@@ -22,7 +22,7 @@ namespace asapgl{
 		    ResizeWindowArgs* args = (ResizeWindowArgs*)&a;
 	    	m_resolution.x = args->m_width; 
 	    	m_resolution.y = args->m_height; 
-			log::debug << "resolution update invoked on RendererSystem: " << m_resolution.x << "x" << m_resolution.y  << std::endl;
+			//log::debug << "resolution update invoked on RendererSystem: " << m_resolution.x << "x" << m_resolution.y  << std::endl;
 	    });
 	}
 
@@ -45,11 +45,6 @@ namespace asapgl{
 
 	void RendererSystem::Render()
 	{
-		glViewport(0, 0, m_resolution.x, m_resolution.y);
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-
 		m_rendererComponent->Render();
 	}
 			

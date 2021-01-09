@@ -8,7 +8,7 @@
 
 namespace asapgl
 {
-	IMGUI_IMPL_API bool     ImGui_ImplXlib_InitForOpenGL(void* eglWindow);
+	IMGUI_IMPL_API bool     ImGui_ImplXlib_InitForOpenGL(void* eglWindow, void* context);
 	IMGUI_IMPL_API void     ImGui_ImplXlib_NewFrame();
 	IMGUI_IMPL_API void     ImGui_ImplXlib_Shutdown();
 }

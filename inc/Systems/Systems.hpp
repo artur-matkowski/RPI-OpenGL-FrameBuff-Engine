@@ -15,7 +15,12 @@ namespace asapgl
 	public:
 		bfu::EventSystem 	EVENTS;
 		RendererSystem 		RENDERER;
+		#ifdef USE_XLIB
 		ContextBase			*CONTEXT;
+		#else
+		DRM_GBM_EGL_ContextType			
+							CONTEXT;
+		#endif
 		ResourceSystem		RESOURCES;
 		SimpleTime			TIME;
 

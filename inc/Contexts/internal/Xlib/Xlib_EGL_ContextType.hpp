@@ -19,18 +19,20 @@ namespace asapgl
 	public:
 		struct XDisplay
 		{
-			Display *display;
-			EGLDisplay egl;
-			Window root;
+			Display 	*display;
+			EGLDisplay 	egl;
+			Window 		root;
 		};
 
 		struct EGLWindow
 		{
-			EGLContext context;
-			EGLSurface surface;
-			glm::ivec2 resolution;
+			EGLContext 	context;
+			EGLSurface 	surface;
+			glm::ivec2 	resolution;
+			glm::ivec2 	position;
 
-			Window x11;
+			Window 		x11;
+    		bool   		WindowOwned;
 		};
 	protected:
 
@@ -41,33 +43,55 @@ namespace asapgl
 
 		std::vector<struct EGLWindow> 	m_eglWindows;
 		EGLWindow* 						m_mainEglWindow = 0;
+		Window 							m_focusedWindow;
 
+
+
+
+		#ifdef IS_EDITOR
+		void RenderImGui();
+		#endif
 
 
 		void InitMaps();
 
 		bool DisplayOpen(void);
-		bool window_create(const char *name,
-				    unsigned int x, unsigned int y,
-				    unsigned int width, unsigned int height,
-				    const int* attributes, const int* contextAttribs,
-				    EGLWindow& eglWindow);
-		void window_show(EGLWindow& eglWindow);
 
-		#ifdef IS_EDITOR
-		void RenderImGui();
-		#endif
 	public:
 
 		Xlib_EGL_ContextType()
 			:ContextBase(){};
 		~Xlib_EGL_ContextType();
 
+
+		EGLWindow* window_create(const char *name,
+				    unsigned int x, unsigned int y,
+				    unsigned int width, unsigned int height);
+		void window_show(EGLWindow& eglWindow);
+
+
 		virtual void Init(const int argc, const char** argv) override;
 		virtual void SwapBuffer() override;
 		virtual void MainLoop() override;
 		virtual void HandleContextEvents() override;
 		virtual void CleanUp() override;
+
+		inline Display* GetDisplay()
+		{
+			return m_XDisplay.display;
+		}
+		inline EGLDisplay GetEGLDisplay()
+		{
+			return m_XDisplay.egl;
+		}
+		inline EGLWindow* GetMainEGLWindow()
+		{
+			return m_mainEglWindow;
+		}
+		inline Window GetFocusedWindow()
+		{
+			return m_focusedWindow;
+		}
 
 	};
 

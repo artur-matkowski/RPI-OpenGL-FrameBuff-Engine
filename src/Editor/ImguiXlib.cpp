@@ -1,7 +1,9 @@
 #include "ImguiXlib.hpp"
 #include "KeyCodes.hpp"
 #include "Systems.hpp"
-
+#ifdef USE_XLIB
+#include <X11/Xlib.h>
+#endif
 #ifdef IS_EDITOR
 
 namespace asapgl
@@ -9,16 +11,20 @@ namespace asapgl
 	static Xlib_EGL_ContextType::EGLWindow* g_Window = 0;
 	static double               			g_Time = 0.0;
 	static bool                 			g_MouseJustPressed[ImGuiMouseButton_COUNT] = {};
+	static bool                 			g_WantUpdateMonitors = true;
 	static glm::ivec2 						g_MousePos;
+	static Xlib_EGL_ContextType* 			g_Context = 0;
 
 
 	static void ImGui_ImplXlib_InitPlatformInterface();
+	static void ImGui_ImplXlib_UpdateMonitors();
 
 
 
-	IMGUI_IMPL_API bool     ImGui_ImplXlib_InitForOpenGL(void* eglWindow)
+	IMGUI_IMPL_API bool     ImGui_ImplXlib_InitForOpenGL(void* eglWindow, void* context)
 	{
 	    g_Window = (Xlib_EGL_ContextType::EGLWindow*)eglWindow;
+	    g_Context = (Xlib_EGL_ContextType*)context;
 	    g_Time = 0.0;
 
 	    // Setup backend capabilities flags
@@ -55,8 +61,8 @@ namespace asapgl
 	    io.KeyMap[ImGuiKey_Y] 			= (int) asapgl::keycodes::snapi_y;
 	    io.KeyMap[ImGuiKey_Z] 			= (int) asapgl::keycodes::snapi_z;
 
-	    //io.SetClipboardTextFn = ImGui_ImplGlfw_SetClipboardText;
-	    //io.GetClipboardTextFn = ImGui_ImplGlfw_GetClipboardText;
+	    //io.SetClipboardTextFn = ImGui_ImplXlib_SetClipboardText;
+	    //io.GetClipboardTextFn = ImGui_ImplXlib_GetClipboardText;
 	    //io.ClipboardUserData = g_Window;
 
 		bfu::CallbackId id;
@@ -134,16 +140,16 @@ namespace asapgl
 	    if (install_callbacks)
 	    {
 	        g_InstalledCallbacks = true;
-	        g_PrevUserCallbackMousebutton = glfwSetMouseButtonCallback(window, ImGui_ImplGlfw_MouseButtonCallback);
-	        g_PrevUserCallbackScroll = glfwSetScrollCallback(window, ImGui_ImplGlfw_ScrollCallback);
-	        g_PrevUserCallbackKey = glfwSetKeyCallback(window, ImGui_ImplGlfw_KeyCallback);
-	        g_PrevUserCallbackChar = glfwSetCharCallback(window, ImGui_ImplGlfw_CharCallback);
-	        g_PrevUserCallbackMonitor = glfwSetMonitorCallback(ImGui_ImplGlfw_MonitorCallback);
+	        g_PrevUserCallbackMousebutton = glfwSetMouseButtonCallback(window, ImGui_ImplXlib_MouseButtonCallback);
+	        g_PrevUserCallbackScroll = glfwSetScrollCallback(window, ImGui_ImplXlib_ScrollCallback);
+	        g_PrevUserCallbackKey = glfwSetKeyCallback(window, ImGui_ImplXlib_KeyCallback);
+	        g_PrevUserCallbackChar = glfwSetCharCallback(window, ImGui_ImplXlib_CharCallback);
+	        g_PrevUserCallbackMonitor = glfwSetMonitorCallback(ImGui_ImplXlib_MonitorCallback);
 	    }
-
+*/
 	    // Update monitors the first time (note: monitor callback are broken in GLFW 3.2 and earlier, see github.com/glfw/glfw/issues/784)
-	    ImGui_ImplGlfw_UpdateMonitors();
-	    glfwSetMonitorCallback(ImGui_ImplGlfw_MonitorCallback);*/
+	    ImGui_ImplXlib_UpdateMonitors();
+	    //glfwSetMonitorCallback(ImGui_ImplXlib_MonitorCallback);
 
 	    // Our mouse update function expect PlatformHandle to be filled for the main viewport
 	    ImGuiViewport* main_viewport = ImGui::GetMainViewport();
@@ -152,36 +158,163 @@ namespace asapgl
 	    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 	        ImGui_ImplXlib_InitPlatformInterface();
 
+
 	    return true;
 	}
+	
+	static void ImGui_ImplXlib_CreateWindow(ImGuiViewport* viewport)
+	{
+		
+	    Xlib_EGL_ContextType::EGLWindow* data = g_Context->window_create( "No Title Yet", 
+	    															(int)viewport->Pos.x, (int)viewport->Pos.y,
+	    															(int)viewport->Size.x, (int)viewport->Size.y);
+
+	    viewport->PlatformUserData = data;
+	    data->WindowOwned = true;
+	    viewport->PlatformHandle = (void*)data->x11;
+
+
+/*
+	    // Install GLFW callbacks for secondary viewports
+	    glfwSetMouseButtonCallback(data->Window, ImGui_ImplXlib_MouseButtonCallback);
+	    glfwSetScrollCallback(data->Window, ImGui_ImplXlib_ScrollCallback);
+	    glfwSetKeyCallback(data->Window, ImGui_ImplXlib_KeyCallback);
+	    glfwSetCharCallback(data->Window, ImGui_ImplXlib_CharCallback);
+
+	    glfwSetWindowCloseCallback(data->Window, ImGui_ImplXlib_WindowCloseCallback);
+	    glfwSetWindowPosCallback(data->Window, ImGui_ImplXlib_WindowPosCallback);
+	    glfwSetWindowSizeCallback(data->Window, ImGui_ImplXlib_WindowSizeCallback);
+
+	    if (g_ClientApi == GlfwClientApi_OpenGL)
+	    {
+	        glfwMakeContextCurrent(data->Window);
+	        glfwSwapInterval(0);
+	    }*/
+	}
+
+	static void ImGui_ImplXlib_DestroyWindow(ImGuiViewport* viewport)
+	{
+	}
+
+	static void ImGui_ImplXlib_ShowWindow(ImGuiViewport* viewport)
+	{
+	    Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*)viewport->PlatformUserData;
+
+	    g_Context->window_show( *data );
+	}
+
+	static ImVec2 ImGui_ImplXlib_GetWindowPos(ImGuiViewport* viewport)
+	{
+		Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*) viewport->PlatformUserData;
+
+	    return ImVec2((float)data->position.x, (float)data->position.y);
+	}
+
+	static void ImGui_ImplXlib_SetWindowPos(ImGuiViewport* viewport, ImVec2 pos)
+	{
+		log::debug << "ImGui_ImplXlib_SetWindowPos" << std::endl;
+	}
+
+	static ImVec2 ImGui_ImplXlib_GetWindowSize(ImGuiViewport* viewport)
+	{
+		log::debug << "ImGui_ImplXlib_GetWindowSize" << std::endl;
+	}
+
+	static void ImGui_ImplXlib_SetWindowSize(ImGuiViewport* viewport, ImVec2 size)
+	{
+		log::debug << "ImGui_ImplXlib_SetWindowSize" << std::endl;
+	}
+
+	static void ImGui_ImplXlib_SetWindowTitle(ImGuiViewport* viewport, const char* title)
+	{
+		log::debug << "ImGui_ImplXlib_SetWindowTitle" << std::endl;
+	}
+
+	static void ImGui_ImplXlib_SetWindowFocus(ImGuiViewport* viewport)
+	{
+		log::debug << "ImGui_ImplXlib_SetWindowFocus" << std::endl;
+	}
+
+	static bool ImGui_ImplXlib_GetWindowFocus(ImGuiViewport* viewport)
+	{
+		Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*) viewport->PlatformUserData;
+		//log::debug << "ImGui_ImplXlib_GetWindowFocus" << std::endl;
+		return g_Context->GetFocusedWindow() == data->x11;
+	}
+
+	static bool ImGui_ImplXlib_GetWindowMinimized(ImGuiViewport* viewport)
+	{
+		//log::debug << "ImGui_ImplXlib_GetWindowMinimized" << std::endl;
+		return false;
+	}
+
+	static void ImGui_ImplXlib_RenderWindow(ImGuiViewport* viewport, void*)
+	{
+		Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*) viewport->PlatformUserData;
+
+		eglMakeCurrent(g_Context->GetEGLDisplay(), data->surface, data->surface, data->context);
+	}
+
+	static void ImGui_ImplXlib_SwapBuffers(ImGuiViewport* viewport, void*)
+	{
+		Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*) viewport->PlatformUserData;
+
+		eglMakeCurrent(g_Context->GetEGLDisplay(), data->surface, data->surface, data->context);
+		eglSwapBuffers(g_Context->GetEGLDisplay(), data->surface);
+	}
+
+
+	static void ImGui_ImplXlib_UpdateMonitors()
+	{
+		Display *display = g_Context->GetDisplay();
+		Screen *screen;
+	    ImGuiPlatformIO& platform_io = ImGui::GetPlatformIO();
+	    platform_io.Monitors.resize(0);
+
+		// return the number of available screens
+		int count_screens = ScreenCount(display);
+
+		for (int i = 0; i < count_screens; ++i) {
+	        ImGuiPlatformMonitor monitor;
+		    screen = ScreenOfDisplay(display, i);
+	        monitor.MainPos = monitor.WorkPos = ImVec2((float)0.0f, (float)0.0f);
+	        monitor.MainSize = monitor.WorkSize = ImVec2((float)screen->width, (float)screen->height);
+
+	        platform_io.Monitors.push_back(monitor);
+		}
+
+	    g_WantUpdateMonitors = false;
+	}
+
+
 
 	static void ImGui_ImplXlib_InitPlatformInterface()
 	{
 	    // Register platform interface (will be coupled with a renderer interface)
-	    ImGuiPlatformIO& platform_io = ImGui::GetPlatformIO();/*
-	    platform_io.Platform_CreateWindow = ImGui_ImplGlfw_CreateWindow;
-	    platform_io.Platform_DestroyWindow = ImGui_ImplGlfw_DestroyWindow;
-	    platform_io.Platform_ShowWindow = ImGui_ImplGlfw_ShowWindow;
-	    platform_io.Platform_SetWindowPos = ImGui_ImplGlfw_SetWindowPos;
-	    platform_io.Platform_GetWindowPos = ImGui_ImplGlfw_GetWindowPos;
-	    platform_io.Platform_SetWindowSize = ImGui_ImplGlfw_SetWindowSize;
-	    platform_io.Platform_GetWindowSize = ImGui_ImplGlfw_GetWindowSize;
-	    platform_io.Platform_SetWindowFocus = ImGui_ImplGlfw_SetWindowFocus;
-	    platform_io.Platform_GetWindowFocus = ImGui_ImplGlfw_GetWindowFocus;
-	    platform_io.Platform_GetWindowMinimized = ImGui_ImplGlfw_GetWindowMinimized;
-	    platform_io.Platform_SetWindowTitle = ImGui_ImplGlfw_SetWindowTitle;
-	    platform_io.Platform_RenderWindow = ImGui_ImplGlfw_RenderWindow;
-	    platform_io.Platform_SwapBuffers = ImGui_ImplGlfw_SwapBuffers;*/
+	    ImGuiPlatformIO& platform_io 				= ImGui::GetPlatformIO();
+	    
+	    platform_io.Platform_CreateWindow 			= ImGui_ImplXlib_CreateWindow;
+	    platform_io.Platform_DestroyWindow 			= ImGui_ImplXlib_DestroyWindow;
+	    platform_io.Platform_ShowWindow 			= ImGui_ImplXlib_ShowWindow;
+	    platform_io.Platform_SetWindowPos 			= ImGui_ImplXlib_SetWindowPos;
+	    platform_io.Platform_GetWindowPos 			= ImGui_ImplXlib_GetWindowPos;
+	    platform_io.Platform_SetWindowSize 			= ImGui_ImplXlib_SetWindowSize;
+	    platform_io.Platform_GetWindowSize 			= ImGui_ImplXlib_GetWindowSize;
+	    platform_io.Platform_SetWindowFocus 		= ImGui_ImplXlib_SetWindowFocus;
+	    platform_io.Platform_GetWindowFocus 		= ImGui_ImplXlib_GetWindowFocus;
+	    platform_io.Platform_GetWindowMinimized 	= ImGui_ImplXlib_GetWindowMinimized;
+	    platform_io.Platform_SetWindowTitle 		= ImGui_ImplXlib_SetWindowTitle;
+	    platform_io.Platform_RenderWindow 			= ImGui_ImplXlib_RenderWindow;
+	    platform_io.Platform_SwapBuffers 			= ImGui_ImplXlib_SwapBuffers;
 	
-/*
+
 	    // Register main window handle (which is owned by the main application, not by us)
 	    // This is mostly for simplicity and consistency, so that our code (e.g. mouse handling etc.) can use same logic for main and secondary viewports.
 	    ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-	    ImGuiViewportDataGlfw* data = IM_NEW(ImGuiViewportDataGlfw)();
-	    data->Window = g_Window;
+	    Xlib_EGL_ContextType::EGLWindow* data = g_Context->GetMainEGLWindow();
 	    data->WindowOwned = false;
 	    main_viewport->PlatformUserData = data;
-	    main_viewport->PlatformHandle = (void*)g_Window;*/
+	    main_viewport->PlatformHandle = (void*)g_Window;
 	}
 
 	static void ImGui_ImplXlib_UpdateMousePosAndButtons()
@@ -271,20 +404,19 @@ namespace asapgl
 	    io.DisplaySize = ImVec2((float)w, (float)h);
 	    if (w > 0 && h > 0)
 	        io.DisplayFramebufferScale = ImVec2((float)display_w / w, (float)display_h / h);
+	    if (g_WantUpdateMonitors)
+	        ImGui_ImplXlib_UpdateMonitors();
 	   
-	    //if (g_WantUpdateMonitors)
-	    //    ImGui_ImplGlfw_UpdateMonitors();
-
 	    // Setup time step
 	    double current_time = SYSTEMS::GetObject().TIME.TimeSinceApplicationStart();
 	    io.DeltaTime = g_Time > 0.0 ? (float)(current_time - g_Time) : (float)(1.0f / 60.0f);
 	    g_Time = current_time;
 
 	    ImGui_ImplXlib_UpdateMousePosAndButtons();
-	    //ImGui_ImplGlfw_UpdateMouseCursor();
+	    //ImGui_ImplXlib_UpdateMouseCursor();
 
 	    // Update game controllers (if enabled and available)
-	    //ImGui_ImplGlfw_UpdateGamepads();
+	    //ImGui_ImplXlib_UpdateGamepads();
 	}
 
 	void ImGui_ImplXlib_Shutdown()

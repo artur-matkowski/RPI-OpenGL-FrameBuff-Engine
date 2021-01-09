@@ -5,6 +5,7 @@
 
 namespace asapgl
 {
+	#ifdef USE_XLIB
 	static ContextBase* ContextInit()
 	{
 		static ContextBase* ret = 0;
@@ -12,7 +13,6 @@ namespace asapgl
 		if(ret!=0)
 			return ret;
 
-		#ifdef USE_XLIB
 		char* display = getenv("DISPLAY");
 
 		bool hasDisplay = display != 0;
@@ -23,13 +23,13 @@ namespace asapgl
 		    ret = new Xlib_EGL_ContextType();
 		}
 		else
-		#endif
 		{
 		    ret = new DRM_GBM_EGL_ContextType();
 		}
 
 		return ret;
 	}
+	#endif
 
 
 	bool SYSTEMS::init(const int argc, const char** argv)
@@ -37,8 +37,12 @@ namespace asapgl
 		srand (time(NULL));
 
 		RENDERER.SetupEvents();
+		#ifdef USE_XLIB
 		CONTEXT = ContextInit();
 		CONTEXT->Init(argc, argv);
+		#else
+		CONTEXT.Init(argc, argv);
+		#endif
 		RENDERER.Init();
 
 		log::info << "GL initialized with version: " << glGetString(GL_VERSION) << std::endl;
@@ -53,11 +57,19 @@ namespace asapgl
 	
 	void SYSTEMS::cloaseApp()
 	{
+		#ifdef USE_XLIB
 		CONTEXT->CleanUp();
+		#else
+		CONTEXT.CleanUp();
+		#endif
 	}
 
 	void SYSTEMS::mainAppLoop()
 	{
-    	CONTEXT->MainLoop();
+		#ifdef USE_XLIB
+		CONTEXT->MainLoop();
+		#else
+		CONTEXT.MainLoop();
+		#endif
 	}
 }
