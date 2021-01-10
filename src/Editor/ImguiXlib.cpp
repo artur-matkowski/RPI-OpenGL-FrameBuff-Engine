@@ -16,6 +16,7 @@ namespace asapgl
 	static bool                 			g_MouseButtonState[ImGuiMouseButton_COUNT] = {};
 	static bool                 			g_WantUpdateMonitors = true;
 	static glm::ivec2 						g_MousePos;
+	static glm::ivec2 						g_MousePosRoot;
 	static Xlib_EGL_ContextType* 			g_Context = 0;
 
 
@@ -129,6 +130,8 @@ namespace asapgl
 		    MouseMoveEvent* args = (MouseMoveEvent*)&a;
 		    g_MousePos.x = (int)args->m_Xpos;
 		    g_MousePos.y = (int)args->m_Ypos;
+		    g_MousePosRoot.x = (int)args->m_XposRoot;
+		    g_MousePosRoot.y = (int)args->m_YposRoot;
 	    });
 
 /*
@@ -207,7 +210,7 @@ namespace asapgl
 
 
 		eglDestroySurface(g_Context->GetEGLDisplay(), data->surface);
-		eglDestroyContext(g_Context->GetEGLDisplay(), data->context);
+		//eglDestroyContext(g_Context->GetEGLDisplay(), data->context);
 		XDestroyWindow(g_Context->GetDisplay(), data->x11);
 
 		g_Context->Erase(data);
@@ -394,7 +397,7 @@ namespace asapgl
 	                if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 	                {
 	                    // Multi-viewport mode: mouse position in OS absolute coordinates (io.MousePos is (0,0) when the mouse is on the upper-left of the primary monitor)
-	                    io.MousePos = ImVec2((float)window->cursorPos.x + window->position.x, (float)window->cursorPos.y + window->position.y);
+	                    io.MousePos = ImVec2((float)g_MousePosRoot.x, (float)g_MousePosRoot.y);
 	                }
 	                else
 	                {
@@ -450,6 +453,9 @@ namespace asapgl
 
 	void ImGui_ImplXlib_Shutdown()
 	{
+	    // Cleanup
+	    ImGui_ImplOpenGL3_Shutdown();
+	    ImGui::DestroyContext();
 	}
 
 	static const char* ImGui_ImplXlib_GetClipboardText(void* user_data)

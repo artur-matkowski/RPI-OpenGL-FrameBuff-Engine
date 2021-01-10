@@ -300,7 +300,9 @@ namespace asapgl
 
 	void Xlib_EGL_ContextType::CleanUp()
 	{
-
+		#ifdef IS_EDITOR
+	    ImGui_ImplXlib_Shutdown();
+	    #endif
 	}
 
 
@@ -336,6 +338,8 @@ namespace asapgl
 			    {
 					args.m_Xpos = (int)event.xmotion.x;
 					args.m_Ypos = (int)event.xmotion.y;
+					args.m_XposRoot = (int)event.xmotion.x_root;
+					args.m_YposRoot = (int)event.xmotion.y_root;
 			    	args.m_eventSourceWindow = event.xmotion.window;
 			    });
 			    for(int i=0; i<m_eglWindows.size(); ++i)

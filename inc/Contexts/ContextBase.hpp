@@ -122,6 +122,8 @@ namespace asapgl
 		bfu::SerializableVar<int> m_Ypos;
 
 		#ifdef IS_EDITOR
+		bfu::SerializableVar<int> m_XposRoot;
+		bfu::SerializableVar<int> m_YposRoot;
 		Window 						m_eventSourceWindow = 0;
 		#endif
 
@@ -130,6 +132,10 @@ namespace asapgl
 			:bfu::EventArgsBase()
 			,m_Xpos("m_Xpos",this)
 			,m_Ypos("m_Ypos",this)
+			#ifdef IS_EDITOR
+			,m_XposRoot("m_XposRoot",this)
+			,m_YposRoot("m_YposRoot",this)
+			#endif
 		{
 			m_Xpos = -1;
 			m_Ypos = -1;
@@ -139,10 +145,16 @@ namespace asapgl
 			:bfu::EventArgsBase()
 			,m_Xpos("m_Xpos",this)
 			,m_Ypos("m_Ypos",this)
+			#ifdef IS_EDITOR
+			,m_XposRoot("m_XposRoot",this)
+			,m_YposRoot("m_YposRoot",this)
+			#endif
 		{
 			m_Xpos = copy.m_Xpos;
 			m_Ypos = copy.m_Ypos;
 			#ifdef IS_EDITOR
+			m_XposRoot = copy.m_XposRoot;
+			m_YposRoot = copy.m_YposRoot;
 			m_eventSourceWindow = copy.m_eventSourceWindow;
 			#endif
 		}
