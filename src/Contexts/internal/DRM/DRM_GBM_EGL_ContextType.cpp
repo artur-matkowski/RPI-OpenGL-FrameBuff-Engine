@@ -240,6 +240,8 @@ namespace asapgl
 		auto frameStart = std::chrono::high_resolution_clock::now();
 		bool show_demo_window = true;
 		bool show_another_window = true;
+		std::chrono::duration<double> frameDeltaTime( m_frameDelay );
+
 		#ifdef IS_EDITOR
     	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     	ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -250,7 +252,6 @@ namespace asapgl
 		GLfloat rotation = 0.0;
 		while(m_isRunning)
 		{
-			std::chrono::duration<double> frameDeltaTime = frameEnd - frameStart;
 			frameStart = std::chrono::high_resolution_clock::now();
 
 			HandleContextEvents();
