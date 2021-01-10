@@ -15,6 +15,7 @@
 
 #include "DRM_GBM_EGL_ContextType.hpp"
 #include "Systems.hpp"
+#include "ImguiDRM.hpp"
 
 
 #define EXIT(msg) { fputs (msg, stderr); exit (EXIT_FAILURE); }
@@ -172,12 +173,45 @@ namespace asapgl
 	    	args.m_width = mode_info.hdisplay; 
 	    	args.m_height = mode_info.vdisplay; 
 	    });
+
+
+
+	    // Setup Dear ImGui context
+	    IMGUI_CHECKVERSION();
+	    ImGui::CreateContext();
+	    ImGuiIO& io = ImGui::GetIO(); (void)io;
+	    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
+	    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+	    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+	    //io.ConfigViewportsNoAutoMerge = true;
+	    //io.ConfigViewportsNoTaskBarIcon = true;
+
+	    // Setup Dear ImGui style
+	    ImGui::StyleColorsDark();
+	    //ImGui::StyleColorsClassic();
+
+	    // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
+	    ImGuiStyle& style = ImGui::GetStyle();
+	    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	    {
+	        style.WindowRounding = 0.0f;
+	        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+	    }
+
+	    // Setup Platform/Renderer backends
+	    ImGui_ImplDRM_InitForOpenGL(&display, &context, &egl_surface, resolution);
+	    ImGui_ImplOpenGL3_Init();
 	}
 	
 	DRM_GBM_EGL_ContextType::~DRM_GBM_EGL_ContextType()
 	{
 		clean_up ();
 		close (device);
+
+		#ifdef IS_EDITOR
+	    ImGui_ImplDRM_Shutdown();
+	    #endif
 	}
 
 	void DRM_GBM_EGL_ContextType::SwapBuffer()
@@ -205,6 +239,11 @@ namespace asapgl
 		auto frameEnd =  std::chrono::system_clock::now();
 		auto frameStart = std::chrono::high_resolution_clock::now();
 		bool show_demo_window = true;
+		bool show_another_window = true;
+		#ifdef IS_EDITOR
+    	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    	ImGuiIO& io = ImGui::GetIO(); (void)io;
+		#endif
 
 		std::chrono::duration<double> elapsed;
 
@@ -220,9 +259,66 @@ namespace asapgl
 			{
 				rotation += frameDeltaTime.count();
 
-				glViewport(0, 0, resolution.x, resolution.y);
-				glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-				glClear(GL_COLOR_BUFFER_BIT);
+				// glViewport(0, 0, resolution.x, resolution.y);
+				// glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+				// glClear(GL_COLOR_BUFFER_BIT);
+
+				#ifdef IS_EDITOR
+				
+				// glViewport(0, 0, m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y);
+				// glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+				// glClear(GL_COLOR_BUFFER_BIT);
+				
+		        // Start the Dear ImGui frame
+		        ImGui_ImplOpenGL3_NewFrame();
+		        ImGui_ImplDRM_NewFrame();
+		        ImGui::NewFrame();
+
+		        // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
+		        if (show_demo_window)
+	            	ImGui::ShowDemoWindow(&show_demo_window);
+
+	            {
+		            static float f = 0.0f;
+		            static int counter = 0;
+
+		            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+
+		            ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+		            ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
+		            ImGui::Checkbox("Another Window", &show_another_window);
+
+		            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+		            ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+
+		            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+		                counter++;
+		            ImGui::SameLine();
+		            ImGui::Text("counter = %d", counter);
+
+		            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+		            ImGui::End();
+		        }
+
+
+
+		        // Rendering
+		        ImGui::Render();
+		        glViewport(0, 0, resolution.x, resolution.y);
+		        glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+		        glClear(GL_COLOR_BUFFER_BIT);
+
+		        // If you are using this code with non-legacy OpenGL header/contexts (which you should not, prefer using imgui_impl_opengl3.cpp!!),
+		        // you may need to backup/reset/restore current shader using the commented lines below.
+		        //GLint last_program;
+		        //glGetIntegerv(GL_CURRENT_PROGRAM, &last_program);
+		        //glUseProgram(0);
+		        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		        //glUseProgram(last_program);
+
+
+				//RenderImGui();
+				#endif
 
 				rendererSystem.Render();
 				
@@ -234,6 +330,9 @@ namespace asapgl
 			std::chrono::duration<double> calculationTime = std::chrono::high_resolution_clock::now() - frameStart;
 			std::chrono::duration<double> diffToFrameEnd = m_frameDelay - calculationTime;
 
+
+		    // Setup time step
+		    io.DeltaTime = (float)frameDeltaTime.count();
 
 			//log::debug << "frameDeltaTime: "  << (float)frameDeltaTime.count() << "s, Calculation time: " << (float)calculationTime.count() << "s" << std::endl;
 

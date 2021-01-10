@@ -10,14 +10,15 @@
 
 namespace asapgl
 {
-	static Xlib_EGL_ContextType::EGLWindow* g_Window = 0;
+	static EGLDisplay* 						g_Display = 0;
 	static double               			g_Time = 0.0;
 	static bool                 			g_MouseJustPressed[ImGuiMouseButton_COUNT] = {};
 	static bool                 			g_MouseButtonState[ImGuiMouseButton_COUNT] = {};
 	static bool                 			g_WantUpdateMonitors = true;
 	static glm::ivec2 						g_MousePos;
-	static glm::ivec2 						g_MousePosRoot;
-	static Xlib_EGL_ContextType* 			g_Context = 0;
+	static EGLContext* 						g_Context = 0;
+	static EGLSurface* 						g_Surface = 0;
+	static glm::ivec2 						g_Resolution;
 
 
 	static void ImGui_ImplDRM_InitPlatformInterface();
@@ -25,10 +26,12 @@ namespace asapgl
 
 
 
-	IMGUI_IMPL_API bool     ImGui_ImplDRM_InitForOpenGL(void* eglWindow, void* context)
+	IMGUI_IMPL_API bool     ImGui_ImplDRM_InitForOpenGL(void* eglWindow, void* context, void* surface, glm::ivec2 resolution)
 	{
-	    g_Window = (Xlib_EGL_ContextType::EGLWindow*)eglWindow;
-	    g_Context = (Xlib_EGL_ContextType*)context;
+	    g_Display = (EGLDisplay*)eglWindow;
+	    g_Context = (EGLContext*)context;
+	    g_Surface = (EGLSurface*)surface;
+	    g_Resolution = resolution;
 	    g_Time = 0.0;
 
 	    // Setup backend capabilities flags
@@ -39,7 +42,7 @@ namespace asapgl
 	#if GLFW_HAS_MOUSE_PASSTHROUGH || (GLFW_HAS_WINDOW_HOVERED && defined(_WIN32))
 	    io.BackendFlags |= ImGuiBackendFlags_HasMouseHoveredViewport; // We can set io.MouseHoveredViewport correctly (optional, not easy)
 	#endif
-	    io.BackendPlatformName = "imgui_impl_xlib";
+	    io.BackendPlatformName = "imgui_impl_drm";
 
 	    // Keyboard mapping. ImGui will use those indices to peek into the io.KeysDown[] array.
 	    io.KeyMap[ImGuiKey_Tab] 		= (int) asapgl::keycodes::snapi_tab;
@@ -67,7 +70,7 @@ namespace asapgl
 
 	    //io.SetClipboardTextFn = ImGui_ImplDRM_SetClipboardText;
 	    //io.GetClipboardTextFn = ImGui_ImplDRM_GetClipboardText;
-	    //io.ClipboardUserData = g_Window;
+	    //io.ClipboardUserData = g_Display;
 
 		bfu::CallbackId id;
 		bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
@@ -130,8 +133,6 @@ namespace asapgl
 		    MouseMoveEvent* args = (MouseMoveEvent*)&a;
 		    g_MousePos.x = (int)args->m_Xpos;
 		    g_MousePos.y = (int)args->m_Ypos;
-		    g_MousePosRoot.x = (int)args->m_XposRoot;
-		    g_MousePosRoot.y = (int)args->m_YposRoot;
 	    });
 
 /*
@@ -165,7 +166,7 @@ namespace asapgl
 
 	    // Our mouse update function expect PlatformHandle to be filled for the main viewport
 	    ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-	    main_viewport->PlatformHandle = (void*)g_Window;
+	    main_viewport->PlatformHandle = (void*)g_Display;
 
 	    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 	        ImGui_ImplDRM_InitPlatformInterface();
@@ -177,13 +178,13 @@ namespace asapgl
 	static void ImGui_ImplDRM_CreateWindow(ImGuiViewport* viewport)
 	{
 		
-	    Xlib_EGL_ContextType::EGLWindow* data = g_Context->window_create( "No Title Yet", 
-	    															(int)viewport->Pos.x, (int)viewport->Pos.y,
-	    															(int)viewport->Size.x, (int)viewport->Size.y);
+	    // Xlib_EGL_ContextType::EGLWindow* data = g_Context->window_create( "No Title Yet", 
+	    // 															(int)viewport->Pos.x, (int)viewport->Pos.y,
+	    // 															(int)viewport->Size.x, (int)viewport->Size.y);
 
-	    viewport->PlatformUserData = data;
-	    data->WindowOwned = true;
-	    viewport->PlatformHandle = (void*)data;
+	    // viewport->PlatformUserData = data;
+	    // data->WindowOwned = true;
+	    // viewport->PlatformHandle = (void*)data;
 
 
 /*
@@ -202,10 +203,12 @@ namespace asapgl
 	        glfwMakeContextCurrent(data->Window);
 	        glfwSwapInterval(0);
 	    }*/
+		log::debug << "ImGui_ImplDRM_CreateWindow" << std::endl;
 	}
 
 	static void ImGui_ImplDRM_DestroyWindow(ImGuiViewport* viewport)
 	{
+		/*
 	    Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*)viewport->PlatformUserData;
 
 
@@ -216,33 +219,34 @@ namespace asapgl
 		g_Context->Erase(data);
 
     	viewport->PlatformUserData = viewport->PlatformHandle = NULL;
-		
-		//log::debug << "ImGui_ImplDRM_DestroyWindow" << std::endl;
+		*/
+		log::debug << "ImGui_ImplDRM_DestroyWindow" << std::endl;
 	}
 
 	static void ImGui_ImplDRM_ShowWindow(ImGuiViewport* viewport)
 	{
-	    Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*)viewport->PlatformUserData;
+	    // Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*)viewport->PlatformUserData;
 
-	    g_Context->window_show( *data );
+	    // g_Context->window_show( *data );
+		log::debug << "ImGui_ImplDRM_DestroyWindow" << std::endl;
 	}
 
 	static ImVec2 ImGui_ImplDRM_GetWindowPos(ImGuiViewport* viewport)
 	{
-		Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*) viewport->PlatformUserData;
+		//Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*) viewport->PlatformUserData;
 
-	    return ImVec2((float)data->position.x, (float)data->position.y);
+	    return ImVec2(0.0f, 0.0f);
 	}
 
 	static void ImGui_ImplDRM_SetWindowPos(ImGuiViewport* viewport, ImVec2 pos)
 	{
-		Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*) viewport->PlatformUserData;
-		XWindowChanges setup;
-		setup.x = pos.x;
-		setup.y = pos.y;
+		// Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*) viewport->PlatformUserData;
+		// XWindowChanges setup;
+		// setup.x = pos.x;
+		// setup.y = pos.y;
 
-		XConfigureWindow( g_Context->GetDisplay(), data->x11, CWX | CWY, &setup);
-		//log::debug << "ImGui_ImplDRM_SetWindowPos" << std::endl;
+		// XConfigureWindow( g_Context->GetDisplay(), data->x11, CWX | CWY, &setup);
+		log::debug << "ImGui_ImplDRM_SetWindowPos" << std::endl;
 	}
 
 	static ImVec2 ImGui_ImplDRM_GetWindowSize(ImGuiViewport* viewport)
@@ -252,14 +256,14 @@ namespace asapgl
 
 	static void ImGui_ImplDRM_SetWindowSize(ImGuiViewport* viewport, ImVec2 size)
 	{
-		Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*) viewport->PlatformUserData;
-		XWindowChanges setup;
-		setup.width = size.x;
-		setup.height = size.y;
+		// Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*) viewport->PlatformUserData;
+		// XWindowChanges setup;
+		// setup.width = size.x;
+		// setup.height = size.y;
 
-		XConfigureWindow( g_Context->GetDisplay(), data->x11, CWWidth | CWHeight, &setup);
+		// XConfigureWindow( g_Context->GetDisplay(), data->x11, CWWidth | CWHeight, &setup);
 
-		//log::debug << "ImGui_ImplDRM_SetWindowSize" << std::endl;
+		log::debug << "ImGui_ImplDRM_SetWindowSize" << std::endl;
 	}
 
 	static void ImGui_ImplDRM_SetWindowTitle(ImGuiViewport* viewport, const char* title)
@@ -300,32 +304,25 @@ namespace asapgl
 
 	static void ImGui_ImplDRM_SwapBuffers(ImGuiViewport* viewport, void*)
 	{
-		Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*) viewport->PlatformUserData;
+		//Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*) viewport->PlatformUserData;
 
 		//eglMakeCurrent(g_Context->GetEGLDisplay(), data->surface, data->surface, data->context);
-		eglMakeCurrent( eglGetCurrentDisplay(), data->surface, data->surface, eglGetCurrentContext() );
-		eglSwapBuffers(g_Context->GetEGLDisplay(), data->surface);
+		eglMakeCurrent( eglGetCurrentDisplay(), g_Surface, g_Surface, eglGetCurrentContext() );
+		eglSwapBuffers(g_Display, g_Surface);
 	}
 
 
 	static void ImGui_ImplDRM_UpdateMonitors()
 	{
-		Display *display = g_Context->GetDisplay();
-		Screen *screen;
 	    ImGuiPlatformIO& platform_io = ImGui::GetPlatformIO();
+        ImGuiPlatformMonitor monitor;
+
 	    platform_io.Monitors.resize(0);
 
-		// return the number of available screens
-		int count_screens = ScreenCount(display);
+        monitor.MainPos = monitor.WorkPos = ImVec2((float)0.0f, (float)0.0f);
+        monitor.MainSize = monitor.WorkSize = ImVec2((float)g_Resolution.x, (float)g_Resolution.y);
 
-		for (int i = 0; i < count_screens; ++i) {
-	        ImGuiPlatformMonitor monitor;
-		    screen = ScreenOfDisplay(display, i);
-	        monitor.MainPos = monitor.WorkPos = ImVec2((float)0.0f, (float)0.0f);
-	        monitor.MainSize = monitor.WorkSize = ImVec2((float)screen->width, (float)screen->height);
-
-	        platform_io.Monitors.push_back(monitor);
-		}
+        platform_io.Monitors.push_back(monitor);
 
 	    g_WantUpdateMonitors = false;
 	}
@@ -355,10 +352,9 @@ namespace asapgl
 	    // Register main window handle (which is owned by the main application, not by us)
 	    // This is mostly for simplicity and consistency, so that our code (e.g. mouse handling etc.) can use same logic for main and secondary viewports.
 	    ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-	    Xlib_EGL_ContextType::EGLWindow* data = g_Context->GetMainEGLWindow();
-	    data->WindowOwned = false;
-	    main_viewport->PlatformUserData = data;
-	    main_viewport->PlatformHandle = (void*)g_Window;
+	    
+	    main_viewport->PlatformUserData = (void*)g_Display;
+	    main_viewport->PlatformHandle = (void*)g_Display;
 	}
 
 	static void ImGui_ImplDRM_UpdateMousePosAndButtons()
@@ -379,35 +375,27 @@ namespace asapgl
 	    io.MouseHoveredViewport = 0;
 	    ImGuiPlatformIO& platform_io = ImGui::GetPlatformIO();
 	    for (int n = 0; n < platform_io.Viewports.Size; n++)
-	    {
-	        ImGuiViewport* viewport = platform_io.Viewports[n];
-	        Xlib_EGL_ContextType::EGLWindow* window = (Xlib_EGL_ContextType::EGLWindow*)viewport->PlatformHandle;
-	        IM_ASSERT(window != NULL);
-
-	        const bool focused = g_Context->GetFocusedWindow() == window->x11;
-
-	        if (focused)
-	        {
-	            if (io.WantSetMousePos)
-	            {
-	            	XWarpPointer(g_Context->GetDisplay(), None, g_Context->GetRoot(), 0, 0, 0, 0, (int)(mouse_pos_backup.x - viewport->Pos.x), (int)(mouse_pos_backup.y - viewport->Pos.y) );
-	            }
-	            else
-	            {
-	                if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	                {
-	                    // Multi-viewport mode: mouse position in OS absolute coordinates (io.MousePos is (0,0) when the mouse is on the upper-left of the primary monitor)
-	                    io.MousePos = ImVec2((float)g_MousePosRoot.x, (float)g_MousePosRoot.y);
-	                }
-	                else
-	                {
-	                    // Single viewport mode: mouse position in client window coordinates (io.MousePos is (0,0) when the mouse is on the upper-left corner of the app window)
-	                    io.MousePos = ImVec2((float)window->cursorPos.x, (float)window->cursorPos.y);
-	                }
-	            }
-	             for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++)
-	                 io.MouseDown[i] |= g_MouseButtonState[i]!=false;
-	        }
+	    {	        
+            if (io.WantSetMousePos)
+            {
+            	//XWarpPointer(g_Context->GetDisplay(), None, g_Context->GetRoot(), 0, 0, 0, 0, (int)(mouse_pos_backup.x - viewport->Pos.x), (int)(mouse_pos_backup.y - viewport->Pos.y) );
+            }
+            else
+            {
+                if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+                {
+                    // Multi-viewport mode: mouse position in OS absolute coordinates (io.MousePos is (0,0) when the mouse is on the upper-left of the primary monitor)
+                    io.MousePos = ImVec2((float)g_MousePos.x, (float)g_MousePos.y);
+                }
+                else
+                {
+                    // Single viewport mode: mouse position in client window coordinates (io.MousePos is (0,0) when the mouse is on the upper-left corner of the app window)
+                    io.MousePos = ImVec2((float)g_MousePos.x, (float)g_MousePos.y);
+                }
+            }
+             for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++)
+                 io.MouseDown[i] |= g_MouseButtonState[i]!=false;
+	        
 
 	        // (Optional) When using multiple viewports: set io.MouseHoveredViewport to the viewport the OS mouse cursor is hovering.
 	        // Important: this information is not easy to provide and many high-level windowing library won't be able to provide it correctly, because
@@ -436,8 +424,8 @@ namespace asapgl
 	    // Setup display size (every frame to accommodate for window resizing)
 	    int w, h;
 	    int display_w, display_h;
-	    display_w = w = g_Window->resolution.x;
-	    display_h = h = g_Window->resolution.y;
+	    display_w = w = g_Resolution.x;
+	    display_h = h = g_Resolution.y;
 	    io.DisplaySize = ImVec2((float)w, (float)h);
 	    if (w > 0 && h > 0)
 	        io.DisplayFramebufferScale = ImVec2((float)display_w / w, (float)display_h / h);
