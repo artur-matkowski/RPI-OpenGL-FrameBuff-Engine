@@ -3,6 +3,8 @@
 #include "Systems.hpp"
 #include <ctime>
 #include <ratio>
+#include <EGL/egl.h>
+//#include <GLES2/gl2.h>
 
 #ifdef IS_EDITOR
 
@@ -33,7 +35,7 @@ namespace asapgl
 	    ImGuiIO& io = ImGui::GetIO();
 	    io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;         // We can honor GetMouseCursor() values (optional)
 	    io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;          // We can honor io.WantSetMousePos requests (optional, rarely used)
-	    io.BackendFlags |= ImGuiBackendFlags_PlatformHasViewports;    // We can create multi-viewports on the Platform side (optional)
+	    //io.BackendFlags |= ImGuiBackendFlags_PlatformHasViewports;    // We can create multi-viewports on the Platform side (optional)
 	#if GLFW_HAS_MOUSE_PASSTHROUGH || (GLFW_HAS_WINDOW_HOVERED && defined(_WIN32))
 	    io.BackendFlags |= ImGuiBackendFlags_HasMouseHoveredViewport; // We can set io.MouseHoveredViewport correctly (optional, not easy)
 	#endif
@@ -262,10 +264,10 @@ namespace asapgl
 
 	static void ImGui_ImplDRM_SetWindowTitle(ImGuiViewport* viewport, const char* title)
 	{
-		Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*) viewport->PlatformUserData;
+		//Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*) viewport->PlatformUserData;
 
-		XStoreName( g_Context->GetDisplay(), data->x11, title );
-		//log::debug << "ImGui_ImplDRM_SetWindowTitle" << std::endl;
+		//XStoreName( g_Context->GetDisplay(), data->x11, title );
+		log::debug << "ImGui_ImplDRM_SetWindowTitle" << std::endl;
 	}
 
 	static void ImGui_ImplDRM_SetWindowFocus(ImGuiViewport* viewport)
@@ -275,11 +277,11 @@ namespace asapgl
 
 	static bool ImGui_ImplDRM_GetWindowFocus(ImGuiViewport* viewport)
 	{
-		Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*) viewport->PlatformUserData;
+		//Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*) viewport->PlatformUserData;
 		// log::debug << "ImGui_ImplDRM_GetWindowFocus" << g_Context->GetFocusedWindow() << std::endl;
 		// log::debug << "ImGui_ImplDRM_GetWindowFocus" << data->x11 << std::endl;
 		// log::debug << " " << std::endl;
-		return g_Context->GetFocusedWindow() == data->x11;
+		return true;//g_Context->GetFocusedWindow() == data->x11;
 	}
 
 	static bool ImGui_ImplDRM_GetWindowMinimized(ImGuiViewport* viewport)
