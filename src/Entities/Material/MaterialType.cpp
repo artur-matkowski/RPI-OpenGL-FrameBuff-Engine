@@ -20,9 +20,9 @@ namespace asapgl
 		:SERIALIZABLE_VAR_CONSTRUCTOR(m_usedShader, this)
 		,SERIALIZABLE_VAR_VEC_CONSTRUCTOR(m_usedTextures, this)
 	{
-		SYSTEMS& systems = SYSTEMS::GetObject();
+		static SYSTEMS& systems = SYSTEMS::GetObject();
 
-		systems.RESOURCES.requestResource( &m_shader, "---" );
+		systems.RESOURCES.requestResource( &m_shader, materialName );
 
 
 		ResourcePtr< Texture > tmp;
@@ -79,6 +79,9 @@ namespace asapgl
 		    {
 		    	case GL_FLOAT:
 		    		m_uniformMap[std::string(name)] = new Uniform<float>(location, this);
+		    		break;
+		    	case GL_FLOAT_VEC3:
+		    		m_uniformMap[std::string(name)] = new Uniform<glm::vec3>(location, this);
 		    		break;
 		    	default:
 		    		log::warning << "Unsuported uniform type found in " << materialName << ": " << name << std::endl;

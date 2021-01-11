@@ -303,6 +303,7 @@ namespace asapgl
 
 
 
+
 		        // Rendering
 		        ImGui::Render();
 		        glViewport(0, 0, resolution.x, resolution.y);

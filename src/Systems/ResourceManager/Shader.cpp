@@ -3,10 +3,9 @@
 
 namespace asapgl
 {
-	Shader::Shader(const char* filename)
+	struct
 	{
-
-		static const char *vertex_source =
+		const char *vertex_source =
 			"#version 100\n"
 			"attribute vec4 position;\n"
 			"attribute vec4 color;\n"
@@ -22,7 +21,7 @@ namespace asapgl
 			"  UV = texCoord;\n"
 			"}\n";
 
-		static const char *fragment_source =
+		const char *fragment_source =
 			"#version 100\n"
 			"precision mediump float;\n"
 			"varying vec4 vcolor;\n"
@@ -36,8 +35,62 @@ namespace asapgl
 			"  gl_FragColor = texture2D(texUnit, UV) * vcolor * blend;\n"
 			//"  gl_FragColor = UV.xyyy * blend;\n"
 			"}\n";
+	}debugShaderSrc;
+		
+	struct
+	{
+		const char *vertex_source =
+			"#version 100\n"
+			"attribute vec4 position;\n"
+			"attribute vec4 color;\n"
+			"attribute vec2 texCoord;\n"
+			"uniform vec3 offset;\n"
+			"\n"
+			"varying vec4 vcolor;\n"
+			"varying vec2 UV;\n"
+			"\n"
+			"void main()\n"
+			"{\n"
+			"  gl_Position = position + vec4(offset, 0.0);\n"
+			"  vcolor = color;\n"
+			"  UV = texCoord;\n"
+			"}\n";
 
+		const char *fragment_source =
+			"#version 100\n"
+			"precision mediump float;\n"
+			"varying vec4 vcolor;\n"
+			"varying vec2 UV;\n"
+			"uniform sampler2D texUnit;\n"
+			"uniform float blend;\n"
+			"uniform vec3 offset;\n"
+			"\n"
+			"void main()\n"
+			"{\n"
+			//"  gl_FragColor = texture2D(texUnit, UV) * vcolor;\n"
+			"  gl_FragColor = vec4(1.0) * blend;\n"
+			//"  gl_FragColor = UV.xyyy * blend;\n"
+			"}\n";
+	}cursorShaderSrc;
+		
+	Shader::Shader(const char* filename)
+	{
+		char* vertex_source = 0;
+		char* fragment_source = 0;
 		GLuint vertex, fragment, program;
+		
+		if( strcmp(filename, "cursor") == 0 )
+		{
+			vertex_source = (char*)cursorShaderSrc.vertex_source;
+			fragment_source = (char*)cursorShaderSrc.fragment_source;
+		}
+		else
+		{
+			vertex_source = (char*)debugShaderSrc.vertex_source;
+			fragment_source = (char*)debugShaderSrc.fragment_source;
+		}
+		
+
 
 		vertex = glCreateShader(GL_VERTEX_SHADER);
 		glShaderSource(vertex, 1, &vertex_source, NULL);

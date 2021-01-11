@@ -481,12 +481,16 @@ namespace asapgl
 
 		#ifdef IS_EDITOR
     	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-    	ImGuiIO& io = ImGui::GetIO(); (void)io;
+    	ImGuiIO& io = ImGui::GetIO(); (void)io;    	
+		Mesh 			cursorMesh( glm::vec2(m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y) );
+		MaterialType 	cursorMaterial("cursor");
+		Uniform<glm::vec3>* uCursorPos = (Uniform<glm::vec3>*)cursorMaterial.GetUniformPtr("offset");
 		#endif
 
 		std::chrono::duration<double> elapsed;
 
 		GLfloat rotation = 0.0;
+
 
 		while(m_isRunning)
 		{
@@ -538,7 +542,6 @@ namespace asapgl
 		        }
 
 
-
 		        // Rendering
 		        ImGui::Render();
 		        glViewport(0, 0, m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y);
@@ -568,9 +571,15 @@ namespace asapgl
 				//RenderImGui();
 				#endif
 
+				glm::vec2 mousePos(m_mainEglWindow->cursorPos.x / (float)m_mainEglWindow->resolution.x*2.0f - 1.0f
+					, 1.0f - m_mainEglWindow->cursorPos.y / (float)m_mainEglWindow->resolution.y*2.0f );
 
 
 				rendererSystem.Render();
+
+				cursorMaterial.BindMaterial();
+				uCursorPos->SetUniform(glm::vec3(mousePos.x, mousePos.y, 0.0f));
+				cursorMesh.Render();
 				
 				SwapBuffer();
 			}

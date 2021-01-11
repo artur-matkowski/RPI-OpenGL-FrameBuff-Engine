@@ -2,6 +2,7 @@
 #include <GLES2/gl2.h>
 #include "MaterialType.hpp"
 #include "UniformOverride.hpp"
+#include <gtc/type_ptr.hpp>
 
 namespace asapgl
 {
@@ -43,6 +44,19 @@ namespace asapgl
 	void Uniform<float>::SendUniform(const float& override) const
 	{
 		glUniform1f(m_location, override );
+	}
+
+
+	template class Uniform<glm::vec3>;
+	template<>
+	void Uniform<glm::vec3>::SendUniform()
+	{
+		glUniform3fv(m_location, 1, glm::value_ptr(m_data) );
+	}
+	template<>
+	void Uniform<glm::vec3>::SendUniform(const glm::vec3& override) const
+	{
+		glUniform3fv(m_location, 3, glm::value_ptr(override) );
 	}
 
 }

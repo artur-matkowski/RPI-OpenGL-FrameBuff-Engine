@@ -34,11 +34,12 @@ namespace asapgl
 	template<typename T>
 	class Uniform: public UniformBase
 	{
-		bfu::SerializableVar<T>	m_data;
+		//bfu::SerializableVar<T>	m_data;
+		T	m_data;
 	public:
 		Uniform(uint32_t location, MaterialType* owner)
 			:UniformBase(location, owner)
-			,m_data("m_data", this)
+			//,m_data("m_data", this)
 		{};
 		~Uniform(){};
 

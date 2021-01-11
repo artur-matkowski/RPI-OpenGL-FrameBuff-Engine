@@ -1,17 +1,19 @@
 #ifndef _H_Mesh
 #define _H_Mesh
 #include <GLES2/gl2.h>
-
+#include "glm.hpp"
 
 namespace asapgl
 {
 	class Mesh
 	{
-		GLfloat* m_vertices = 0;
-		GLfloat* m_texCoords = 0;
-		GLfloat* m_colors = 0;
+		GLfloat* 	m_vertices = 0;
+		GLfloat* 	m_texCoords = 0;
+		GLfloat* 	m_colors = 0;
+		GLint 		m_size = 0;
 
 	public:
+		Mesh(glm::vec2 resolution);
 		Mesh(const char*);
 		~Mesh(){};
 
@@ -26,7 +28,7 @@ namespace asapgl
 			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, m_texCoords);
 			glEnableVertexAttribArray(2);
 
-			glDrawArrays(GL_TRIANGLES, 0, 3);
+			glDrawArrays(GL_TRIANGLES, 0, m_size);
 		}
 		
 	};
