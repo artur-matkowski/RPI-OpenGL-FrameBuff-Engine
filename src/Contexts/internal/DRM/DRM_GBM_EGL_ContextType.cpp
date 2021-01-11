@@ -245,6 +245,9 @@ namespace asapgl
 		#ifdef IS_EDITOR
     	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     	ImGuiIO& io = ImGui::GetIO(); (void)io;
+		Mesh 			cursorMesh( glm::vec2(resolution.x, resolution.y) );
+		MaterialType 	cursorMaterial("cursor");
+		Uniform<glm::vec3>* uCursorPos = (Uniform<glm::vec3>*)cursorMaterial.GetUniformPtr("offset");
 		#endif
 
 		std::chrono::duration<double> elapsed;
@@ -324,6 +327,13 @@ namespace asapgl
 
 				rendererSystem.Render();
 				
+				cursorMaterial.BindMaterial();
+				int x,y;
+				m_devinput.GetCursorPos(x, y);
+				uCursorPos->SetUniform(glm::vec3( (float)x, (float)y, 0.0f));
+				cursorMesh.Render();
+
+
 				SwapBuffer();
 			}
 
