@@ -74,20 +74,6 @@ namespace asapgl
 	}static cursorShaderSrc;
 
 
-	void PrintLog(GLuint glID)
-	{
-		GLint maxLength = 0;
-		glGetShaderiv(glID, GL_INFO_LOG_LENGTH, &maxLength);
-
-		// The maxLength includes the NULL character
-		std::vector<GLchar> errorLog(maxLength);
-		glGetShaderInfoLog(glID, maxLength, &maxLength, &errorLog[0]);
-
-		std::string str(&errorLog[0]);
-
-		log::error << str << std::endl;
-	}
-		
 	Shader::Shader(const char* filename)
 	{
 		char* vertex_source = 0;
@@ -193,7 +179,7 @@ namespace asapgl
 
 		glDeleteShader(vertex);
 		glDeleteShader(fragment);
-
+/*
 		glGetProgramiv(m_programID, GL_VALIDATE_STATUS, &isCompiled);
 		if(isCompiled == GL_FALSE)
 		{
@@ -213,7 +199,7 @@ namespace asapgl
 			glDeleteProgram(m_programID); // Don't leak the shader.
 			return;
 		}
-
+*/
 	}
 
 	Shader::~Shader()
