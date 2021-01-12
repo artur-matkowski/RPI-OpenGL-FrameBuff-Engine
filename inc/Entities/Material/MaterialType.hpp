@@ -61,7 +61,7 @@ namespace asapgl
 
 			static float blend = 1.0;
 
-			( (Uniform<float>*) (m_uniformMap["blend"]) )->SetUniform(blend);
+			//( (Uniform<float>*) (m_uniformMap["blend"]) )->SetUniform(blend);
 			//( (Uniform<glm::vec3>*) (m_uniformMap["offset"]) )->SetUniform(glm::vec3(cursor.x, cursor.y, 0.0f));
 			blend -= 0.01;
 			if(blend < 0.1)

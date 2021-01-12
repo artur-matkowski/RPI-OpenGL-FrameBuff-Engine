@@ -32,7 +32,7 @@ namespace asapgl
 			"void main()\n"
 			"{\n"
 			//"  gl_FragColor = texture2D(texUnit, UV) * vcolor;\n"
-			"  gl_FragColor = texture2D(texUnit, UV) * vcolor * blend;\n"
+			"  gl_FragColor = texture2D(texUnit, UV) * vcolor * (blend+1.0);\n"
 			//"  gl_FragColor = UV.xyyy * blend;\n"
 			"}\n";
 	}static debugShaderSrc;
@@ -68,7 +68,7 @@ namespace asapgl
 			"void main()\n"
 			"{\n"
 			//"  gl_FragColor = texture2D(texUnit, UV) * vcolor;\n"
-			"  gl_FragColor = vec4(1.0) * blend;\n"
+			"  gl_FragColor = vec4(1.0) * (blend+1.0);\n"
 			//"  gl_FragColor = UV.xyyy * blend;\n"
 			"}\n";
 	}static cursorShaderSrc;
@@ -78,6 +78,7 @@ namespace asapgl
 		char* vertex_source = 0;
 		char* fragment_source = 0;
 		GLuint vertex, fragment, program;
+		GLint isCompiled = 0;
 		
 		if( strcmp(filename, "cursor") == 0 )
 		{
@@ -89,18 +90,35 @@ namespace asapgl
 			vertex_source = (char*)debugShaderSrc.vertex_source;
 			fragment_source = (char*)debugShaderSrc.fragment_source;
 		}
-		
 
 
 		vertex = glCreateShader(GL_VERTEX_SHADER);
 		glShaderSource(vertex, 1, &vertex_source, NULL);
 		glCompileShader(vertex);
+		glGetShaderiv(vertex, GL_COMPILE_STATUS, &isCompiled);
+		if(isCompiled == GL_FALSE)
+		{
+			GLint maxLength = 0;
+			glGetShaderiv(vertex, GL_INFO_LOG_LENGTH, &maxLength);
+
+			// The maxLength includes the NULL character
+			std::vector<GLchar> errorLog(maxLength);
+			glGetShaderInfoLog(vertex, maxLength, &maxLength, &errorLog[0]);
+
+			std::string str(&errorLog[0]);
+
+			log::error << str << std::endl;
+
+			// Provide the infolog in whatever manor you deem best.
+			// Exit with failure.
+			glDeleteShader(vertex); // Don't leak the shader.
+			return;
+		}
 
 		fragment = glCreateShader(GL_FRAGMENT_SHADER);
 		glShaderSource(fragment, 1, &fragment_source, NULL);
 		glCompileShader(fragment);
 
-		GLint isCompiled = 0;
 		glGetShaderiv(fragment, GL_COMPILE_STATUS, &isCompiled);
 		if(isCompiled == GL_FALSE)
 		{
