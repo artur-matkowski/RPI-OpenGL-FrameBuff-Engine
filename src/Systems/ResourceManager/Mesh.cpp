@@ -71,12 +71,12 @@ namespace asapgl
 		m_colors = colors;
 		m_size = 6;
 
-		for(int i=0; i<sizeof(vertices); i+=3)
+		for(int i=0; i<18; i+=3)
 		{
 			m_vertices[i] = verticesO[i] * resolution.y/resolution.x;
 		}
 
-		for(int i=0; i<sizeof(vertices); ++i)
+		for(int i=0; i<18; ++i)
 		{
 			m_vertices[i] = m_vertices[i] * 50.f/resolution.x;
 		}
