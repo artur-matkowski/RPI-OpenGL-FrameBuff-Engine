@@ -35,7 +35,7 @@ namespace asapgl
 			"  gl_FragColor = texture2D(texUnit, UV) * vcolor * blend;\n"
 			//"  gl_FragColor = UV.xyyy * blend;\n"
 			"}\n";
-	}debugShaderSrc;
+	}static debugShaderSrc;
 		
 	struct
 	{
@@ -71,7 +71,7 @@ namespace asapgl
 			"  gl_FragColor = vec4(1.0) * blend;\n"
 			//"  gl_FragColor = UV.xyyy * blend;\n"
 			"}\n";
-	}cursorShaderSrc;
+	}static cursorShaderSrc;
 		
 	Shader::Shader(const char* filename)
 	{

@@ -24,7 +24,6 @@ namespace asapgl
 		bool 										m_isDirty = false;
 
 	public:
-		MaterialType();
 		MaterialType(const char*);
 		~MaterialType();		
 
