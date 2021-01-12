@@ -72,6 +72,25 @@ namespace asapgl
 			//"  gl_FragColor = UV.xyyy * blend;\n"
 			"}\n";
 	}static cursorShaderSrc;
+
+
+	void PrintLog(GLuint glID)
+	{
+		GLint maxLength = 0;
+		glGetShaderiv(vertex, GL_INFO_LOG_LENGTH, &maxLength);
+
+		// The maxLength includes the NULL character
+		std::vector<GLchar> errorLog(maxLength);
+		glGetShaderInfoLog(vertex, maxLength, &maxLength, &errorLog[0]);
+
+		std::string str(&errorLog[0]);
+
+		log::error << str << std::endl;
+
+		// Provide the infolog in whatever manor you deem best.
+		// Exit with failure.
+		glDeleteShader(vertex); // Don't leak the shader.
+	}
 		
 	Shader::Shader(const char* filename)
 	{
@@ -152,7 +171,7 @@ namespace asapgl
 
 		glLinkProgram(m_programID);
 
-		glGetProgramiv(m_programID, GL_COMPILE_STATUS, &isCompiled);
+		glGetProgramiv(m_programID, GL_LINK_STATUS, &isCompiled);
 		if(isCompiled == GL_FALSE)
 		{
 			GLint maxLength = 0;
@@ -168,7 +187,7 @@ namespace asapgl
 
 			// Provide the infolog in whatever manor you deem best.
 			// Exit with failure.
-			glDeleteShader(m_programID); // Don't leak the shader.
+			glDeleteProgram(m_programID); // Don't leak the shader.
 			return;
 		}
 
@@ -178,10 +197,31 @@ namespace asapgl
 
 		glDeleteShader(vertex);
 		glDeleteShader(fragment);
+
+		glGetProgramiv(m_programID, GL_VALIDATE_STATUS, &isCompiled);
+		if(isCompiled == GL_FALSE)
+		{
+			GLint maxLength = 0;
+			glGetProgramiv(m_programID, GL_INFO_LOG_LENGTH, &maxLength);
+
+			// The maxLength includes the NULL character
+			std::vector<GLchar> errorLog(maxLength);
+			glGetProgramInfoLog(m_programID, maxLength, &maxLength, &errorLog[0]);
+
+			std::string str(&errorLog[0]);
+
+			log::error << str << std::endl;
+
+			// Provide the infolog in whatever manor you deem best.
+			// Exit with failure.
+			glDeleteProgram(m_programID); // Don't leak the shader.
+			return;
+		}
+
 	}
 
 	Shader::~Shader()
 	{
-		glDeleteShader(m_programID);
+		glDeleteProgram(m_programID);
 	}
 }
