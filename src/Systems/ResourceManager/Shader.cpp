@@ -7,6 +7,7 @@ namespace asapgl
 	{
 		const char *vertex_source =
 			"#version 100\n"
+			"precision mediump float;\n"
 			"attribute vec4 position;\n"
 			"attribute vec4 color;\n"
 			"attribute vec2 texCoord;\n"
@@ -41,6 +42,7 @@ namespace asapgl
 	{
 		const char *vertex_source =
 			"#version 100\n"
+			"precision mediump float;\n"
 			"attribute vec4 position;\n"
 			"attribute vec4 color;\n"
 			"attribute vec2 texCoord;\n"
@@ -63,7 +65,6 @@ namespace asapgl
 			"varying vec2 UV;\n"
 			"uniform sampler2D texUnit;\n"
 			"uniform float blend;\n"
-			"uniform vec3 offset;\n"
 			"\n"
 			"void main()\n"
 			"{\n"
