@@ -77,19 +77,15 @@ namespace asapgl
 	void PrintLog(GLuint glID)
 	{
 		GLint maxLength = 0;
-		glGetShaderiv(vertex, GL_INFO_LOG_LENGTH, &maxLength);
+		glGetShaderiv(glID, GL_INFO_LOG_LENGTH, &maxLength);
 
 		// The maxLength includes the NULL character
 		std::vector<GLchar> errorLog(maxLength);
-		glGetShaderInfoLog(vertex, maxLength, &maxLength, &errorLog[0]);
+		glGetShaderInfoLog(glID, maxLength, &maxLength, &errorLog[0]);
 
 		std::string str(&errorLog[0]);
 
 		log::error << str << std::endl;
-
-		// Provide the infolog in whatever manor you deem best.
-		// Exit with failure.
-		glDeleteShader(vertex); // Don't leak the shader.
 	}
 		
 	Shader::Shader(const char* filename)
