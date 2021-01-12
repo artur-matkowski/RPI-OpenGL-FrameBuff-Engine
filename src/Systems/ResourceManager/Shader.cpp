@@ -77,7 +77,7 @@ namespace asapgl
 	{
 		char* vertex_source = 0;
 		char* fragment_source = 0;
-		GLuint vertex, fragment, program;
+		GLuint vertex, fragment;
 		GLint isCompiled = 0;
 		
 		if( strcmp(filename, "cursor") == 0 )
@@ -146,9 +146,9 @@ namespace asapgl
 		glAttachShader(m_programID, vertex);
 		glAttachShader(m_programID, fragment);
 		
-		glBindAttribLocation(program, 0, "position");
-		glBindAttribLocation(program, 1, "color");
-		glBindAttribLocation(program, 2, "texCoord");
+		glBindAttribLocation(m_programID, 0, "position");
+		glBindAttribLocation(m_programID, 1, "color");
+		glBindAttribLocation(m_programID, 2, "texCoord");
 
 		glLinkProgram(m_programID);
 
