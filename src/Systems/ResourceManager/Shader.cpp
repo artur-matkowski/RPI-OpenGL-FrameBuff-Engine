@@ -78,7 +78,7 @@ namespace asapgl
 		char* vertex_source = 0;
 		char* fragment_source = 0;
 		GLuint vertex, fragment;
-		GLint isCompiled = 0;
+		GLint isCompiled = GL_FALSE;
 		
 		if( strcmp(filename, "cursor") == 0 )
 		{
@@ -172,6 +172,9 @@ namespace asapgl
 			return;
 		}
 
+		// Always detach shaders after a successful link.
+		glDetachShader(m_programID, vertex);
+		glDetachShader(m_programID, fragment);
 
 		glDeleteShader(vertex);
 		glDeleteShader(fragment);
