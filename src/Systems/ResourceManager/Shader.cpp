@@ -152,6 +152,27 @@ namespace asapgl
 
 		glLinkProgram(m_programID);
 
+		glGetShaderiv(m_programID, GL_COMPILE_STATUS, &isCompiled);
+		if(isCompiled == GL_FALSE)
+		{
+			GLint maxLength = 0;
+			glGetShaderiv(m_programID, GL_INFO_LOG_LENGTH, &maxLength);
+
+			// The maxLength includes the NULL character
+			std::vector<GLchar> errorLog(maxLength);
+			glGetShaderInfoLog(m_programID, maxLength, &maxLength, &errorLog[0]);
+
+			std::string str(&errorLog[0]);
+
+			log::error << str << std::endl;
+
+			// Provide the infolog in whatever manor you deem best.
+			// Exit with failure.
+			glDeleteShader(m_programID); // Don't leak the shader.
+			return;
+		}
+
+
 		glDeleteShader(vertex);
 		glDeleteShader(fragment);
 	}
