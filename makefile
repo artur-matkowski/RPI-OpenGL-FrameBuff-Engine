@@ -42,6 +42,9 @@ HEADER_DEPS += 	-I./vendor/glm/glm/
 DEBUG_CC 	+= -g -DLOG_LEVEL=DebugLevel::ALL
 RELEASE_CC	+= -O3 -DLOG_LEVEL=DebugLevel::INFO -DNOTRACE
 
+COLOR=\033[0;32m
+NC=\033[0m # No Color
+
 #################################################################################
 
 all:
@@ -92,6 +95,7 @@ $(OUT): $(SOURCES)
 
 
 $(SOURCES): $(INCDIR)$(@.hpp) $(SRCDIR)$@ 
+	@echo "${COLOR}$(OBJDIR)$(notdir $@).o${NC}:"
 	$(CC) -c $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS) $(@).cpp -o $(OBJDIR)$(notdir $@).o -fPIC
 	@echo 
 	

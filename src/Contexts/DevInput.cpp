@@ -115,7 +115,7 @@ namespace asapgl
 					        }
 				        	else if(evp->code == REL_WHEEL) //touchscreen coords Y
 				        	{
-				    			asapgl::keystates state = (evp->value == 1) ? asapgl::keystates::snapi_up : asapgl::keystates::snapi_down;
+				    			asapgl::keystates state = (evp->value == 0) ? asapgl::keystates::snapi_up : asapgl::keystates::snapi_down;
 				        		events.Invoke<MouseClickEvent>([&](MouseClickEvent& args) 
 							    {
 									args.m_Xpos = (int)m_mouse_posX;
@@ -145,7 +145,7 @@ namespace asapgl
 				        {
 				        	if(evp->code == 330) // touchscreen click
 				        	{
-				    			asapgl::keystates state = (evp->value == 1) ? asapgl::keystates::snapi_up : asapgl::keystates::snapi_down;
+				    			asapgl::keystates state = (evp->value == 0) ? asapgl::keystates::snapi_up : asapgl::keystates::snapi_down;
 				        		events.Invoke<MouseClickEvent>([&](MouseClickEvent& args) 
 							    {
 									args.m_Xpos = (int)m_mouse_posX;
@@ -157,7 +157,7 @@ namespace asapgl
 				        	else 
 				        	{
 				        		auto it = m_mouseCodeMap.find( evp->code );
-				    			asapgl::keystates state = (evp->value == 1) ? asapgl::keystates::snapi_up : asapgl::keystates::snapi_down;
+				    			asapgl::keystates state = (evp->value == 0) ? asapgl::keystates::snapi_up : asapgl::keystates::snapi_down;
 
 				        		if(it == m_mouseCodeMap.end() )
 				        		{
