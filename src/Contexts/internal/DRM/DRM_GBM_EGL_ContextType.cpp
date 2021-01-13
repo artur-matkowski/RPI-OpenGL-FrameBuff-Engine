@@ -330,7 +330,8 @@ namespace asapgl
 				cursorMaterial.BindMaterial();
 				int x,y;
 				m_devinput.GetCursorPos(x, y);
-				uCursorPos->SetUniform(glm::vec3( x/(float)resolution.x, y/(float)resolution.y, 0.0f));
+				uCursorPos->SetUniform(glm::vec3( x/(float)resolution.x * 2.0f - 1.0f,
+												 1.0f - y/(float)resolution.y * 2.0f, 0.0f));
 				cursorMesh.Render();
 
 
