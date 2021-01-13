@@ -206,12 +206,12 @@ namespace asapgl
 	
 	DRM_GBM_EGL_ContextType::~DRM_GBM_EGL_ContextType()
 	{
-		clean_up ();
-		close (device);
-
 		#ifdef IS_EDITOR
 	    ImGui_ImplDRM_Shutdown();
 	    #endif
+
+		clean_up ();
+		close (device);
 	}
 
 	void DRM_GBM_EGL_ContextType::SwapBuffer()
@@ -222,7 +222,7 @@ namespace asapgl
 
 	void DRM_GBM_EGL_ContextType::CleanUp()
 	{
-		
+		m_isRunning = false;
 	}
 
 

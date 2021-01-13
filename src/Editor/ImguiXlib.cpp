@@ -134,34 +134,8 @@ namespace asapgl
 		    g_MousePosRoot.y = (int)args->m_YposRoot;
 	    });
 
-/*
-	    // Create mouse cursors
-	    // (By design, on X11 cursors are user configurable and some cursors may be missing. When a cursor doesn't exist,
-	    // GLFW will emit an error which will often be printed by the app, so we temporarily disable error reporting.
-	    // Missing cursors will return NULL and our _UpdateMouseCursor() function will use the Arrow cursor instead.)
-	    GLFWerrorfun prev_error_callback = glfwSetErrorCallback(NULL);
-
-	    glfwSetErrorCallback(prev_error_callback);
-
-	    // Chain GLFW callbacks: our callbacks will call the user's previously installed callbacks, if any.
-	    g_PrevUserCallbackMousebutton = NULL;
-	    g_PrevUserCallbackScroll = NULL;
-	    g_PrevUserCallbackKey = NULL;
-	    g_PrevUserCallbackChar = NULL;
-	    g_PrevUserCallbackMonitor = NULL;
-	    if (install_callbacks)
-	    {
-	        g_InstalledCallbacks = true;
-	        g_PrevUserCallbackMousebutton = glfwSetMouseButtonCallback(window, ImGui_ImplXlib_MouseButtonCallback);
-	        g_PrevUserCallbackScroll = glfwSetScrollCallback(window, ImGui_ImplXlib_ScrollCallback);
-	        g_PrevUserCallbackKey = glfwSetKeyCallback(window, ImGui_ImplXlib_KeyCallback);
-	        g_PrevUserCallbackChar = glfwSetCharCallback(window, ImGui_ImplXlib_CharCallback);
-	        g_PrevUserCallbackMonitor = glfwSetMonitorCallback(ImGui_ImplXlib_MonitorCallback);
-	    }
-*/
-	    // Update monitors the first time (note: monitor callback are broken in GLFW 3.2 and earlier, see github.com/glfw/glfw/issues/784)
+   // Update monitors the first time (note: monitor callback are broken in GLFW 3.2 and earlier, see github.com/glfw/glfw/issues/784)
 	    ImGui_ImplXlib_UpdateMonitors();
-	    //glfwSetMonitorCallback(ImGui_ImplXlib_MonitorCallback);
 
 	    // Our mouse update function expect PlatformHandle to be filled for the main viewport
 	    ImGuiViewport* main_viewport = ImGui::GetMainViewport();
@@ -184,24 +158,6 @@ namespace asapgl
 	    viewport->PlatformUserData = data;
 	    data->WindowOwned = true;
 	    viewport->PlatformHandle = (void*)data;
-
-
-/*
-	    // Install GLFW callbacks for secondary viewports
-	    glfwSetMouseButtonCallback(data->Window, ImGui_ImplXlib_MouseButtonCallback);
-	    glfwSetScrollCallback(data->Window, ImGui_ImplXlib_ScrollCallback);
-	    glfwSetKeyCallback(data->Window, ImGui_ImplXlib_KeyCallback);
-	    glfwSetCharCallback(data->Window, ImGui_ImplXlib_CharCallback);
-
-	    glfwSetWindowCloseCallback(data->Window, ImGui_ImplXlib_WindowCloseCallback);
-	    glfwSetWindowPosCallback(data->Window, ImGui_ImplXlib_WindowPosCallback);
-	    glfwSetWindowSizeCallback(data->Window, ImGui_ImplXlib_WindowSizeCallback);
-
-	    if (g_ClientApi == GlfwClientApi_OpenGL)
-	    {
-	        glfwMakeContextCurrent(data->Window);
-	        glfwSwapInterval(0);
-	    }*/
 	}
 
 	static void ImGui_ImplXlib_DestroyWindow(ImGuiViewport* viewport)
@@ -409,22 +365,7 @@ namespace asapgl
 	                 io.MouseDown[i] |= g_MouseButtonState[i]!=false;
 	        }
 
-	        // (Optional) When using multiple viewports: set io.MouseHoveredViewport to the viewport the OS mouse cursor is hovering.
-	        // Important: this information is not easy to provide and many high-level windowing library won't be able to provide it correctly, because
-	        // - This is _ignoring_ viewports with the ImGuiViewportFlags_NoInputs flag (pass-through windows).
-	        // - This is _regardless_ of whether another viewport is focused or being dragged from.
-	        // If ImGuiBackendFlags_HasMouseHoveredViewport is not set by the backend, imgui will ignore this field and infer the information by relying on the
-	        // rectangles and last focused time of every viewports it knows about. It will be unaware of other windows that may be sitting between or over your windows.
-	        // [GLFW] FIXME: This is currently only correct on Win32. See what we do below with the WM_NCHITTEST, missing an equivalent for other systems.
-	        // See https://github.com/glfw/glfw/issues/1236 if you want to help in making this a GLFW feature.
-	// #if GLFW_HAS_MOUSE_PASSTHROUGH || (GLFW_HAS_WINDOW_HOVERED && defined(_WIN32))
-	//         const bool window_no_input = (viewport->Flags & ImGuiViewportFlags_NoInputs) != 0;
-	// #if GLFW_HAS_MOUSE_PASSTHROUGH
-	//         glfwSetWindowAttrib(window, GLFW_MOUSE_PASSTHROUGH, window_no_input);
-	// #endif
-	//         if (glfwGetWindowAttrib(window, GLFW_HOVERED) && !window_no_input)
-	//             io.MouseHoveredViewport = viewport->ID;
-	// #endif
+
 	    }
 	}
 

@@ -284,6 +284,11 @@ namespace asapgl
 	
 	Xlib_EGL_ContextType::~Xlib_EGL_ContextType()
 	{
+		#ifdef IS_EDITOR
+	    ImGui_ImplXlib_Shutdown();
+	    #endif
+
+	    
 		XAutoRepeatOn(m_XDisplay.display);
 
 		for(int i=0; i<m_eglWindows.size(); ++i)
@@ -300,9 +305,7 @@ namespace asapgl
 
 	void Xlib_EGL_ContextType::CleanUp()
 	{
-		#ifdef IS_EDITOR
-	    ImGui_ImplXlib_Shutdown();
-	    #endif
+		m_isRunning = false;
 	}
 
 

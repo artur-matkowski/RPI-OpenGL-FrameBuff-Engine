@@ -11,7 +11,8 @@ using namespace asapgl;
 void signalHandler( int signum )
 {
 	SYSTEMS::GetObject().cloaseApp();
-	exit(0);
+	//memoryRaport();
+	//exit(0);
 }
 
 int main(const int argc, const char** argv)

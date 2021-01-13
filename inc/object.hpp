@@ -2,7 +2,7 @@
 #define _H_OBJECT
 #include "SharedPtr.hpp"
 #include "glm.hpp"
-
+#include "MemoryManager.hpp"
 
 //	Allowed #defines to controll build process
 //	#define IS_EDITOR
@@ -38,5 +38,8 @@ namespace asapgl
 {
 	class object{};
 }
+
+
+
 
 #endif
