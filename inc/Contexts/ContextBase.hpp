@@ -85,7 +85,7 @@ namespace asapgl
 
 
 	public:
-		ResizeWindowArgs()
+		ResizeWindowArgs(bfu::MemBlockBase* mBlock = 0)
 			:bfu::EventArgsBase()
 			,m_width("m_width",this)
 			,m_height("m_height",this)
@@ -128,7 +128,7 @@ namespace asapgl
 		#endif
 
 	public:
-		MouseMoveEvent()
+		MouseMoveEvent(bfu::MemBlockBase* mBlock = 0)
 			:bfu::EventArgsBase()
 			,m_Xpos("m_Xpos",this)
 			,m_Ypos("m_Ypos",this)
@@ -173,7 +173,7 @@ namespace asapgl
 		#endif
 
 	public:
-		MouseClickEvent()
+		MouseClickEvent(bfu::MemBlockBase* mBlock = 0)
 			:bfu::EventArgsBase()
 			,m_Xpos("m_Xpos",this)
 			,m_Ypos("m_Ypos",this)
@@ -215,7 +215,7 @@ namespace asapgl
 		#endif
 
 	public:
-		KeyboardEvent()
+		KeyboardEvent(bfu::MemBlockBase* mBlock = 0)
 			:bfu::EventArgsBase()
 			,m_key("m_key",this)
 			,m_state("m_state",this)
@@ -256,7 +256,7 @@ namespace asapgl
 
 
 	public:
-		MoveWindowArgs()
+		MoveWindowArgs(bfu::MemBlockBase* mBlock = 0)
 			:bfu::EventArgsBase()
 			,m_X("m_X",this)
 			,m_Y("m_Y",this)

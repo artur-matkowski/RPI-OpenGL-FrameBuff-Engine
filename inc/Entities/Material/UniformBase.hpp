@@ -9,7 +9,7 @@ namespace asapgl
 	class MaterialInstance;
 	class UniformOverrideBase;
 
-	class UniformBase: public object, public bfu::SerializableClassBase
+	class UniformBase: public object//, public bfu::SerializableClassBase
 	{
 	protected:
 		uint32_t 				m_location = -1;

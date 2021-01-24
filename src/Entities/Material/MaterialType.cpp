@@ -17,8 +17,8 @@ namespace asapgl
 	}
 
 	MaterialType::MaterialType(const char* materialName)
-		:SERIALIZABLE_VAR_CONSTRUCTOR(m_usedShader, this)
-		,SERIALIZABLE_VAR_VEC_CONSTRUCTOR(m_usedTextures, this)
+		//:SERIALIZABLE_VAR_CONSTRUCTOR(m_usedShader, this)
+		//,SERIALIZABLE_VAR_VEC_CONSTRUCTOR(m_usedTextures, this)
 	{
 		static SYSTEMS& systems = SYSTEMS::GetObject();
 

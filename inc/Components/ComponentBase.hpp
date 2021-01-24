@@ -5,9 +5,12 @@
 
 namespace asapgl
 {
-	class ComponentBase: public SERIALIZABLE_CLASS_BASE
+	class ComponentBase: public object//, public bfu::SerializableClassBase
 	{
 	public:	
+		ComponentBase(bfu::MemBlockBase* mBlock)
+			//:bfu::SerializableClassBase(mBlock)
+		{};
 		~ComponentBase(){};
 		
 		virtual void OnAttach() = 0;

@@ -28,7 +28,7 @@ namespace asapgl{
 
 	void RendererSystem::Init()
 	{
-		m_rendererComponent = new RendererComponent();
+		m_rendererComponent = new RendererComponent(nullptr);
 	}
 
 	RendererSystem::RendererSystem()

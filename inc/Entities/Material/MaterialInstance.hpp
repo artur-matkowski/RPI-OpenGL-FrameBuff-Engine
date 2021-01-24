@@ -5,9 +5,9 @@
 
 namespace asapgl
 {
-	class MaterialInstance: public bfu::SerializableClassBase, public object
+	class MaterialInstance: public object//, public bfu::SerializableClassBase
 	{
-		bfu::SerializableVar<std::string> 			m_usedMaterialType;
+		//bfu::SerializableVar<std::string> 			m_usedMaterialType;
 
 		ResourcePtr< MaterialType > 				m_materialType;
 

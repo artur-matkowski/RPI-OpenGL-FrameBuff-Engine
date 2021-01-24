@@ -7,9 +7,9 @@ namespace asapgl
 	class GameObject: public EntityBase
 	{
 	protected:
-		SERIALIZABLE_VAR_VEC( UniqueID ) 	m_usedComponentsIDs;
-		SERIALIZABLE_VAR_VEC( UniqueID )	m_usedGameObjectsChildrensIDs;
-		SERIALIZABLE_VAR( UniqueID )		m_usedGameObjectParrentID;
+		//SERIALIZABLE_VAR_VEC( UniqueID ) 	m_usedComponentsIDs;
+		//SERIALIZABLE_VAR_VEC( UniqueID )	m_usedGameObjectsChildrensIDs;
+		//SERIALIZABLE_VAR( UniqueID )		m_usedGameObjectParrentID;
 
 
 	public:

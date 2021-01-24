@@ -13,18 +13,18 @@ namespace asapgl
 
 	class ResourceSystem
 	{
-		std::map<std::string, ResourcePtr<Texture> > 		m_textures;
-		std::map<std::string, ResourcePtr<Shader> > 		m_shaders;
-		std::map<std::string, ResourcePtr<MaterialType> > 	m_materials;
-		std::map<std::string, ResourcePtr<Mesh> > 			m_meshes;
+		std::map<bfu::string, ResourcePtr<Texture> > 		m_textures;
+		std::map<bfu::string, ResourcePtr<Shader> > 		m_shaders;
+		std::map<bfu::string, ResourcePtr<MaterialType> > 	m_materials;
+		std::map<bfu::string, ResourcePtr<Mesh> > 			m_meshes;
 
 	public:
 
 		bool requestResource(ResourcePtr<Texture>* res, const char* str)
 		{
-			std::string id(str);
+			bfu::string id(str);
 
-			std::map<std::string, ResourcePtr<Texture> >::iterator it = m_textures.find(id);
+			std::map<bfu::string, ResourcePtr<Texture> >::iterator it = m_textures.find(id);
 
 			if( it==m_textures.end() )
 			{
@@ -41,7 +41,7 @@ namespace asapgl
 
 		void dispouseResource(ResourcePtr<Texture>* res)
 		{
-			for(std::map<std::string, ResourcePtr<Texture> >::iterator it = m_textures.begin() ;
+			for(std::map<bfu::string, ResourcePtr<Texture> >::iterator it = m_textures.begin() ;
 				it!=m_textures.end();
 				++it)
 			{
@@ -58,9 +58,9 @@ namespace asapgl
 
 		bool requestResource(ResourcePtr<Shader>* res, const char* str)
 		{
-			std::string id(str);
+			bfu::string id(str);
 
-			std::map<std::string, ResourcePtr<Shader> >::iterator it = m_shaders.find(id);
+			std::map<bfu::string, ResourcePtr<Shader> >::iterator it = m_shaders.find(id);
 
 			if( it==m_shaders.end() )
 			{
@@ -77,7 +77,7 @@ namespace asapgl
 
 		void dispouseResource(ResourcePtr<Shader>* res)
 		{
-			for(std::map<std::string, ResourcePtr<Shader> >::iterator it = m_shaders.begin() ;
+			for(std::map<bfu::string, ResourcePtr<Shader> >::iterator it = m_shaders.begin() ;
 				it!=m_shaders.end();
 				++it)
 			{
@@ -94,9 +94,9 @@ namespace asapgl
 
 		bool requestResource(ResourcePtr<MaterialType>* res, const char* str)
 		{
-			std::string id(str);
+			bfu::string id(str);
 
-			std::map<std::string, ResourcePtr<MaterialType> >::iterator it = m_materials.find(id);
+			std::map<bfu::string, ResourcePtr<MaterialType> >::iterator it = m_materials.find(id);
 
 			if( it==m_materials.end() )
 			{
@@ -113,7 +113,7 @@ namespace asapgl
 
 		void dispouseResource(ResourcePtr<MaterialType>* res)
 		{
-			for(std::map<std::string, ResourcePtr<MaterialType> >::iterator it = m_materials.begin() ;
+			for(std::map<bfu::string, ResourcePtr<MaterialType> >::iterator it = m_materials.begin() ;
 				it!=m_materials.end();
 				++it)
 			{
@@ -130,9 +130,9 @@ namespace asapgl
 
 		bool requestResource(ResourcePtr<Mesh>* res, const char* str)
 		{
-			std::string id(str);
+			bfu::string id(str);
 
-			std::map<std::string, ResourcePtr<Mesh> >::iterator it = m_meshes.find(id);
+			std::map<bfu::string, ResourcePtr<Mesh> >::iterator it = m_meshes.find(id);
 
 			if( it==m_meshes.end() )
 			{
@@ -149,7 +149,7 @@ namespace asapgl
 
 		void dispouseResource(ResourcePtr<Mesh>* res)
 		{
-			for(std::map<std::string, ResourcePtr<Mesh> >::iterator it = m_meshes.begin() ;
+			for(std::map<bfu::string, ResourcePtr<Mesh> >::iterator it = m_meshes.begin() ;
 				it!=m_meshes.end();
 				++it)
 			{

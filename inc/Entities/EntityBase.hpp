@@ -4,14 +4,14 @@
 
 namespace asapgl
 {
-	class EntityBase: public SERIALIZABLE_CLASS_BASE
+	class EntityBase: public object
 	{
 	protected:
-		SERIALIZABLE_VAR( UniqueID ) m_ID;
+		//SERIALIZABLE_VAR( UniqueID ) m_ID;
 
 	public:
 		EntityBase(EntityBase* _this)
-			:SERIALIZABLE_VAR_CONSTRUCTOR(m_ID, _this)
+			//:SERIALIZABLE_VAR_CONSTRUCTOR(m_ID, _this)
 		{};
 		~EntityBase(){};
 

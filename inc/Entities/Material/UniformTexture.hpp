@@ -9,13 +9,13 @@ namespace asapgl
 	template<>
 	class Uniform< ResourcePtr< Texture > >: public UniformBase
 	{
-		bfu::SerializableVar<std::string>	m_data;
+		//bfu::SerializableVar<std::string>	m_data;
 		ResourcePtr< Texture >				m_texture;
 
 	public:
 		Uniform(uint32_t location, MaterialType* owner)
 			:UniformBase(location, owner)
-			,m_data("m_data", this)
+			//,m_data("m_data", this)
 		{};
 		~Uniform();
 	};

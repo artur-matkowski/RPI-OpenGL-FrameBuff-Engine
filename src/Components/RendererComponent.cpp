@@ -3,10 +3,10 @@
 
 namespace asapgl
 {
-	RendererComponent::RendererComponent()
-		:ComponentBase()
-		,SERIALIZABLE_VAR_CONSTRUCTOR(m_usedMaterial,this)
-		,SERIALIZABLE_VAR_CONSTRUCTOR(m_usedMesh,this)
+	RendererComponent::RendererComponent(bfu::MemBlockBase* mBlock)
+		:ComponentBase(mBlock)
+		//,m_usedMaterial("m_usedMaterial",this, mBlock)
+		//,m_usedMesh("m_usedMesh",this, mBlock)
 	{
 		SYSTEMS& systems = SYSTEMS::GetObject();
 		

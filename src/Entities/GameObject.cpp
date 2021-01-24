@@ -7,11 +7,11 @@ namespace asapgl
 		void GameObject::Serialize(bfu::JSONStream& stream)
 		{
 			//sync objects to serializable IDs
-			bfu::SerializableClassBase::Serialize(stream);
+			//bfu::SerializableClassBase::Serialize(stream);
 		}
 		void GameObject::Deserialize(bfu::JSONStream& stream)
 		{
-			bfu::SerializableClassBase::Deserialize(stream);
+			//bfu::SerializableClassBase::Deserialize(stream);
 			//sync objects from serializable IDs
 		}
 	#endif
