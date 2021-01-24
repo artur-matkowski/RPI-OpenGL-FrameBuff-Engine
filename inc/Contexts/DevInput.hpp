@@ -41,6 +41,12 @@ namespace asapgl
 		void poolEvents();
 
 		void scanForDevices();
+
+		inline void GetCursorPos(int &x, int &y)
+		{
+			x = m_mouse_posX;
+			y = m_mouse_posY;
+		}
 	};
 }
 #endif

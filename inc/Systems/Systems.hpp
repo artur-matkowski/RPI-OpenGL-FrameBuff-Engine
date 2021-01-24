@@ -6,6 +6,7 @@
 #include "RendererSystem.hpp"
 #include "Context.hpp"
 #include "ResourceSystem.hpp"
+#include "SimpleTime.hpp"
 
 namespace asapgl
 {
@@ -14,9 +15,14 @@ namespace asapgl
 	public:
 		bfu::EventSystem 	EVENTS;
 		RendererSystem 		RENDERER;
-		Context  			CONTEXT;
+		#ifdef USE_XLIB
+		ContextBase			*CONTEXT;
+		#else
+		DRM_GBM_EGL_ContextType			
+							CONTEXT;
+		#endif
 		ResourceSystem		RESOURCES;
-
+		SimpleTime			TIME;
 
 		bool init(const int argc, const char** argv);
 		void cloaseApp();

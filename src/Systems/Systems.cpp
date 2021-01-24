@@ -5,12 +5,14 @@
 
 namespace asapgl
 {
-	bool SYSTEMS::init(const int argc, const char** argv)
+	#ifdef USE_XLIB
+	static ContextBase* ContextInit()
 	{
-		srand (time(NULL));
-		RENDERER.SetupEvents();
+		static ContextBase* ret = 0;
 
-	#ifndef _TARGET
+		if(ret!=0)
+			return ret;
+
 		char* display = getenv("DISPLAY");
 
 		bool hasDisplay = display != 0;
@@ -18,19 +20,35 @@ namespace asapgl
 
 		if(hasDisplay)
 		{
-			//log::info << "DISPLAY=" << display << " Initializing GLUT context" << std::endl;
-
-		    CONTEXT.initXlib( argc, argv );
+		    ret = new Xlib_EGL_ContextType();
 		}
 		else
-	#endif
 		{
-			//log::info << "No DISPLAY found. Initializing DRM GBM EGL context" << std::endl;
-
-			CONTEXT.initDRM( argc, argv );
+		    ret = new DRM_GBM_EGL_ContextType();
 		}
 
+		return ret;
+	}
+	#endif
+
+
+	bool SYSTEMS::init(const int argc, const char** argv)
+	{
+		srand (time(NULL));
+
+		RENDERER.SetupEvents();
+		#ifdef USE_XLIB
+		CONTEXT = ContextInit();
+		CONTEXT->Init(argc, argv);
+		#else
+		CONTEXT.Init(argc, argv);
+		#endif
 		RENDERER.Init();
+
+		log::info << "GL initialized with version: " << glGetString(GL_VERSION) << std::endl;
+		log::info << "GL vendor: " << glGetString(GL_VENDOR) << std::endl;
+		log::info << "GL renderer: " << glGetString(GL_RENDERER) << std::endl;
+		log::info << "GL shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 
 
 		return true;
@@ -39,11 +57,19 @@ namespace asapgl
 	
 	void SYSTEMS::cloaseApp()
 	{
+		#ifdef USE_XLIB
+		CONTEXT->CleanUp();
+		#else
 		CONTEXT.CleanUp();
+		#endif
 	}
 
 	void SYSTEMS::mainAppLoop()
 	{
-    	CONTEXT.MainLoop();
+		#ifdef USE_XLIB
+		CONTEXT->MainLoop();
+		#else
+		CONTEXT.MainLoop();
+		#endif
 	}
 }

@@ -30,7 +30,8 @@ namespace asapgl
 	{
 	protected:
 		const Uniform<T>* 				m_targetUniform;
-		SERIALIZABLE_VAR(T)				m_data;
+		//SERIALIZABLE_VAR(T)				m_data;
+		T m_data;
 	public:
 		UniformOverride( const Uniform<T>* targetUniform, MaterialInstance* owner);
 		~UniformOverride(){};

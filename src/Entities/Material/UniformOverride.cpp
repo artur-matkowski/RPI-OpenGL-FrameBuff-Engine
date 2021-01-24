@@ -6,7 +6,7 @@ namespace asapgl
 	UniformOverride<T>::UniformOverride( const Uniform<T>* targetUniform, MaterialInstance* owner)
 		:UniformOverrideBase(owner)
 		,m_targetUniform(targetUniform)
-		,SERIALIZABLE_VAR_CONSTRUCTOR(m_data, this)
+		//,SERIALIZABLE_VAR_CONSTRUCTOR(m_data, this)
 	{
 
 	}
@@ -27,4 +27,5 @@ namespace asapgl
 
 	template class UniformOverride<float>;
 	template class UniformOverride<int>;
+	template class UniformOverride<glm::vec3>;
 }
