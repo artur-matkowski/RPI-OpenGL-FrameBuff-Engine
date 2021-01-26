@@ -233,9 +233,9 @@ namespace asapgl
 
 	void DRM_GBM_EGL_ContextType::MainLoop()
 	{
-		
-		bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
-		RendererSystem& rendererSystem = SYSTEMS::GetObject().RENDERER;
+		SYSTEMS& system = SYSTEMS::GetObject();
+		bfu::EventSystem& events = system.EVENTS;
+		RendererSystem& rendererSystem = system.RENDERER;
 		auto frameEnd =  std::chrono::system_clock::now();
 		auto frameStart = std::chrono::high_resolution_clock::now();
 		bool show_demo_window = true;
@@ -272,7 +272,7 @@ namespace asapgl
 
 		        // Rendering
 		        ImGui::Render();
-		        glViewport(0, 0, m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y);
+		        glViewport(0, 0, resolution.x, resolution.y);
 		        glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 		        glClear(GL_COLOR_BUFFER_BIT);
 
@@ -282,19 +282,7 @@ namespace asapgl
 		        //glGetIntegerv(GL_CURRENT_PROGRAM, &last_program);
 		        //glUseProgram(0);
 		        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-		        //glUseProgram(last_program);
-
-		        // Update and Render additional Platform Windows
-		        // (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
-		        //  For this specific demo app we could also call glfwMakeContextCurrent(window) directly)
-		        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-		        {
-		            //GLFWwindow* backup_current_context = glfwGetCurrentContext();
-		            ImGui::UpdatePlatformWindows();
-		            ImGui::RenderPlatformWindowsDefault();
-		            eglMakeCurrent(m_XDisplay.egl, m_mainEglWindow->surface, m_mainEglWindow->surface, m_mainEglWindow->context);
-		        }
-		        
+		        //glUseProgram(last_program);		        	        
 				#endif
 
 				rendererSystem.Render();

@@ -4,7 +4,8 @@ ARCHITECTURE = $(shell dpkg --print-architecture)
 
 CC 		  	= g++ -std=c++11 -I/usr/include/libdrm 
 
-CPPFLAGS 	= -I/usr/include/freetype2 -I/usr/include/freetype2/freetype -DIMGUI_IMPL_OPENGL_ES2 -DDEBUG_MEMORY_ALLOC
+CPPFLAGS 	= -I/usr/include/freetype2 -I/usr/include/freetype2/freetype -DIMGUI_IMPL_OPENGL_ES2 
+#-DDEBUG_MEMORY_ALLOC
 
 INCDIR	 	= inc/
 OBJDIR	 	= obj/
