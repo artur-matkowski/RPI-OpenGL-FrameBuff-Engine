@@ -268,48 +268,11 @@ namespace asapgl
 				// glClear(GL_COLOR_BUFFER_BIT);
 
 				#ifdef IS_EDITOR
-				
-				// glViewport(0, 0, m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y);
-				// glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-				// glClear(GL_COLOR_BUFFER_BIT);
-				
-		        // Start the Dear ImGui frame
-		        ImGui_ImplOpenGL3_NewFrame();
-		        ImGui_ImplDRM_NewFrame();
-		        ImGui::NewFrame();
-
-		        // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-		        if (show_demo_window)
-	            	ImGui::ShowDemoWindow(&show_demo_window);
-
-	            {
-		            static float f = 0.0f;
-		            static int counter = 0;
-
-		            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-		            ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-		            ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-		            ImGui::Checkbox("Another Window", &show_another_window);
-
-		            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-		            ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-		            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-		                counter++;
-		            ImGui::SameLine();
-		            ImGui::Text("counter = %d", counter);
-
-		            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-		            ImGui::End();
-		        }
-
-
-
+				system.OnGUI();
 
 		        // Rendering
 		        ImGui::Render();
-		        glViewport(0, 0, resolution.x, resolution.y);
+		        glViewport(0, 0, m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y);
 		        glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 		        glClear(GL_COLOR_BUFFER_BIT);
 
@@ -321,8 +284,17 @@ namespace asapgl
 		        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		        //glUseProgram(last_program);
 
-
-				//RenderImGui();
+		        // Update and Render additional Platform Windows
+		        // (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
+		        //  For this specific demo app we could also call glfwMakeContextCurrent(window) directly)
+		        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		        {
+		            //GLFWwindow* backup_current_context = glfwGetCurrentContext();
+		            ImGui::UpdatePlatformWindows();
+		            ImGui::RenderPlatformWindowsDefault();
+		            eglMakeCurrent(m_XDisplay.egl, m_mainEglWindow->surface, m_mainEglWindow->surface, m_mainEglWindow->context);
+		        }
+		        
 				#endif
 
 				rendererSystem.Render();
