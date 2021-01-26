@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <iostream>
 
-
+/*
 void * operator new(size_t size)
 { 
 	++alocations;
@@ -21,3 +21,4 @@ void operator delete(void * p) noexcept
     std::cout.flush();
     free(p); 
 }
+*/

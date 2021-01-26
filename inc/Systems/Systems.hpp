@@ -7,26 +7,32 @@
 #include "Context.hpp"
 #include "ResourceSystem.hpp"
 #include "SimpleTime.hpp"
+#include "MemoryManagmentSystem.hpp"
 
 namespace asapgl
 {
 	class SYSTEMS: public object, public Singleton<SYSTEMS>
 	{
 	public:
-		bfu::EventSystem 	EVENTS;
-		RendererSystem 		RENDERER;
+		MemoryManagmentSystem 	MEMORY;
+
+		bfu::EventSystem 		EVENTS;
+		RendererSystem 			RENDERER;
 		#ifdef USE_XLIB
-		ContextBase			*CONTEXT;
+		ContextBase				*CONTEXT;
 		#else
 		DRM_GBM_EGL_ContextType			
-							CONTEXT;
+								CONTEXT;
 		#endif
-		ResourceSystem		RESOURCES;
-		SimpleTime			TIME;
+		ResourceSystem			RESOURCES;
+		SimpleTime				TIME;
 
 		bool init(const int argc, const char** argv);
 		void cloaseApp();
 		void mainAppLoop();
+
+		
+		void OnGUI();
 	
 	};
 
