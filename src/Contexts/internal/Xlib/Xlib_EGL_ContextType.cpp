@@ -357,21 +357,35 @@ namespace asapgl
 				m_focusedWindow = event.xmotion.window;
 				break;	
 
-			case ButtonPress:
+			case ButtonPress:			
+				// log::debug << "ButtonPress: " << event.xbutton.x << " " << event.xbutton.y 
+				// 	<< " " << event.xbutton.state << " " << event.xbutton.button << std::endl;
 				events.Invoke<MouseClickEvent>([&](MouseClickEvent& args) 
 			    {
 					args.m_Xpos = (int)event.xbutton.x;
 					args.m_Ypos = (int)event.xbutton.y;
-					args.m_key = (int)m_mouseCodeMap[event.xbutton.button];
-					args.m_state = (int)asapgl::keystates::snapi_down;
 			    	args.m_eventSourceWindow = event.xbutton.window;
+			    	if(event.xbutton.button==5)
+			    	{
+						args.m_key = (int)asapgl::mousecodes::snapi_wheelY;
+						args.m_state = (int)asapgl::keystates::snapi_down;
+			    	}
+			    	else if(event.xbutton.button==4)
+			    	{
+						args.m_key = (int)asapgl::mousecodes::snapi_wheelY;
+						args.m_state = (int)asapgl::keystates::snapi_up;
+			    	}
+			    	else
+			    	{
+						args.m_key = (int)m_mouseCodeMap[event.xbutton.button];
+						args.m_state = (int)asapgl::keystates::snapi_down;
+			    	}
 			    });
 				break;
 
-			case ButtonRelease:
-			/*
-				log::debug << "Button: " << event.xbutton.x << " " << event.xbutton.y 
-					<< " " << event.xbutton.state << " " << event.xbutton.button << std::endl;*/
+			case ButtonRelease:			
+				// log::debug << "ButtonRelease: " << event.xbutton.x << " " << event.xbutton.y 
+				// 	<< " " << event.xbutton.state << " " << event.xbutton.button << std::endl;
 				events.Invoke<MouseClickEvent>([&](MouseClickEvent& args) 
 			    {
 					args.m_Xpos = (int)event.xbutton.x;
@@ -473,9 +487,10 @@ namespace asapgl
 
 	void Xlib_EGL_ContextType::MainLoop()
 	{
-		
-		bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
-		RendererSystem& rendererSystem = SYSTEMS::GetObject().RENDERER;
+		SYSTEMS& system = SYSTEMS::GetObject();
+		bfu::EventSystem& events = system.EVENTS;
+		RendererSystem& rendererSystem = system.RENDERER;
+
 		auto frameEnd =  std::chrono::system_clock::now();
 		auto frameStart = std::chrono::high_resolution_clock::now();
 		bool show_demo_window = true;
@@ -508,42 +523,7 @@ namespace asapgl
 				//eglMakeCurrent(m_XDisplay.egl, m_mainEglWindow->surface, m_mainEglWindow->surface, m_mainEglWindow->context);
 
 				#ifdef IS_EDITOR
-				
-				// glViewport(0, 0, m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y);
-				// glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-				// glClear(GL_COLOR_BUFFER_BIT);
-				
-		        // Start the Dear ImGui frame
-		        ImGui_ImplOpenGL3_NewFrame();
-		        ImGui_ImplXlib_NewFrame();
-		        ImGui::NewFrame();
-
-		        // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-		        if (show_demo_window)
-	            	ImGui::ShowDemoWindow(&show_demo_window);
-
-	            {
-		            static float f = 0.0f;
-		            static int counter = 0;
-
-		            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-		            ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-		            ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-		            ImGui::Checkbox("Another Window", &show_another_window);
-
-		            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-		            ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-		            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-		                counter++;
-		            ImGui::SameLine();
-		            ImGui::Text("counter = %d", counter);
-
-		            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-		            ImGui::End();
-		        }
-
+				system.OnGUI();
 
 		        // Rendering
 		        ImGui::Render();
@@ -569,9 +549,7 @@ namespace asapgl
 		            ImGui::RenderPlatformWindowsDefault();
 		            eglMakeCurrent(m_XDisplay.egl, m_mainEglWindow->surface, m_mainEglWindow->surface, m_mainEglWindow->context);
 		        }
-
-
-				//RenderImGui();
+		        
 				#endif
 
 				glm::vec2 mousePos(m_mainEglWindow->cursorPos.x / (float)m_mainEglWindow->resolution.x*2.0f - 1.0f
