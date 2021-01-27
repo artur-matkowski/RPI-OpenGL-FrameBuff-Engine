@@ -523,6 +523,18 @@ namespace asapgl
 				//eglMakeCurrent(m_XDisplay.egl, m_mainEglWindow->surface, m_mainEglWindow->surface, m_mainEglWindow->context);
 
 				#ifdef IS_EDITOR
+
+
+				// glViewport(0, 0, m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y);
+				// glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+				// glClear(GL_COLOR_BUFFER_BIT);
+				
+		        // Start the Dear ImGui frame
+		        ImGui_ImplOpenGL3_NewFrame();
+		        ImGui_ImplXlib_NewFrame();
+       			ImGui::NewFrame();
+
+
 				system.OnGUI();
 
 		        // Rendering

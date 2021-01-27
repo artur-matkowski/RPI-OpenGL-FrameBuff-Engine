@@ -78,15 +78,6 @@ namespace asapgl
 	{
 
 
-		// glViewport(0, 0, m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y);
-		// glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		// glClear(GL_COLOR_BUFFER_BIT);
-		
-        // Start the Dear ImGui frame
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplXlib_NewFrame();
-        ImGui::NewFrame();
-
     
         ImGui::ShowDemoWindow(0);
 
