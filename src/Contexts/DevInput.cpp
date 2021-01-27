@@ -303,7 +303,9 @@ namespace asapgl
 		}
 
 		m_kbdFdsSize = m_keyboards.size();
-		m_kbdPollStruct = new struct pollfd[ m_kbdFdsSize ];
+		//m_kbdPollStruct = new struct pollfd[ m_kbdFdsSize ];
+		m_kbdPollStruct = SYSTEMS::allocate<struct pollfd>(m_kbdFdsSize);
+		new (m_kbdPollStruct) struct pollfd();
 		for(int i=0; i<m_kbdFdsSize; ++i)
 		{
 		    m_kbdPollStruct[i].fd = m_keyboards[i];
@@ -312,7 +314,9 @@ namespace asapgl
 		}
 
 		m_mouseFdsSize = m_mouses.size();
-		m_mousePollStruct = new struct pollfd[ m_mouseFdsSize ];
+		//m_mousePollStruct = new struct pollfd[ m_mouseFdsSize ];
+		m_mousePollStruct = SYSTEMS::allocate<struct pollfd>(m_mouseFdsSize);
+		new (m_mousePollStruct) struct pollfd();
 		for(int i=0; i<m_mouseFdsSize; ++i)
 		{
 		    m_mousePollStruct[i].fd = m_mouses[i];

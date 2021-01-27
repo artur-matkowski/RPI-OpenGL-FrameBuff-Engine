@@ -21,11 +21,13 @@ namespace asapgl
 
 		if(hasDisplay)
 		{
-		    ret = new Xlib_EGL_ContextType();
+		    ret = SYSTEMS::allocate<Xlib_EGL_ContextType>(1);
+		    new (ret) Xlib_EGL_ContextType();
 		}
 		else
 		{
-		    ret = new DRM_GBM_EGL_ContextType();
+		    ret = SYSTEMS::allocate<DRM_GBM_EGL_ContextType>(1);
+		    new (ret) DRM_GBM_EGL_ContextType();
 		}
 
 		return ret;
