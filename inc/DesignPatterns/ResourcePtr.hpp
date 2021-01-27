@@ -1,12 +1,13 @@
 #ifndef _H_ResourcePtr
 #define _H_ResourcePtr
-
+//#include "Systems.hpp"
 
 template < typename T > class ResourcePtr
 {
 private:
-    T*    pData = 0;
-    int* reference = 0;
+    T*    	pData = 0;
+    int 	buff = 1;
+    int* 	reference = 0;
 
 public:
     ResourcePtr()
@@ -16,7 +17,7 @@ public:
 	}
     ResourcePtr(T* pValue)
    		:pData(pValue)
-   		,reference(new int(1))
+   		,reference(&buff)
    	{
 	}
     ResourcePtr(const ResourcePtr<T>& sp) 

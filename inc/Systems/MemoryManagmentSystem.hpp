@@ -14,6 +14,7 @@ namespace asapgl
 		std::vector<bfu::MemBlockBase*, bfu::custom_allocator<bfu::MemBlockBase*>> v_memBlocks;
 
 	public:
+
 		MemoryManagmentSystem()
 			:SystemsMemoryBlock("SystemsMemoryBlock")
 			,v_memBlocks(bfu::custom_allocator<bfu::MemBlockBase*>(&SystemsMemoryBlock))
@@ -26,7 +27,25 @@ namespace asapgl
 
 
 		void OnGUI();
+
+		template<class T>
+		T* allocateSystemInBlock (std::size_t n) 
+		{
+	  		T* ret = (T*)(SystemsMemoryBlock.allocate( n, sizeof(T), alignof(T) ));		
+			return ret; 
+		}
+
+		template<class T>
+		void deallocateSystemInBlock (T* p, std::size_t n) 
+		{
+	  		SystemsMemoryBlock.deallocate(p, n * sizeof(T));	
+		}
 	};
+
+
 }
+
+#define allocate GetObject().MEMORY.allocateSystemInBlock
+#define deallocate GetObject().MEMORY.deallocateSystemInBlock
 
 #endif

@@ -20,8 +20,7 @@ ResourcePtr<T>::~ResourcePtr()
 	    }
 	    else if( *reference == 0 )
 	    {
-	        delete reference;	
-	        reference = 0;		    	
+		    //do nothing as we do not need to delete something that is builded on stack	    	
 	    }
 	    
 	}	    
@@ -42,13 +41,13 @@ void ResourcePtr<T>::Rebuild(T* pValue)
 	    }
 	    else if( *reference == 0 )
 	    {
-	        delete reference;	
-	        reference = 0;		    	
+		    //do nothing as we do not need to delete something that is builded on stack	    	
 	    }
 	}
 
    	pData = pValue;
-   	reference = new int(1);
+   	reference = &buff;
+   	*reference = 1;
 }
 
 template < typename T > 
@@ -67,8 +66,7 @@ ResourcePtr<T>& ResourcePtr<T>::operator = (const ResourcePtr<T>& sp)
 		    }
 		    else if( *reference == 0 )
 		    {
-		        delete reference;	
-		        reference = 0;		    	
+		        //do nothing as we do not need to delete something that is builded on stack
 		    }
     	}
 

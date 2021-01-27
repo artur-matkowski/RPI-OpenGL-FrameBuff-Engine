@@ -1,6 +1,5 @@
 #ifndef _H_SYSTEMS
 #define _H_SYSTEMS
-#include "Singleton.hpp"
 #include "object.hpp"
 #include <bitforge/utils/bfu.hpp>
 #include "RendererSystem.hpp"
@@ -11,7 +10,7 @@
 
 namespace asapgl
 {
-	class SYSTEMS: public object, public Singleton<SYSTEMS>
+	class SYSTEMS: public object
 	{
 	public:
 		MemoryManagmentSystem 	MEMORY;
@@ -31,8 +30,16 @@ namespace asapgl
 		void cloaseApp();
 		void mainAppLoop();
 
+		static SYSTEMS& GetObject()
+		{
+			static SYSTEMS _this;
+			return _this;
+		}
+
 		
 		void OnGUI();
+
+
 	
 	};
 
