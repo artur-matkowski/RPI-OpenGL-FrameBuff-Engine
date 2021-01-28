@@ -7,7 +7,8 @@ namespace asapgl
 {
 	class MemoryManagmentSystem
 	{
-		bfu::MonotonicMemBlock<1024*1024*10> 	SystemsMemoryBlock;
+		//bfu::MonotonicMemBlock<1024*1024*10> 	SystemsMemoryBlock;
+		bfu::MmappedMemBlock				 	SystemsMemoryBlock;
 		bfu::operatorNEWstatistics				m_operatorNEWstatistics;
 		bfu::StdAllocatorMemBlock				m_StdAllocatorMemBlock;
 
@@ -16,7 +17,7 @@ namespace asapgl
 	public:
 
 		MemoryManagmentSystem()
-			:SystemsMemoryBlock("SystemsMemoryBlock")
+			:SystemsMemoryBlock(1, 1024*1024*10, "SystemsMemoryBlock")
 			,v_memBlocks(bfu::custom_allocator<bfu::MemBlockBase*>(&SystemsMemoryBlock))
 		{
 			v_memBlocks.reserve(16);

@@ -16,12 +16,4 @@ namespace asapgl
 		}
 	#endif
 
-	void GameObject::Serialize(std::ofstream& stream)
-	{
-
-	}
-	void GameObject::Deserialize(std::ifstream& stream)
-	{
-
-	}
 }

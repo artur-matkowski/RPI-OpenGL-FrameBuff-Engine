@@ -67,7 +67,7 @@ namespace asapgl
                 ImGui::TextUnformatted(buff);
 
                 ImGui::TableSetColumnIndex(1);
-                sprintf(buff, "%llu", v_memBlocks[row]->getRefPtr() );
+                sprintf(buff, "%zx", v_memBlocks[row]->getMemPtr() );
                 ImGui::TextUnformatted(buff);
 
                 ImGui::TableSetColumnIndex(2);

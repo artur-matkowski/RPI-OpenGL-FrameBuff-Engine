@@ -4,6 +4,7 @@
 
 namespace asapgl
 {
+	/*
 	UniqueID::UniqueID()
 			:SERIALIZABLE_VAR_CONSTRUCTOR(ID,this)
 	{
@@ -37,5 +38,5 @@ namespace asapgl
 	{
 		stream >> bits(ID);
 		ID64 = ID;
-	}
+	}*/
 }

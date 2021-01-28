@@ -6,6 +6,7 @@
 
 namespace asapgl
 {
+	/*
 	class UniqueID: public SERIALIZABLE_CLASS_BASE
 	{
 		SERIALIZABLE_VAR(uint64_t) ID;
@@ -27,7 +28,7 @@ namespace asapgl
 
 		virtual void Serialize(std::ofstream& stream);
 		virtual void Deserialize(std::ifstream& stream);
-	};
+	};*/
 }
 
 #endif
