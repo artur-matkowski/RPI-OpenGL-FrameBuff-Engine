@@ -245,7 +245,8 @@ namespace asapgl
 		m_keyboards.clear();
 		
 		if( m_kbdPollStruct != 0 ){
-			delete m_kbdPollStruct;
+			SYSTEMS::DEALLOCATE<struct pollfd>(m_kbdPollStruct, 1);
+			//delete m_kbdPollStruct;
 			m_kbdPollStruct = 0;
 		}
 
@@ -257,7 +258,8 @@ namespace asapgl
 		m_mouses.clear();
 
 		if( m_mousePollStruct != 0 ){
-			delete m_mousePollStruct;
+			SYSTEMS::DEALLOCATE<struct pollfd>(m_mousePollStruct, 1);
+			//delete m_mousePollStruct;
 			m_mousePollStruct = 0;
 		}
 	}
@@ -304,7 +306,7 @@ namespace asapgl
 
 		m_kbdFdsSize = m_keyboards.size();
 		//m_kbdPollStruct = new struct pollfd[ m_kbdFdsSize ];
-		m_kbdPollStruct = SYSTEMS::allocate<struct pollfd>(m_kbdFdsSize);
+		m_kbdPollStruct = SYSTEMS::ALLOCATE<struct pollfd>(m_kbdFdsSize);
 		new (m_kbdPollStruct) struct pollfd();
 		for(int i=0; i<m_kbdFdsSize; ++i)
 		{
@@ -315,7 +317,7 @@ namespace asapgl
 
 		m_mouseFdsSize = m_mouses.size();
 		//m_mousePollStruct = new struct pollfd[ m_mouseFdsSize ];
-		m_mousePollStruct = SYSTEMS::allocate<struct pollfd>(m_mouseFdsSize);
+		m_mousePollStruct = SYSTEMS::ALLOCATE<struct pollfd>(m_mouseFdsSize);
 		new (m_mousePollStruct) struct pollfd();
 		for(int i=0; i<m_mouseFdsSize; ++i)
 		{

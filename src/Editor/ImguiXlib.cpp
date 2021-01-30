@@ -203,7 +203,8 @@ namespace asapgl
 
 	static ImVec2 ImGui_ImplXlib_GetWindowSize(ImGuiViewport* viewport)
 	{
-		log::debug << "ImGui_ImplXlib_GetWindowSize" << std::endl;
+		log::debug << " TBD ImGui_ImplXlib_GetWindowSize" << std::endl;
+		return ImVec2(0, 0);
 	}
 
 	static void ImGui_ImplXlib_SetWindowSize(ImGuiViewport* viewport, ImVec2 size)

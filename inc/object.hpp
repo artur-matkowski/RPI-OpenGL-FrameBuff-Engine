@@ -2,6 +2,7 @@
 #define _H_OBJECT
 #include "SharedPtr.hpp"
 #include "glm.hpp"
+#include <cstdlib>
 
 //	Allowed #defines to controll build process
 //	#define IS_EDITOR
@@ -39,6 +40,8 @@ namespace asapgl
 }
 
 
+void* operator new(std::size_t size);
+void operator delete(void* p) noexcept;
 
 
 #endif

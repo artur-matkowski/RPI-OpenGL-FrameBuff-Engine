@@ -9,7 +9,7 @@ namespace asapgl
 	{
 		//bfu::MonotonicMemBlock<1024*1024*10> 	SystemsMemoryBlock;
 		bfu::MmappedMemBlock				 	SystemsMemoryBlock;
-		bfu::operatorNEWstatistics				m_operatorNEWstatistics;
+		bfu::MallocAllocator					m_operatorNEWstatistics;
 		bfu::StdAllocatorMemBlock				m_StdAllocatorMemBlock;
 
 		std::vector<bfu::MemBlockBase*, bfu::custom_allocator<bfu::MemBlockBase*>> v_memBlocks;
@@ -41,12 +41,22 @@ namespace asapgl
 		{
 	  		SystemsMemoryBlock.deallocate(p, n * sizeof(T));	
 		}
+
+		inline bfu::MmappedMemBlock& GetSystemsAllocator()
+		{
+			return SystemsMemoryBlock;
+		}
+
+		inline bfu::StdAllocatorMemBlock& GetStdAllocator()
+		{
+			return m_StdAllocatorMemBlock;
+		}
 	};
 
 
 }
 
-#define allocate GetObject().MEMORY.allocateSystemInBlock
-#define deallocate GetObject().MEMORY.deallocateSystemInBlock
+#define ALLOCATE GetObject().MEMORY.allocateSystemInBlock
+#define DEALLOCATE GetObject().MEMORY.deallocateSystemInBlock
 
 #endif
