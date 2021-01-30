@@ -6,6 +6,13 @@
 
 namespace asapgl
 {
+	SYSTEMS::SYSTEMS()
+		:SCENE(&MEMORY.GetSystemsAllocator())
+	{
+
+	}
+
+
 	#ifdef USE_XLIB
 	static ContextBase* ContextInit()
 	{
@@ -87,5 +94,6 @@ namespace asapgl
 
 
 	    MEMORY.OnGUI();
+	    SCENE.OnGUI();
 	}
 }

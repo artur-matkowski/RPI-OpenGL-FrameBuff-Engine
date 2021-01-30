@@ -7,6 +7,7 @@
 #include "ResourceSystem.hpp"
 #include "SimpleTime.hpp"
 #include "MemoryManagmentSystem.hpp"
+#include "SceneSystem.hpp"
 
 namespace asapgl
 {
@@ -25,6 +26,7 @@ namespace asapgl
 		#endif
 		ResourceSystem			RESOURCES;
 		SimpleTime				TIME;
+		SceneSystem				SCENE;
 
 		bool init(const int argc, const char** argv);
 		void cloaseApp();
@@ -35,6 +37,8 @@ namespace asapgl
 			static SYSTEMS _this;
 			return _this;
 		}
+
+		SYSTEMS();
 
 		
 		void OnGUI();

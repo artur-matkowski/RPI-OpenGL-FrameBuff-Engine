@@ -3,17 +3,39 @@
 namespace asapgl
 {
 
-	#ifndef _PLAYER
-		void GameObject::Serialize(bfu::JSONStream& stream)
+	void GameObject::OnLoad(GameObject* parrent)
+	{
+		p_parrent = parrent;
+		parrent->RegisterChild( this );
+	}
+	void GameObject::OnUnLoad()
+	{
+		p_parrent->UnRegisterChild( this );
+	}
+
+
+	void GameObject::RegisterChild(GameObject* newChild)
+	{
+		v_children.push_back( newChild );
+	}
+	void GameObject::UnRegisterChild(GameObject* deleteChild)
+	{
+		for(auto it = v_children.begin(); 
+			it != v_children.end();
+			++it)
 		{
-			//sync objects to serializable IDs
-			//bfu::SerializableClassBase::Serialize(stream);
+			if(*it==deleteChild)
+			{
+				v_children.erase(it);
+				break;
+			}
 		}
-		void GameObject::Deserialize(bfu::JSONStream& stream)
-		{
-			//bfu::SerializableClassBase::Deserialize(stream);
-			//sync objects from serializable IDs
-		}
-	#endif
+	}
+
+
+	void GameObject::OnGUI()
+	{
+		
+	}
 
 }
