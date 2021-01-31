@@ -15,9 +15,9 @@ namespace asapgl
 			return m_root;
 		}
 
-
-
 		void OnGUI();
+
+
 	};
 }
 

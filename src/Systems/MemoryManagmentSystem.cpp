@@ -36,7 +36,8 @@ namespace asapgl
         							| ImGuiTableFlags_BordersOuterV
         							| ImGuiTableFlags_BordersInnerV
         							| ImGuiTableFlags_BordersOuter
-        							| ImGuiTableFlags_BordersInner;
+        							| ImGuiTableFlags_BordersInner
+                                    | ImGuiTableFlags_Resizable;
 
 
         ImGui::BeginTable("Memory Table", 6, flags);

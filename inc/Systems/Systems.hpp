@@ -8,11 +8,15 @@
 #include "SimpleTime.hpp"
 #include "MemoryManagmentSystem.hpp"
 #include "SceneSystem.hpp"
+#include "EditorSystem.hpp"
+#include <stdlib.h>
 
 namespace asapgl
 {
 	class SYSTEMS: public object
 	{
+		static SYSTEMS _this;
+		SYSTEMS();
 	public:
 		MemoryManagmentSystem 	MEMORY;
 
@@ -28,17 +32,26 @@ namespace asapgl
 		SimpleTime				TIME;
 		SceneSystem				SCENE;
 
+
+		#ifndef _PLAYER
+		EditorSystem			EDITOR;
+		#endif
+
 		bool init(const int argc, const char** argv);
 		void cloaseApp();
 		void mainAppLoop();
 
 		static SYSTEMS& GetObject()
 		{
-			static SYSTEMS _this;
+			// static SYSTEMS* _this = 0;
+			// if(_this==0)
+			// {
+			// 	_this = (SYSTEMS*)aligned_alloc(alignof(SYSTEMS), sizeof(SYSTEMS));
+			// 	new (_this) SYSTEMS();
+			// }
 			return _this;
 		}
 
-		SYSTEMS();
 
 		
 		void OnGUI();

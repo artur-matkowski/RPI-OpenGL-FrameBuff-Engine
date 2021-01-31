@@ -33,9 +33,8 @@ namespace asapgl
 	}
 
 
-	void GameObject::OnGUI()
+	void GameObject::SetName(const char* name)
 	{
-		
+		m_myName = name;
 	}
-
 }

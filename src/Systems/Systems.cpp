@@ -6,8 +6,13 @@
 
 namespace asapgl
 {
+	SYSTEMS SYSTEMS::_this;
+
 	SYSTEMS::SYSTEMS()
 		:SCENE(&MEMORY.GetSystemsAllocator())
+		#ifndef _PLAYER
+		,EDITOR(&MEMORY.GetSystemsAllocator())
+		#endif
 	{
 
 	}
@@ -85,9 +90,6 @@ namespace asapgl
 
 	void SYSTEMS::OnGUI()
 	{
-
-
-    
         ImGui::ShowDemoWindow(0);
 
 	            
@@ -95,5 +97,7 @@ namespace asapgl
 
 	    MEMORY.OnGUI();
 	    SCENE.OnGUI();
+
+	    EDITOR.OnGUI();
 	}
 }
