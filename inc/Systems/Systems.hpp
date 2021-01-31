@@ -33,7 +33,7 @@ namespace asapgl
 		SceneSystem				SCENE;
 
 
-		#ifndef _PLAYER
+		#ifdef IS_EDITOR
 		EditorSystem			EDITOR;
 		#endif
 
