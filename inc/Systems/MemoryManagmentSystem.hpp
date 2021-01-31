@@ -27,7 +27,9 @@ namespace asapgl
 		}
 
 
+		#ifdef IS_EDITOR
 		void OnGUI();
+		#endif
 
 		template<class T>
 		T* allocateSystemInBlock (std::size_t n) 

@@ -15,8 +15,9 @@
 
 #include "DRM_GBM_EGL_ContextType.hpp"
 #include "Systems.hpp"
+#ifdef IS_EDITOR
 #include "ImguiDRM.hpp"
-
+#endif
 
 #define EXIT(msg) { fputs (msg, stderr); exit (EXIT_FAILURE); }
 
@@ -175,7 +176,7 @@ namespace asapgl
 	    });
 
 
-
+		#ifdef IS_EDITOR
 	    // Setup Dear ImGui context
 	    IMGUI_CHECKVERSION();
 	    ImGui::CreateContext();
@@ -202,6 +203,7 @@ namespace asapgl
 	    // Setup Platform/Renderer backends
 	    ImGui_ImplDRM_InitForOpenGL(&display, &context, &egl_surface, resolution);
 	    ImGui_ImplOpenGL3_Init();
+	    #endif
 	}
 	
 	DRM_GBM_EGL_ContextType::~DRM_GBM_EGL_ContextType()
@@ -243,7 +245,7 @@ namespace asapgl
 		std::chrono::duration<double> frameDeltaTime( m_frameDelay );
 
 		#ifdef IS_EDITOR
-    	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    	//ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     	ImGuiIO& io = ImGui::GetIO(); (void)io;
 		Mesh 			cursorMesh( glm::vec2(resolution.x, resolution.y) );
 		MaterialType 	cursorMaterial("cursor");
@@ -263,9 +265,11 @@ namespace asapgl
 			{
 				rotation += frameDeltaTime.count();
 
-				// glViewport(0, 0, resolution.x, resolution.y);
-				// glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-				// glClear(GL_COLOR_BUFFER_BIT);
+				glViewport(0, 0, resolution.x, resolution.y);
+				glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+				glClear(GL_COLOR_BUFFER_BIT);
+
+				rendererSystem.Render();
 
 				#ifdef IS_EDITOR
 
@@ -284,9 +288,6 @@ namespace asapgl
 
 		        // Rendering
 		        ImGui::Render();
-		        glViewport(0, 0, resolution.x, resolution.y);
-		        glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-		        glClear(GL_COLOR_BUFFER_BIT);
 
 		        // If you are using this code with non-legacy OpenGL header/contexts (which you should not, prefer using imgui_impl_opengl3.cpp!!),
 		        // you may need to backup/reset/restore current shader using the commented lines below.
@@ -294,10 +295,8 @@ namespace asapgl
 		        //glGetIntegerv(GL_CURRENT_PROGRAM, &last_program);
 		        //glUseProgram(0);
 		        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-		        //glUseProgram(last_program);		        	        
-				#endif
+		        //glUseProgram(last_program);		   
 
-				rendererSystem.Render();
 				
 				cursorMaterial.BindMaterial();
 				int x,y;
@@ -305,7 +304,8 @@ namespace asapgl
 				uCursorPos->SetUniform(glm::vec3( x/(float)resolution.x * 2.0f - 1.0f,
 												 1.0f - y/(float)resolution.y * 2.0f, 0.0f));
 				cursorMesh.Render();
-
+     	        
+				#endif
 
 				SwapBuffer();
 			}
@@ -316,8 +316,10 @@ namespace asapgl
 			std::chrono::duration<double> diffToFrameEnd = m_frameDelay - calculationTime;
 
 
+			#ifdef IS_EDITOR
 		    // Setup time step
 		    io.DeltaTime = (float)frameDeltaTime.count();
+			#endif
 
 			//log::debug << "frameDeltaTime: "  << (float)frameDeltaTime.count() << "s, Calculation time: " << (float)calculationTime.count() << "s" << std::endl;
 

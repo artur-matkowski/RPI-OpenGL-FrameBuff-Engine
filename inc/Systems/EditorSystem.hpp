@@ -1,6 +1,6 @@
 #ifndef _H_EditorSystem
 #define _H_EditorSystem
-#ifndef _PLAYER
+#ifdef IS_EDITOR
 #include "HierarchyWindow.hpp"
 
 namespace asapgl

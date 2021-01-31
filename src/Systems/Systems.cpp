@@ -10,7 +10,7 @@ namespace asapgl
 
 	SYSTEMS::SYSTEMS()
 		:SCENE(&MEMORY.GetSystemsAllocator())
-		#ifndef _PLAYER
+		#ifdef IS_EDITOR
 		,EDITOR(&MEMORY.GetSystemsAllocator())
 		#endif
 	{
@@ -88,16 +88,15 @@ namespace asapgl
 		#endif
 	}
 
+	#ifdef IS_EDITOR
 	void SYSTEMS::OnGUI()
 	{
         ImGui::ShowDemoWindow(0);
-
-	            
-
 
 	    MEMORY.OnGUI();
 	    SCENE.OnGUI();
 
 	    EDITOR.OnGUI();
 	}
+	#endif
 }

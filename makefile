@@ -59,8 +59,15 @@ print:
 debug-player: DEBUG_CC 	+= -DIS_PLAYER
 debug-player: debug
 
-debug-player: DEBUG_CC 	+= -DIS_PLAYER
-debug-player: debug
+release-player: endif 	+= -DIS_PLAYER
+release-player: release
+
+
+debug-editor: DEBUG_CC 	+= -DIS_EDITOR
+debug-editor: debug
+
+release-editor: endif 	+= -DIS_EDITOR
+release-editor: release
 
 ifeq ($(ARCHITECTURE),armhf)
 	@echo -----Build for target

@@ -10,9 +10,9 @@
 //	#define IS_TARGET
 
 //temporary solution
-#ifndef IS_PLAYER
-	#define IS_EDITOR
-#endif
+// #ifndef IS_PLAYER
+// 	#define IS_EDITOR
+// #endif
 
 #ifdef IS_TARGET
 	#ifdef IS_EDITOR

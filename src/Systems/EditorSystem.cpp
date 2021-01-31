@@ -1,5 +1,5 @@
 #include "EditorSystem.hpp"
-#ifndef _PLAYER
+#ifdef IS_EDITOR
 
 namespace asapgl
 {

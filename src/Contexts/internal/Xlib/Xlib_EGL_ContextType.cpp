@@ -231,7 +231,9 @@ namespace asapgl
 	    {
 	    	args.m_width = width; 
 	    	args.m_height = height; 
+			#ifdef IS_EDITOR
 			args.m_eventSourceWindow = m_mainEglWindow->x11;
+			#endif
 	    });
 /*
 		bfu::CallbackId id;
@@ -254,6 +256,7 @@ namespace asapgl
 	    });
 */
 
+		#ifdef IS_EDITOR
 	    // Setup Dear ImGui context
 	    IMGUI_CHECKVERSION();
 	    ImGui::CreateContext();
@@ -280,6 +283,7 @@ namespace asapgl
 	    // Setup Platform/Renderer backends
 	    ImGui_ImplXlib_InitForOpenGL(m_mainEglWindow, this);
 	    ImGui_ImplOpenGL3_Init();
+	    #endif
 	}
 	
 	Xlib_EGL_ContextType::~Xlib_EGL_ContextType()
@@ -341,9 +345,11 @@ namespace asapgl
 			    {
 					args.m_Xpos = (int)event.xmotion.x;
 					args.m_Ypos = (int)event.xmotion.y;
+					#ifdef IS_EDITOR
 					args.m_XposRoot = (int)event.xmotion.x_root;
 					args.m_YposRoot = (int)event.xmotion.y_root;
 			    	args.m_eventSourceWindow = event.xmotion.window;
+			    	#endif
 			    });
 			    for(int i=0; i<m_eglWindows.size(); ++i)
 			    {
@@ -364,7 +370,9 @@ namespace asapgl
 			    {
 					args.m_Xpos = (int)event.xbutton.x;
 					args.m_Ypos = (int)event.xbutton.y;
+					#ifdef IS_EDITOR
 			    	args.m_eventSourceWindow = event.xbutton.window;
+			    	#endif
 			    	if(event.xbutton.button==5)
 			    	{
 						args.m_key = (int)asapgl::mousecodes::snapi_wheelY;
@@ -392,7 +400,9 @@ namespace asapgl
 					args.m_Ypos = (int)event.xbutton.y;
 					args.m_key = (int)m_mouseCodeMap[event.xbutton.button];
 					args.m_state = (int)asapgl::keystates::snapi_up;
+					#ifdef IS_EDITOR
 			    	args.m_eventSourceWindow = event.xbutton.window;
+			    	#endif
 			    });
 				break;
 
@@ -404,7 +414,9 @@ namespace asapgl
 			    	args.m_height = (GLint)event.xconfigure.height; 
 			    	args.m_Xpos = (GLint)event.xconfigure.x; 
 			    	args.m_Ypos = (GLint)event.xconfigure.y; 
+					#ifdef IS_EDITOR
 			    	args.m_eventSourceWindow = event.xconfigure.window;
+			    	#endif
 			    });
 			    for(int i=0; i<m_eglWindows.size(); ++i)
 			    {
@@ -432,7 +444,9 @@ namespace asapgl
 			    	args.m_key = (int)key; 
 			    	args.m_state = (int)asapgl::keystates::snapi_down; 
 			    	args.m_char = (char)keycodes2char[ key ];
+					#ifdef IS_EDITOR
 			    	args.m_eventSourceWindow = event.xkey.window;
+			    	#endif
 			    });
 				break;
 
@@ -448,7 +462,9 @@ namespace asapgl
 			    	args.m_key = (int)key; 
 			    	args.m_state = (int)asapgl::keystates::snapi_up; 
 			    	args.m_char = (char)keycodes2char[ key ];
+					#ifdef IS_EDITOR
 			    	args.m_eventSourceWindow = event.xkey.window;
+			    	#endif
 			    });
 			    break;
 			
@@ -498,7 +514,7 @@ namespace asapgl
 		std::chrono::duration<double> frameDeltaTime( m_frameDelay );
 
 		#ifdef IS_EDITOR
-    	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    	//ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     	ImGuiIO& io = ImGui::GetIO(); (void)io;    	
 		Mesh 			cursorMesh( glm::vec2(m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y) );
 		MaterialType 	cursorMaterial("cursor");
@@ -522,6 +538,13 @@ namespace asapgl
 
 				//eglMakeCurrent(m_XDisplay.egl, m_mainEglWindow->surface, m_mainEglWindow->surface, m_mainEglWindow->context);
 
+		        glViewport(0, 0, m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y);
+				glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+				glClear(GL_COLOR_BUFFER_BIT);
+
+				rendererSystem.Render();
+
+
 				#ifdef IS_EDITOR
 
 
@@ -539,9 +562,6 @@ namespace asapgl
 
 		        // Rendering
 		        ImGui::Render();
-		        glViewport(0, 0, m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y);
-		        glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-		        glClear(GL_COLOR_BUFFER_BIT);
 
 		        // If you are using this code with non-legacy OpenGL header/contexts (which you should not, prefer using imgui_impl_opengl3.cpp!!),
 		        // you may need to backup/reset/restore current shader using the commented lines below.
@@ -562,17 +582,16 @@ namespace asapgl
 		            eglMakeCurrent(m_XDisplay.egl, m_mainEglWindow->surface, m_mainEglWindow->surface, m_mainEglWindow->context);
 		        }
 		        
-				#endif
 
 				glm::vec2 mousePos(m_mainEglWindow->cursorPos.x / (float)m_mainEglWindow->resolution.x*2.0f - 1.0f
 					, 1.0f - m_mainEglWindow->cursorPos.y / (float)m_mainEglWindow->resolution.y*2.0f );
 
 
-				rendererSystem.Render();
 
 				cursorMaterial.BindMaterial();
 				uCursorPos->SetUniform(glm::vec3(mousePos.x, mousePos.y, 0.0f));
 				cursorMesh.Render();
+				#endif
 				
 				SwapBuffer();
 			}
@@ -585,8 +604,10 @@ namespace asapgl
 			std::chrono::duration<double> diffToFrameEnd = m_frameDelay - calculationTime;
 
 
+			#ifdef IS_EDITOR
 		    // Setup time step
 		    io.DeltaTime = (float)frameDeltaTime.count();
+			#endif
 
 
 

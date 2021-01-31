@@ -54,8 +54,9 @@ namespace asapgl
 
 
 		
+		#ifdef IS_EDITOR
 		void OnGUI();
-
+		#endif
 
 	
 	};

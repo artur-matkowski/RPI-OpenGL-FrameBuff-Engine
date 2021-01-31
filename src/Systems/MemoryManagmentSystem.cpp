@@ -1,5 +1,8 @@
 #include "MemoryManagmentSystem.hpp"
-#include "ImguiXlib.hpp"
+
+#ifdef IS_EDITOR
+#include "imgui.h"
+#endif
 
 namespace asapgl
 {
@@ -18,12 +21,9 @@ namespace asapgl
 
 
 
+    #ifdef IS_EDITOR
 	void MemoryManagmentSystem::OnGUI()
 	{
-		
-
-
-
 		ImGui::Begin("Memory Tables"); 
 
    
@@ -97,4 +97,5 @@ namespace asapgl
 	    
 	    ImGui::End();
 	}
+    #endif
 }
