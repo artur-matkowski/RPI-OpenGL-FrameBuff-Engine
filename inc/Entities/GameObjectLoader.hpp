@@ -14,6 +14,8 @@ namespace asapgl
 
 
 		bool LoadContent();
+
+		void SetPrefabMemFileName(const char* mmapFileName);
 		
 	};
 }

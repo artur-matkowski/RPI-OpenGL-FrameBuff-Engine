@@ -6,7 +6,6 @@ template < typename T > class ResourcePtr
 {
 private:
     T*    	pData = 0;
-    int 	buff = 1;
     int* 	reference = 0;
 
 public:
@@ -17,7 +16,7 @@ public:
 	}
     ResourcePtr(T* pValue)
    		:pData(pValue)
-   		,reference(&buff)
+   		,reference(new int(1))
    	{
 	}
     ResourcePtr(const ResourcePtr<T>& sp) 

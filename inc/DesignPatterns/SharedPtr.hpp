@@ -6,7 +6,6 @@ template < typename T > class SharedPtr
 {
 private:
     T*    	pData = 0;
-    int 	buff = 1;
     int* 	reference = 0;
 
 public:
@@ -16,7 +15,7 @@ public:
    	{}
     SharedPtr(T* pValue)
    		:pData(pValue)
-   		,reference(&buff)
+   		,reference(new int(1))
    	{}
     SharedPtr(const SharedPtr<T>& sp) 
     	:pData(sp.pData)
@@ -33,7 +32,7 @@ public:
 		    if( *reference == 0 )
 		    {
 		        delete pData;
-		   		//do nothing as we do not need to delete something that is builded on stack	
+	    		delete reference; 
 		    }
 		}	    
 	}
@@ -59,7 +58,7 @@ public:
 		        if( *reference == 0 )
 		        {
 		            delete pData;
-		    		//do nothing as we do not need to delete something that is builded on stack	
+	    			delete reference; 
 		        }
 	    	}
 
@@ -91,7 +90,7 @@ public:
 		        if( *reference == 0 )
 		        {
 		            delete pData;
-		    		//do nothing as we do not need to delete something that is builded on stack	
+	    			delete reference; 
 		        }
 	    	}
 

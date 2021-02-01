@@ -24,9 +24,8 @@ namespace asapgl
     #ifdef IS_EDITOR
 	void MemoryManagmentSystem::OnGUI()
 	{
-		ImGui::Begin("Memory Tables"); 
-
-   
+        //Rendered as part of "Editor System" window
+        
         static ImGuiTableFlags flags = ImGuiTableFlags_Borders 
         							| ImGuiTableFlags_RowBg
         							| ImGuiTableFlags_BordersH
@@ -93,9 +92,6 @@ namespace asapgl
             }
         }
         ImGui::EndTable();
-        
-	    
-	    ImGui::End();
 	}
     #endif
 }

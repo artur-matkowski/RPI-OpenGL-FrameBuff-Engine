@@ -43,12 +43,6 @@ namespace asapgl
 
 		static SYSTEMS& GetObject()
 		{
-			// static SYSTEMS* _this = 0;
-			// if(_this==0)
-			// {
-			// 	_this = (SYSTEMS*)aligned_alloc(alignof(SYSTEMS), sizeof(SYSTEMS));
-			// 	new (_this) SYSTEMS();
-			// }
 			return _this;
 		}
 

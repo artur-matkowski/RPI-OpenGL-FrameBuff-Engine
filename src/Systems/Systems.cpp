@@ -93,7 +93,7 @@ namespace asapgl
 	{
         ImGui::ShowDemoWindow(0);
 
-	    MEMORY.OnGUI();
+	    //MEMORY.OnGUI();		// rendered in EDITOR
 	    SCENE.OnGUI();
 
 	    EDITOR.OnGUI();

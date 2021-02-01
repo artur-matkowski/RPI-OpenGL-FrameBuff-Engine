@@ -9,6 +9,7 @@ namespace asapgl
 		:m_root(mBlock)
 	{
 		m_root.SetName("root node");
+		m_root.SetPrefabMemFileName("EntryPoint.mmp");
 
 		GameObject *pgo, *pgo2 ;
 

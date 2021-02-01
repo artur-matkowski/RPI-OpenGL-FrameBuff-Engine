@@ -12,4 +12,13 @@ namespace asapgl
 	{
 
 	}
+
+	bool GameObjectLoader::LoadContent()
+	{
+		return true;
+	}
+	void GameObjectLoader::SetPrefabMemFileName(const char* mmapFileName)
+	{
+
+	}
 }
