@@ -23,10 +23,24 @@ namespace asapgl
 	static void ImGui_ImplXlib_InitPlatformInterface();
 	static void ImGui_ImplXlib_UpdateMonitors();
 
+	int	error_handler(Display *display, XErrorEvent *err)
+	{
+		if(err->type == BadWindow)
+		{
+			log::error << "BadWindow" << std::endl;
+		}
+		else
+		{
+			log::error << "error_handler" << std::endl;
+		}
+	    return 0;
+	}
 
 
 	IMGUI_IMPL_API bool     ImGui_ImplXlib_InitForOpenGL(void* eglWindow, void* context)
 	{
+	    //XSetErrorHandler(error_handler);
+
 	    g_Window = (Xlib_EGL_ContextType::EGLWindow*)eglWindow;
 	    g_Context = (Xlib_EGL_ContextType*)context;
 	    g_Time = 0.0;
@@ -144,7 +158,6 @@ namespace asapgl
 	    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 	        ImGui_ImplXlib_InitPlatformInterface();
 
-
 	    return true;
 	}
 	
@@ -162,18 +175,19 @@ namespace asapgl
 
 	static void ImGui_ImplXlib_DestroyWindow(ImGuiViewport* viewport)
 	{
+		log::debug << "ImGui_ImplXlib_DestroyWindow" << std::endl;
 	    Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*)viewport->PlatformUserData;
 
 
 		eglDestroySurface(g_Context->GetEGLDisplay(), data->surface);
 		//eglDestroyContext(g_Context->GetEGLDisplay(), data->context);
+		//XUnmapWindow(g_Context->GetDisplay(), data->x11);
 		XDestroyWindow(g_Context->GetDisplay(), data->x11);
 
 		g_Context->Erase(data);
 
     	viewport->PlatformUserData = viewport->PlatformHandle = NULL;
 		
-		//log::debug << "ImGui_ImplXlib_DestroyWindow" << std::endl;
 	}
 
 	static void ImGui_ImplXlib_ShowWindow(ImGuiViewport* viewport)

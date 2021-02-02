@@ -46,7 +46,9 @@ namespace asapgl
 
 	void HierarchyWindow::OnGUInode(GameObject* obj)
 	{
-        const ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth;
+        const ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow | 
+        										ImGuiTreeNodeFlags_OpenOnDoubleClick | 
+        										ImGuiTreeNodeFlags_SpanAvailWidth;
 
 
 		const int size = obj->v_children.size();
@@ -81,8 +83,9 @@ namespace asapgl
 	void HierarchyWindow::OnGUI()
 	{
 		static GameObject* go_root = &SYSTEMS::GetObject().SCENE.GetRootNode();
+		auto window_flags = ImGuiWindowFlags_NoCollapse;
 		
-		ImGui::Begin("Scene Hierarhy"); 
+		ImGui::Begin("Scene Hierarhy", NULL, window_flags); 
 
         OnGUInode( go_root );
 

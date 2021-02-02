@@ -335,6 +335,9 @@ namespace asapgl
 
 			switch (event.type) 
 			{
+			case DestroyNotify:
+				log::debug << "DestroyNotify" << std::endl;
+				break;
 			case Expose:
 				//log::debug << "Expose" << std::endl;
 				break;
