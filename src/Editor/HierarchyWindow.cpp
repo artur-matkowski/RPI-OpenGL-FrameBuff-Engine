@@ -43,6 +43,36 @@ namespace asapgl
 		}
 	}
 
+	static bool is_GOContextMenuOpen = false;
+
+	void AddGameObject(GameObject* parrent)
+	{
+		GameObject *pgo = SYSTEMS::ALLOCATE<GameObject>(1);
+		pgo->Init( parrent->GetMemBlock() );
+		//new (pgo) GameObject(parrent->GetMemBlock());
+		pgo->OnLoad(parrent);
+	}
+	void RemoveGameObject(GameObject* obj)
+	{
+		obj->OnUnLoad();
+		SYSTEMS::DEALLOCATE<GameObject>(obj, 1);
+	}
+
+	void RenameGameObject(GameObject* obj)
+	{
+		static GameObject* ranemedGO = 0;
+		static char buff[GAMEOBJECT_MAX_NAME_LENGTH];
+
+		if( ranemedGO != obj )
+		{
+			ranemedGO = obj;
+			strncpy(buff, obj->GetName(), GAMEOBJECT_MAX_NAME_LENGTH);
+		}
+
+	    ImGui::InputText("Rename GameObject", buff, GAMEOBJECT_MAX_NAME_LENGTH);
+
+		obj->SetName(buff);
+	}
 
 	void HierarchyWindow::OnGUInode(GameObject* obj)
 	{
@@ -51,44 +81,83 @@ namespace asapgl
         										ImGuiTreeNodeFlags_SpanAvailWidth;
 
 
-		const int size = obj->v_children.size();
+		const int size = obj->GetChildCount();
         for (int i = 0; i < size; ++i)
         {
             // Disable the default "open on single-click behavior" + set Selected flag according to our selection.
             ImGuiTreeNodeFlags node_flags = base_flags;
+            GameObject* child = obj->GetChild( i );
 
-            const bool isSelected = IsNodeSelected(obj->v_children[i]);
+            const bool isSelected = IsNodeSelected(child);
             if ( isSelected )
                 node_flags |= ImGuiTreeNodeFlags_Selected;
+
+            if( child->GetChildCount()==0 )
+            {
+            	node_flags |= ImGuiTreeNodeFlags_Leaf;// | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+            }
             
-            bool node_open = ImGui::TreeNodeEx((void*) obj->v_children[i] , node_flags,  obj->v_children[i]->m_myName.c_str() );
+            bool node_open = ImGui::TreeNodeEx((void*) child , node_flags, child->GetName() );
+            if (ImGui::BeginPopupContextItem())
+	        {
+	        	is_GOContextMenuOpen = true;
+	            if (ImGui::MenuItem("Add GameObject")) { AddGameObject( child ); }
+	            if (ImGui::MenuItem("Remove GameObject")) { RemoveGameObject( child ); }
+	            RenameGameObject( child );
+	            ImGui::EndPopup();
+	        }
+
             if ( ImGui::IsItemClicked() ){
             	if( !ImGui::GetIO().KeyCtrl )
             		v_SelectedGameObjects.clear();
 
             	if( isSelected )
-            		DeselectNode( obj->v_children[i] );
+            		DeselectNode( child );
             	else
-                	v_SelectedGameObjects.push_back( obj->v_children[i] );
+                	v_SelectedGameObjects.push_back( child );
             }
             if (node_open)
             {
-                OnGUInode(obj->v_children[i]);
+                OnGUInode( child );
                 ImGui::TreePop();
             }
             
         }
 	}
 
+// Make the UI compact because there are so many fields
+static void PushStyleCompact()
+{
+    ImGuiStyle& style = ImGui::GetStyle();
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(style.FramePadding.x, (float)(int)(style.FramePadding.y * 0.60f)));
+    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(style.ItemSpacing.x, (float)(int)(style.ItemSpacing.y * 0.60f)));
+}
+
+static void PopStyleCompact()
+{
+    ImGui::PopStyleVar(2);
+}
+
 	void HierarchyWindow::OnGUI()
 	{
 		static GameObject* go_root = &SYSTEMS::GetObject().SCENE.GetRootNode();
-		auto window_flags = ImGuiWindowFlags_NoCollapse;
+		auto window_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking;
 		
 		ImGui::Begin("Scene Hierarhy", NULL, window_flags); 
 
+
+		is_GOContextMenuOpen = false;
         OnGUInode( go_root );
 
+
+        if (!is_GOContextMenuOpen && ImGui::BeginPopupContextWindow())
+	    {
+	        if (ImGui::MenuItem("Add GameObject")) { AddGameObject( go_root ); }
+	        ImGui::EndPopup();
+	    }
+
 	    ImGui::End();
+
+        
 	}
 }

@@ -14,17 +14,17 @@ namespace asapgl
 		GameObject *pgo, *pgo2 ;
 
 		pgo2 = pgo = SYSTEMS::ALLOCATE<GameObject>(1);
-		new (pgo) GameObject(mBlock);
+		pgo->Init(mBlock);
 		pgo->OnLoad(&m_root);
 		pgo->SetName("GameObject 1");
 
 		pgo = SYSTEMS::ALLOCATE<GameObject>(1);
-		new (pgo) GameObject(mBlock);
+		pgo->Init(mBlock);
 		pgo->OnLoad(pgo2);
 		pgo->SetName("GameObject 2");
 
 		pgo = SYSTEMS::ALLOCATE<GameObject>(1);
-		new (pgo) GameObject(mBlock);
+		pgo->Init(mBlock);
 		pgo->OnLoad(&m_root);
 		pgo->SetName("GameObject 3");
 

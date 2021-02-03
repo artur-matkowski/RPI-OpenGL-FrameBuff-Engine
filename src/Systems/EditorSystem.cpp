@@ -19,7 +19,7 @@ namespace asapgl
 
 	void EditorSystem::OnGUI()
 	{
-		auto window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse;
+		auto window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking;
 		MemoryManagmentSystem& MEMORY = SYSTEMS::GetObject().MEMORY;
 
 		ImGui::Begin("Editor System", NULL, window_flags ); 

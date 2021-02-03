@@ -2,22 +2,11 @@
 
 namespace asapgl
 {
-
-	void GameObject::OnLoad(GameObject* parrent)
-	{
-		p_parrent = parrent;
-		parrent->RegisterChild( this );
-	}
-	void GameObject::OnUnLoad()
-	{
-		p_parrent->UnRegisterChild( this );
-	}
-
-
 	void GameObject::RegisterChild(GameObject* newChild)
 	{
 		v_children.push_back( newChild );
 	}
+
 	void GameObject::UnRegisterChild(GameObject* deleteChild)
 	{
 		for(auto it = v_children.begin(); 
@@ -32,9 +21,36 @@ namespace asapgl
 		}
 	}
 
+	GameObject::GameObject( bfu::MemBlockBase* mBlock )
+			:EntityBase(mBlock)
+			,m_myName("m_myName", this, mBlock)
+			,v_children("v_children", this, mBlock)
+	{
+		m_myName.resize(GAMEOBJECT_MAX_NAME_LENGTH, '\0');
+		m_myName = "GameObject";
+	}
+
+
+	void GameObject::Init( bfu::MemBlockBase* mBlock )
+	{
+		new (this) GameObject(mBlock);
+	}
+	void GameObject::OnLoad(GameObject* parrent)
+	{
+		p_parrent = parrent;
+		parrent->RegisterChild( this );
+	}
+	void GameObject::OnUnLoad()
+	{
+		p_parrent->UnRegisterChild( this );
+		p_parrent = 0;
+	}
+
+
 
 	void GameObject::SetName(const char* name)
 	{
 		m_myName = name;
 	}
+
 }

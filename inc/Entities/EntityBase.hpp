@@ -15,7 +15,10 @@ namespace asapgl
 		{};
 		~EntityBase(){};
 
-
+		bfu::MemBlockBase* GetMemBlock()
+		{
+			return m_mBlock;
+		}
 	};
 }
 

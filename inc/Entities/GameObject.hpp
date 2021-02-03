@@ -4,13 +4,13 @@
 
 namespace asapgl
 {
-	class SceneSystem;
-	class HierarchyWindow;
+	//class HierarchyWindow;
+
+	#define GAMEOBJECT_MAX_NAME_LENGTH 256
 
 	class GameObject: public EntityBase
 	{
-		friend SceneSystem;
-		friend HierarchyWindow;		//needed for OnGUI not rendering root node
+		//friend HierarchyWindow;		//needed for OnGUI not rendering root node
 	protected:
 		GameObject*										p_parrent = 0;
 		//SERIALIZABLE_VAR_VEC( UniqueID ) 	m_usedComponentsIDs;
@@ -21,19 +21,34 @@ namespace asapgl
 
 		void RegisterChild(GameObject* newChild);
 		void UnRegisterChild(GameObject* deleteChild);
-	public:
-		GameObject( bfu::MemBlockBase* mBlock )
-			:EntityBase(mBlock)
-			,m_myName("m_myName", this, mBlock)
-			,v_children("v_children", this, mBlock)
-		{
-			m_myName = "GameObject";
-		}
 
+		GameObject( bfu::MemBlockBase* mBlock );
+		//~GameObject();
+
+	public:
+		void Init( bfu::MemBlockBase* mBlock );
+
+		void ReAttach(GameObject* newParrent);
 		void OnLoad(GameObject* parrent);
 		void OnUnLoad();
 
+
 		void SetName(const char*);
+		inline const char* GetName()
+		{
+			return m_myName.c_str();
+		}
+
+		inline int GetChildCount()
+		{
+			return v_children.size();
+		}
+
+		inline GameObject* GetChild(int index)
+		{
+			return v_children[index];
+		}
+
 
 	};
 }
