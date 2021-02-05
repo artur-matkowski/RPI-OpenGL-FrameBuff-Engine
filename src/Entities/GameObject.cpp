@@ -1,4 +1,5 @@
 #include "GameObject.hpp"
+#include "Systems.hpp"
 
 namespace asapgl
 {
@@ -30,21 +31,64 @@ namespace asapgl
 		m_myName = "GameObject";
 	}
 
+	GameObject::~GameObject()
+	{
+
+	}
+
 
 	void GameObject::Init( bfu::MemBlockBase* mBlock )
 	{
 		new (this) GameObject(mBlock);
 	}
-	void GameObject::OnLoad(GameObject* parrent)
+	void GameObject::Dispouse()
 	{
-		p_parrent = parrent;
-		parrent->RegisterChild( this );
+		for(auto it = v_children.begin(); 
+			it != v_children.end();
+			++it)
+		{
+			(*it)->Dispouse();
+			SYSTEMS::DEALLOCATE<GameObject>(*it, 1);
+		}
+		this->~GameObject();
+	}
+
+	void GameObject::OnLoad()
+	{
+
 	}
 	void GameObject::OnUnLoad()
+	{
+
+	}
+
+	void GameObject::Serialize()
+	{
+		
+	}
+	void GameObject::Deserialize()
+	{
+
+	}
+
+
+	void GameObject::OnAttach(GameObject* newParrent)
+	{
+		p_parrent = newParrent;
+		newParrent->RegisterChild( this );
+	}
+	void GameObject::OnDetach()
 	{
 		p_parrent->UnRegisterChild( this );
 		p_parrent = 0;
 	}
+	void GameObject::ReAttach(GameObject* newParrent)
+	{
+		p_parrent->UnRegisterChild( this );
+		p_parrent = newParrent;
+		newParrent->RegisterChild( this );
+	}
+
 
 
 

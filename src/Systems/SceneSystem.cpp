@@ -7,25 +7,28 @@ namespace asapgl
 
 	SceneSystem::SceneSystem( bfu::MemBlockBase* mBlock )
 		:m_root(mBlock)
+		,m_stream(tmpbuff, 2/*, mBlock*/) // using std allocator to dont waste large chunks of memory on reallocations
 	{
+		m_stream.resize(1024*1024*10); // reserve 10 Mb buff for reading json
+
 		m_root.SetName("root node");
-		m_root.SetPrefabMemFileName("EntryPoint.mmp");
+		m_root.SetPrefabMemFileName("EntryPoint");
 
 		GameObject *pgo, *pgo2 ;
 
 		pgo2 = pgo = SYSTEMS::ALLOCATE<GameObject>(1);
 		pgo->Init(mBlock);
-		pgo->OnLoad(&m_root);
+		pgo->OnAttach(&m_root);
 		pgo->SetName("GameObject 1");
 
 		pgo = SYSTEMS::ALLOCATE<GameObject>(1);
 		pgo->Init(mBlock);
-		pgo->OnLoad(pgo2);
+		pgo->OnAttach(pgo2);
 		pgo->SetName("GameObject 2");
 
 		pgo = SYSTEMS::ALLOCATE<GameObject>(1);
 		pgo->Init(mBlock);
-		pgo->OnLoad(&m_root);
+		pgo->OnAttach(&m_root);
 		pgo->SetName("GameObject 3");
 
 	}
@@ -34,4 +37,12 @@ namespace asapgl
 	{
 		
 	}
+
+
+	#ifdef IS_EDITOR
+	bfu::JSONStream& SceneSystem::GetJSONStreamWorkBuffer()
+	{
+		return m_stream;
+	}
+	#endif
 }

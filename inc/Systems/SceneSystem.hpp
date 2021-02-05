@@ -6,7 +6,13 @@ namespace asapgl
 {
 	class SceneSystem
 	{
-		GameObjectLoader  m_root;
+		GameObjectLoader  	m_root;
+
+		#ifdef IS_EDITOR
+		bfu::JSONStream 	m_stream;
+		char 				tmpbuff[2];
+		#endif
+
 	public:
 		SceneSystem( bfu::MemBlockBase* mBlock );
 
@@ -17,7 +23,9 @@ namespace asapgl
 
 		void OnGUI();
 
-
+		#ifdef IS_EDITOR
+		bfu::JSONStream& GetJSONStreamWorkBuffer();
+		#endif
 	};
 }
 

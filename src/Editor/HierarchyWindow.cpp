@@ -49,12 +49,12 @@ namespace asapgl
 	{
 		GameObject *pgo = SYSTEMS::ALLOCATE<GameObject>(1);
 		pgo->Init( parrent->GetMemBlock() );
-		//new (pgo) GameObject(parrent->GetMemBlock());
-		pgo->OnLoad(parrent);
+		pgo->OnAttach(parrent);
 	}
 	void RemoveGameObject(GameObject* obj)
 	{
-		obj->OnUnLoad();
+		obj->OnDetach();
+		obj->Dispouse();
 		SYSTEMS::DEALLOCATE<GameObject>(obj, 1);
 	}
 
@@ -79,6 +79,7 @@ namespace asapgl
         const ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow | 
         										ImGuiTreeNodeFlags_OpenOnDoubleClick | 
         										ImGuiTreeNodeFlags_SpanAvailWidth;
+        GameObject* go2remove = 0;
 
 
 		const int size = obj->GetChildCount();
@@ -102,7 +103,7 @@ namespace asapgl
 	        {
 	        	is_GOContextMenuOpen = true;
 	            if (ImGui::MenuItem("Add GameObject")) { AddGameObject( child ); }
-	            if (ImGui::MenuItem("Remove GameObject")) { RemoveGameObject( child ); }
+	            if (ImGui::MenuItem("Remove GameObject")) { go2remove = child; }
 	            RenameGameObject( child );
 	            ImGui::EndPopup();
 	        }
@@ -123,6 +124,9 @@ namespace asapgl
             }
             
         }
+
+        if( go2remove!=0 )
+        	RemoveGameObject( go2remove );
 	}
 
 // Make the UI compact because there are so many fields

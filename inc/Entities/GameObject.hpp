@@ -4,14 +4,14 @@
 
 namespace asapgl
 {
-	//class HierarchyWindow;
-
 	#define GAMEOBJECT_MAX_NAME_LENGTH 256
+	#define SERIALIZATION_FILE_EXT ".json"
+	#define SERIALIZATION_FOLDER "json/"
 
 	class GameObject: public EntityBase
 	{
-		//friend HierarchyWindow;		//needed for OnGUI not rendering root node
 	protected:
+		bool 											b_isGameObjectLoader = false;
 		GameObject*										p_parrent = 0;
 		//SERIALIZABLE_VAR_VEC( UniqueID ) 	m_usedComponentsIDs;
 		//SERIALIZABLE_VAR_VEC( UniqueID )	m_usedGameObjectsChildrensIDs;
@@ -23,14 +23,25 @@ namespace asapgl
 		void UnRegisterChild(GameObject* deleteChild);
 
 		GameObject( bfu::MemBlockBase* mBlock );
-		//~GameObject();
+		~GameObject();
 
 	public:
 		void Init( bfu::MemBlockBase* mBlock );
+		void Dispouse();
 
-		void ReAttach(GameObject* newParrent);
-		void OnLoad(GameObject* parrent);
+		void OnLoad();
 		void OnUnLoad();
+
+		virtual void Serialize();
+		virtual void Deserialize();
+
+		//virtual void Serialize(JSONStream& stream);
+		//virtual void Deserialize(JSONStream& stream);
+
+		void OnAttach(GameObject* newParrent);
+		void OnDetach();
+		void ReAttach(GameObject* newParrent);
+
 
 
 		void SetName(const char*);
@@ -49,7 +60,10 @@ namespace asapgl
 			return v_children[index];
 		}
 
-
+		inline bool IsGameObjectLoader()
+		{
+			return b_isGameObjectLoader;
+		}
 	};
 }
 

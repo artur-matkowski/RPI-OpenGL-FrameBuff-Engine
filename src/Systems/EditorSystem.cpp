@@ -21,6 +21,7 @@ namespace asapgl
 	{
 		auto window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking;
 		MemoryManagmentSystem& MEMORY = SYSTEMS::GetObject().MEMORY;
+		SceneSystem& SCENE = SYSTEMS::GetObject().SCENE;
 
 		ImGui::Begin("Editor System", NULL, window_flags ); 
 
@@ -31,8 +32,8 @@ namespace asapgl
 	    {
 	        if (ImGui::BeginMenu("Menu"))
 	        {
-			    if (ImGui::MenuItem("Serialize to JSON")) {}
-			    if (ImGui::MenuItem("Deserialize from JSON")) {}
+			    if (ImGui::MenuItem("Serialize to JSON")) { SCENE.GetRootNode().Serialize(); }
+			    if (ImGui::MenuItem("Deserialize from JSON")) { SCENE.GetRootNode().Deserialize(); }
 			    ImGui::Separator();
 
 			    if (ImGui::MenuItem("Compile to .mmp")) {}
