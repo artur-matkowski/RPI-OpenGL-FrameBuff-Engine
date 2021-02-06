@@ -47,10 +47,20 @@ namespace asapgl
 			it != v_children.end();
 			++it)
 		{
-			(*it)->Dispouse();
-			SYSTEMS::DEALLOCATE<GameObject>(*it, 1);
+			(*it)->DispouseAndDeallocate();
 		}
 		this->~GameObject();
+	}
+	void GameObject::DispouseAndDeallocate()
+	{
+		for(auto it = v_children.begin(); 
+			it != v_children.end();
+			++it)
+		{
+			(*it)->DispouseAndDeallocate();
+		}
+		this->~GameObject();
+		m_mBlock->deallocate(this, sizeof(GameObject));
 	}
 
 	void GameObject::OnLoad()

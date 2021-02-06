@@ -14,6 +14,9 @@ namespace asapgl
 
 		std::vector<bfu::MemBlockBase*, bfu::custom_allocator<bfu::MemBlockBase*>> v_memBlocks;
 
+		bfu::MmappedMemBlock* 					p_memBlockCache = 0;
+		void* 									p_memBlocksEnd = 0;
+
 	public:
 
 		MemoryManagmentSystem()
@@ -24,6 +27,16 @@ namespace asapgl
 			v_memBlocks.push_back(&SystemsMemoryBlock);
 			v_memBlocks.push_back(&m_operatorNEWstatistics);
 			v_memBlocks.push_back(&m_StdAllocatorMemBlock);
+
+			p_memBlocksEnd = SystemsMemoryBlock.end();
+
+			p_memBlockCache = (bfu::MmappedMemBlock*) SystemsMemoryBlock.allocate( 1
+																					, sizeof(bfu::MmappedMemBlock)
+																					, alignof(bfu::MmappedMemBlock));
+			new (p_memBlockCache) bfu::MmappedMemBlock((void*)(((size_t)p_memBlocksEnd)+1), 1024*1024*10, "TestMemoryBlock");
+
+			p_memBlocksEnd = p_memBlockCache->end();
+			v_memBlocks.push_back(p_memBlockCache);
 		}
 
 

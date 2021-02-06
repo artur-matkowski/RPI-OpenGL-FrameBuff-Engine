@@ -30,7 +30,8 @@ namespace asapgl
 
 	public:
 		void Init( bfu::MemBlockBase* mBlock );
-		void Dispouse();
+		virtual void Dispouse();
+		virtual void DispouseAndDeallocate();
 
 		void OnLoad();
 		void OnUnLoad();

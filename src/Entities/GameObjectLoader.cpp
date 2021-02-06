@@ -25,6 +25,7 @@ namespace asapgl
 
 		//TBD temporarly use parrent allocator
 		m_child->Init(mBlock);
+		m_child->SetName("Prefab Root");
 
 		v_children.push_back(m_child);
 	}
@@ -32,6 +33,32 @@ namespace asapgl
 	{
 		m_child->Dispouse();
 		m_mBlock->deallocate(m_child, sizeof(GameObject));
+	}
+
+	void GameObjectLoader::Init( bfu::MemBlockBase* mBlock )
+	{
+		new (this) GameObjectLoader(mBlock);
+	}
+	void GameObjectLoader::Dispouse()
+	{
+		for(auto it = v_children.begin(); 
+			it != v_children.end();
+			++it)
+		{
+			(*it)->DispouseAndDeallocate();
+		}
+		this->~GameObjectLoader();
+	}
+	void GameObjectLoader::DispouseAndDeallocate()
+	{
+		for(auto it = v_children.begin(); 
+			it != v_children.end();
+			++it)
+		{
+			(*it)->DispouseAndDeallocate();
+		}
+		this->~GameObjectLoader();
+		m_mBlock->deallocate(this, sizeof(GameObjectLoader));
 	}
 
 	void GameObjectLoader::SetPrefabMemFileName(const char* mmapFileName)

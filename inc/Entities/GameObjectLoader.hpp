@@ -12,10 +12,15 @@ namespace asapgl
 
 		virtual void RegisterChild(GameObject* newChild);
 		virtual void UnRegisterChild(GameObject* deleteChild);
-		
+
 	public:
 		GameObjectLoader( bfu::MemBlockBase* mBlock );
 		~GameObjectLoader();
+
+
+		void Init( bfu::MemBlockBase* mBlock );
+		virtual void Dispouse();
+		virtual void DispouseAndDeallocate();
 
 
 		void SetPrefabMemFileName(const char* mmapFileName);
