@@ -3,6 +3,17 @@
 
 namespace asapgl
 {
+	void GameObjectLoader::RegisterChild(GameObject* newChild)
+	{
+		log::warning << "Can not RegisterChild to GameObjectLoader, passing to child" << std::endl;
+		v_children[0]->RegisterChild( newChild );
+	}
+	void GameObjectLoader::UnRegisterChild(GameObject* deleteChild)
+	{
+		log::warning << "Can not UnRegisterChild to GameObjectLoader, passing to child" << std::endl;
+		v_children[0]->UnRegisterChild( deleteChild );
+	}
+
 	GameObjectLoader::GameObjectLoader( bfu::MemBlockBase* mBlock )
 		:GameObject(mBlock)
 		,m_prefabMemFile("m_prefabMemFile", this, mBlock)
@@ -14,6 +25,8 @@ namespace asapgl
 
 		//TBD temporarly use parrent allocator
 		m_child->Init(mBlock);
+
+		v_children.push_back(m_child);
 	}
 	GameObjectLoader::~GameObjectLoader()
 	{

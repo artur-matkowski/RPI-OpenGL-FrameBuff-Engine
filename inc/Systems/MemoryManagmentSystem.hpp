@@ -17,7 +17,7 @@ namespace asapgl
 	public:
 
 		MemoryManagmentSystem()
-			:SystemsMemoryBlock(1, 1024*1024*10, "SystemsMemoryBlock")
+			:SystemsMemoryBlock((void*)1, 1024*1024*10, "SystemsMemoryBlock")
 			,v_memBlocks(bfu::custom_allocator<bfu::MemBlockBase*>(&SystemsMemoryBlock))
 		{
 			v_memBlocks.reserve(16);

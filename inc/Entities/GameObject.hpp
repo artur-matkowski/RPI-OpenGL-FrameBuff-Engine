@@ -8,8 +8,11 @@ namespace asapgl
 	#define SERIALIZATION_FILE_EXT ".json"
 	#define SERIALIZATION_FOLDER "json/"
 
+	class GameObjectLoader;
+
 	class GameObject: public EntityBase
 	{
+		friend GameObjectLoader;
 	protected:
 		bool 											b_isGameObjectLoader = false;
 		GameObject*										p_parrent = 0;
@@ -19,8 +22,8 @@ namespace asapgl
 		bfu::SerializableVar<bfu::string>  				m_myName;
 		bfu::SerializableVarVector<GameObject*>			v_children;
 
-		void RegisterChild(GameObject* newChild);
-		void UnRegisterChild(GameObject* deleteChild);
+		virtual void RegisterChild(GameObject* newChild);
+		virtual void UnRegisterChild(GameObject* deleteChild);
 
 		GameObject( bfu::MemBlockBase* mBlock );
 		~GameObject();
