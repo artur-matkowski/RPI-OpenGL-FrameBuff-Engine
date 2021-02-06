@@ -5,6 +5,8 @@
 
 namespace asapgl
 {
+	class GameObject;
+	
 	class MemoryManagmentSystem
 	{
 		//bfu::MonotonicMemBlock<1024*1024*10> 	SystemsMemoryBlock;
@@ -33,10 +35,11 @@ namespace asapgl
 			p_memBlockCache = (bfu::MmappedMemBlock*) SystemsMemoryBlock.allocate( 1
 																					, sizeof(bfu::MmappedMemBlock)
 																					, alignof(bfu::MmappedMemBlock));
+			/*
 			new (p_memBlockCache) bfu::MmappedMemBlock((void*)(((size_t)p_memBlocksEnd)+1), 1024*1024*10, "TestMemoryBlock");
 
 			p_memBlocksEnd = p_memBlockCache->end();
-			v_memBlocks.push_back(p_memBlockCache);
+			v_memBlocks.push_back(p_memBlockCache);*/
 		}
 
 
@@ -66,6 +69,8 @@ namespace asapgl
 		{
 			return m_StdAllocatorMemBlock;
 		}
+
+		bfu::MmappedMemBlock* ObtainPrefabMemBlock(size_t size, GameObject* &ret_entryPointRaw, const char* description);
 	};
 
 

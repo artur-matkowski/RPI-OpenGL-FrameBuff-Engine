@@ -14,25 +14,27 @@ namespace asapgl
 		v_children[0]->UnRegisterChild( deleteChild );
 	}
 
+	void GameObjectLoader::InstatiatePrefab()
+	{
+		GameObject* GoRoot = 0;
+		bfu::MmappedMemBlock* mBlock = SYSTEMS::GetObject().MEMORY.ObtainPrefabMemBlock(1024*1024*10, GoRoot, m_prefabMemFile.c_str() );
+		//GoRoot->Init(m_mBlock);
+		GoRoot->Init(mBlock);
+
+		GoRoot->SetName("Prefab Root");
+
+		v_children.push_back(GoRoot);
+	}
+
 	GameObjectLoader::GameObjectLoader( bfu::MemBlockBase* mBlock )
 		:GameObject(mBlock)
 		,m_prefabMemFile("m_prefabMemFile", this, mBlock)
 	{
 		m_prefabMemFile.reserve(GAMEOBJECT_MAX_NAME_LENGTH);
 		b_isGameObjectLoader = true;
-
-		m_child = (GameObject*)m_mBlock->allocate(1, sizeof(GameObject), alignof(GameObject));
-
-		//TBD temporarly use parrent allocator
-		m_child->Init(mBlock);
-		m_child->SetName("Prefab Root");
-
-		v_children.push_back(m_child);
 	}
 	GameObjectLoader::~GameObjectLoader()
 	{
-		m_child->Dispouse();
-		m_mBlock->deallocate(m_child, sizeof(GameObject));
 	}
 
 	void GameObjectLoader::Init( bfu::MemBlockBase* mBlock )
@@ -91,7 +93,7 @@ namespace asapgl
 			return;
  		}
 
- 		jsonStream << *m_child;
+ 		jsonStream << *v_children[0];
 
 		fwrite(jsonStream.c_str(), 1, jsonStream.size(), pFile);
 
@@ -126,7 +128,7 @@ namespace asapgl
 		fread(jsonStream.c_str(), 1, fileSize, pFile);
 		jsonStream.OverrideWriteCursorPos(fileSize);
 
- 		jsonStream >> *m_child;
+ 		jsonStream >> *v_children[0];
 
 		fclose (pFile);
 

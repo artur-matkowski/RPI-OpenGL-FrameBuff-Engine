@@ -13,6 +13,7 @@ namespace asapgl
 
 		m_root.SetName("root node");
 		m_root.SetPrefabMemFileName("EntryPoint");
+		m_root.InstatiatePrefab();
 
 		GameObject *pgo, *pgo2 ;
 
