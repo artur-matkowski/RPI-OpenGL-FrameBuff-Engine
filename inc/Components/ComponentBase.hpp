@@ -5,16 +5,40 @@
 
 namespace asapgl
 {
-	class ComponentBase: public EntityBase
+	class ComponentInterface: public EntityBase
 	{
 	public:	
-		ComponentBase(bfu::MemBlockBase* mBlock)
+		ComponentInterface(bfu::MemBlockBase* mBlock)
 			:EntityBase(mBlock)
 		{};
-		~ComponentBase(){};
+		~ComponentInterface(){};
 		
 		virtual void OnAttach() = 0;
 		virtual void OnDetach() = 0;
+
+		//suve component type
+		//virtual void Serialize(bfu::JSONStream& stream);
+
+		//resotre component type
+		//virtual void Deserialize(bfu::JSONStream& stream);
+	};
+
+	template<class T>
+	class ComponentBase: public ComponentInterface
+	{
+	protected:
+	public:	
+		ComponentBase(bfu::MemBlockBase* mBlock)
+			:ComponentInterface(mBlock)
+		{};
+		~ComponentBase(){};
+
+		static T* AllocateAndInit( bfu::MemBlockBase* mBlock )
+		{
+			T* obj = mBlock->allocate(1, sizeof(T), alignof(T) );
+			obj->Init(mBlock);
+			return obj;
+		}
 	};
 }
 

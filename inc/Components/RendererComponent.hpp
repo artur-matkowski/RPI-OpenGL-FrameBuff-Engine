@@ -7,7 +7,7 @@
 
 namespace asapgl
 {
-	class RendererComponent: public ComponentBase
+	class RendererComponent: public ComponentBase<RendererComponent>
 	{
 		//bfu::SerializableVar< bfu::string > 		m_usedMaterial;
 		//bfu::SerializableVar< bfu::string >	 		m_usedMesh;

@@ -4,7 +4,7 @@
 namespace asapgl
 {
 	RendererComponent::RendererComponent(bfu::MemBlockBase* mBlock)
-		:ComponentBase(mBlock)
+		:ComponentBase<RendererComponent>(mBlock)
 		//,m_usedMaterial("m_usedMaterial",this, mBlock)
 		//,m_usedMesh("m_usedMesh",this, mBlock)
 	{
