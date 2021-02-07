@@ -5,11 +5,11 @@
 
 namespace asapgl
 {
-	class ComponentBase: public object//, public bfu::SerializableClassBase
+	class ComponentBase: public object, public bfu::SerializableClassBase
 	{
 	public:	
 		ComponentBase(bfu::MemBlockBase* mBlock)
-			//:bfu::SerializableClassBase(mBlock)
+			:bfu::SerializableClassBase(mBlock)
 		{};
 		~ComponentBase(){};
 		

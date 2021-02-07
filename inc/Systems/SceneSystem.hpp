@@ -1,12 +1,12 @@
 #ifndef _H_SceneSystem
 #define _H_SceneSystem
-#include "GameObjectLoader.hpp"
+#include "GameObject.hpp"
 
 namespace asapgl
 {
 	class SceneSystem
 	{
-		GameObjectLoader  	*p_root = 0;
+		GameObject  		*p_root = 0;
 
 		#ifdef IS_EDITOR
 		bfu::JSONStream 	m_stream;
@@ -16,7 +16,7 @@ namespace asapgl
 	public:
 		SceneSystem( bfu::MemBlockBase* mBlock );
 
-		inline GameObjectLoader& GetRootNode()
+		inline GameObject& GetRootNode()
 		{
 			return *p_root;
 		}

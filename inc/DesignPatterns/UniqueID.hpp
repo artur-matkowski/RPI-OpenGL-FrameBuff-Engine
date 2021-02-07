@@ -6,29 +6,23 @@
 
 namespace asapgl
 {
-	/*
-	class UniqueID: public SERIALIZABLE_CLASS_BASE
-	{
-		SERIALIZABLE_VAR(uint64_t) ID;
+	
+	// class UniqueID: public SERIALIZABLE_CLASS_BASE
+	// {
+	// 	SERIALIZABLE_VAR(uint64_t) ID;
 
-		union{
-			uint64_t ID64;
-			uint32_t ID32[2];
-		};
+	// 	union{
+	// 		uint64_t ID64;
+	// 		uint32_t ID32[2];
+	// 	};
 
-	public:
-		UniqueID();
-		~UniqueID(){};
+	// public:
+	// 	UniqueID();
+	// 	~UniqueID(){};
 
-		
-		#ifndef _PLAYER
-			virtual void Serialize(bfu::JSONStream& stream);
-			virtual void Deserialize(bfu::JSONStream& stream);
-		#endif
-
-		virtual void Serialize(std::ofstream& stream);
-		virtual void Deserialize(std::ifstream& stream);
-	};*/
+	// 	virtual void Serialize(std::ofstream& stream);
+	// 	virtual void Deserialize(std::ifstream& stream);
+	// };
 }
 
 #endif

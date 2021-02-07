@@ -5,7 +5,7 @@
 #include "RendererSystem.hpp"
 #include "Context.hpp"
 #include "ResourceSystem.hpp"
-#include "SimpleTime.hpp"
+#include "TimeSystem.hpp"
 #include "MemoryManagmentSystem.hpp"
 #include "SceneSystem.hpp"
 #include "EditorSystem.hpp"
@@ -29,7 +29,7 @@ namespace asapgl
 								CONTEXT;
 		#endif
 		ResourceSystem			RESOURCES;
-		SimpleTime				TIME;
+		TimeSystem				TIME;
 		SceneSystem				SCENE;
 
 

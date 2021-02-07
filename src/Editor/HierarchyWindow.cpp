@@ -144,7 +144,7 @@ static void PopStyleCompact()
 
 	void HierarchyWindow::OnGUI()
 	{
-		static GameObject* go_root = SYSTEMS::GetObject().SCENE.GetRootNode().GetChild(0);
+		static GameObject* go_root = &SYSTEMS::GetObject().SCENE.GetRootNode();
 		auto window_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking;
 		
 		ImGui::Begin("Scene Hierarhy", NULL, window_flags); 

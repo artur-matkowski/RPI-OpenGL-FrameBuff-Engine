@@ -25,17 +25,39 @@ namespace asapgl
 	GameObject::GameObject( bfu::MemBlockBase* mBlock )
 			:EntityBase(mBlock)
 			,m_myName("m_myName", this, mBlock)
-			,v_children("v_children", this, mBlock)
+			,v_children("v_children", this, this, mBlock)
 	{
 		m_myName.resize(GAMEOBJECT_MAX_NAME_LENGTH, '\0');
 		m_myName = "GameObject";
 	}
 
-	GameObject::~GameObject()
+	GameObject::GameObject( const GameObject& cp )
+		:EntityBase(cp)
+		,b_isGameObjectLoader(false)
+		,p_parrent(cp.p_parrent)
+		,m_myName("m_myName", this, cp.m_mBlock)
+		,v_children("v_children", this, this, cp.m_mBlock)
 	{
-
+		m_myName.resize(GAMEOBJECT_MAX_NAME_LENGTH, '\0');
+		m_myName = cp.m_myName.c_str();
 	}
 
+	GameObject::~GameObject()
+	{
+		for(auto it = v_children.begin(); 
+			it != v_children.end();
+			++it)
+		{
+			(*it)->DispouseAndDeallocate();
+		}
+	}
+
+	GameObject& GameObject::operator=(const GameObject& cp)
+	{
+		this->~GameObject();
+		new (this) GameObject(cp);
+		return *this;
+	}
 
 	void GameObject::Init( bfu::MemBlockBase* mBlock )
 	{
@@ -43,22 +65,10 @@ namespace asapgl
 	}
 	void GameObject::Dispouse()
 	{
-		for(auto it = v_children.begin(); 
-			it != v_children.end();
-			++it)
-		{
-			(*it)->DispouseAndDeallocate();
-		}
 		this->~GameObject();
 	}
 	void GameObject::DispouseAndDeallocate()
 	{
-		for(auto it = v_children.begin(); 
-			it != v_children.end();
-			++it)
-		{
-			(*it)->DispouseAndDeallocate();
-		}
 		this->~GameObject();
 		m_mBlock->deallocate(this, sizeof(GameObject));
 	}
@@ -74,11 +84,63 @@ namespace asapgl
 
 	void GameObject::Serialize()
 	{
-		
+		//we will pe using GameObject name as prefab file name
+		// char filePath[GAMEOBJECT_MAX_NAME_LENGTH+sizeof(SERIALIZATION_FILE_EXT)+sizeof(SERIALIZATION_FOLDER)]; 
+		// bfu::JSONStream& jsonStream = SYSTEMS::GetObject().SCENE.GetJSONStreamWorkBuffer();
+
+		// //building a file name;
+		// strcpy(filePath, SERIALIZATION_FOLDER );
+		// strncpy(filePath+sizeof(SERIALIZATION_FOLDER)-1, m_prefabMemFile.c_str(), GAMEOBJECT_MAX_NAME_LENGTH );
+		// strncpy(filePath+sizeof(SERIALIZATION_FOLDER)-1+m_prefabMemFile.size(), SERIALIZATION_FILE_EXT, sizeof(SERIALIZATION_FILE_EXT));
+
+		// FILE * pFile = fopen (filePath,"wb");
+
+		// if( pFile==NULL )
+		// {
+		// 	log::error << "Could not open file: " << filePath << std::endl;
+		// 	return;
+ 	// 	}
+
+ 	// 	jsonStream << *v_children[0];
+
+		// fwrite(jsonStream.c_str(), 1, jsonStream.size(), pFile);
+
+		// fclose (pFile);
+
+		// jsonStream.clear();
 	}
 	void GameObject::Deserialize()
 	{
+		//we will pe using GameObject name as prefab file name
+		// char filePath[GAMEOBJECT_MAX_NAME_LENGTH+sizeof(SERIALIZATION_FILE_EXT)+sizeof(SERIALIZATION_FOLDER)]; 
+		// bfu::JSONStream& jsonStream = SYSTEMS::GetObject().SCENE.GetJSONStreamWorkBuffer();
 
+		// //building a file name;
+		// strcpy(filePath, SERIALIZATION_FOLDER );
+		// strncpy(filePath+sizeof(SERIALIZATION_FOLDER)-1, m_prefabMemFile.c_str(), GAMEOBJECT_MAX_NAME_LENGTH );
+		// strncpy(filePath+sizeof(SERIALIZATION_FOLDER)-1+m_prefabMemFile.size(), SERIALIZATION_FILE_EXT, sizeof(SERIALIZATION_FILE_EXT));
+
+		// FILE * pFile = fopen (filePath,"rb");
+
+		// if( pFile==NULL )
+		// {
+		// 	log::error << "Could not open file: " << filePath << std::endl;
+		// 	return;
+ 	// 	}
+		
+		// fseek(pFile, 0L, SEEK_END); 
+		// auto fileSize = ftell(pFile); 
+		// fseek(pFile, 0L, SEEK_SET); 
+
+		// jsonStream.resize(fileSize);
+		// fread(jsonStream.c_str(), 1, fileSize, pFile);
+		// jsonStream.OverrideWriteCursorPos(fileSize);
+
+ 	// 	jsonStream >> *v_children[0];
+
+		// fclose (pFile);
+
+		// jsonStream.clear();
 	}
 
 

@@ -13,6 +13,9 @@ namespace asapgl
 		EntityBase( bfu::MemBlockBase* mBlock )
 			:bfu::SerializableClassBase(mBlock)
 		{};
+		EntityBase( const EntityBase& cp )
+			:bfu::SerializableClassBase(cp.m_mBlock)
+		{};
 		~EntityBase(){};
 
 		bfu::MemBlockBase* GetMemBlock()
