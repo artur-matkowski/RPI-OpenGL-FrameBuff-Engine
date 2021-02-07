@@ -1,28 +1,32 @@
 #include "UniqueID.hpp"
 #include <stdlib.h>
-#include <time.h> 
+#include <time.h>
+#include "Systems.hpp"
 
 namespace asapgl
 {
 	
 	UniqueID::UniqueID( bfu::MemBlockBase* mBlock )
 			:bfu::SerializableClassBase(mBlock)
-			,ID("ID", this)
+			,m_ID("m_ID", this)
 	{
-		ID32[0] = time(NULL);
-		ID32[1] = rand();
-		ID = ID64;
+		auto &TIME = SYSTEMS::GetObject().TIME;
+
+		ID32[0] = TIME.SecondsSince1970();
+		ID32[1] = TIME.RANDOM.UINT32();
+		
+		m_ID = ID64;
 	}
 
 	void UniqueID::Serialize(bfu::JSONStream& stream)
 	{
-		ID = ID64;
-		stream << ID;
+		m_ID = ID64;
+		stream << m_ID;
 	}
 
 	void UniqueID::Deserialize(bfu::JSONStream& stream)
 	{
-		stream >> ID;
-		ID64 = ID;
+		stream >> m_ID;
+		ID64 = m_ID;
 	}
 }

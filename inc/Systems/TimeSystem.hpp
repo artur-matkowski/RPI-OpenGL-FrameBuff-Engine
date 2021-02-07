@@ -9,12 +9,15 @@ namespace asapgl
 {
 	class TimeSystem
 	{
-		struct Random
+		class Random
 		{
+			friend TimeSystem;
 			Random()
 			{
 				srand (time(NULL));
 			}
+			Random(const Random& cp){};
+		public:
 			inline void SetSeed(unsigned int seed)
 			{
 				srand( seed );				
@@ -54,6 +57,11 @@ namespace asapgl
 		inline void SetTargetFPS(double fps)
 		{
 			m_frameTargetTime = std::chrono::duration<double>(1.0 / fps);
+		}
+
+		inline uint32_t SecondsSince1970()
+		{
+			return time(NULL);
 		}
 
 	};

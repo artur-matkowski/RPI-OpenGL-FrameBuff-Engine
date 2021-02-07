@@ -85,62 +85,62 @@ namespace asapgl
 	void GameObject::Serialize()
 	{
 		//we will pe using GameObject name as prefab file name
-		// char filePath[GAMEOBJECT_MAX_NAME_LENGTH+sizeof(SERIALIZATION_FILE_EXT)+sizeof(SERIALIZATION_FOLDER)]; 
-		// bfu::JSONStream& jsonStream = SYSTEMS::GetObject().SCENE.GetJSONStreamWorkBuffer();
+		char filePath[GAMEOBJECT_MAX_NAME_LENGTH+sizeof(SERIALIZATION_FILE_EXT)+sizeof(SERIALIZATION_FOLDER)]; 
+		bfu::JSONStream& jsonStream = SYSTEMS::GetObject().SCENE.GetJSONStreamWorkBuffer();
 
-		// //building a file name;
-		// strcpy(filePath, SERIALIZATION_FOLDER );
-		// strncpy(filePath+sizeof(SERIALIZATION_FOLDER)-1, m_prefabMemFile.c_str(), GAMEOBJECT_MAX_NAME_LENGTH );
-		// strncpy(filePath+sizeof(SERIALIZATION_FOLDER)-1+m_prefabMemFile.size(), SERIALIZATION_FILE_EXT, sizeof(SERIALIZATION_FILE_EXT));
+		//building a file name;
+		strcpy(filePath, SERIALIZATION_FOLDER );
+		strncpy(filePath+sizeof(SERIALIZATION_FOLDER)-1, m_myName.c_str(), GAMEOBJECT_MAX_NAME_LENGTH );
+		strncpy(filePath+sizeof(SERIALIZATION_FOLDER)-1+m_myName.size(), SERIALIZATION_FILE_EXT, sizeof(SERIALIZATION_FILE_EXT));
 
-		// FILE * pFile = fopen (filePath,"wb");
+		FILE * pFile = fopen (filePath,"wb");
 
-		// if( pFile==NULL )
-		// {
-		// 	log::error << "Could not open file: " << filePath << std::endl;
-		// 	return;
- 	// 	}
+		if( pFile==NULL )
+		{
+			log::error << "Could not open file: " << filePath << std::endl;
+			return;
+ 		}
 
- 	// 	jsonStream << *v_children[0];
+ 		jsonStream << v_children;
 
-		// fwrite(jsonStream.c_str(), 1, jsonStream.size(), pFile);
+		fwrite(jsonStream.c_str(), 1, jsonStream.size(), pFile);
 
-		// fclose (pFile);
+		fclose (pFile);
 
-		// jsonStream.clear();
+		jsonStream.clear();
 	}
 	void GameObject::Deserialize()
 	{
 		//we will pe using GameObject name as prefab file name
-		// char filePath[GAMEOBJECT_MAX_NAME_LENGTH+sizeof(SERIALIZATION_FILE_EXT)+sizeof(SERIALIZATION_FOLDER)]; 
-		// bfu::JSONStream& jsonStream = SYSTEMS::GetObject().SCENE.GetJSONStreamWorkBuffer();
+		char filePath[GAMEOBJECT_MAX_NAME_LENGTH+sizeof(SERIALIZATION_FILE_EXT)+sizeof(SERIALIZATION_FOLDER)]; 
+		bfu::JSONStream& jsonStream = SYSTEMS::GetObject().SCENE.GetJSONStreamWorkBuffer();
 
-		// //building a file name;
-		// strcpy(filePath, SERIALIZATION_FOLDER );
-		// strncpy(filePath+sizeof(SERIALIZATION_FOLDER)-1, m_prefabMemFile.c_str(), GAMEOBJECT_MAX_NAME_LENGTH );
-		// strncpy(filePath+sizeof(SERIALIZATION_FOLDER)-1+m_prefabMemFile.size(), SERIALIZATION_FILE_EXT, sizeof(SERIALIZATION_FILE_EXT));
+		//building a file name;
+		strcpy(filePath, SERIALIZATION_FOLDER );
+		strncpy(filePath+sizeof(SERIALIZATION_FOLDER)-1, m_myName.c_str(), GAMEOBJECT_MAX_NAME_LENGTH );
+		strncpy(filePath+sizeof(SERIALIZATION_FOLDER)-1+m_myName.size(), SERIALIZATION_FILE_EXT, sizeof(SERIALIZATION_FILE_EXT));
 
-		// FILE * pFile = fopen (filePath,"rb");
+		FILE * pFile = fopen (filePath,"rb");
 
-		// if( pFile==NULL )
-		// {
-		// 	log::error << "Could not open file: " << filePath << std::endl;
-		// 	return;
- 	// 	}
+		if( pFile==NULL )
+		{
+			log::error << "Could not open file: " << filePath << std::endl;
+			return;
+ 		}
 		
-		// fseek(pFile, 0L, SEEK_END); 
-		// auto fileSize = ftell(pFile); 
-		// fseek(pFile, 0L, SEEK_SET); 
+		fseek(pFile, 0L, SEEK_END); 
+		auto fileSize = ftell(pFile); 
+		fseek(pFile, 0L, SEEK_SET); 
 
-		// jsonStream.resize(fileSize);
-		// fread(jsonStream.c_str(), 1, fileSize, pFile);
-		// jsonStream.OverrideWriteCursorPos(fileSize);
+		jsonStream.resize(fileSize);
+		fread(jsonStream.c_str(), 1, fileSize, pFile);
+		jsonStream.OverrideWriteCursorPos(fileSize);
 
- 	// 	jsonStream >> *v_children[0];
+ 		jsonStream >> v_children;
 
-		// fclose (pFile);
+		fclose (pFile);
 
-		// jsonStream.clear();
+		jsonStream.clear();
 	}
 
 
