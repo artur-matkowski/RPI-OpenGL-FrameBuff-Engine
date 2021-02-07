@@ -18,7 +18,6 @@ namespace asapgl
 	{
 		GameObject* GoRoot = 0;
 		bfu::MmappedMemBlock* mBlock = SYSTEMS::GetObject().MEMORY.ObtainPrefabMemBlock(1024*1024*10, GoRoot, m_prefabMemFile.c_str() );
-		//GoRoot->Init(m_mBlock);
 		GoRoot->Init(mBlock);
 
 		GoRoot->SetName("Prefab Root");

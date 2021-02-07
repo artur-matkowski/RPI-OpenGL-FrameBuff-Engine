@@ -7,13 +7,15 @@ namespace asapgl
 {
 	class GameObjectLoader: public GameObject
 	{
+	protected:
 		bfu::SerializableVar<bfu::string>  	m_prefabMemFile;
 
 		virtual void RegisterChild(GameObject* newChild);
 		virtual void UnRegisterChild(GameObject* deleteChild);
 
-	public:
 		GameObjectLoader( bfu::MemBlockBase* mBlock );
+		
+	public:
 		~GameObjectLoader();
 
 		void InstatiatePrefab();

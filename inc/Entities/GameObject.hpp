@@ -26,9 +26,10 @@ namespace asapgl
 		virtual void UnRegisterChild(GameObject* deleteChild);
 
 		GameObject( bfu::MemBlockBase* mBlock );
-		~GameObject();
 
 	public:
+		~GameObject();
+		
 		void Init( bfu::MemBlockBase* mBlock );
 		virtual void Dispouse();
 		virtual void DispouseAndDeallocate();

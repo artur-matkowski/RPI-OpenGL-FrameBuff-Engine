@@ -6,7 +6,7 @@ namespace asapgl
 {
 	class SceneSystem
 	{
-		GameObjectLoader  	m_root;
+		GameObjectLoader  	*p_root = 0;
 
 		#ifdef IS_EDITOR
 		bfu::JSONStream 	m_stream;
@@ -18,7 +18,7 @@ namespace asapgl
 
 		inline GameObjectLoader& GetRootNode()
 		{
-			return m_root;
+			return *p_root;
 		}
 
 		void OnGUI();
