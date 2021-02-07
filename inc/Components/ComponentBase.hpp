@@ -1,15 +1,15 @@
 #ifndef _H_ComponentBase
 #define _H_ComponentBase
-#include "Serialization.hpp"
+#include "EntityBase.hpp"
 
 
 namespace asapgl
 {
-	class ComponentBase: public object, public bfu::SerializableClassBase
+	class ComponentBase: public EntityBase
 	{
 	public:	
 		ComponentBase(bfu::MemBlockBase* mBlock)
-			:bfu::SerializableClassBase(mBlock)
+			:EntityBase(mBlock)
 		{};
 		~ComponentBase(){};
 		

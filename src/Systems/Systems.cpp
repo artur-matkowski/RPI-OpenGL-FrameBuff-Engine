@@ -49,7 +49,7 @@ namespace asapgl
 
 	bool SYSTEMS::init(const int argc, const char** argv)
 	{
-		srand (time(NULL));
+		//srand (time(NULL)); // moved to TIME.RANDOM
 
 		RENDERER.SetupEvents();
 		#ifdef USE_XLIB

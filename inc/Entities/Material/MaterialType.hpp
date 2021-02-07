@@ -4,7 +4,7 @@
 #include "Shader.hpp"
 #include "Texture.hpp"
 #include "UniformList.hpp"
-#include "Serialization.hpp"
+#include "object.hpp"
 #include <map>
 
 

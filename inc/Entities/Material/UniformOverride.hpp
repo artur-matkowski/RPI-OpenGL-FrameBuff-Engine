@@ -2,7 +2,6 @@
 #define _H_UniformOverride
 #include "MaterialInstance.hpp"
 #include "MaterialType.hpp"
-#include "Serialization.hpp"
 
 namespace asapgl
 {

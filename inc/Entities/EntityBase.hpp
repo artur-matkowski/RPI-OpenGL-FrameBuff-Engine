@@ -1,6 +1,7 @@
 #ifndef _H_EntityBase
 #define _H_EntityBase
 #include "UniqueID.hpp"
+#include "object.hpp"
 
 namespace asapgl
 {

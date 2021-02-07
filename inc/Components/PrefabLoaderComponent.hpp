@@ -8,6 +8,11 @@ namespace asapgl
 	{
 	protected:
 	public:
+		PrefabLoaderComponent(bfu::MemBlockBase* mBlock)
+			:ComponentBase(mBlock)
+		{};
+		~PrefabLoaderComponent();
+
 		virtual void OnAttach();
 		virtual void OnDetach();
 	};
