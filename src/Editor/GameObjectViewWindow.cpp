@@ -23,11 +23,6 @@ namespace asapgl
 
 		if( _selected!=0 )
 		{
-			ImGui::Spacing();
-			ImGui::Text( _selected->GetName() );
-			ImGui::Spacing();
-			ImGui::Separator();
-			ImGui::Spacing();
 			_selected->OnGUI();
 		}
 

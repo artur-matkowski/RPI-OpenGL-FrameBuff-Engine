@@ -38,17 +38,29 @@ namespace asapgl
 			//TODO add serializablefields to vector for easier rendering
 		}
 
-		
-		virtual void OnGUI()
+		virtual void OnGUI();
+	};
+	
+	template<class T>
+	class ComponentBase;
+
+	template<class T>
+	class StaticInitializer
+	{
+	public:
+		StaticInitializer()
 		{
-			//TODO render serializable fields in imgui
+			//s_componentAllocatorMap[ ComponentBase<T>::TypeHash() ] = ComponentBase<T>::AllocateAndInit;
+			log::error << "ComponentBase::StaticInitializer " << ComponentBase<T>::TypeHash() << std::endl;
 		}
+		void print(){log::error << "ComponentBase:dupa:StaticInitializer " << ComponentBase<T>::TypeHash() << std::endl;}
 	};
 
 
 	template<class T>
 	class ComponentBase: public ComponentInterface
 	{
+		static StaticInitializer<T> initializer;
 	protected:
 		static ComponentInterface* AllocateAndInit( bfu::MemBlockBase* mBlock )
 		{
@@ -60,15 +72,19 @@ namespace asapgl
 		ComponentBase(bfu::MemBlockBase* mBlock)
 			:ComponentInterface(mBlock)
 		{
-			s_componentAllocatorMap[ TypeHash() ] = AllocateAndInit;
+			initializer.print();
+			//s_componentAllocatorMap[ TypeHash() ] = AllocateAndInit;
 		};
 		~ComponentBase(){};
 
 		static size_t TypeHash()
 		{
-			return typeid(T).hash_code();
+			return 1;// typeid(T).hash_code();
 		}
 	};
+
+	template<class T>
+	StaticInitializer<T> ComponentBase<T>::initializer;
 }
 
 #endif

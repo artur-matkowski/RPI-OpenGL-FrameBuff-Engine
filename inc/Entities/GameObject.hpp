@@ -8,14 +8,40 @@ namespace asapgl
 	#define SERIALIZATION_FILE_EXT ".json"
 	#define SERIALIZATION_FOLDER "json/"
 
+	class ComponentInterface;
+
 	class GameObject: public EntityBase
 	{
+		struct ComponentInfo: public EntityBase
+		{
+			bfu::SerializableVar<size_t>  				m_typeId;
+			bfu::SerializableVar<bfu::JSONStream>  		m_recreationString;
+
+			ComponentInfo( bfu::MemBlockBase* mBlock )
+				:EntityBase(mBlock)
+				,m_typeId("m_typeId", this)
+				,m_recreationString("m_recreationString", this, mBlock)
+				{};
+			ComponentInfo( const ComponentInfo& cp )
+				:EntityBase(cp.m_mBlock)
+				,m_typeId("m_typeId", this)
+				,m_recreationString("m_recreationString", this, cp.m_mBlock)
+				{ 
+					m_typeId = cp.m_typeId; 
+					m_recreationString = cp.m_recreationString;
+				};
+		};
 	protected:
 		bool 											b_isGameObjectLoader = false;
 		GameObject*										p_parrent = 0;
 
 		bfu::SerializableVar<bfu::string>  				m_myName;
 		bfu::SerializableVarVector<GameObject*>			v_children;
+
+		bfu::SerializableVarVector<ComponentInfo>		v_componentsInfo;
+
+		std::vector<ComponentInterface*, bfu::custom_allocator<ComponentInterface*>> 
+														v_components;
 
 		virtual void RegisterChild(GameObject* newChild);
 		virtual void UnRegisterChild(GameObject* deleteChild);

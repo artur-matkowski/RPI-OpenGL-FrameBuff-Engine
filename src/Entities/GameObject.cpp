@@ -1,5 +1,6 @@
 #include "GameObject.hpp"
 #include "Systems.hpp"
+#include "imgui.h"
 
 namespace asapgl
 {
@@ -23,9 +24,12 @@ namespace asapgl
 	}
 
 	GameObject::GameObject( bfu::MemBlockBase* mBlock )
-			:EntityBase(mBlock)
-			,m_myName("m_myName", this, mBlock)
-			,v_children("v_children", this, this, mBlock)
+		:EntityBase(mBlock)
+		,b_isGameObjectLoader(false)
+		,m_myName("m_myName", this, mBlock)
+		,v_children("v_children", this, this, mBlock)
+		,v_componentsInfo("v_componentsInfo", this, mBlock)
+		,v_components(mBlock)
 	{
 		m_myName.resize(GAMEOBJECT_MAX_NAME_LENGTH, '\0');
 		m_myName = "GameObject";
@@ -37,6 +41,8 @@ namespace asapgl
 		,p_parrent(cp.p_parrent)
 		,m_myName("m_myName", this, cp.m_mBlock)
 		,v_children("v_children", this, this, cp.m_mBlock)
+		,v_componentsInfo("v_componentsInfo", this, cp.m_mBlock)
+		,v_components(cp.m_mBlock)
 	{
 		m_myName.resize(GAMEOBJECT_MAX_NAME_LENGTH, '\0');
 		m_myName = cp.m_myName.c_str();
@@ -172,6 +178,24 @@ namespace asapgl
 
 	void GameObject::OnGUI()
 	{
-		
+		ImGui::Spacing();
+		ImGui::Text( GetName() );
+
+		for(int i=0; i<v_components.size(); ++i)
+		{
+			ImGui::Spacing();
+			ImGui::Separator();
+			ImGui::Spacing();
+			v_components[i]->OnGUI();
+		}
+
+		ImGui::Spacing();
+		ImGui::Separator();
+		ImGui::Spacing();
+			
+		if( ImGui::Button("Add Component") )
+		{
+
+		}
 	}
 }

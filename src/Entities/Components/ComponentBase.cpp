@@ -1,5 +1,6 @@
 #include "ComponentBase.hpp"
 #include "Systems.hpp"
+#include "imgui.h"
 
 namespace asapgl
 {
@@ -10,4 +11,12 @@ namespace asapgl
 						,bfu::custom_allocator< std::pair<const size_t, ComponentInterface::InitFuncPtr> >
 						> 
 						ComponentInterface::s_componentAllocatorMap( &SYSTEMS::GetObject().MEMORY.GetSystemsAllocator() );
+
+
+	void ComponentInterface::OnGUI()
+	{
+		//TODO render serializable fields in imgui
+		
+		ImGui::Text("Debug Component renderer"); 
+	}
 }
