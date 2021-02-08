@@ -22,6 +22,11 @@ namespace asapgl
 		~RendererComponent(){};
 
 
+		void Init( bfu::MemBlockBase* mBlock )
+		{
+			new (this) RendererComponent(mBlock);
+		};
+
 		virtual void OnAttach(){};
 		virtual void OnDetach(){};
 

@@ -13,6 +13,12 @@ namespace asapgl
 		{};
 		~PrefabLoaderComponent();
 
+
+		void Init( bfu::MemBlockBase* mBlock )
+		{
+			new (this) PrefabLoaderComponent(mBlock);
+		};
+
 		virtual void OnAttach();
 		virtual void OnDetach();
 	};
