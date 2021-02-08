@@ -10,9 +10,6 @@ namespace asapgl
 
 	SYSTEMS::SYSTEMS()
 		:SCENE(&MEMORY.GetSystemsAllocator())
-		#ifdef IS_EDITOR
-		,EDITOR(&MEMORY.GetSystemsAllocator())
-		#endif
 	{
 
 	}

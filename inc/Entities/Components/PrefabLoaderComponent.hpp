@@ -7,6 +7,7 @@ namespace asapgl
 	class PrefabLoaderComponent: public ComponentBase<PrefabLoaderComponent>
 	{
 	protected:
+		
 	public:
 		PrefabLoaderComponent(bfu::MemBlockBase* mBlock)
 			:ComponentBase<PrefabLoaderComponent>(mBlock)

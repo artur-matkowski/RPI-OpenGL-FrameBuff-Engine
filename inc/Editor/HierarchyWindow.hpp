@@ -7,18 +7,19 @@ namespace asapgl
 {
 	class HierarchyWindow
 	{
-		bfu::MemBlockBase* 				m_mBlock = 0;
-
 		std::vector<GameObject*, bfu::custom_allocator<GameObject*> > 
 										v_SelectedGameObjects;
-	public:
-		HierarchyWindow( bfu::MemBlockBase* mBlock );
-		~HierarchyWindow();
+
 
 		bool IsNodeSelected(GameObject*);
 		void DeselectNode(GameObject*);
 		void OnGUInode(GameObject* obj);
-		void OnGUI();		
+
+		HierarchyWindow();
+		~HierarchyWindow();
+	public:
+
+		static void OnGUI();		
 	};
 }
 

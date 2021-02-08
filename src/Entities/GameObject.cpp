@@ -169,4 +169,9 @@ namespace asapgl
 		m_myName = name;
 	}
 
+
+	void GameObject::OnGUI()
+	{
+		
+	}
 }

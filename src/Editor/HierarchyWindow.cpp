@@ -1,13 +1,13 @@
 #include "HierarchyWindow.hpp"
 #include "imgui.h"
 #include "Systems.hpp"
+#include "GameObjectViewWindow.hpp"
 
 
 namespace asapgl
 {
-	HierarchyWindow::HierarchyWindow( bfu::MemBlockBase* mBlock )
-		:m_mBlock(mBlock)
-		,v_SelectedGameObjects(mBlock)
+	HierarchyWindow::HierarchyWindow()
+		:v_SelectedGameObjects( &SYSTEMS::GetObject().MEMORY.GetSystemsAllocator() )
 	{
 		v_SelectedGameObjects.reserve(128);
 	}
@@ -129,21 +129,22 @@ namespace asapgl
         	RemoveGameObject( go2remove );
 	}
 
-// Make the UI compact because there are so many fields
-static void PushStyleCompact()
-{
-    ImGuiStyle& style = ImGui::GetStyle();
-    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(style.FramePadding.x, (float)(int)(style.FramePadding.y * 0.60f)));
-    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(style.ItemSpacing.x, (float)(int)(style.ItemSpacing.y * 0.60f)));
-}
+	// Make the UI compact because there are so many fields
+	static void PushStyleCompact()
+	{
+	    ImGuiStyle& style = ImGui::GetStyle();
+	    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(style.FramePadding.x, (float)(int)(style.FramePadding.y * 0.60f)));
+	    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(style.ItemSpacing.x, (float)(int)(style.ItemSpacing.y * 0.60f)));
+	}
 
-static void PopStyleCompact()
-{
-    ImGui::PopStyleVar(2);
-}
+	static void PopStyleCompact()
+	{
+	    ImGui::PopStyleVar(2);
+	}
 
 	void HierarchyWindow::OnGUI()
 	{
+		static HierarchyWindow _this;
 		static GameObject* go_root = &SYSTEMS::GetObject().SCENE.GetRootNode();
 		auto window_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking;
 		
@@ -151,7 +152,7 @@ static void PopStyleCompact()
 
 
 		is_GOContextMenuOpen = false;
-        OnGUInode( go_root );
+        _this.OnGUInode( go_root );
 
 
         if (!is_GOContextMenuOpen && ImGui::BeginPopupContextWindow())
@@ -162,6 +163,14 @@ static void PopStyleCompact()
 
 	    ImGui::End();
 
-        
+        if( _this.v_SelectedGameObjects.size() > 0)
+        {
+        	GameObjectViewWindow::SetSelectedGameObject( _this.v_SelectedGameObjects[0] );
+        }
+        else
+        {
+        	GameObjectViewWindow::SetSelectedGameObject( nullptr );
+        }
+
 	}
 }

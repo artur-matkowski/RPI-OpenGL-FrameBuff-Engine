@@ -1,0 +1,41 @@
+#include "StatsWindow.hpp"
+#include "imgui.h"
+#include "Systems.hpp"
+
+
+namespace asapgl
+{
+	void StatsWindow::OnGUI()
+	{
+		auto window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking;
+		MemoryManagmentSystem& MEMORY = SYSTEMS::GetObject().MEMORY;
+		SceneSystem& SCENE = SYSTEMS::GetObject().SCENE;
+
+		ImGui::Begin("Editor System", NULL, window_flags ); 
+
+
+
+		// Menu Bar
+	    if (ImGui::BeginMenuBar())
+	    {
+	        if (ImGui::BeginMenu("Menu"))
+	        {
+			    if (ImGui::MenuItem("Serialize to JSON")) { SCENE.GetRootNode().Serialize(); }
+			    if (ImGui::MenuItem("Deserialize from JSON")) { SCENE.GetRootNode().Deserialize(); }
+			    ImGui::Separator();
+
+			    if (ImGui::MenuItem("Compile to .mmp")) {}
+			    if (ImGui::MenuItem("Load from .mmp")) {}
+			    ImGui::Separator();
+
+			    if (ImGui::MenuItem("Quit")) { SYSTEMS::GetObject().cloaseApp(); }
+	            ImGui::EndMenu();
+	        }
+	        ImGui::EndMenuBar();
+	    }
+
+	    MEMORY.OnGUI();
+
+	    ImGui::End();
+	}
+}

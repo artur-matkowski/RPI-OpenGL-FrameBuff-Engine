@@ -16,6 +16,8 @@ namespace asapgl
 						,bfu::custom_allocator< std::pair<const size_t, InitFuncPtr> >
 						> 
 									s_componentAllocatorMap;
+
+
 	public:	
 		ComponentInterface(bfu::MemBlockBase* mBlock)
 			:EntityBase(mBlock)
@@ -30,11 +32,17 @@ namespace asapgl
 			return s_componentAllocatorMap[hash]( mBlock );
 		}
 
-		//suve component type
-		//virtual void Serialize(bfu::JSONStream& stream);
+		virtual void PushReferenceToMap(const char* memberName, SerializableBase* memberReference)
+		{
+			bfu::SerializableClassBase::PushReferenceToMap(memberName, memberReference);
+			//TODO add serializablefields to vector for easier rendering
+		}
 
-		//resotre component type
-		//virtual void Deserialize(bfu::JSONStream& stream);
+		
+		virtual void OnGUI()
+		{
+			//TODO render serializable fields in imgui
+		}
 	};
 
 
@@ -55,8 +63,6 @@ namespace asapgl
 			s_componentAllocatorMap[ TypeHash() ] = AllocateAndInit;
 		};
 		~ComponentBase(){};
-
-		
 
 		static size_t TypeHash()
 		{

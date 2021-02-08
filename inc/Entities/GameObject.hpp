@@ -67,6 +67,8 @@ namespace asapgl
 		{
 			return b_isGameObjectLoader;
 		}
+
+		void OnGUI();
 	};
 }
 
