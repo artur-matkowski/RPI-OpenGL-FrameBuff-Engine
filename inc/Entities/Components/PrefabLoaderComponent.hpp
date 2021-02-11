@@ -12,7 +12,7 @@ namespace asapgl
 		PrefabLoaderComponent(bfu::MemBlockBase* mBlock)
 			:ComponentBase<PrefabLoaderComponent>(mBlock)
 		{};
-		~PrefabLoaderComponent();
+		~PrefabLoaderComponent(){};
 
 
 		void Init( bfu::MemBlockBase* mBlock )

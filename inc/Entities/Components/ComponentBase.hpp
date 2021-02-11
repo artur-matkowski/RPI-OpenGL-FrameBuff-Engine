@@ -2,22 +2,33 @@
 #define _H_ComponentBase
 #include "EntityBase.hpp"
 #include <unordered_map>
+#include <cxxabi.h>
+#include <vector>
 
 namespace asapgl
 {
+	class ComponentInterface;
+
+	typedef ComponentInterface* (*InitFuncPtr)(bfu::MemBlockBase*);
+
+	struct TypeInfo
+	{
+		InitFuncPtr 		fPtr;
+		const char* 		name;
+	};
+
+	static std::map<size_t
+					,TypeInfo
+					,std::less<size_t>
+					,bfu::custom_allocator< std::pair<const size_t, TypeInfo> >
+					> 
+					s_componentAllocatorMap;
+
+
 	class ComponentInterface: public EntityBase
 	{
-		typedef ComponentInterface* (*InitFuncPtr)(bfu::MemBlockBase*);
-
-		static std::unordered_map<size_t
-						,InitFuncPtr
-						,std::hash<size_t>
-						,std::equal_to<size_t>
-						,bfu::custom_allocator< std::pair<const size_t, InitFuncPtr> >
-						> 
-									s_componentAllocatorMap;
-
-
+	protected:
+		void OnGUInamed(const char* ComponentName);
 	public:	
 		ComponentInterface(bfu::MemBlockBase* mBlock)
 			:EntityBase(mBlock)
@@ -29,7 +40,7 @@ namespace asapgl
 
 		static ComponentInterface* AllocateAndInitObjectFromTypeHash(size_t hash, bfu::MemBlockBase* mBlock)
 		{
-			return s_componentAllocatorMap[hash]( mBlock );
+			return s_componentAllocatorMap[hash].fPtr(mBlock);
 		}
 
 		virtual void PushReferenceToMap(const char* memberName, SerializableBase* memberReference)
@@ -38,53 +49,69 @@ namespace asapgl
 			//TODO add serializablefields to vector for easier rendering
 		}
 
-		virtual void OnGUI();
+		virtual void OnGUI() = 0;
 	};
 	
+	
 	template<class T>
-	class ComponentBase;
-
-	template<class T>
-	class StaticInitializer
+	static ComponentInterface* AllocateAndInit( bfu::MemBlockBase* mBlock )
 	{
-	public:
-		StaticInitializer()
-		{
-			//s_componentAllocatorMap[ ComponentBase<T>::TypeHash() ] = ComponentBase<T>::AllocateAndInit;
-			log::error << "ComponentBase::StaticInitializer " << ComponentBase<T>::TypeHash() << std::endl;
-		}
-		void print(){log::error << "ComponentBase:dupa:StaticInitializer " << ComponentBase<T>::TypeHash() << std::endl;}
-	};
+		T* obj = (T*) mBlock->allocate(1, sizeof(T), alignof(T) );
+		obj->Init(mBlock);
+		return obj;
+	}
 
 
 	template<class T>
 	class ComponentBase: public ComponentInterface
 	{
-		static StaticInitializer<T> initializer;
-	protected:
-		static ComponentInterface* AllocateAndInit( bfu::MemBlockBase* mBlock )
+		static char ClassName[255];
+
+		class StaticInitializer
 		{
-			T* obj = (T*) mBlock->allocate(1, sizeof(T), alignof(T) );
-			obj->Init(mBlock);
-			return obj;
-		}
+		public:
+			StaticInitializer()
+			{
+				s_componentAllocatorMap[ typeid(T).hash_code() ] = TypeInfo{AllocateAndInit<T>, ClassName};
+				size_t size = 255;
+				int status;
+ 				abi::__cxa_demangle(typeid(T).name(), ClassName, &size, &status);
+
+				//log::error << "ComponentBase::StaticInitializer " << ComponentBase<T>::TypeHash() << " " << ClassName << std::endl;
+			}
+		};
+
+		static  StaticInitializer initializer __attribute__((__used__)) ;
+	protected:
+
 	public:	
 		ComponentBase(bfu::MemBlockBase* mBlock)
 			:ComponentInterface(mBlock)
 		{
-			initializer.print();
-			//s_componentAllocatorMap[ TypeHash() ] = AllocateAndInit;
 		};
 		~ComponentBase(){};
 
 		static size_t TypeHash()
 		{
-			return 1;// typeid(T).hash_code();
+			return typeid(T).hash_code();
+		}
+
+		static const char* TypeName()
+		{
+			return ClassName;
+		}
+
+		virtual void OnGUI()
+		{
+			ComponentInterface::OnGUInamed( ClassName );
 		}
 	};
 
 	template<class T>
-	StaticInitializer<T> ComponentBase<T>::initializer;
+	typename ComponentBase<T>::StaticInitializer ComponentBase<T>::initializer __attribute__((__used__));
+
+	template<class T>
+	char ComponentBase<T>::ClassName[255];
 }
 
 #endif
