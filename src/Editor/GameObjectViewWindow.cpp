@@ -1,10 +1,41 @@
 #include "GameObjectViewWindow.hpp"
 #include "GameObject.hpp"
 #include "imgui.h"
+#include <cstdio>
+#include <iostream>
 
 namespace asapgl
 {
-	GameObjectViewWindow::GameObjectViewWindow(){};
+
+void print(Node<size_t>& f, int depth = 0)
+{
+	std::cout << "\n";
+
+	for(int i=0; i<depth; ++i) std::cout << "  ";
+
+	std::cout << f.name();
+
+	for(int i=0; i<f.size(); ++i)
+	{
+		print(*f[i], depth+1);
+	}
+}
+
+	GameObjectViewWindow::GameObjectViewWindow()
+	{
+		//log::error << "GameObjectViewWindow::GameObjectViewWindow()" << std::endl;
+
+		TypeInfo* types = TypeInfo::GetTypeInfo();
+		int typesC = TypeInfo::GetTypeInfoSize();
+		TypeInfo* end = types + typesC;
+
+		for(TypeInfo* it = types; it!=end; ++it)
+		{
+			m_rootNode.FeedEntry( it->name, ":", it->id);
+		}
+
+		print(m_rootNode);
+	};
 	GameObjectViewWindow::~GameObjectViewWindow(){};
 
 	GameObject* _selected = 0;
@@ -24,6 +55,15 @@ namespace asapgl
 		if( _selected!=0 )
 		{
 			_selected->OnGUI();
+
+			ImGui::Spacing();
+			ImGui::Separator();
+			ImGui::Spacing();
+				
+			if( ImGui::Button("Add Component") )
+			{
+				
+			}
 		}
 
 	    ImGui::End();

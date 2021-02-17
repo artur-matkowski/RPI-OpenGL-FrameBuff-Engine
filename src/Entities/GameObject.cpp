@@ -189,13 +189,6 @@ namespace asapgl
 			v_components[i]->OnGUI();
 		}
 
-		ImGui::Spacing();
-		ImGui::Separator();
-		ImGui::Spacing();
-			
-		if( ImGui::Button("Add Component") )
-		{
-
-		}
+		
 	}
 }

@@ -1,28 +1,32 @@
 #ifndef _H_ComponentBase
 #define _H_ComponentBase
 #include "EntityBase.hpp"
+#include "EarlyAllocator.hpp"
 #include <unordered_map>
 #include <cxxabi.h>
 #include <vector>
 
 namespace asapgl
 {
+
+
 	class ComponentInterface;
 
 	typedef ComponentInterface* (*InitFuncPtr)(bfu::MemBlockBase*);
 
+	#define TYPE_INFO_CAPACITY 1024
 	struct TypeInfo
 	{
 		InitFuncPtr 		fPtr;
+		size_t 				id;
 		const char* 		name;
-	};
 
-	static std::map<size_t
-					,TypeInfo
-					,std::less<size_t>
-					,bfu::custom_allocator< std::pair<const size_t, TypeInfo> >
-					> 
-					s_componentAllocatorMap;
+		static void RegisterType(InitFuncPtr, size_t, const char*);
+		static TypeInfo* GetTypeInfo(size_t);
+		static TypeInfo* GetTypeInfo(const char*);
+		static TypeInfo* GetTypeInfo();
+		static int GetTypeInfoSize();
+	};
 
 
 	class ComponentInterface: public EntityBase
@@ -40,7 +44,7 @@ namespace asapgl
 
 		static ComponentInterface* AllocateAndInitObjectFromTypeHash(size_t hash, bfu::MemBlockBase* mBlock)
 		{
-			return s_componentAllocatorMap[hash].fPtr(mBlock);
+			return TypeInfo::GetTypeInfo(hash)->fPtr(mBlock);
 		}
 
 		virtual void PushReferenceToMap(const char* memberName, SerializableBase* memberReference)
@@ -48,6 +52,8 @@ namespace asapgl
 			bfu::SerializableClassBase::PushReferenceToMap(memberName, memberReference);
 			//TODO add serializablefields to vector for easier rendering
 		}
+
+
 
 		virtual void OnGUI() = 0;
 	};
@@ -72,12 +78,13 @@ namespace asapgl
 		public:
 			StaticInitializer()
 			{
-				s_componentAllocatorMap[ typeid(T).hash_code() ] = TypeInfo{AllocateAndInit<T>, ClassName};
+				TypeInfo::RegisterType(AllocateAndInit<T>, typeid(T).hash_code(), ClassName);
+
 				size_t size = 255;
 				int status;
  				abi::__cxa_demangle(typeid(T).name(), ClassName, &size, &status);
 
-				//log::error << "ComponentBase::StaticInitializer " << ComponentBase<T>::TypeHash() << " " << ClassName << std::endl;
+				log::error << "ComponentBase::StaticInitializer " << ComponentBase<T>::TypeHash() << " " << ClassName << std::endl;
 			}
 		};
 
@@ -112,6 +119,8 @@ namespace asapgl
 
 	template<class T>
 	char ComponentBase<T>::ClassName[255];
+
+
 }
 
 #endif

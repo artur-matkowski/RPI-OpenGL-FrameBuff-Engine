@@ -1,6 +1,7 @@
 #ifndef _H_GameObject
 #define _H_GameObject
 #include "EntityBase.hpp"
+#include "ComponentBase.hpp"
 
 namespace asapgl
 {
