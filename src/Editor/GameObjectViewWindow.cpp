@@ -45,6 +45,28 @@ void print(Node<size_t>& f, int depth = 0)
 		_selected = ptr;
 	}
 
+	void OnGUI(Node<size_t>* obj)
+	{
+		if( obj->size() > 0)
+		{
+			if (ImGui::BeginMenu( obj->name() ))
+            {
+            	for(int i=0; i<obj->size(); ++i)
+            	{
+            		OnGUI( (*obj)[i] );
+            	}
+                ImGui::EndMenu();
+            }
+		}
+		else
+		{
+			if( ImGui::MenuItem( obj->name() ) )
+			{
+				log::error << "Clicked " << obj->name() << std::endl;
+			}
+		}
+	}
+
 	void GameObjectViewWindow::OnGUI()
 	{
 		static GameObjectViewWindow _this;
@@ -61,8 +83,12 @@ void print(Node<size_t>& f, int depth = 0)
 			ImGui::Spacing();
 				
 			if( ImGui::Button("Add Component") )
+				ImGui::OpenPopup("Add_Component_popup");
+		    if (ImGui::BeginPopup("Add_Component_popup"))
 			{
-				
+	            asapgl::OnGUI( &_this.m_rootNode );
+
+	            ImGui::EndPopup();
 			}
 		}
 
