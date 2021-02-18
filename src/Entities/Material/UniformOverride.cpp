@@ -1,6 +1,6 @@
 #include "UniformOverride.hpp"
 
-namespace asapgl
+namespace asapi
 {
 	template<class T>
 	UniformOverride<T>::UniformOverride( const Uniform<T>* targetUniform, MaterialInstance* owner)

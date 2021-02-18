@@ -4,7 +4,7 @@
 #include "ResourcePtr.hpp"
 #include "Texture.hpp"
 
-namespace asapgl
+namespace asapi
 {
 	template<>
 	class Uniform< ResourcePtr< Texture > >: public UniformBase

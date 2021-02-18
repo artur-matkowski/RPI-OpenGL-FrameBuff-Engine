@@ -5,7 +5,7 @@
 #include "Mesh.hpp"
 #include "ResourcePtr.hpp"
 
-namespace asapgl
+namespace asapi
 {
 	class RendererComponent: public ComponentBase<RendererComponent>
 	{

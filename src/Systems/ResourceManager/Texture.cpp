@@ -2,7 +2,7 @@
 #include <png.h>
 #include <bitforge/utils/bfu.hpp>
 
-namespace asapgl
+namespace asapi
 {
 	void* Texture::LoadPNG(const char* filename)
 	{

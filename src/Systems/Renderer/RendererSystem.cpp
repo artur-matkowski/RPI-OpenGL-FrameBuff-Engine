@@ -11,7 +11,7 @@
 
 
 
-namespace asapgl{
+namespace asapi{
 	void RendererSystem::SetupEvents()
 	{
     	bfu::CallbackId id;

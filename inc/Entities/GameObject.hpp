@@ -3,7 +3,7 @@
 #include "EntityBase.hpp"
 #include "ComponentBase.hpp"
 
-namespace asapgl
+namespace asapi
 {
 	#define GAMEOBJECT_MAX_NAME_LENGTH 256
 	#define SERIALIZATION_FILE_EXT ".json"

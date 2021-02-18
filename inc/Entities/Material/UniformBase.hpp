@@ -3,7 +3,7 @@
 #include "object.hpp"
 #include <bitforge/utils/bfu.hpp>
 
-namespace asapgl
+namespace asapi
 {
 	class MaterialType;
 	class MaterialInstance;

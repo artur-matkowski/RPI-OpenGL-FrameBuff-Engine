@@ -2,7 +2,7 @@
 #include "Systems.hpp"
 #include "imgui.h"
 
-namespace asapgl
+namespace asapi
 {
 	void GameObject::RegisterChild(GameObject* newChild)
 	{

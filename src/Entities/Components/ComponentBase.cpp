@@ -2,7 +2,7 @@
 #include "Systems.hpp"
 #include "imgui.h"
 
-namespace asapgl
+namespace asapi
 {
 	TypeInfo 	a_typeInfo[TYPE_INFO_CAPACITY];
 	int 		i_typeInfoCount = 0;

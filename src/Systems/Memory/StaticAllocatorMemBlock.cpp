@@ -1,6 +1,6 @@
 #include "StaticAllocatorMemBlock.hpp"
 
-namespace asapgl
+namespace asapi
 {
 	StaticAllocatorMemBlock::StaticAllocatorMemBlock(void* memStart, size_t memSize, const char* name)
 		:bfu::MemBlockBase(name)

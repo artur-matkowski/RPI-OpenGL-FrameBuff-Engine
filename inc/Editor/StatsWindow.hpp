@@ -1,7 +1,7 @@
 #ifndef H_StatsWindow
 #define H_StatsWindow
 
-namespace asapgl
+namespace asapi
 {
 	class StatsWindow
 	{

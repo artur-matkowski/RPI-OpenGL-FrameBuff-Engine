@@ -5,7 +5,7 @@
 #include <ratio>
 
 
-namespace asapgl
+namespace asapi
 {
 	class TimeSystem
 	{

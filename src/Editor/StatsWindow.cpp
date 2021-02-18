@@ -3,7 +3,7 @@
 #include "Systems.hpp"
 
 
-namespace asapgl
+namespace asapi
 {
 	void StatsWindow::OnGUI()
 	{

@@ -4,7 +4,7 @@
 #include "imgui.h"
 #endif
 
-namespace asapgl
+namespace asapi
 {
 	void convert(size_t& big, size_t& small)
 	{
@@ -18,6 +18,23 @@ namespace asapgl
 	    convert(mb, kb);
 	    convert(gb, mb);
 	}
+
+
+    void MemoryManagmentSystem::RegisterMemBlock(bfu::MemBlockBase* memBlock)
+    {
+        v_memBlocks.emplace_back(memBlock);
+    }
+    void MemoryManagmentSystem::UnRegisterMemBlock(bfu::MemBlockBase* memBlock)
+    {
+        for(auto it = v_memBlocks.begin(); it!=v_memBlocks.end(); ++it)
+        {
+            if(*it==memBlock)
+            {
+                v_memBlocks.erase(it);
+                break;
+            }
+        }
+    }
 
     bfu::MmappedMemBlock* MemoryManagmentSystem::ObtainPrefabMemBlock(size_t size, GameObject* &ret_entryPoint, const char* description)
     {

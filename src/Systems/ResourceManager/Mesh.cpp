@@ -1,6 +1,6 @@
 #include "Mesh.hpp"
 
-namespace asapgl
+namespace asapi
 {
 	Mesh::Mesh(const char* filename)
 	{

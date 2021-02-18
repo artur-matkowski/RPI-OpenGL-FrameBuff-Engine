@@ -8,7 +8,7 @@
 
 #define AsciMap 
 
-namespace asapgl
+namespace asapi
 {
 	class devinput
 	{
@@ -25,8 +25,8 @@ namespace asapgl
 		int 				m_mouseXmax = -1;
 		int 				m_mouseYmax = -1;
 
-		asapgl::keycodes		m_keyCodeMap[1+(int)asapgl::keycodes::unknown] = {asapgl::keycodes::unknown};
-		std::map<int, asapgl::mousecodes>
+		asapi::keycodes		m_keyCodeMap[1+(int)asapi::keycodes::unknown] = {asapi::keycodes::unknown};
+		std::map<int, asapi::mousecodes>
 							m_mouseCodeMap;
 
 

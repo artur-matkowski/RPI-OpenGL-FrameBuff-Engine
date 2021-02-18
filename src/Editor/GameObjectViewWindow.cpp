@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <iostream>
 
-namespace asapgl
+namespace asapi
 {
 
 void print(Node<size_t>& f, int depth = 0)
@@ -86,7 +86,7 @@ void print(Node<size_t>& f, int depth = 0)
 				ImGui::OpenPopup("Add_Component_popup");
 		    if (ImGui::BeginPopup("Add_Component_popup"))
 			{
-	            asapgl::OnGUI( &_this.m_rootNode );
+	            asapi::OnGUI( &_this.m_rootNode );
 
 	            ImGui::EndPopup();
 			}

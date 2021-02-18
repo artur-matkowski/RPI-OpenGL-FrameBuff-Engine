@@ -2,7 +2,7 @@
 #define H_PrefabLoaderComponent
 #include "ComponentBase.hpp"
 
-namespace asapgl
+namespace asapi
 {
 	class PrefabLoaderComponent: public ComponentBase<PrefabLoaderComponent>
 	{

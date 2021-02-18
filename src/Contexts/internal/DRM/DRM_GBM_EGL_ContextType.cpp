@@ -146,7 +146,7 @@ static void clean_up () {
 	gbm_device_destroy (gbm_device);
 }
 
-namespace asapgl
+namespace asapi
 {
 
 	void DRM_GBM_EGL_ContextType::Init(const int argc, const char** argv)

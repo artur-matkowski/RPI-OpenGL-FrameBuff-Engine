@@ -2,7 +2,7 @@
 #define _H_MaterialInterface
 #include "object.hpp"
 
-namespace asapgl
+namespace asapi
 {
 	class MaterialInterface: public object
 	{

@@ -6,7 +6,7 @@
 #endif
 
 
-namespace asapgl{
+namespace asapi{
 
 	
 

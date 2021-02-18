@@ -7,7 +7,7 @@
 #include "RendererComponent.hpp"
 
 
-namespace asapgl{
+namespace asapi{
 
 	class RendererSystem: public object
 	{

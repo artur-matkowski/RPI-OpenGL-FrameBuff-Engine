@@ -3,7 +3,7 @@
 #include <bitforge/utils/bfu.hpp>
 #include <vector>
 
-namespace asapgl
+namespace asapi
 {
 	class GameObject;
 	
@@ -46,6 +46,9 @@ namespace asapgl
 		#ifdef IS_EDITOR
 		void OnGUI();
 		#endif
+
+		void RegisterMemBlock(bfu::MemBlockBase* memBlock);
+    	void UnRegisterMemBlock(bfu::MemBlockBase* memBlock);
 
 		template<class T>
 		T* allocateSystemInBlock (std::size_t n) 

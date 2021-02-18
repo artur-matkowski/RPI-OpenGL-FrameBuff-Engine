@@ -3,7 +3,7 @@
 #include "UniqueID.hpp"
 #include "object.hpp"
 
-namespace asapgl
+namespace asapi
 {
 	class EntityBase: public object, public bfu::SerializableClassBase
 	{

@@ -2,7 +2,7 @@
 #define _H_Shader
 #include <GLES2/gl2.h>
 
-namespace asapgl
+namespace asapi
 {
 	class Shader
 	{

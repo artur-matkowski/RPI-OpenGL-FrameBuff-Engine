@@ -15,7 +15,7 @@ ResourcePtr<T>::~ResourcePtr()
 	    if( *reference == 1 )
 	    {
 	        delete pData;
-	        asapgl::SYSTEMS::GetObject().RESOURCES.dispouseResource(this);
+	        asapi::SYSTEMS::GetObject().RESOURCES.dispouseResource(this);
 	        pData = 0;
 	    }
 	    else if( *reference == 0 )
@@ -36,7 +36,7 @@ void ResourcePtr<T>::Rebuild(T* pValue)
 	    if( *reference == 1 )
 	    {
 	        delete pData;
-	        asapgl::SYSTEMS::GetObject().RESOURCES.dispouseResource(this);
+	        asapi::SYSTEMS::GetObject().RESOURCES.dispouseResource(this);
 	        pData = 0;
 	    }
 	    else if( *reference == 0 )
@@ -60,7 +60,7 @@ ResourcePtr<T>& ResourcePtr<T>::operator = (const ResourcePtr<T>& sp)
 		    if( *reference == 1 )
 		    {
 		        delete pData;
-	        asapgl::SYSTEMS::GetObject().RESOURCES.dispouseResource(this);
+	        asapi::SYSTEMS::GetObject().RESOURCES.dispouseResource(this);
 		        pData = 0;
 		    }
 		    else if( *reference == 0 )
@@ -77,7 +77,7 @@ ResourcePtr<T>& ResourcePtr<T>::operator = (const ResourcePtr<T>& sp)
 }
 
 
-template class ResourcePtr<asapgl::Texture>;
-template class ResourcePtr<asapgl::Shader>;
-template class ResourcePtr<asapgl::MaterialType>;
-template class ResourcePtr<asapgl::Mesh>;
+template class ResourcePtr<asapi::Texture>;
+template class ResourcePtr<asapi::Shader>;
+template class ResourcePtr<asapi::MaterialType>;
+template class ResourcePtr<asapi::Mesh>;

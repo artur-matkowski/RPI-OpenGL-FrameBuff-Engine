@@ -3,7 +3,7 @@
 #include <EGL/egl.h>
 
 
-namespace asapgl{
+namespace asapi{
 	ContextBase::ContextBase()
 	{
 		m_frameDelay = std::chrono::duration<double> (1.0/60.0);

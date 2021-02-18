@@ -3,7 +3,7 @@
 #include <time.h>
 #include "Systems.hpp"
 
-namespace asapgl
+namespace asapi
 {
 	
 	UniqueID::UniqueID( bfu::MemBlockBase* mBlock )

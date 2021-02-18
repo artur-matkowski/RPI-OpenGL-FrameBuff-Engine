@@ -4,7 +4,7 @@
 #include "HierarchyWindow.hpp"
 #include "GameObjectViewWindow.hpp"
 
-namespace asapgl
+namespace asapi
 {
 
 	EditorSystem::EditorSystem()

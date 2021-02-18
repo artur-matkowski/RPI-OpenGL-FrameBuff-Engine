@@ -1,12 +1,11 @@
 #ifndef _H_ComponentBase
 #define _H_ComponentBase
 #include "EntityBase.hpp"
-#include "EarlyAllocator.hpp"
 #include <unordered_map>
 #include <cxxabi.h>
 #include <vector>
 
-namespace asapgl
+namespace asapi
 {
 
 

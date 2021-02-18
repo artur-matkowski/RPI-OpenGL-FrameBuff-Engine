@@ -4,7 +4,7 @@
 #include "GameObjectViewWindow.hpp"
 
 
-namespace asapgl
+namespace asapi
 {
 	HierarchyWindow::HierarchyWindow()
 		:v_SelectedGameObjects( &SYSTEMS::GetObject().MEMORY.GetSystemsAllocator() )

@@ -11,7 +11,7 @@
 #include "EditorSystem.hpp"
 #include <stdlib.h>
 
-namespace asapgl
+namespace asapi
 {
 	class SYSTEMS: public object
 	{

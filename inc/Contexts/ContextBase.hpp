@@ -9,7 +9,7 @@
 #include "object.hpp"
 #include "KeyCodes.hpp"
 
-namespace asapgl
+namespace asapi
 {
 	const EGLint attributes[] = {
 	    EGL_BLUE_SIZE, 8, 
@@ -182,8 +182,8 @@ namespace asapgl
 		{
 			m_Xpos = -1;
 			m_Ypos = -1;
-			m_key = (int) asapgl::mousecodes::unknown;
-			m_state = (int) asapgl::keystates::unknown;
+			m_key = (int) asapi::mousecodes::unknown;
+			m_state = (int) asapi::keystates::unknown;
 		}
 
 		MouseClickEvent(const MouseClickEvent& copy)
@@ -221,8 +221,8 @@ namespace asapgl
 			,m_state("m_state",this)
 			,m_char("m_char",this)
 		{
-			m_key = (int) asapgl::mousecodes::unknown;
-			m_key = (int) asapgl::keystates::unknown;
+			m_key = (int) asapi::mousecodes::unknown;
+			m_key = (int) asapi::keystates::unknown;
 			m_char = (char)0;
 		}
 

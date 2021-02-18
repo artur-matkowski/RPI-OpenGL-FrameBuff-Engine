@@ -3,7 +3,7 @@
 #include <GLES2/gl2.h>
 #include "glm.hpp"
 
-namespace asapgl
+namespace asapi
 {
 	class Mesh
 	{

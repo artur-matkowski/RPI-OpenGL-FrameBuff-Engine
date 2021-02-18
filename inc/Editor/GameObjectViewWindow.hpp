@@ -6,7 +6,7 @@
 
 #define MAX_COMPONENT_PATH_SIZE 1024
 
-namespace asapgl
+namespace asapi
 {
 	class GameObject;
 	

@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <bitforge/utils/bfu.hpp>
 
-namespace asapgl
+namespace asapi
 {
 	class UniqueID: public bfu::SerializableClassBase
 	{

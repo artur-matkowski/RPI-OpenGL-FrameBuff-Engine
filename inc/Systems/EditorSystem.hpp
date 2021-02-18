@@ -2,7 +2,7 @@
 #define _H_EditorSystem
 #ifdef IS_EDITOR
 
-namespace asapgl
+namespace asapi
 {
 	class EditorSystem
 	{		

@@ -1,7 +1,7 @@
 #include "Systems.hpp"
 #include "RendererComponent.hpp"
 
-namespace asapgl
+namespace asapi
 {
 	RendererComponent::RendererComponent(bfu::MemBlockBase* mBlock)
 		:ComponentBase<RendererComponent>(mBlock)

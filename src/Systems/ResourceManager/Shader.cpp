@@ -1,7 +1,7 @@
 #include "Shader.hpp"
 #include <bitforge/utils/bfu.hpp>
 
-namespace asapgl
+namespace asapi
 {
 	struct
 	{

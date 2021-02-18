@@ -10,7 +10,7 @@
 
 #ifdef USE_XLIB
 
-namespace asapgl
+namespace asapi
 {
 
 

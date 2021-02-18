@@ -6,7 +6,7 @@
 #include "backends/imgui_impl_opengl3.h"
 
 
-namespace asapgl
+namespace asapi
 {
 	IMGUI_IMPL_API bool     ImGui_ImplXlib_InitForOpenGL(void* eglWindow, void* context);
 	IMGUI_IMPL_API void     ImGui_ImplXlib_NewFrame();

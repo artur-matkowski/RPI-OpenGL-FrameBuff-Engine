@@ -34,7 +34,7 @@
 	#endif
 #endif
 
-namespace asapgl
+namespace asapi
 {
 	class object{};
 }

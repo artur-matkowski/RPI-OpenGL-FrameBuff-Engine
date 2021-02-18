@@ -3,7 +3,7 @@
 #include "MaterialType.hpp"
 #include "UniformOverride.hpp"
 
-namespace asapgl
+namespace asapi
 {
 	class MaterialInstance: public object//, public bfu::SerializableClassBase
 	{

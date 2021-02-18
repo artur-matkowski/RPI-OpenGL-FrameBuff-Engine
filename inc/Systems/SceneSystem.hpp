@@ -2,7 +2,7 @@
 #define _H_SceneSystem
 #include "GameObject.hpp"
 
-namespace asapgl
+namespace asapi
 {
 	class SceneSystem
 	{

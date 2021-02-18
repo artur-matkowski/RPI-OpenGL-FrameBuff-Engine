@@ -1,6 +1,6 @@
 #include "PrefabLoaderComponent.hpp"
 
-namespace asapgl
+namespace asapi
 {
 	void PrefabLoaderComponent::OnAttach()
 	{

@@ -4,7 +4,7 @@
 #include "UniformOverride.hpp"
 #include <gtc/type_ptr.hpp>
 
-namespace asapgl
+namespace asapi
 {
 	template<class T>
 	void Uniform<T>::SetUniform(const T& in)

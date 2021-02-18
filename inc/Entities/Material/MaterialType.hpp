@@ -8,7 +8,7 @@
 #include <map>
 
 
-namespace asapgl
+namespace asapi
 {
 	class MaterialType: public object
 	{

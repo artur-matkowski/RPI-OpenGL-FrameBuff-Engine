@@ -2,7 +2,7 @@
 #include "ImguiXlib.hpp"
 #include "Systems.hpp"
 
-namespace asapgl
+namespace asapi
 {
 
 	SceneSystem::SceneSystem( bfu::MemBlockBase* mBlock )

@@ -2,7 +2,7 @@
 #define H_StaticAllocatorMemBlock
 #include <bitforge/utils/bfu.hpp>
 
-namespace asapgl
+namespace asapi
 {
 	class StaticAllocatorMemBlock: public bfu::MemBlockBase
 	{

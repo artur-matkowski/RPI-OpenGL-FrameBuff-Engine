@@ -3,7 +3,7 @@
 #include <GLES2/gl2.h>
 
 
-namespace asapgl
+namespace asapi
 {
 
 	MaterialType::~MaterialType()

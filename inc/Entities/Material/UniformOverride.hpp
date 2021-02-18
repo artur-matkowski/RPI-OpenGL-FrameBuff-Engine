@@ -3,7 +3,7 @@
 #include "MaterialInstance.hpp"
 #include "MaterialType.hpp"
 
-namespace asapgl
+namespace asapi
 {
 	class MaterialInstance;
 

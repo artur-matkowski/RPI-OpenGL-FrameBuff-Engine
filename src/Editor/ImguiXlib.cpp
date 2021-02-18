@@ -8,7 +8,7 @@
 #endif
 #ifdef IS_EDITOR
 
-namespace asapgl
+namespace asapi
 {
 	static Xlib_EGL_ContextType::EGLWindow* g_Window = 0;
 	static double               			g_Time = 0.0;
@@ -56,28 +56,28 @@ namespace asapgl
 	    io.BackendPlatformName = "imgui_impl_xlib";
 
 	    // Keyboard mapping. ImGui will use those indices to peek into the io.KeysDown[] array.
-	    io.KeyMap[ImGuiKey_Tab] 		= (int) asapgl::keycodes::snapi_tab;
-	    io.KeyMap[ImGuiKey_LeftArrow] 	= (int) asapgl::keycodes::snapi_left;
-	    io.KeyMap[ImGuiKey_RightArrow] 	= (int) asapgl::keycodes::snapi_right;
-	    io.KeyMap[ImGuiKey_UpArrow] 	= (int) asapgl::keycodes::snapi_up;
-	    io.KeyMap[ImGuiKey_DownArrow] 	= (int) asapgl::keycodes::snapi_down;
-	    io.KeyMap[ImGuiKey_PageUp] 		= (int) asapgl::keycodes::snapi_pageup;
-	    io.KeyMap[ImGuiKey_PageDown] 	= (int) asapgl::keycodes::snapi_pagedown;
-	    io.KeyMap[ImGuiKey_Home] 		= (int) asapgl::keycodes::snapi_home;
-	    io.KeyMap[ImGuiKey_End] 		= (int) asapgl::keycodes::snapi_end;
-	    io.KeyMap[ImGuiKey_Insert] 		= (int) asapgl::keycodes::snapi_insert;
-	    io.KeyMap[ImGuiKey_Delete] 		= (int) asapgl::keycodes::snapi_delete;
-	    io.KeyMap[ImGuiKey_Backspace]	= (int) asapgl::keycodes::snapi_backspace;
-	    io.KeyMap[ImGuiKey_Space] 		= (int) asapgl::keycodes::snapi_space;
-	    io.KeyMap[ImGuiKey_Enter] 		= (int) asapgl::keycodes::snapi_enter;
-	    io.KeyMap[ImGuiKey_Escape] 		= (int) asapgl::keycodes::snapi_esc;
-	    io.KeyMap[ImGuiKey_KeyPadEnter] = (int) asapgl::keycodes::snapi_kpenter;
-	    io.KeyMap[ImGuiKey_A] 			= (int) asapgl::keycodes::snapi_a;
-	    io.KeyMap[ImGuiKey_C] 			= (int) asapgl::keycodes::snapi_c;
-	    io.KeyMap[ImGuiKey_V] 			= (int) asapgl::keycodes::snapi_v;
-	    io.KeyMap[ImGuiKey_X] 			= (int) asapgl::keycodes::snapi_x;
-	    io.KeyMap[ImGuiKey_Y] 			= (int) asapgl::keycodes::snapi_y;
-	    io.KeyMap[ImGuiKey_Z] 			= (int) asapgl::keycodes::snapi_z;
+	    io.KeyMap[ImGuiKey_Tab] 		= (int) asapi::keycodes::snapi_tab;
+	    io.KeyMap[ImGuiKey_LeftArrow] 	= (int) asapi::keycodes::snapi_left;
+	    io.KeyMap[ImGuiKey_RightArrow] 	= (int) asapi::keycodes::snapi_right;
+	    io.KeyMap[ImGuiKey_UpArrow] 	= (int) asapi::keycodes::snapi_up;
+	    io.KeyMap[ImGuiKey_DownArrow] 	= (int) asapi::keycodes::snapi_down;
+	    io.KeyMap[ImGuiKey_PageUp] 		= (int) asapi::keycodes::snapi_pageup;
+	    io.KeyMap[ImGuiKey_PageDown] 	= (int) asapi::keycodes::snapi_pagedown;
+	    io.KeyMap[ImGuiKey_Home] 		= (int) asapi::keycodes::snapi_home;
+	    io.KeyMap[ImGuiKey_End] 		= (int) asapi::keycodes::snapi_end;
+	    io.KeyMap[ImGuiKey_Insert] 		= (int) asapi::keycodes::snapi_insert;
+	    io.KeyMap[ImGuiKey_Delete] 		= (int) asapi::keycodes::snapi_delete;
+	    io.KeyMap[ImGuiKey_Backspace]	= (int) asapi::keycodes::snapi_backspace;
+	    io.KeyMap[ImGuiKey_Space] 		= (int) asapi::keycodes::snapi_space;
+	    io.KeyMap[ImGuiKey_Enter] 		= (int) asapi::keycodes::snapi_enter;
+	    io.KeyMap[ImGuiKey_Escape] 		= (int) asapi::keycodes::snapi_esc;
+	    io.KeyMap[ImGuiKey_KeyPadEnter] = (int) asapi::keycodes::snapi_kpenter;
+	    io.KeyMap[ImGuiKey_A] 			= (int) asapi::keycodes::snapi_a;
+	    io.KeyMap[ImGuiKey_C] 			= (int) asapi::keycodes::snapi_c;
+	    io.KeyMap[ImGuiKey_V] 			= (int) asapi::keycodes::snapi_v;
+	    io.KeyMap[ImGuiKey_X] 			= (int) asapi::keycodes::snapi_x;
+	    io.KeyMap[ImGuiKey_Y] 			= (int) asapi::keycodes::snapi_y;
+	    io.KeyMap[ImGuiKey_Z] 			= (int) asapi::keycodes::snapi_z;
 
 	    //io.SetClipboardTextFn = ImGui_ImplXlib_SetClipboardText;
 	    //io.GetClipboardTextFn = ImGui_ImplXlib_GetClipboardText;
@@ -91,7 +91,7 @@ namespace asapgl
 		    MouseClickEvent* args = (MouseClickEvent*)&a;
 			static ImGuiIO& io = ImGui::GetIO();
 
-		    if (args->m_state == (int)asapgl::keystates::snapi_down &&
+		    if (args->m_state == (int)asapi::keystates::snapi_down &&
 		    	 (int)args->m_key >= 0 &&
 		    	 (int)args->m_key < IM_ARRAYSIZE(g_MouseJustPressed))
 		    {
@@ -100,21 +100,21 @@ namespace asapgl
 		    if( (int)args->m_key >= 0 &&
 		    	 (int)args->m_key < IM_ARRAYSIZE(g_MouseJustPressed) )
 		    {
-		    	g_MouseButtonState[args->m_key] = args->m_state == (int)asapgl::keystates::snapi_down;
+		    	g_MouseButtonState[args->m_key] = args->m_state == (int)asapi::keystates::snapi_down;
 		    }
 
-		    if( args->m_key == (int)asapgl::mousecodes::snapi_wheelY )
+		    if( args->m_key == (int)asapi::mousecodes::snapi_wheelY )
 		    {
-		    	if( args->m_state == (int)asapgl::keystates::snapi_down )
+		    	if( args->m_state == (int)asapi::keystates::snapi_down )
 			    	io.MouseWheel -= (float)1.0;
-		    	else if( args->m_state == (int)asapgl::keystates::snapi_up )
+		    	else if( args->m_state == (int)asapi::keystates::snapi_up )
 			    	io.MouseWheel += (float)1.0;
 		    }
-		    else if( args->m_key == (int)asapgl::mousecodes::snapi_wheelX )
+		    else if( args->m_key == (int)asapi::mousecodes::snapi_wheelX )
 		    {
-		    	if( args->m_state == (int)asapgl::keystates::snapi_down )
+		    	if( args->m_state == (int)asapi::keystates::snapi_down )
 			    	io.MouseWheelH -= (float)1.0;
-		    	else if( args->m_state == (int)asapgl::keystates::snapi_up )
+		    	else if( args->m_state == (int)asapi::keystates::snapi_up )
 			    	io.MouseWheelH += (float)1.0;
 		    }
 	    });
@@ -124,18 +124,18 @@ namespace asapgl
 		    KeyboardEvent* args = (KeyboardEvent*)&a;
 			static ImGuiIO& io = ImGui::GetIO();
 
-			if( args->m_char != '\0' && args->m_state == (int)asapgl::keystates::snapi_down )
+			if( args->m_char != '\0' && args->m_state == (int)asapi::keystates::snapi_down )
 	    		io.AddInputCharacter( args->m_char );
 
-			if (args->m_state == (int)asapgl::keystates::snapi_down)
+			if (args->m_state == (int)asapi::keystates::snapi_down)
 		        io.KeysDown[args->m_key] = true;
-		    if (args->m_state == (int)asapgl::keystates::snapi_up)
+		    if (args->m_state == (int)asapi::keystates::snapi_up)
 		        io.KeysDown[args->m_key] = false;
 
 		    // Modifiers are not reliable across systems
-		    io.KeyCtrl = io.KeysDown[(int)asapgl::keycodes::snapi_leftctrl] || io.KeysDown[(int)asapgl::keycodes::snapi_rightctrl];
-		    io.KeyShift = io.KeysDown[(int)asapgl::keycodes::snapi_leftshift] || io.KeysDown[(int)asapgl::keycodes::snapi_rightshift];
-		    io.KeyAlt = io.KeysDown[(int)asapgl::keycodes::snapi_leftalt] || io.KeysDown[(int)asapgl::keycodes::snapi_rightalt];
+		    io.KeyCtrl = io.KeysDown[(int)asapi::keycodes::snapi_leftctrl] || io.KeysDown[(int)asapi::keycodes::snapi_rightctrl];
+		    io.KeyShift = io.KeysDown[(int)asapi::keycodes::snapi_leftshift] || io.KeysDown[(int)asapi::keycodes::snapi_rightshift];
+		    io.KeyAlt = io.KeysDown[(int)asapi::keycodes::snapi_leftalt] || io.KeysDown[(int)asapi::keycodes::snapi_rightalt];
 		    //io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
 	    });
 

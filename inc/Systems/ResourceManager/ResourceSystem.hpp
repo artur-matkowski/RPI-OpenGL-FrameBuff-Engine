@@ -8,7 +8,7 @@
 #include "MaterialType.hpp"
 #include "Mesh.hpp"
 
-namespace asapgl
+namespace asapi
 {
 
 	class ResourceSystem

@@ -4,7 +4,7 @@
 #include "DevInput.hpp"
 #include "glm.hpp"
 
-namespace asapgl
+namespace asapi
 {
 
 	class DRM_GBM_EGL_ContextType: public ContextBase
