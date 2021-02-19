@@ -19,6 +19,8 @@ namespace asapi
 			return *p_root;
 		}
 
+		void Init( bfu::MemBlockBase* mBlock );
+
 		void OnGUI();
 
 		bfu::JSONStream& GetJSONStreamWorkBuffer();

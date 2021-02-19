@@ -33,6 +33,8 @@ namespace asapi
 	{
 		m_myName.resize(GAMEOBJECT_MAX_NAME_LENGTH, '\0');
 		m_myName = "GameObject";
+
+		AddComponent( TypeInfo::GetTypeInfo("asapi::Transform3D")->id );
 	}
 
 	GameObject::GameObject( const GameObject& cp )

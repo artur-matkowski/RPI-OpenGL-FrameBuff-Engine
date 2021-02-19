@@ -57,6 +57,8 @@ namespace asapi
 		#endif
 		RENDERER.Init();
 
+		SCENE.Init( &MEMORY.GetSystemsAllocator() );
+
 		log::info << "GL initialized with version: " << glGetString(GL_VERSION) << std::endl;
 		log::info << "GL vendor: " << glGetString(GL_VENDOR) << std::endl;
 		log::info << "GL renderer: " << glGetString(GL_RENDERER) << std::endl;

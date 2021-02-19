@@ -68,4 +68,10 @@ namespace asapi
 	{
 		return i_typeInfoCount;
 	}
+
+
+	virtual void ComponentInterface::OnGUI()
+	{
+
+	}
 }

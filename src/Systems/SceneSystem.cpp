@@ -11,7 +11,10 @@ namespace asapi
 		#ifdef IS_EDITOR
 		m_stream.resize(1024*1024*10); // reserve 10 Mb buff for reading json
 		#endif
+	}
 
+	void SceneSystem::Init( bfu::MemBlockBase* mBlock )
+	{
 		p_root = (GameObject*) mBlock->allocate(1, sizeof(GameObject), alignof(GameObject));
 		p_root->Init(mBlock);
 		p_root->SetName("EntryPoint");
@@ -32,7 +35,6 @@ namespace asapi
 		pgo->Init(mBlock);
 		pgo->OnAttach(p_root);
 		pgo->SetName("GameObject 3");
-
 	}
 
 	void SceneSystem::OnGUI()

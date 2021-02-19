@@ -1,13 +1,17 @@
 #ifndef _H_ComponentBase
 #define _H_ComponentBase
 #include "EntityBase.hpp"
-#include <unordered_map>
 #include <cxxabi.h>
 #include <vector>
 
 namespace asapi
 {
-
+	// template<class T>
+	// class SerializableVar: public bfu::SerializableVar
+	// {
+	// public:
+	// 	using bfu::SerializableVar::bfu::SerializableVar;
+	// };
 
 	class ComponentInterface;
 	class GameObject;
@@ -86,8 +90,6 @@ namespace asapi
 				size_t size = 255;
 				int status;
  				abi::__cxa_demangle(typeid(T).name(), ClassName, &size, &status);
-
-				log::error << "ComponentBase::StaticInitializer " << ClassName << std::endl;
 			}
 		};
 
