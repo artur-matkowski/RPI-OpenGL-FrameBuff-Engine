@@ -101,6 +101,10 @@ namespace asapi
 		};
 		~ComponentBase(){};
 
+		void Init( bfu::MemBlockBase* mBlock )
+		{
+			new (this) T(mBlock);
+		};
 		
 		virtual size_t TypeHash() override
 		{

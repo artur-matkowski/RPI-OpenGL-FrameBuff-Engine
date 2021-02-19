@@ -22,10 +22,7 @@ namespace asapi
 		~RendererComponent(){};
 
 
-		void Init( bfu::MemBlockBase* mBlock )
-		{
-			new (this) RendererComponent(mBlock);
-		};
+	
 	
 		inline void Render()
 		{

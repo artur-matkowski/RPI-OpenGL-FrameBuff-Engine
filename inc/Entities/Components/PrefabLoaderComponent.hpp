@@ -15,10 +15,7 @@ namespace asapi
 		~PrefabLoaderComponent(){};
 
 
-		void Init( bfu::MemBlockBase* mBlock )
-		{
-			new (this) PrefabLoaderComponent(mBlock);
-		};
+		
 	};
 }
 
