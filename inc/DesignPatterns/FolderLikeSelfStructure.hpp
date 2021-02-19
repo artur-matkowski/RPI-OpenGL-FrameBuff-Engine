@@ -105,7 +105,7 @@ public:
 			return;
 
 
-		this->operator[](m_name)->FeedEntry(path, delimeters_v, path_c, delimeters_c);
+		this->operator[](m_name)->FeedEntry(path, delimeters_v, path_c, delimeters_c, in_info);
 	}
 
 

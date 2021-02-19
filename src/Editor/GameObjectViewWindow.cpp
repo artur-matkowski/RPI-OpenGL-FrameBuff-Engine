@@ -62,7 +62,7 @@ void print(Node<size_t>& f, int depth = 0)
 		{
 			if( ImGui::MenuItem( obj->name() ) )
 			{
-				log::error << "Clicked " << obj->name() << std::endl;
+				_selected->AddComponent( obj->m_infoBuffer );
 			}
 		}
 	}

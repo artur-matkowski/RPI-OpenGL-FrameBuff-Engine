@@ -19,9 +19,6 @@ namespace asapi
 		{
 			new (this) PrefabLoaderComponent(mBlock);
 		};
-
-		virtual void OnAttach();
-		virtual void OnDetach();
 	};
 }
 

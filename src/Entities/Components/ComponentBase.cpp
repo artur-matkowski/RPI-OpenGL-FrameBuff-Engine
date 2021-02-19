@@ -15,11 +15,22 @@ namespace asapi
 		ImGui::Text("Debug Component renderer for component %s", ComponentName); 
 	}
 
+	void ComponentInterface::Attached(GameObject* owner)
+	{
+		m_owner = owner;
+		this->OnAttach();	
+	}
+	void ComponentInterface::Detached()
+	{
+		this->OnDetach();	
+	}
 
-	void TypeInfo::RegisterType(InitFuncPtr fPtr, size_t id, const char* name)
+
+	void TypeInfo::RegisterType(InitFuncPtr fPtr, size_t id, size_t sizeOf, const char* name)
 	{
 		a_typeInfo[i_typeInfoCount].fPtr = fPtr;
 		a_typeInfo[i_typeInfoCount].id = id;
+		a_typeInfo[i_typeInfoCount].sizeOf = sizeOf;
 		a_typeInfo[i_typeInfoCount].name = name;
 		++i_typeInfoCount;
 	}

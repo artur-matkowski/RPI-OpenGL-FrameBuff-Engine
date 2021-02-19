@@ -10,6 +10,7 @@ namespace asapi
 
 
 	class ComponentInterface;
+	class GameObject;
 
 	typedef ComponentInterface* (*InitFuncPtr)(bfu::MemBlockBase*);
 
@@ -18,9 +19,10 @@ namespace asapi
 	{
 		InitFuncPtr 		fPtr;
 		size_t 				id;
+		size_t 				sizeOf;
 		const char* 		name;
 
-		static void RegisterType(InitFuncPtr, size_t, const char*);
+		static void RegisterType(InitFuncPtr, size_t, size_t, const char*);
 		static TypeInfo* GetTypeInfo(size_t);
 		static TypeInfo* GetTypeInfo(const char*);
 		static TypeInfo* GetTypeInfo();
@@ -32,14 +34,15 @@ namespace asapi
 	{
 	protected:
 		void OnGUInamed(const char* ComponentName);
+		GameObject *m_owner = nullptr;
 	public:	
 		ComponentInterface(bfu::MemBlockBase* mBlock)
 			:EntityBase(mBlock)
 		{};
 		~ComponentInterface(){};
 		
-		virtual void OnAttach() = 0;
-		virtual void OnDetach() = 0;
+		void Attached(GameObject* owner);
+		void Detached();
 
 		static ComponentInterface* AllocateAndInitObjectFromTypeHash(size_t hash, bfu::MemBlockBase* mBlock)
 		{
@@ -52,9 +55,10 @@ namespace asapi
 			//TODO add serializablefields to vector for easier rendering
 		}
 
-
-
+		virtual void OnAttach(){};
+		virtual void OnDetach(){};
 		virtual void OnGUI() = 0;
+		virtual size_t TypeHash() = 0;
 	};
 	
 	
@@ -77,13 +81,13 @@ namespace asapi
 		public:
 			StaticInitializer()
 			{
-				TypeInfo::RegisterType(AllocateAndInit<T>, typeid(T).hash_code(), ClassName);
+				TypeInfo::RegisterType(AllocateAndInit<T>, typeid(T).hash_code(), sizeof(T), ClassName);
 
 				size_t size = 255;
 				int status;
  				abi::__cxa_demangle(typeid(T).name(), ClassName, &size, &status);
 
-				log::error << "ComponentBase::StaticInitializer " << ComponentBase<T>::TypeHash() << " " << ClassName << std::endl;
+				log::error << "ComponentBase::StaticInitializer " << ClassName << std::endl;
 			}
 		};
 
@@ -97,7 +101,8 @@ namespace asapi
 		};
 		~ComponentBase(){};
 
-		static size_t TypeHash()
+		
+		virtual size_t TypeHash() override
 		{
 			return typeid(T).hash_code();
 		}
@@ -118,6 +123,7 @@ namespace asapi
 
 	template<class T>
 	char ComponentBase<T>::ClassName[255];
+
 
 
 }

@@ -168,6 +168,27 @@ namespace asapi
 	}
 
 
+	void GameObject::AddComponent(size_t typeHash)
+	{
+		ComponentInterface* newComp = ComponentInterface::AllocateAndInitObjectFromTypeHash(typeHash, m_mBlock);
+
+		v_components.push_back(newComp);
+
+		newComp->Attached(this);
+	}
+	void GameObject::RemoveComponent(ComponentInterface* ptr)
+	{
+		for(auto it = v_components.begin(); it!=v_components.end(); ++it)
+		{
+			if(*it==ptr)
+			{
+				v_components.erase(it);
+				ptr->Detached();
+				m_mBlock->deallocate(ptr, TypeInfo::GetTypeInfo( ptr->TypeHash() )->sizeOf ); // TODO wrong sizeof
+				break;
+			}
+		}
+	}
 
 
 	void GameObject::SetName(const char* name)

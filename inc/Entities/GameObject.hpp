@@ -72,6 +72,9 @@ namespace asapi
 		void OnDetach();
 		void ReAttach(GameObject* newParrent);
 
+		void AddComponent(size_t typeHash);
+		void RemoveComponent(ComponentInterface* ptr);
+
 
 
 		void SetName(const char*);

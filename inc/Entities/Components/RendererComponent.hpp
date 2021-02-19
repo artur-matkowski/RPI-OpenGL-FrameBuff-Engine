@@ -26,11 +26,7 @@ namespace asapi
 		{
 			new (this) RendererComponent(mBlock);
 		};
-
-		virtual void OnAttach(){};
-		virtual void OnDetach(){};
-
-
+	
 		inline void Render()
 		{
 			m_material->BindMaterial();
