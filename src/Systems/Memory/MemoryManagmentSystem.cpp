@@ -36,21 +36,21 @@ namespace asapi
         }
     }
 
-    bfu::MmappedMemBlock* MemoryManagmentSystem::ObtainPrefabMemBlock(size_t size, GameObject* &ret_entryPoint, const char* description)
+    MmappedMemBlock* MemoryManagmentSystem::ObtainPrefabMemBlock(size_t size, GameObject* &ret_entryPoint, const char* description)
     {
-        new (p_memBlockCache) bfu::MmappedMemBlock((void*)(((size_t)p_memBlocksEnd)+1), size, description);
-
+        p_memBlockCache->Init( p_memBlocksEnd, size, description );
         p_memBlocksEnd = p_memBlockCache->end();
 
         size_t* data = (size_t*)p_memBlockCache->allocate(3, sizeof(size_t), alignof(size_t));
 
-        bfu::MmappedMemBlock* mBlock = (bfu::MmappedMemBlock*) p_memBlockCache->allocate(1, sizeof(bfu::MmappedMemBlock), alignof(bfu::MmappedMemBlock));
-        new (mBlock) bfu::MmappedMemBlock(*p_memBlockCache);
-        v_memBlocks.push_back(mBlock);
+        MmappedMemBlock* mBlock = (MmappedMemBlock*) p_memBlockCache->allocate(1, sizeof(MmappedMemBlock), alignof(MmappedMemBlock));
+        new (mBlock) MmappedMemBlock(*p_memBlockCache);
+        p_memBlockCache->Dispouse();
+
 
         GameObject* entryPoint = (GameObject*) mBlock->allocate(1, sizeof(GameObject), alignof(GameObject));
         ret_entryPoint = entryPoint;
-        //ret_entryPoint->Init(mBlock);
+        
 
         data[0] = size;
         data[1] = (size_t)mBlock;
