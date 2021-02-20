@@ -1,7 +1,7 @@
 #ifndef _H_ComponentBase
 #define _H_ComponentBase
-#include "EntityBase.hpp"
 #include "ComponentInterface.hpp"
+#include "Serializable.hpp"
 #include <cxxabi.h>
 #include <vector>
 

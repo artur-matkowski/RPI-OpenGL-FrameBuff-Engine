@@ -1,6 +1,6 @@
 #ifndef H_Serializable
 #define H_Serializable
-#include <bitforge/utils/bfu.hpp>
+#include "ComponentInterface.hpp"
 
 namespace asapi
 {
@@ -9,10 +9,10 @@ namespace asapi
 	{
 	public:
 		template<typename... Targs>
-		Serializable(const char* Name, SerializableClassBase* parent, Targs... Fargs)
+		Serializable(const char* Name, ComponentInterface* parent, Targs... Fargs)
 			:bfu::SerializableVar<T>(Name, parent, Fargs...)
 		{
-			
+			parent->PushSerializableRenderer();
 		}
 	};
 }
