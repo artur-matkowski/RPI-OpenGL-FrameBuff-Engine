@@ -58,12 +58,12 @@ namespace asapi
 
 
 
-	void ComponentInterface::OnGUInamed(const char* ComponentName)
-	{
-		//TODO render serializable fields in imgui
+	// void ComponentInterface::OnGUInamed()
+	// {
+	// 	//TODO render serializable fields in imgui
 		
-		ImGui::Text("Debug Component renderer for component %s", ComponentName); 
-	}
+	// 	ImGui::Text("Debug Component renderer for component %s", ComponentName); 
+	// }
 
 	void ComponentInterface::Attached(GameObject* owner)
 	{
@@ -74,9 +74,21 @@ namespace asapi
 	{
 		this->OnDetach();	
 	}
-	void ComponentInterface::PushSerializableRenderer()
+
+	#ifdef IS_EDITOR
+
+	void ComponentInterface::OnGUI()
 	{
-		log::error << "Push Serializable Renderer " << std::endl;
+		ImGui::LabelText( "Component", this->TypeName() ); 
+
+		for(int i=0; i<v_SerializableRenderers.size(); ++i)
+			v_SerializableRenderers[i]->OnGUI();
 	}
+
+	void ComponentInterface::PushSerializableRenderer(SerializableRendererBase* in)
+	{
+		v_SerializableRenderers.push_back(in);
+	}
+	#endif
 
 }

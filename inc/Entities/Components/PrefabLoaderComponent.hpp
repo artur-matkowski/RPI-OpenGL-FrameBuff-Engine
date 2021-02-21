@@ -11,7 +11,7 @@ namespace asapi
 	public:
 		PrefabLoaderComponent(bfu::MemBlockBase* mBlock)
 			:ComponentBase<PrefabLoaderComponent>(mBlock)
-			,m_prefabName("prefabName", this, mBlock)
+			,m_prefabName("m_prefabName", this, mBlock)
 		{};
 		~PrefabLoaderComponent(){};
 

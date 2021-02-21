@@ -1,6 +1,7 @@
 #ifndef H_ComponentInterface
 #define H_ComponentInterface
 #include "EntityBase.hpp"
+#include "SerializableRenderer.hpp"
 
 namespace asapi
 {
@@ -30,6 +31,10 @@ namespace asapi
 	protected:
 		void OnGUInamed(const char* ComponentName);
 		GameObject *m_owner = nullptr;
+		#ifdef IS_EDITOR
+		std::vector<SerializableRendererBase*>
+					v_SerializableRenderers;
+		#endif
 	public:	
 		ComponentInterface(bfu::MemBlockBase* mBlock)
 			:EntityBase(mBlock)
@@ -49,12 +54,21 @@ namespace asapi
 			bfu::SerializableClassBase::PushReferenceToMap(memberName, memberReference);
 			//TODO add serializablefields to vector for easier rendering
 		}
-		void PushSerializableRenderer();
+
+		#ifdef IS_EDITOR
+		void PushSerializableRenderer(SerializableRendererBase*);
+		virtual void OnGUI();
+		#endif
+
 
 		virtual void OnAttach(){};
 		virtual void OnDetach(){};
-		virtual void OnGUI() = 0;
 		virtual size_t TypeHash() = 0;
+
+		virtual const char* TypeName()
+		{
+			return "ComponentInterface";
+		}
 
 	};
 }

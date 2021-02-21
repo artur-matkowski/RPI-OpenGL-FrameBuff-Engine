@@ -64,15 +64,15 @@ namespace asapi
 			return typeid(T).hash_code();
 		}
 
-		static const char* TypeName()
+		virtual const char* TypeName()
 		{
 			return ClassName;
 		}
 
-		virtual void OnGUI()
-		{
-			ComponentInterface::OnGUInamed( ClassName );
-		}
+		// virtual void OnGUI()
+		// {
+		// 	ComponentInterface::OnGUInamed( ClassName );
+		// }
 
 	};
 
