@@ -102,7 +102,9 @@ namespace asapi
 			return b_isGameObjectLoader;
 		}
 
+		#ifdef IS_EDITOR
 		void OnGUI();
+		#endif
 	};
 }
 

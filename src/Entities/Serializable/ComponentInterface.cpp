@@ -54,17 +54,6 @@ namespace asapi
 		return i_typeInfoCount;
 	}
 
-
-
-
-
-	// void ComponentInterface::OnGUInamed()
-	// {
-	// 	//TODO render serializable fields in imgui
-		
-	// 	ImGui::Text("Debug Component renderer for component %s", ComponentName); 
-	// }
-
 	void ComponentInterface::Attached(GameObject* owner)
 	{
 		m_owner = owner;

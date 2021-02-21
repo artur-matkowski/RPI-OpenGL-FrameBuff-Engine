@@ -5,6 +5,7 @@
 
 namespace asapi
 {
+	#ifdef IS_EDITOR
 	void StatsWindow::OnGUI()
 	{
 		auto window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking;
@@ -38,4 +39,5 @@ namespace asapi
 
 	    ImGui::End();
 	}
+	#endif
 }

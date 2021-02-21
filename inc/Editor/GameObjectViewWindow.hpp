@@ -1,5 +1,7 @@
 #ifndef H_GameObjectViewWindow
 #define H_GameObjectViewWindow
+#ifdef IS_EDITOR
+
 #include <vector>
 #include <map>
 #include "FolderLikeSelfStructure.hpp"
@@ -26,4 +28,5 @@ namespace asapi
 	};
 }
 
+#endif
 #endif

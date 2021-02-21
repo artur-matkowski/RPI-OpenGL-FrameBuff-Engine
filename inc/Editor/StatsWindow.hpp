@@ -6,7 +6,9 @@ namespace asapi
 	class StatsWindow
 	{
 	public:
+		#ifdef IS_EDITOR
 		static void OnGUI();
+		#endif
 	};
 }
 

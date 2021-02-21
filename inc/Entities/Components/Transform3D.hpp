@@ -11,6 +11,7 @@ namespace asapi
 		SerializableArray<float>   m_position;
 		SerializableArray<float>   m_rotation;
 		SerializableArray<float>   m_scale;
+		
 	public:
 		Transform3D(bfu::MemBlockBase* mBlock)
 			:ComponentBase<Transform3D>(mBlock)

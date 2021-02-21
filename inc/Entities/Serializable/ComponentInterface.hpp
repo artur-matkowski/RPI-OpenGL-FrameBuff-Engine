@@ -29,7 +29,6 @@ namespace asapi
 	class ComponentInterface: public EntityBase
 	{
 	protected:
-		void OnGUInamed(const char* ComponentName);
 		GameObject *m_owner = nullptr;
 		#ifdef IS_EDITOR
 		std::vector<SerializableRendererBase*>

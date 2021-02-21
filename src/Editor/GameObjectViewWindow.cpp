@@ -3,23 +3,24 @@
 #include "imgui.h"
 #include <cstdio>
 #include <iostream>
+#ifdef IS_EDITOR
 
 namespace asapi
 {
 
-void print(Node<size_t>& f, int depth = 0)
-{
-	std::cout << "\n";
-
-	for(int i=0; i<depth; ++i) std::cout << "  ";
-
-	std::cout << f.name();
-
-	for(int i=0; i<f.size(); ++i)
+	void print(Node<size_t>& f, int depth = 0)
 	{
-		print(*f[i], depth+1);
+		std::cout << "\n";
+
+		for(int i=0; i<depth; ++i) std::cout << "  ";
+
+		std::cout << f.name();
+
+		for(int i=0; i<f.size(); ++i)
+		{
+			print(*f[i], depth+1);
+		}
 	}
-}
 
 	GameObjectViewWindow::GameObjectViewWindow()
 	{
@@ -93,8 +94,7 @@ void print(Node<size_t>& f, int depth = 0)
 		}
 
 	    ImGui::End();
-
-
 	}
 }
 
+#endif

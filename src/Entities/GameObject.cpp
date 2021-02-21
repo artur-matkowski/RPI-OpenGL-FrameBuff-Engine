@@ -239,6 +239,7 @@ namespace asapi
 	}
 
 
+	#ifdef IS_EDITOR
 	void GameObject::OnGUI()
 	{
 		ImGui::Spacing();
@@ -251,7 +252,6 @@ namespace asapi
 			ImGui::Spacing();
 			v_components[i]->OnGUI();
 		}
-
-		
 	}
+	#endif
 }

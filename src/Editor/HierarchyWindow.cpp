@@ -2,6 +2,7 @@
 #include "imgui.h"
 #include "Systems.hpp"
 #include "GameObjectViewWindow.hpp"
+#ifdef IS_EDITOR
 
 
 namespace asapi
@@ -174,3 +175,5 @@ namespace asapi
 
 	}
 }
+
+#endif

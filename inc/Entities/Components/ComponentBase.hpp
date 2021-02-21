@@ -7,16 +7,6 @@
 
 namespace asapi
 {
-	// template<class T>
-	// class SerializableVar: public bfu::SerializableVar
-	// {
-	// public:
-	// 	using bfu::SerializableVar::bfu::SerializableVar;
-	// };
-
-
-
-	
 	template<class T>
 	static ComponentInterface* AllocateAndInit( bfu::MemBlockBase* mBlock )
 	{
@@ -68,12 +58,6 @@ namespace asapi
 		{
 			return ClassName;
 		}
-
-		// virtual void OnGUI()
-		// {
-		// 	ComponentInterface::OnGUInamed( ClassName );
-		// }
-
 	};
 
 	template<class T>
