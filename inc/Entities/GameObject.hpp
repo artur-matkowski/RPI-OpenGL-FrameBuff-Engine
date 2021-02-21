@@ -32,6 +32,10 @@ namespace asapi
 					m_recreationString = cp.m_recreationString;
 				};
 		};
+
+		void PopulateComponentInfo();
+		void ClearComponentInfo();
+		void ReconstructComponentsFromComponentInfo();
 	protected:
 		bool 											b_isGameObjectLoader = false;
 		GameObject*										p_parrent = 0;
@@ -65,8 +69,8 @@ namespace asapi
 		virtual void Serialize();
 		virtual void Deserialize();
 
-		//virtual void Serialize(JSONStream& stream);
-		//virtual void Deserialize(JSONStream& stream);
+		virtual void Serialize(bfu::JSONStream& stream);
+		virtual void Deserialize(bfu::JSONStream& stream);
 
 		void OnAttach(GameObject* newParrent);
 		void OnDetach();

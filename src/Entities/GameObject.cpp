@@ -28,7 +28,7 @@ namespace asapi
 		,b_isGameObjectLoader(false)
 		,m_myName("m_myName", this, mBlock)
 		,v_children("v_children", this, this, mBlock)
-		,v_componentsInfo("v_componentsInfo", this, mBlock)
+		,v_componentsInfo("v_componentsInfo", this, &SYSTEMS::GetObject().MEMORY.GetStdAllocator() ) //it is only usefull when de/serializing JSON
 		,v_components(mBlock)
 	{
 		m_myName.resize(GAMEOBJECT_MAX_NAME_LENGTH, '\0');
@@ -43,7 +43,7 @@ namespace asapi
 		,p_parrent(cp.p_parrent)
 		,m_myName("m_myName", this, cp.m_mBlock)
 		,v_children("v_children", this, this, cp.m_mBlock)
-		,v_componentsInfo("v_componentsInfo", this, cp.m_mBlock)
+		,v_componentsInfo("v_componentsInfo", this, &SYSTEMS::GetObject().MEMORY.GetStdAllocator() )
 		,v_components(cp.m_mBlock)
 	{
 		m_myName.resize(GAMEOBJECT_MAX_NAME_LENGTH, '\0');
@@ -88,6 +88,46 @@ namespace asapi
 	void GameObject::OnUnLoad()
 	{
 
+	}
+
+	void GameObject::PopulateComponentInfo()
+	{
+		ClearComponentInfo();
+
+		for(int i=0; i<v_components.size(); ++i)
+		{
+			v_componentsInfo.emplace_back( &SYSTEMS::GetObject().MEMORY.GetStdAllocator() );
+
+			v_componentsInfo.back().m_typeId = v_components[i]->TypeHash();
+			//v_componentsInfo.back().m_recreationString << *v_components[i]; //Can't really do that is we have a ptr not a full reference
+			v_components[i]->Serialize( v_componentsInfo.back().m_recreationString.GetRef() );
+		}
+	}
+	void GameObject::ClearComponentInfo()
+	{
+		v_componentsInfo.clear();
+	}
+	void GameObject::ReconstructComponentsFromComponentInfo()
+	{
+		v_components.clear();
+
+		for(int i=0; i<v_componentsInfo.size(); ++i)
+		{
+			this->AddComponent( v_componentsInfo[i].m_typeId );
+			v_components.back()->Deserialize( v_componentsInfo[i].m_recreationString.GetRef() );
+		}
+		ClearComponentInfo();
+	}
+
+	void GameObject::Serialize(bfu::JSONStream& stream)
+	{
+		PopulateComponentInfo();
+		this->EntityBase::Serialize(stream);	
+	}
+	void GameObject::Deserialize(bfu::JSONStream& stream)
+	{
+		this->EntityBase::Deserialize(stream);	
+		ReconstructComponentsFromComponentInfo();
 	}
 
 	void GameObject::Serialize()
