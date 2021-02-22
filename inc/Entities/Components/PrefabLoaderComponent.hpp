@@ -7,16 +7,16 @@ namespace asapi
 	class PrefabLoaderComponent: public ComponentBase<PrefabLoaderComponent>
 	{
 	protected:
-		Serializable<bfu::string> m_prefabName;
+		//Serializable<bfu::string> m_prefabName;
 	public:
 		PrefabLoaderComponent(bfu::MemBlockBase* mBlock)
 			:ComponentBase<PrefabLoaderComponent>(mBlock)
-			,m_prefabName("m_prefabName", this, mBlock)
+			//,m_prefabName("m_prefabName", this, mBlock)
 		{};
 		~PrefabLoaderComponent(){};
 
 
-		
+		virtual void OnGUI() override;
 	};
 }
 

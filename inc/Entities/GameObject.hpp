@@ -78,6 +78,7 @@ namespace asapi
 
 		void AddComponent(size_t typeHash);
 		void RemoveComponent(ComponentInterface* ptr);
+		ComponentInterface* GetComponentOfTypeHash(size_t typeHash);
 
 
 

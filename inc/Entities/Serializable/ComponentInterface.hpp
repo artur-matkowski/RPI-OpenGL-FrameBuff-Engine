@@ -56,6 +56,7 @@ namespace asapi
 
 		#ifdef IS_EDITOR
 		void PushSerializableRenderer(SerializableRendererBase*);
+		void OnGUI_NameAndVirtual();
 		virtual void OnGUI();
 		#endif
 

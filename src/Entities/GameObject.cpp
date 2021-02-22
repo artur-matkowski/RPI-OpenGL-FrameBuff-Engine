@@ -114,19 +114,67 @@ namespace asapi
 		for(int i=0; i<v_componentsInfo.size(); ++i)
 		{
 			this->AddComponent( v_componentsInfo[i].m_typeId );
-			v_components.back()->Deserialize( v_componentsInfo[i].m_recreationString.GetRef() );
+			auto &recreationString = v_componentsInfo[i].m_recreationString.GetRef();
+			if(recreationString.size() > 0)
+				v_components.back()->Deserialize( v_componentsInfo[i].m_recreationString.GetRef() );
 		}
 		ClearComponentInfo();
 	}
 
+
+
+
 	void GameObject::Serialize(bfu::JSONStream& stream)
 	{
 		PopulateComponentInfo();
-		this->EntityBase::Serialize(stream);	
+
+		//this->EntityBase::Serialize(stream);	
+		{
+			stream.sprintf("{");
+
+			auto last = m_membersMap.end();
+
+			for(auto it = m_membersMap.begin(); it != last; )
+			{
+				stream.sprintf("\n\"%s\": ", it->first.c_str() );
+
+				it->second->Serialize( stream );
+
+				++it;
+
+				if( it != last )
+				{
+					stream.sprintf(", ");
+				}
+			}
+
+			stream.sprintf("\n}");
+		}
 	}
 	void GameObject::Deserialize(bfu::JSONStream& stream)
 	{
-		this->EntityBase::Deserialize(stream);	
+		//this->EntityBase::Deserialize(stream);	
+		{
+			stream.skipTo('{');
+			stream.skip( 1 );
+
+			if(stream.peak() == '\n')
+				stream.skip( 1 );
+
+			while( stream.peak() != '}' )
+			{
+				m_token.clear();
+
+				stream.Deserialize( m_token );
+
+				m_membersMap[ m_token.str() ]->Deserialize( stream );
+
+				stream.skipToOneOf("\"}");
+
+			}
+			stream.skip(1);
+		}
+
 		ReconstructComponentsFromComponentInfo();
 	}
 
@@ -212,6 +260,9 @@ namespace asapi
 
 	void GameObject::AddComponent(size_t typeHash)
 	{
+		if( GetComponentOfTypeHash(typeHash) != nullptr)
+			return;
+
 		ComponentInterface* newComp = ComponentInterface::AllocateAndInitObjectFromTypeHash(typeHash, m_mBlock);
 
 		v_components.push_back(newComp);
@@ -230,6 +281,18 @@ namespace asapi
 				break;
 			}
 		}
+	}
+	ComponentInterface* GameObject::GetComponentOfTypeHash(size_t typeHash)
+	{
+		for(auto it = v_components.begin(); it!=v_components.end(); ++it)
+		{
+			if( (*it)->TypeHash() == typeHash)
+			{
+				return *it;
+			}
+		}
+
+		return nullptr;
 	}
 
 
@@ -250,7 +313,7 @@ namespace asapi
 			ImGui::Spacing();
 			ImGui::Separator();
 			ImGui::Spacing();
-			v_components[i]->OnGUI();
+			v_components[i]->OnGUI_NameAndVirtual();
 		}
 	}
 	#endif

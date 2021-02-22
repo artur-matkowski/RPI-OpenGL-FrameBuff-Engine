@@ -66,10 +66,15 @@ namespace asapi
 
 	#ifdef IS_EDITOR
 
-	void ComponentInterface::OnGUI()
+	void ComponentInterface::OnGUI_NameAndVirtual()
 	{
 		ImGui::LabelText( "Component", this->TypeName() ); 
 
+		OnGUI();
+	}
+
+	void ComponentInterface::OnGUI()
+	{
 		for(int i=0; i<v_SerializableRenderers.size(); ++i)
 			v_SerializableRenderers[i]->OnGUI();
 	}
