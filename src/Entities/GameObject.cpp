@@ -23,11 +23,25 @@ namespace asapi
 		}
 	}
 
+	GameObject::GameObject(  )
+		:EntityBase(&SYSTEMS::GetObject().MEMORY.GetStdAllocator())
+		,b_isGameObjectLoader(false)
+		,m_myName("m_myName", this, &SYSTEMS::GetObject().MEMORY.GetStdAllocator())
+		,v_children("v_children", this, &SYSTEMS::GetObject().MEMORY.GetStdAllocator())
+		,v_componentsInfo("v_componentsInfo", this, &SYSTEMS::GetObject().MEMORY.GetStdAllocator() ) //it is only usefull when de/serializing JSON
+		,v_components(&SYSTEMS::GetObject().MEMORY.GetStdAllocator())
+	{
+		m_myName.resize(GAMEOBJECT_MAX_NAME_LENGTH, '\0');
+		m_myName = "GameObject";
+
+		AddComponent( TypeInfo::GetTypeInfo("asapi::Transform3D")->id );
+	}
+
 	GameObject::GameObject( bfu::MemBlockBase* mBlock )
 		:EntityBase(mBlock)
 		,b_isGameObjectLoader(false)
 		,m_myName("m_myName", this, mBlock)
-		,v_children("v_children", this, this, mBlock)
+		,v_children("v_children", this, mBlock)
 		,v_componentsInfo("v_componentsInfo", this, &SYSTEMS::GetObject().MEMORY.GetStdAllocator() ) //it is only usefull when de/serializing JSON
 		,v_components(mBlock)
 	{
@@ -37,18 +51,18 @@ namespace asapi
 		AddComponent( TypeInfo::GetTypeInfo("asapi::Transform3D")->id );
 	}
 
-	GameObject::GameObject( const GameObject& cp )
-		:EntityBase(cp)
-		,b_isGameObjectLoader(false)
-		,p_parrent(cp.p_parrent)
-		,m_myName("m_myName", this, cp.m_mBlock)
-		,v_children("v_children", this, this, cp.m_mBlock)
-		,v_componentsInfo("v_componentsInfo", this, &SYSTEMS::GetObject().MEMORY.GetStdAllocator() )
-		,v_components(cp.m_mBlock)
-	{
-		m_myName.resize(GAMEOBJECT_MAX_NAME_LENGTH, '\0');
-		m_myName = cp.m_myName.c_str();
-	}
+	// GameObject::GameObject( const GameObject& cp )
+	// 	:EntityBase(cp)
+	// 	,b_isGameObjectLoader(false)
+	// 	,p_parrent(cp.p_parrent)
+	// 	,m_myName("m_myName", this, cp.m_mBlock)
+	// 	,v_children("v_children", this, this, cp.m_mBlock)
+	// 	,v_componentsInfo("v_componentsInfo", this, &SYSTEMS::GetObject().MEMORY.GetStdAllocator() )
+	// 	,v_components(cp.m_mBlock)
+	// {
+	// 	m_myName.resize(GAMEOBJECT_MAX_NAME_LENGTH, '\0');
+	// 	m_myName = cp.m_myName.c_str();
+	// }
 
 	GameObject::~GameObject()
 	{
@@ -60,12 +74,16 @@ namespace asapi
 		}
 	}
 
-	GameObject& GameObject::operator=(const GameObject& cp)
-	{
-		this->~GameObject();
-		new (this) GameObject(cp);
-		return *this;
-	}
+	//TODO
+	// GameObject& GameObject::operator=(const GameObject& cp)
+	// {
+	// 	Dispouse();
+	// 	Init(cp.m_mBlock);
+	// 	m_myName = "Copy of " + cp.m_myName;
+	// 	OnAttach(cp.p_parrent);
+
+	// 	return *this;
+	// }
 
 	void GameObject::Init( bfu::MemBlockBase* mBlock )
 	{

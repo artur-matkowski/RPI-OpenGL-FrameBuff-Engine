@@ -42,6 +42,8 @@ namespace asapi
 			:ComponentInterface(mBlock)
 		{
 		};
+
+		ComponentBase(const ComponentBase&) = delete;
 		~ComponentBase(){};
 
 		void Init( bfu::MemBlockBase* mBlock )

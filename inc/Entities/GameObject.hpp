@@ -13,6 +13,8 @@ namespace asapi
 
 	class GameObject: public EntityBase
 	{
+		friend bfu::ConditionalBuilder;
+
 		struct ComponentInfo: public EntityBase
 		{
 			bfu::SerializableVar<size_t>  				m_typeId;
@@ -51,13 +53,15 @@ namespace asapi
 		virtual void RegisterChild(GameObject* newChild);
 		virtual void UnRegisterChild(GameObject* deleteChild);
 
+		GameObject(); //should never be used for prefabs. Is needed for template edduction in serialization
 		GameObject( bfu::MemBlockBase* mBlock );
 
 	public:
-		GameObject( const GameObject& cp );
+		GameObject( const GameObject& cp ) = delete;
 		~GameObject();
 
-		GameObject& operator=(const GameObject& cp);
+		//TODO
+		//GameObject& operator=(const GameObject& cp);
 
 		void Init( bfu::MemBlockBase* mBlock );
 		virtual void Dispouse();

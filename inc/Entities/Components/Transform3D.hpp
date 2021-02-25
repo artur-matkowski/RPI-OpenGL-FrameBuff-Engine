@@ -19,6 +19,7 @@ namespace asapi
 			,m_rotation("m_rotation", this, 3, mBlock)
 			,m_scale("m_scale", this, 3, mBlock)
 		{};
+		Transform3D(const Transform3D&) = delete;
 		~Transform3D(){};
 
 
