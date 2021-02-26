@@ -40,8 +40,8 @@ HEADER_DEPS += 	-I./vendor/glm/glm/
 
 #STATIC_LINK	= ./libs/libjpeg-turbo/build/libturbojpeg.a
 
-DEBUG_CC 	+= -g -DLOG_LEVEL=DebugLevel::ALL
-RELEASE_CC	+= -O3 -DLOG_LEVEL=DebugLevel::INFO -DNOTRACE
+DEBUG_CC 	+= -g -DLOG_LEVEL=DebugLevel::ALL ${PROFILER_FLAG}
+RELEASE_CC	+= -O3 -DLOG_LEVEL=DebugLevel::INFO -DNOTRACE ${PROFILER_FLAG}
 
 COLOR=\033[0;32m
 NC=\033[0m # No Color
@@ -124,3 +124,9 @@ install:
 	cp build/rel/${OUT}.so ${INSTALLDIR}lib${OUT}.so$(VERSION)
 	ln -sf ${INSTALLDIR}lib${OUT}.so$(VERSION) ${INSTALLDIR}lib${OUT}.so
 	cp -r inc $(HEADERDIR)$(OUT) 
+
+enable-profiling:
+	export PROFILER_FLAG=-DUSE_PROFILER
+
+disable-profiling:
+	unset PROFILER_FLAG

@@ -152,7 +152,7 @@ namespace asapi
 	void DRM_GBM_EGL_ContextType::Init(const int argc, const char** argv)
 	{
 
-		device = open ("/dev/dri/card0", O_RDWR|O_CLOEXEC);
+		PRIFILE_FUNCTION( device = open ("/dev/dri/card0", O_RDWR|O_CLOEXEC); );
 		bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
 
 
@@ -161,9 +161,9 @@ namespace asapi
 			log::error << "Can not open dri/card0, is Full KMS anabled on RPI?" << std::endl;
 
 
-		find_display_configuration ();
+		PRIFILE_FUNCTION( find_display_configuration (); );
 
-		setup_opengl(attributes, contextAttribs);
+		PRIFILE_FUNCTION( setup_opengl(attributes, contextAttribs); );
 
 		resolution.x = mode_info.hdisplay; 
 	    resolution.y = mode_info.vdisplay; 

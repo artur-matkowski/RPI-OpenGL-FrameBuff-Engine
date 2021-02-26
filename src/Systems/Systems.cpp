@@ -48,16 +48,16 @@ namespace asapi
 	{
 		//srand (time(NULL)); // moved to TIME.RANDOM
 
-		RENDERER.SetupEvents();
+		PRIFILE_FUNCTION( RENDERER.SetupEvents(); );
 		#ifdef USE_XLIB
-		CONTEXT = ContextInit();
-		CONTEXT->Init(argc, argv);
+		PRIFILE_FUNCTION( CONTEXT = ContextInit(); );
+		PRIFILE_FUNCTION( CONTEXT->Init(argc, argv); );
 		#else
-		CONTEXT.Init(argc, argv);
+		PRIFILE_FUNCTION( CONTEXT.Init(argc, argv); );
 		#endif
-		RENDERER.Init();
+		PRIFILE_FUNCTION( RENDERER.Init(); );
 
-		SCENE.Init( &MEMORY.GetSystemsAllocator() );
+		PRIFILE_FUNCTION( SCENE.Init( &MEMORY.GetSystemsAllocator() ); );
 
 		log::info << "GL initialized with version: " << glGetString(GL_VERSION) << std::endl;
 		log::info << "GL vendor: " << glGetString(GL_VENDOR) << std::endl;
