@@ -2,6 +2,7 @@
 #define _H_OBJECT
 #include "SharedPtr.hpp"
 #include "glm.hpp"
+#include "Profiler.hpp"
 #include <cstdlib>
 
 //	Allowed #defines to controll build process

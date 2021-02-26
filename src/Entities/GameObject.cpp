@@ -51,19 +51,6 @@ namespace asapi
 		AddComponent( TypeInfo::GetTypeInfo("asapi::Transform3D")->id );
 	}
 
-	// GameObject::GameObject( const GameObject& cp )
-	// 	:EntityBase(cp)
-	// 	,b_isGameObjectLoader(false)
-	// 	,p_parrent(cp.p_parrent)
-	// 	,m_myName("m_myName", this, cp.m_mBlock)
-	// 	,v_children("v_children", this, this, cp.m_mBlock)
-	// 	,v_componentsInfo("v_componentsInfo", this, &SYSTEMS::GetObject().MEMORY.GetStdAllocator() )
-	// 	,v_components(cp.m_mBlock)
-	// {
-	// 	m_myName.resize(GAMEOBJECT_MAX_NAME_LENGTH, '\0');
-	// 	m_myName = cp.m_myName.c_str();
-	// }
-
 	GameObject::~GameObject()
 	{
 		for(auto it = v_children.begin(); 
@@ -74,7 +61,7 @@ namespace asapi
 		}
 	}
 
-	//TODO
+	//TODO copy all children, and all components
 	// GameObject& GameObject::operator=(const GameObject& cp)
 	// {
 	// 	Dispouse();

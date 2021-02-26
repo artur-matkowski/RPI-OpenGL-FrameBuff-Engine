@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <csignal>
 #include "Systems.hpp"
-
+#include "ProfilingTimer.hpp"
 
 using namespace asapi;
 
@@ -17,9 +17,8 @@ void signalHandler( int signum )
 
 int main(const int argc, const char** argv)
 {
-	signal(SIGINT, signalHandler);  
-
-	SYSTEMS::GetObject().init( argc, argv );
+	PRIFILE_FUNCTION( signal(SIGINT, signalHandler);   );
+	PRIFILE_FUNCTION( SYSTEMS::GetObject().init( argc, argv ); );
 
 	// bfu::CallbackId id;
 	// bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
