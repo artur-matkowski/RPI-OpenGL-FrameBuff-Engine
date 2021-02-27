@@ -1,17 +1,40 @@
 #include "StatsWindow.hpp"
 #include "imgui.h"
-#include "Systems.hpp"
+#include "ImGuiFileDialog.h"
 
 
 namespace asapi
 {
 	char StatsWindow::m_openedProjectPath[2048] = "./";
+	StatsWindow::Persistance* StatsWindow::persistance;
+	ImGuiFileDialog instance;
 
 	#ifdef IS_EDITOR
+
+	void StatsWindow::drawFileGui(const std::string& dummyDlgKey)
+	{ 
+		// display
+		if (instance.Display(dummyDlgKey)) 
+		{
+			// action if OK
+			if (instance.IsOk() )
+			{
+				if( OpenProject( instance.GetCurrentPath().c_str() ) )
+					persistance->Update(m_openedProjectPath);
+				// action
+			}
+
+			// close
+			instance.Close();
+		}
+	}
+
+
 	void StatsWindow::OnGUI()
 	{
 		auto window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking;
-		static char 	openedProjectPath[2048] = "./";
+		static bool showFileWindow = false;
+		static std::string dummyDlgKey = "ChooseFileDlgKey";
 		MemoryManagmentSystem& MEMORY = SYSTEMS::GetObject().MEMORY;
 		SceneSystem& SCENE = SYSTEMS::GetObject().SCENE;
 
@@ -24,6 +47,17 @@ namespace asapi
 	    {
 	        if (ImGui::BeginMenu("Menu"))
 	        {
+			    if (ImGui::MenuItem("Open Project...")) { showFileWindow = true; }
+			    if (ImGui::BeginMenu("Open Recent"))
+		        {
+				    if ( ImGui::MenuItem(persistance->m_lastOpenProject0.GetRef().c_str()) ) { OpenProject( persistance->m_lastOpenProject0.GetRef().c_str() ); }
+				    if ( ImGui::MenuItem(persistance->m_lastOpenProject1.GetRef().c_str()) ) { OpenProject( persistance->m_lastOpenProject1.GetRef().c_str() ); }
+				    if ( ImGui::MenuItem(persistance->m_lastOpenProject2.GetRef().c_str()) ) { OpenProject( persistance->m_lastOpenProject2.GetRef().c_str() ); }
+				    if ( ImGui::MenuItem(persistance->m_lastOpenProject3.GetRef().c_str()) ) { OpenProject( persistance->m_lastOpenProject3.GetRef().c_str() ); }
+	           		ImGui::EndMenu();
+		        }
+			    ImGui::Separator();
+
 			    if (ImGui::MenuItem("Serialize to JSON")) { SCENE.GetRootNode().Serialize(); }
 			    if (ImGui::MenuItem("Deserialize from JSON")) { SCENE.GetRootNode().Deserialize(); }
 			    ImGui::Separator();
@@ -37,7 +71,13 @@ namespace asapi
 	        }
 	        ImGui::EndMenuBar();
 	    }
-
+			
+		if(showFileWindow)
+		{
+			instance.OpenDialog(dummyDlgKey, "Choose File", nullptr, ".");
+			showFileWindow = false;
+		}
+		drawFileGui(dummyDlgKey);
 
 	    //Tabs
 	    ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
@@ -50,7 +90,7 @@ namespace asapi
             }
             if (ImGui::BeginTabItem("Opened project info"))
             {
-                ImGui::LabelText("Currently opened project", openedProjectPath);
+                ImGui::LabelText("Currently opened project", m_openedProjectPath);
                 ImGui::EndTabItem();
             }
             ImGui::EndTabBar();
@@ -59,4 +99,11 @@ namespace asapi
 	    ImGui::End();
 	}
 	#endif
+
+
+	bool StatsWindow::OpenProject(const char* path)
+	{
+		strcpy(m_openedProjectPath, path );
+		return true;
+	}
 }

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "ImguiXlib.hpp"
-
+#include "StatsWindow.hpp"
 
 namespace asapi
 {
@@ -66,6 +66,8 @@ namespace asapi
 			log::info << "GL renderer: " << glGetString(GL_RENDERER) << std::endl;
 			log::info << "GL shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 		);
+
+		StatsWindow::Init();
 		#endif
 
 		return true;

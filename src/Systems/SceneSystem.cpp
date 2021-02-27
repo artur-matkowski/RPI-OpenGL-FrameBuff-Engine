@@ -50,4 +50,44 @@ namespace asapi
 	{
 		return m_stream;
 	}
+
+
+	bool SceneSystem::File2JSON(bfu::JSONStream& jsonStream, const char* filePath)
+	{
+		FILE * pFile = fopen (filePath,"rb");
+
+		if( pFile==NULL )
+		{
+			log::error << "Could not open file: " << filePath << std::endl;
+			return false;
+ 		}
+		
+		fseek(pFile, 0L, SEEK_END); 
+		auto fileSize = ftell(pFile); 
+		fseek(pFile, 0L, SEEK_SET); 
+
+		jsonStream.resize(fileSize);
+		fread(jsonStream.c_str(), 1, fileSize, pFile);
+		jsonStream.OverrideWriteCursorPos(fileSize);
+
+		fclose (pFile);
+		return true;
+	}
+
+
+	bool SceneSystem::JSON2File(bfu::JSONStream& jsonStream, const char* filePath)
+	{
+		FILE * pFile = fopen (filePath,"wb");
+
+		if( pFile==NULL )
+		{
+			log::error << "Could not open file: " << filePath << std::endl;
+			return false;
+ 		}
+
+		fwrite(jsonStream.c_str(), 1, jsonStream.size(), pFile);
+
+		fclose (pFile);
+		return true;
+	}
 }

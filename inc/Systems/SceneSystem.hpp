@@ -24,6 +24,9 @@ namespace asapi
 		void OnGUI();
 
 		bfu::JSONStream& GetJSONStreamWorkBuffer();
+
+		static bool File2JSON(bfu::JSONStream&, const char* path);
+		static bool JSON2File(bfu::JSONStream&, const char* path);
 	};
 }
 
