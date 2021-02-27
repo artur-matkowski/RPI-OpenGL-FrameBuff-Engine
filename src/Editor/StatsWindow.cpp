@@ -5,7 +5,6 @@
 
 namespace asapi
 {
-	char StatsWindow::m_openedProjectPath[2048] = "./";
 	StatsWindow::Persistance* StatsWindow::persistance;
 	ImGuiFileDialog instance;
 
@@ -20,7 +19,7 @@ namespace asapi
 			if (instance.IsOk() )
 			{
 				if( OpenProject( instance.GetCurrentPath().c_str() ) )
-					persistance->Update(m_openedProjectPath);
+					persistance->Update( instance.GetCurrentPath().c_str() );
 				// action
 			}
 
@@ -90,7 +89,7 @@ namespace asapi
             }
             if (ImGui::BeginTabItem("Opened project info"))
             {
-                ImGui::LabelText("Currently opened project", m_openedProjectPath);
+                ImGui::LabelText("Currently opened project", SYSTEMS::GetObject().SCENE.GetProjectPath());
                 ImGui::EndTabItem();
             }
             ImGui::EndTabBar();
@@ -103,7 +102,8 @@ namespace asapi
 
 	bool StatsWindow::OpenProject(const char* path)
 	{
-		strcpy(m_openedProjectPath, path );
+		SYSTEMS::GetObject().SCENE.SetProjectPath(path);
+
 		return true;
 	}
 }

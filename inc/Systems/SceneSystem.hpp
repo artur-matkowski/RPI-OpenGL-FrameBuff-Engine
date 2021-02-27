@@ -10,6 +10,7 @@ namespace asapi
 
 		bfu::JSONStream 	m_stream;
 		char 				tmpbuff[2];
+		char 				m_ProjectPath[2048] = ".";
 
 	public:
 		SceneSystem( bfu::MemBlockBase* mBlock );
@@ -27,6 +28,9 @@ namespace asapi
 
 		static bool File2JSON(bfu::JSONStream&, const char* path);
 		static bool JSON2File(bfu::JSONStream&, const char* path);
+
+		void SetProjectPath(const char* path);
+		const char* GetProjectPath(){ return m_ProjectPath; }
 	};
 }
 

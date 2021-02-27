@@ -28,7 +28,7 @@ namespace asapi{
 
 	void RendererSystem::Init()
 	{
-		m_rendererComponent = new RendererComponent( &SYSTEMS::GetObject().MEMORY.GetSystemsAllocator() );
+		m_rendererComponent = new RendererComponent( SYSTEMS::SYSTEMS_ALLOCATOR );
 	}
 
 	RendererSystem::RendererSystem()

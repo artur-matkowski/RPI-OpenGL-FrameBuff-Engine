@@ -17,11 +17,11 @@ namespace asapi
 			bfu::SerializableVar<bfu::string> m_lastOpenProject3;
 
 			Persistance()
-				:bfu::SerializableClassBase( &SYSTEMS::GetObject().MEMORY.GetSystemsAllocator() )
-				,m_lastOpenProject0("m_lastOpenProject0", this,  &SYSTEMS::GetObject().MEMORY.GetSystemsAllocator() )
-				,m_lastOpenProject1("m_lastOpenProject1", this,  &SYSTEMS::GetObject().MEMORY.GetSystemsAllocator() )
-				,m_lastOpenProject2("m_lastOpenProject2", this,  &SYSTEMS::GetObject().MEMORY.GetSystemsAllocator() )
-				,m_lastOpenProject3("m_lastOpenProject3", this,  &SYSTEMS::GetObject().MEMORY.GetSystemsAllocator() )
+				:bfu::SerializableClassBase( SYSTEMS::SYSTEMS_ALLOCATOR )
+				,m_lastOpenProject0("m_lastOpenProject0", this, SYSTEMS::SYSTEMS_ALLOCATOR )
+				,m_lastOpenProject1("m_lastOpenProject1", this, SYSTEMS::SYSTEMS_ALLOCATOR )
+				,m_lastOpenProject2("m_lastOpenProject2", this, SYSTEMS::SYSTEMS_ALLOCATOR )
+				,m_lastOpenProject3("m_lastOpenProject3", this, SYSTEMS::SYSTEMS_ALLOCATOR )
 			{
 				m_lastOpenProject3.GetRef() = "...none";
 				m_lastOpenProject2.GetRef() = "...none";

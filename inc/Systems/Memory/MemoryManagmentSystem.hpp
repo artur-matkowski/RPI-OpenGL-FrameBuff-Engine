@@ -60,14 +60,14 @@ namespace asapi
 	  		SystemsMemoryBlock.deallocate(p, n * sizeof(T));	
 		}
 
-		inline bfu::MmappedMemBlock& GetSystemsAllocator()
+		inline bfu::MmappedMemBlock* GetSystemsAllocator()
 		{
-			return SystemsMemoryBlock;
+			return &SystemsMemoryBlock;
 		}
 
-		inline bfu::StdAllocatorMemBlock& GetStdAllocator()
+		inline bfu::StdAllocatorMemBlock* GetStdAllocator()
 		{
-			return m_StdAllocatorMemBlock;
+			return &m_StdAllocatorMemBlock;
 		}
 
 		MmappedMemBlock* ObtainPrefabMemBlock(size_t size, GameObject* &ret_entryPointRaw, const char* description);
@@ -76,7 +76,9 @@ namespace asapi
 
 }
 
-#define ALLOCATE GetObject().MEMORY.allocateSystemInBlock
-#define DEALLOCATE GetObject().MEMORY.deallocateSystemInBlock
+#define ALLOCATE 				GetObject().MEMORY.allocateSystemInBlock
+#define DEALLOCATE 				GetObject().MEMORY.deallocateSystemInBlock
+#define SYSTEMS_ALLOCATOR 		GetObject().MEMORY.GetSystemsAllocator()
+#define STD_ALLOCATOR 			GetObject().MEMORY.GetStdAllocator()
 
 #endif

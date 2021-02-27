@@ -54,6 +54,8 @@ namespace asapi
 
 	bool SceneSystem::File2JSON(bfu::JSONStream& jsonStream, const char* filePath)
 	{
+		char buff[2048];
+		bfu::stream stream(buff, 2048, SYSTEMS::SYSTEMS_ALLOCATOR );
 		FILE * pFile = fopen (filePath,"rb");
 
 		if( pFile==NULL )
@@ -89,5 +91,11 @@ namespace asapi
 
 		fclose (pFile);
 		return true;
+	}
+
+
+	void SceneSystem::SetProjectPath(const char* path)
+	{
+		strcpy(m_ProjectPath, path );
 	}
 }

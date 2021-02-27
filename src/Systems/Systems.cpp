@@ -9,7 +9,7 @@ namespace asapi
 	SYSTEMS SYSTEMS::_this;
 
 	SYSTEMS::SYSTEMS()
-		:SCENE(&MEMORY.GetSystemsAllocator())
+		:SCENE( SYSTEMS::SYSTEMS_ALLOCATOR )
 	{
 
 	}
@@ -57,7 +57,7 @@ namespace asapi
 		#endif
 		PRIFILE( RENDERER.Init(); );
 
-		PRIFILE( SCENE.Init( &MEMORY.GetSystemsAllocator() ); );
+		PRIFILE( SCENE.Init( SYSTEMS::SYSTEMS_ALLOCATOR ); );
 
 		#ifdef IS_EDITOR
 		PRIFILE (

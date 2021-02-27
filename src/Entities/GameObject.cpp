@@ -25,12 +25,12 @@ namespace asapi
 	}
 
 	GameObject::GameObject(  )
-		:EntityBase(&SYSTEMS::GetObject().MEMORY.GetStdAllocator())
+		:EntityBase( SYSTEMS::STD_ALLOCATOR )
 		,b_isGameObjectLoader(false)
-		,m_myName("m_myName", this, &SYSTEMS::GetObject().MEMORY.GetStdAllocator())
-		,v_children("v_children", this, &SYSTEMS::GetObject().MEMORY.GetStdAllocator())
-		,v_componentsInfo("v_componentsInfo", this, &SYSTEMS::GetObject().MEMORY.GetStdAllocator() ) //it is only usefull when de/serializing JSON
-		,v_components(&SYSTEMS::GetObject().MEMORY.GetStdAllocator())
+		,m_myName("m_myName", this, SYSTEMS::STD_ALLOCATOR )
+		,v_children("v_children", this, SYSTEMS::STD_ALLOCATOR )
+		,v_componentsInfo("v_componentsInfo", this, SYSTEMS::STD_ALLOCATOR ) //it is only usefull when de/serializing JSON
+		,v_components( SYSTEMS::STD_ALLOCATOR )
 	{
 		m_myName.resize(GAMEOBJECT_MAX_NAME_LENGTH, '\0');
 		m_myName = "GameObject";
@@ -43,7 +43,7 @@ namespace asapi
 		,b_isGameObjectLoader(false)
 		,m_myName("m_myName", this, mBlock)
 		,v_children("v_children", this, mBlock)
-		,v_componentsInfo("v_componentsInfo", this, &SYSTEMS::GetObject().MEMORY.GetStdAllocator() ) //it is only usefull when de/serializing JSON
+		,v_componentsInfo("v_componentsInfo", this, SYSTEMS::STD_ALLOCATOR ) //it is only usefull when de/serializing JSON
 		,v_components(mBlock)
 	{
 		m_myName.resize(GAMEOBJECT_MAX_NAME_LENGTH, '\0');
@@ -102,7 +102,7 @@ namespace asapi
 
 		for(int i=0; i<v_components.size(); ++i)
 		{
-			v_componentsInfo.emplace_back( &SYSTEMS::GetObject().MEMORY.GetStdAllocator() );
+			v_componentsInfo.emplace_back( SYSTEMS::STD_ALLOCATOR );
 
 			v_componentsInfo.back().m_typeId = v_components[i]->TypeHash();
 			//v_componentsInfo.back().m_recreationString << *v_components[i]; //Can't really do that is we have a ptr not a full reference

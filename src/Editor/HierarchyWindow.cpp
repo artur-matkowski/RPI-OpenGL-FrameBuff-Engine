@@ -8,7 +8,7 @@
 namespace asapi
 {
 	HierarchyWindow::HierarchyWindow()
-		:v_SelectedGameObjects( &SYSTEMS::GetObject().MEMORY.GetSystemsAllocator() )
+		:v_SelectedGameObjects( SYSTEMS::SYSTEMS_ALLOCATOR )
 	{
 		v_SelectedGameObjects.reserve(128);
 	}
