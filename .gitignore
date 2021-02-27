@@ -2,3 +2,4 @@ build/*
 Logs/*
 *.out
 *.gch
+vendor/lib/*
