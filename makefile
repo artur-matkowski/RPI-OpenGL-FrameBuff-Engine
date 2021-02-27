@@ -125,8 +125,3 @@ install:
 	ln -sf ${INSTALLDIR}lib${OUT}.so$(VERSION) ${INSTALLDIR}lib${OUT}.so
 	cp -r inc $(HEADERDIR)$(OUT) 
 
-enable-profiling:
-	export PROFILER_FLAG=-DUSE_PROFILER
-
-disable-profiling:
-	unset PROFILER_FLAG
