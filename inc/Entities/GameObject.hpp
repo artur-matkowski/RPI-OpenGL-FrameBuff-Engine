@@ -73,9 +73,7 @@ namespace asapi
 
 		void OnLoad();
 		void OnUnLoad();
-
-		virtual void Serialize();
-		virtual void Deserialize();
+		
 
 		virtual void Serialize(bfu::JSONStream& stream);
 		virtual void Deserialize(bfu::JSONStream& stream);

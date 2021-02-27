@@ -69,10 +69,6 @@ namespace asapi
 			    }
 			    ImGui::Separator();
 
-			    if (ImGui::MenuItem("Serialize to JSON")) { SCENE.GetRootNode().Serialize(); }
-			    if (ImGui::MenuItem("Deserialize from JSON")) { SCENE.GetRootNode().Deserialize(); }
-			    ImGui::Separator();
-
 			    if (ImGui::MenuItem("Compile to .mmp")) {}
 			    if (ImGui::MenuItem("Load from .mmp")) {}
 			    ImGui::Separator();
