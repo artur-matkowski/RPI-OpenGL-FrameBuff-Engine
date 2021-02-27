@@ -11,6 +11,8 @@ namespace asapi
 
 	class ComponentInterface;
 
+	#define GET_COMPONENT(x) GetComponentOfTypeHash(typeid(x).hash_code())
+
 	class GameObject: public EntityBase
 	{
 		friend bfu::ConditionalBuilder;
@@ -44,6 +46,7 @@ namespace asapi
 
 		bfu::SerializableVar<bfu::string>  				m_myName;
 		bfu::SerializableVarVector<GameObject*>			v_children;
+		// If you change name of v_children you need to change { if( loader!=0 && strcmp(it->first.c_str(), "v_children")==0 ) }
 
 		bfu::SerializableVarVector<ComponentInfo>		v_componentsInfo;
 

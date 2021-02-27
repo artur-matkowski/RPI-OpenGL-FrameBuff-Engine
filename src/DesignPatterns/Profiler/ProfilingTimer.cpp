@@ -4,14 +4,6 @@
 
 namespace Prifiler
 {
-	// ProfilingTimer::ProfilingTimer()
-	// {
-	// 	new (this) ProfilingTimer( [](double microseconds) {
-	// 		std::cerr << "Execution time is ===== " << microseconds << "us" << std::endl;
-	// 	} );
-	// }
-
-
 	ProfilingTimer::~ProfilingTimer()
 	{
 		m_tStop = std::chrono::high_resolution_clock::now();
@@ -22,7 +14,6 @@ namespace Prifiler
 
 		delete m_MesurmentFinishCallBack;
 	}
-
 }
 
 #endif

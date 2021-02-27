@@ -48,22 +48,25 @@ namespace asapi
 	{
 		//srand (time(NULL)); // moved to TIME.RANDOM
 
-		PRIFILE_FUNCTION( RENDERER.SetupEvents(); );
+		PRIFILE( RENDERER.SetupEvents(); );
 		#ifdef USE_XLIB
-		PRIFILE_FUNCTION( CONTEXT = ContextInit(); );
-		PRIFILE_FUNCTION( CONTEXT->Init(argc, argv); );
+		PRIFILE( CONTEXT = ContextInit(); );
+		PRIFILE( CONTEXT->Init(argc, argv); );
 		#else
-		PRIFILE_FUNCTION( CONTEXT.Init(argc, argv); );
+		PRIFILE( CONTEXT.Init(argc, argv); );
 		#endif
-		PRIFILE_FUNCTION( RENDERER.Init(); );
+		PRIFILE( RENDERER.Init(); );
 
-		PRIFILE_FUNCTION( SCENE.Init( &MEMORY.GetSystemsAllocator() ); );
+		PRIFILE( SCENE.Init( &MEMORY.GetSystemsAllocator() ); );
 
-		log::info << "GL initialized with version: " << glGetString(GL_VERSION) << std::endl;
-		log::info << "GL vendor: " << glGetString(GL_VENDOR) << std::endl;
-		log::info << "GL renderer: " << glGetString(GL_RENDERER) << std::endl;
-		log::info << "GL shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
-
+		#ifdef IS_EDITOR
+		PRIFILE (
+			log::info << "GL initialized with version: " << glGetString(GL_VERSION) << std::endl;
+			log::info << "GL vendor: " << glGetString(GL_VENDOR) << std::endl;
+			log::info << "GL renderer: " << glGetString(GL_RENDERER) << std::endl;
+			log::info << "GL shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+		);
+		#endif
 
 		return true;
 

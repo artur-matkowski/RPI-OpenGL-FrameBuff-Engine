@@ -17,8 +17,8 @@ void signalHandler( int signum )
 
 int main(const int argc, const char** argv)
 {
-	PRIFILE_FUNCTION( signal(SIGINT, signalHandler);   );
-	PRIFILE_FUNCTION( SYSTEMS::GetObject().init( argc, argv ); );
+	PRIFILE( signal(SIGINT, signalHandler);   );
+	PRIFILE( SYSTEMS::GetObject().init( argc, argv ); );
 
 	// bfu::CallbackId id;
 	// bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;

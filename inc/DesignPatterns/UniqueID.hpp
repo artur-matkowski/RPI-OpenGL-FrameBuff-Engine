@@ -16,7 +16,7 @@ namespace asapi
 
 	public:
 		UniqueID( bfu::MemBlockBase* mBlock );
-		UniqueID( const UniqueID& mBlock );
+		UniqueID( const UniqueID& cp );
 		~UniqueID(){};
 
 		virtual void Serialize(bfu::JSONStream& stream);

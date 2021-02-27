@@ -1,6 +1,7 @@
 #include "GameObject.hpp"
 #include "Systems.hpp"
 #include "imgui.h"
+#include "PrefabLoaderComponent.hpp"
 
 namespace asapi
 {
@@ -133,6 +134,8 @@ namespace asapi
 	{
 		PopulateComponentInfo();
 
+		ComponentInterface* loader = this->GET_COMPONENT(PrefabLoaderComponent);
+
 		//this->EntityBase::Serialize(stream);	
 		{
 			stream.sprintf("{");
@@ -141,6 +144,11 @@ namespace asapi
 
 			for(auto it = m_membersMap.begin(); it != last; )
 			{
+				if( loader!=0 && strcmp(it->first.c_str(), "v_children")==0 ){
+					++it;
+					continue;
+				}
+
 				stream.sprintf("\n\"%s\": ", it->first.c_str() );
 
 				it->second->Serialize( stream );
@@ -172,7 +180,9 @@ namespace asapi
 
 				stream.Deserialize( m_token );
 
-				m_membersMap[ m_token.str() ]->Deserialize( stream );
+				auto &tmp = m_membersMap[ m_token.str() ];
+
+				tmp->Deserialize( stream );
 
 				stream.skipToOneOf("\"}");
 
