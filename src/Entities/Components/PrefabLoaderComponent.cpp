@@ -9,11 +9,13 @@ namespace asapi
 		ImGui::LabelText("Prefab ID", "%lld", m_prefabID.GetRef().ID() );
 		if( ImGui::Button("Load") ) Load();
 		ImGui::SameLine();
-		ImGui::PushItemWidth(-ImGui::GetContentRegionAvail().x * 0.5f);
+		ImGui::PushItemWidth(-(ImGui::GetWindowContentRegionWidth() * 0.5f - ImGui::CalcItemWidth()));
 		ImGui::Button("Unload"); 
+		ImGui::PopItemWidth();
 		ImGui::SameLine();
-		ImGui::PushItemWidth(-100.0f);
+		ImGui::PushItemWidth(-(ImGui::GetWindowContentRegionWidth()  - ImGui::CalcItemWidth()));
 		if( ImGui::Button("Save") ) Save();
+		ImGui::PopItemWidth();
 	}
 
 

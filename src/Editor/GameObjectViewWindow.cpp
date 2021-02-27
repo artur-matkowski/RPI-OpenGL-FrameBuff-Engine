@@ -94,6 +94,8 @@ namespace asapi
 		}
 
 	    ImGui::End();
+
+	    ComponentInterface::RemovedMarkedComponent();
 	}
 }
 

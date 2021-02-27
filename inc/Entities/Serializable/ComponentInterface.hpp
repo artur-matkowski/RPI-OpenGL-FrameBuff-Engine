@@ -70,6 +70,7 @@ namespace asapi
 			return "ComponentInterface";
 		}
 
+		static void RemovedMarkedComponent();
 	};
 }
 
