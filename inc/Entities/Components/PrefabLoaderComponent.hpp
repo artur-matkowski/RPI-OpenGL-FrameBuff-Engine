@@ -18,6 +18,13 @@ namespace asapi
 
 
 		virtual void OnGUI() override;
+
+		void Save();
+		void Load();
+		void UnLoad();
+
+		void SetPrefabID(uint64_t id);
+		uint64_t GetPrefabID();
 	};
 }
 

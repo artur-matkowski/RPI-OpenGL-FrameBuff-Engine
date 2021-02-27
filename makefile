@@ -9,6 +9,7 @@ CPPFLAGS 	= -I/usr/include/freetype2 -I/usr/include/freetype2/freetype -DIMGUI_I
 
 INCDIR	 	= inc/
 OBJDIR	 	= obj/
+VENDOR_DIR  = vendor/lib/
 INSTALLDIR	= /usr/lib/
 HEADERDIR	= /usr/include/
 
@@ -17,10 +18,6 @@ SOURCES		= $(shell find $(SRCDIR) -type f | grep cpp | cut -f 1 -d '.')
 DIRSTRUCTURE = $(shell find $(INCDIR) -type d)
 INCSTRUCTURE = $(patsubst %, -I%, $(DIRSTRUCTURE))
 
-
-IMGUI_DIR = ./vendor/imgui/
-SOURCES += $(IMGUI_DIR)/imgui $(IMGUI_DIR)/imgui_demo $(IMGUI_DIR)/imgui_draw $(IMGUI_DIR)/imgui_tables $(IMGUI_DIR)/imgui_widgets
-SOURCES += $(IMGUI_DIR)/backends/imgui_impl_opengl3
 
 DEPGL 		= -lGL -lEGL -lGLESv2  -ldrm -lgbm -lX11 -lXext -lbitforgeutils -lpng
 #DEPGL 		=  -lpng -lbrcmEGL -lbrcmGLESv2  -L/opt/vc/lib
@@ -32,7 +29,8 @@ OBJECTS 	= $(OBJECTS2:%.cpp=$(OBJDIR)%.o)
 #INCLUDES += $(SOURCES:%.cpp=$(OBJDIR)%.hpp)
 
 #HEADER_DEPS += 	-I./libs/libjpeg-turbo
-HEADER_DEPS += 	-I$(IMGUI_DIR)
+HEADER_DEPS += 	-I./vendor/imgui/
+HEADER_DEPS += 	-I./vendor/ImGuiFileDialog/ImGuiFileDialog/
 HEADER_DEPS += 	-I./vendor/glm/glm/
 #DEPS 		+= 	../02_Common/01_C-Logger
 #DEPS 		+= 	../02_Common/03_UdpSocket
@@ -96,9 +94,9 @@ release: $(OUT)
 
 
 $(OUT): $(SOURCES)
-	$(CC) -shared -o $(BUILDPATH)$@.so $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)*  $(DEPGL) 
+	$(CC) -shared -o $(BUILDPATH)$@.so $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* $(VENDOR_DIR)* $(DEPGL) 
 	@echo 
-	$(CC) -o $(BUILDPATH)$@ $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* main.cpp  $(DEPGL) 
+	$(CC) -o $(BUILDPATH)$@ $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* $(VENDOR_DIR)* main.cpp  $(DEPGL) 
 	@echo 
 
 
@@ -125,3 +123,4 @@ install:
 	ln -sf ${INSTALLDIR}lib${OUT}.so$(VERSION) ${INSTALLDIR}lib${OUT}.so
 	cp -r inc $(HEADERDIR)$(OUT) 
 
+lib:

@@ -11,4 +11,4 @@ mkdir -p build/rel/lib
 mkdir -p build/dbg
 mkdir -p build/dbg/obj
 mkdir -p build/dbg/lib
-
+mkdir -p vendor/lib

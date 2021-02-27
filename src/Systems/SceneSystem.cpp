@@ -1,6 +1,7 @@
 #include "SceneSystem.hpp"
 #include "ImguiXlib.hpp"
 #include "Systems.hpp"
+#include "PrefabLoaderComponent.hpp"
 
 namespace asapi
 {
@@ -18,6 +19,8 @@ namespace asapi
 		p_root = (GameObject*) mBlock->allocate(1, sizeof(GameObject), alignof(GameObject));
 		p_root->Init(mBlock);
 		p_root->SetName("EntryPoint");
+		PrefabLoaderComponent* rootLoader = (PrefabLoaderComponent*) p_root->ADD_COMPONENT( PrefabLoaderComponent );
+		rootLoader->SetPrefabID(1);
 
 		GameObject *pgo, *pgo2 ;
 

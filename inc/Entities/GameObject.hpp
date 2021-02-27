@@ -12,6 +12,7 @@ namespace asapi
 	class ComponentInterface;
 
 	#define GET_COMPONENT(x) GetComponentOfTypeHash(typeid(x).hash_code())
+	#define ADD_COMPONENT(x) AddComponent(typeid(x).hash_code())
 
 	class GameObject: public EntityBase
 	{
@@ -83,7 +84,7 @@ namespace asapi
 		void OnDetach();
 		void ReAttach(GameObject* newParrent);
 
-		void AddComponent(size_t typeHash);
+		ComponentInterface* AddComponent(size_t typeHash);
 		void RemoveComponent(ComponentInterface* ptr);
 		ComponentInterface* GetComponentOfTypeHash(size_t typeHash);
 

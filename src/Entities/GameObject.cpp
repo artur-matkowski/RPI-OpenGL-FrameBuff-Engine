@@ -273,16 +273,18 @@ namespace asapi
 	}
 
 
-	void GameObject::AddComponent(size_t typeHash)
+	ComponentInterface* GameObject::AddComponent(size_t typeHash)
 	{
 		if( GetComponentOfTypeHash(typeHash) != nullptr)
-			return;
+			return nullptr;
 
 		ComponentInterface* newComp = ComponentInterface::AllocateAndInitObjectFromTypeHash(typeHash, m_mBlock);
 
 		v_components.push_back(newComp);
 
 		newComp->Attached(this);
+
+		return newComp;
 	}
 	void GameObject::RemoveComponent(ComponentInterface* ptr)
 	{
