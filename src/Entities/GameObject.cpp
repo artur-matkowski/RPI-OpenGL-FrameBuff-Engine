@@ -193,6 +193,15 @@ namespace asapi
 		ReconstructComponentsFromComponentInfo();
 	}
 
+	void GameObject::SerializeChildren(bfu::JSONStream& stream)
+	{
+		stream << v_children;
+	}
+	void GameObject::DeserializeChildren(bfu::JSONStream& stream)
+	{
+		stream >> v_children;
+	}
+
 	void GameObject::Serialize()
 	{
 		//we will pe using GameObject name as prefab file name

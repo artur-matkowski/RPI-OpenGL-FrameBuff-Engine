@@ -1,50 +1,54 @@
 #include "PrefabLoaderComponent.hpp"
 #include "imgui.h"
+#include "Systems.hpp"
 
 namespace asapi
 {
 	void PrefabLoaderComponent::OnGUI()
 	{
 		ImGui::LabelText("Prefab ID", "%lld", m_prefabID.GetRef().ID() );
-		ImGui::Button("Load"); 
+		if( ImGui::Button("Load") ) Load();
 		ImGui::SameLine();
 		ImGui::PushItemWidth(-ImGui::GetContentRegionAvail().x * 0.5f);
 		ImGui::Button("Unload"); 
 		ImGui::SameLine();
 		ImGui::PushItemWidth(-100.0f);
-		ImGui::Button("Save"); 
+		if( ImGui::Button("Save") ) Save();
 	}
 
 
 	void PrefabLoaderComponent::Save()
 	{
-		// char filePath[GAMEOBJECT_MAX_NAME_LENGTH+sizeof(SERIALIZATION_FILE_EXT)+sizeof(SERIALIZATION_FOLDER)]; 
-		// bfu::JSONStream& jsonStream = SYSTEMS::GetObject().SCENE.GetJSONStreamWorkBuffer();
+		char buff[2048];
+		bfu::stream path(buff, 2048, SYSTEMS::STD_ALLOCATOR );
 
-		// //building a file name;
-		// strcpy(filePath, SERIALIZATION_FOLDER );
-		// strncpy(filePath+sizeof(SERIALIZATION_FOLDER)-1, m_myName.c_str(), GAMEOBJECT_MAX_NAME_LENGTH );
-		// strncpy(filePath+sizeof(SERIALIZATION_FOLDER)-1+m_myName.size(), SERIALIZATION_FILE_EXT, sizeof(SERIALIZATION_FILE_EXT));
+		path.sprintf( "%s/json/%lld.json"
+						, SYSTEMS::GetObject().SCENE.GetProjectPath()
+						, GetPrefabID() );
 
-		// FILE * pFile = fopen (filePath,"wb");
+		bfu::JSONStream& jsonStream = SYSTEMS::GetObject().SCENE.GetJSONStreamWorkBuffer();
+		jsonStream.clear();
 
-		// if( pFile==NULL )
-		// {
-		// 	log::error << "Could not open file: " << filePath << std::endl;
-		// 	return;
- 	// 	}
-
- 	// 	jsonStream << v_children;
-
-		// fwrite(jsonStream.c_str(), 1, jsonStream.size(), pFile);
-
-		// fclose (pFile);
-
-		// jsonStream.clear();
+		m_owner->SerializeChildren( jsonStream );
+		
+		SceneSystem::JSON2File( jsonStream, path.c_str() ) ;
 	}
 	void PrefabLoaderComponent::Load()
 	{
+		char buff[2048];
+		bfu::stream path(buff, 2048, SYSTEMS::STD_ALLOCATOR );
 
+		path.sprintf( "%s/json/%lld.json"
+						, SYSTEMS::GetObject().SCENE.GetProjectPath()
+						, GetPrefabID() );
+
+		bfu::JSONStream& jsonStream = SYSTEMS::GetObject().SCENE.GetJSONStreamWorkBuffer();
+		jsonStream.clear();
+
+		if( SceneSystem::File2JSON( jsonStream, path.c_str() ) )
+		{
+			m_owner->DeserializeChildren( jsonStream );
+		}
 	}
 	void PrefabLoaderComponent::UnLoad()
 	{

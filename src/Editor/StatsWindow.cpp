@@ -1,7 +1,7 @@
 #include "StatsWindow.hpp"
 #include "imgui.h"
 #include "ImGuiFileDialog.h"
-
+#include "PrefabLoaderComponent.hpp"
 
 namespace asapi
 {
@@ -55,6 +55,18 @@ namespace asapi
 				    if ( ImGui::MenuItem(persistance->m_lastOpenProject3.GetRef().c_str()) ) { OpenProject( persistance->m_lastOpenProject3.GetRef().c_str() ); }
 	           		ImGui::EndMenu();
 		        }
+			    ImGui::Separator();
+
+			    if (ImGui::MenuItem("Save root")) 
+			    { 
+			    	PrefabLoaderComponent* cmp = (PrefabLoaderComponent*) SCENE.GetRootNode().GET_COMPONENT(PrefabLoaderComponent);
+			    	cmp->Save(); 
+			    }
+			    if (ImGui::MenuItem("Load root")) 
+			    { 
+			    	PrefabLoaderComponent* cmp = (PrefabLoaderComponent*) SCENE.GetRootNode().GET_COMPONENT(PrefabLoaderComponent);
+			    	cmp->Load(); 
+			    }
 			    ImGui::Separator();
 
 			    if (ImGui::MenuItem("Serialize to JSON")) { SCENE.GetRootNode().Serialize(); }

@@ -1,0 +1,27 @@
+[{
+"m_myName": "GameObject 1", 
+"v_componentsInfo": [{
+"m_recreationString": "{
+\"m_position\": [0.000000, 0.000000, 0.000000], 
+\"m_rotation\": [0.000000, 0.000000, 0.000000], 
+\"m_scale\": [0.000000, 0.000000, 0.000000]
+}", 
+"m_typeId": 17520803739226355458
+}, {
+"m_recreationString": "{
+\"m_prefabID\": 7020033728059190627
+}", 
+"m_typeId": 5400824173256357139
+}]
+}, {
+"m_myName": "GameObject 3", 
+"v_children": [], 
+"v_componentsInfo": [{
+"m_recreationString": "{
+\"m_position\": [0.000000, 0.000000, 0.000000], 
+\"m_rotation\": [0.000000, 0.000000, 0.000000], 
+\"m_scale\": [0.000000, 0.000000, 0.000000]
+}", 
+"m_typeId": 17520803739226355458
+}]
+}]

@@ -1,0 +1,12 @@
+[{
+"m_myName": "GameObject 2", 
+"v_children": [], 
+"v_componentsInfo": [{
+"m_recreationString": "{
+\"m_position\": [0.000000, 0.000000, 0.000000], 
+\"m_rotation\": [0.000000, 0.000000, 0.000000], 
+\"m_scale\": [0.000000, 0.000000, 0.000000]
+}", 
+"m_typeId": 17520803739226355458
+}]
+}]

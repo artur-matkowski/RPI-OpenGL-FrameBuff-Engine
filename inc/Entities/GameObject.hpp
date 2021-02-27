@@ -80,6 +80,9 @@ namespace asapi
 		virtual void Serialize(bfu::JSONStream& stream);
 		virtual void Deserialize(bfu::JSONStream& stream);
 
+		void SerializeChildren(bfu::JSONStream& stream);
+		void DeserializeChildren(bfu::JSONStream& stream);
+
 		void OnAttach(GameObject* newParrent);
 		void OnDetach();
 		void ReAttach(GameObject* newParrent);
