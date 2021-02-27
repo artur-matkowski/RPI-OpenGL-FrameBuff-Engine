@@ -13,8 +13,11 @@ namespace asapi{
 	{
 		glm::ivec2			m_resolution;
 
+		std::vector<RendererComponent*> 
+							v_rendererComponents;
 
-		RendererComponent* 	m_rendererComponent = 0;
+
+		//RendererComponent* 	m_rendererComponent = 0;
 
 	
 		void SendTextureToGPU(void *textureImage);
@@ -27,6 +30,9 @@ namespace asapi{
 		void Init();
 		void SetupEvents();
 		void Render();
+
+		void RegisterRenderer(RendererComponent*);
+		void UnRegisterRenderer(RendererComponent*);
 	};
 
 }

@@ -14,4 +14,13 @@ namespace asapi
 		
 		systems.RESOURCES.requestResource( &m_mesh, "---" );
 	};
+
+	void RendererComponent::OnAttach()
+	{
+		SYSTEMS::GetObject().RENDERER.RegisterRenderer( this );
+	}
+	void RendererComponent::OnDetach()
+	{
+		SYSTEMS::GetObject().RENDERER.UnRegisterRenderer( this );
+	}
 }

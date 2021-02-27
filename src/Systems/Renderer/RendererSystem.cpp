@@ -28,12 +28,12 @@ namespace asapi{
 
 	void RendererSystem::Init()
 	{
-		m_rendererComponent = new RendererComponent( SYSTEMS::SYSTEMS_ALLOCATOR );
+		//m_rendererComponent = new RendererComponent( SYSTEMS::SYSTEMS_ALLOCATOR );
 	}
 
 	RendererSystem::RendererSystem()
 	{
-
+		v_rendererComponents.reserve(1024);
 	}
 	RendererSystem::~RendererSystem()
 	{
@@ -45,9 +45,29 @@ namespace asapi{
 
 	void RendererSystem::Render()
 	{
-		m_rendererComponent->Render();
+		//m_rendererComponent->Render();
+
+		for(auto it = v_rendererComponents.begin(); it!=v_rendererComponents.end(); ++it)
+		{
+			(*it)->Render();
+		}
 	}
 			
 	
+	void RendererSystem::RegisterRenderer(RendererComponent* element)
+	{
+		v_rendererComponents.push_back(element);
+	}
+	void RendererSystem::UnRegisterRenderer(RendererComponent* element)
+	{
+		for(auto it = v_rendererComponents.begin(); it!=v_rendererComponents.end(); ++it)
+		{
+			if(element==*it)
+			{
+				v_rendererComponents.erase(it);
+				break;
+			}
+		}
+	}
 
 }

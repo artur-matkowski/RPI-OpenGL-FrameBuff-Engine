@@ -134,9 +134,6 @@ namespace asapi
 		if (eglWindow.context == EGL_NO_CONTEXT) {
 			return 0;
 		}
-
-		eglQueryContext(m_XDisplay.egl, eglWindow.context, EGL_CONTEXT_CLIENT_VERSION, &version);
-		log::info << "OpenGL ES: " << version << std::endl;
 		
 		//printf("OpenGL ES: %d\n", version);
 
@@ -150,8 +147,6 @@ namespace asapi
 
 		eglWindow.resolution.x = width;
 		eglWindow.resolution.y = height;
-
-		log::debug << "\tegl: " << *(int*)m_XDisplay.egl << " \tcontext: " << *(int*)eglWindow.context << std::endl;
 
 		m_eglWindows.push_back(eglWindow);
 		return &m_eglWindows.back();

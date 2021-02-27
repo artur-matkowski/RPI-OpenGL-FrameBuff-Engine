@@ -21,7 +21,8 @@ namespace asapi
 		RendererComponent(bfu::MemBlockBase* mBlock);
 		~RendererComponent(){};
 
-
+		virtual void OnAttach() override;
+		virtual void OnDetach() override;
 	
 	
 		inline void Render()
