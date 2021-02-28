@@ -16,7 +16,6 @@ namespace asapi
 		ResourcePtr< Mesh >		 					m_mesh;
 
 		Uniform<glm::mat4>*							p_modelViewMat;
-		void* ptr = nullptr;
 
 	public:
 		RendererComponent(bfu::MemBlockBase* mBlock);

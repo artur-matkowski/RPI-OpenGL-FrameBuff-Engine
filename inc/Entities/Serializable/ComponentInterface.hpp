@@ -63,6 +63,7 @@ namespace asapi
 
 		virtual void OnAttach(){};
 		virtual void OnDetach(){};
+		virtual void OnIsDirty(){};
 		virtual size_t TypeHash() = 0;
 
 		virtual const char* TypeName()

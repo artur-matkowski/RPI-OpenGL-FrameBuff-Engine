@@ -3,6 +3,7 @@
 #include "ext.hpp"
 #include "GameObject.hpp"
 #include "imgui.h"
+#define M_PIf           3.14159265358979323846f  /* pi */
 
 namespace asapi
 {
@@ -17,7 +18,12 @@ namespace asapi
 		m_scale[2] = 1.0f;
 	};
 
-	void Transform3D::UpdateModelMatrix()
+	void Transform3D::OnAttach()
+	{
+		OnIsDirty();
+	}
+
+	void Transform3D::OnIsDirty()
 	{
 		//log::debug << "UpdateModelMatrix" << std::endl;1
 		GameObject* parent = m_owner->GetParent();
@@ -26,9 +32,9 @@ namespace asapi
 
 		m_modelMatix = glm::translate(m_modelMatix, glm::vec3( m_position[0], m_position[1], m_position[2] ) );
 		//m_modelMatix = glm::translate(m_modelMatix, localPivot * glm::vec3(1.0f, -1.0f, 1.0f));
-		m_modelMatix = glm::rotate(m_modelMatix, m_rotation[1], glm::vec3(0.0, 1.0, 0.0));
-		m_modelMatix = glm::rotate(m_modelMatix, m_rotation[0], glm::vec3(1.0, 0.0, 0.0));
-		m_modelMatix = glm::rotate(m_modelMatix, m_rotation[2], glm::vec3(0.0, 0.0, 1.0));
+		m_modelMatix = glm::rotate(m_modelMatix, m_rotation[1]*M_PIf/180.0f, glm::vec3(0.0, 1.0, 0.0));
+		m_modelMatix = glm::rotate(m_modelMatix, m_rotation[0]*M_PIf/180.0f, glm::vec3(1.0, 0.0, 0.0));
+		m_modelMatix = glm::rotate(m_modelMatix, m_rotation[2]*M_PIf/180.0f, glm::vec3(0.0, 0.0, 1.0));
 		//m_modelMatix = glm::translate(m_modelMatix, localPivot * glm::vec3(-1.0f, 1.0f, -1.0f));
 
 		// glm::mat4 View = glm::lookAt(
@@ -39,20 +45,14 @@ namespace asapi
 
 		// glm::mat4 Projection = glm::perspective( 0.395f, 1.0f, 1.0f, 200.0f) * glm::ortho(0.0f, 1024.0f, 600.0f, 0.0f, 1.0f, -1.0f);	
 
-		m_MVP = m_modelMatix;
 	
 		const int size = m_owner->GetChildCount();
 		for(int i=0; i<size; ++i)
 		{
-			m_owner->GetChild(i)->GetTransform3D()->UpdateModelMatrix();
+			m_owner->GetChild(i)->GetTransform3D()->OnIsDirty(); // == OnIsDirty()
 		}
 	}
 
-
-	void Transform3D::OnAttach()
-	{
-		UpdateModelMatrix();
-	}
 	void Transform3D::OnGUI()
 	{
 		bool updated = false;
@@ -62,10 +62,6 @@ namespace asapi
 
 
 		if(updated)
-			UpdateModelMatrix();
-
-		glm::vec4 tmp = GetMVMatrix() * glm::vec4( m_position[0], m_position[1], m_position[2], 0.0f ) ;
-
-		ImGui::LabelText("Test position after model transformation", "%f - %f - %f", tmp.x, tmp.y, tmp.z);
+			OnIsDirty(); // OnIsDirty()
 	}
 }

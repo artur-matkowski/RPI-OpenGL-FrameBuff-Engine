@@ -13,19 +13,16 @@ namespace asapi
 		SerializableArray<float>   	m_scale;
 
 		glm::mat4 					m_modelMatix;
-		glm::mat4 					m_MVP;
 		
 	public:
 		Transform3D(bfu::MemBlockBase* mBlock);
 		Transform3D(const Transform3D&) = delete;
 		~Transform3D(){};
 
-
-		void UpdateModelMatrix();
-		//glm::mat4& GetModelMatrix() 		{ return m_modelMatix; } 
-		glm::mat4& GetMVMatrix() 			{ return m_MVP; } 
+		glm::mat4& GetModelMatrix() 		{ return m_modelMatix; } 
 
 		virtual void OnAttach() override;
+		virtual void OnIsDirty() override;
 		virtual void OnGUI() override;
 	};
 }

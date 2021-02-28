@@ -64,6 +64,8 @@ namespace asapi
 	public:
 		GameObject( const GameObject& cp ) = delete;
 		~GameObject();
+		void ClearChildren();
+		void ClearComponents(); 
 
 		//TODO
 		//GameObject& operator=(const GameObject& cp);

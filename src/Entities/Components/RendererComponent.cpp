@@ -32,12 +32,8 @@ namespace asapi
 
 	void RendererComponent::Render()
 	{
-		ptr = (void*)m_owner->GetTransform3D();
-		glm::mat4 *tmp = &m_owner->GetTransform3D()->GetMVMatrix();
-
-
 		if(p_modelViewMat!=0)
-			p_modelViewMat->SetUniform( *tmp );
+			p_modelViewMat->SetUniform( m_owner->GetTransform3D()->GetModelMatrix() );
 		else
 			log::warning << "failing on matrix uniform update" << std::endl;
 
@@ -47,7 +43,7 @@ namespace asapi
 	
 	void RendererComponent::OnGUI()
 	{
-		ImGui::Text(" %s %lld", m_owner->GetName(), (size_t)ptr );
+
 	}
 
 }

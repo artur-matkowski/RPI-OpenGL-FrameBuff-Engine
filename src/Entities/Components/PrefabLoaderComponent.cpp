@@ -10,7 +10,7 @@ namespace asapi
 		if( ImGui::Button("Load") ) Load();
 		ImGui::SameLine();
 		ImGui::PushItemWidth(-(ImGui::GetWindowContentRegionWidth() * 0.5f - ImGui::CalcItemWidth()));
-		ImGui::Button("Unload"); 
+		if( ImGui::Button("Unload") ) UnLoad();
 		ImGui::PopItemWidth();
 		ImGui::SameLine();
 		ImGui::PushItemWidth(-(ImGui::GetWindowContentRegionWidth()  - ImGui::CalcItemWidth()));
@@ -54,7 +54,7 @@ namespace asapi
 	}
 	void PrefabLoaderComponent::UnLoad()
 	{
-
+		m_owner->ClearChildren();
 	}
 
 	void PrefabLoaderComponent::SetPrefabID(uint64_t id)

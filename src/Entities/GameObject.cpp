@@ -52,11 +52,27 @@ namespace asapi
 
 	GameObject::~GameObject()
 	{
+		ClearComponents();
+		ClearChildren();
+	}
+	void GameObject::ClearChildren()
+	{
 		for(auto it = v_children.begin(); 
 			it != v_children.end();
 			++it)
 		{
 			(*it)->DispouseAndDeallocate();
+		}
+		v_children.clear();
+	}
+	void GameObject::ClearComponents()
+	{
+		while( v_components.size() != 0 )
+		{
+			ComponentInterface* ptr = *v_components.begin();
+			v_components.erase( v_components.begin() );
+			ptr->Detached();
+			m_mBlock->deallocate(ptr, TypeInfo::GetTypeInfo( ptr->TypeHash() )->sizeOf ); // TODO wrong sizeof
 		}
 	}
 
@@ -113,13 +129,7 @@ namespace asapi
 	}
 	void GameObject::ReconstructComponentsFromComponentInfo()
 	{
-		while( v_components.size() != 0 )
-		{
-			ComponentInterface* ptr = *v_components.begin();
-			v_components.erase( v_components.begin() );
-			ptr->Detached();
-			m_mBlock->deallocate(ptr, TypeInfo::GetTypeInfo( ptr->TypeHash() )->sizeOf ); // TODO wrong sizeof
-		}
+		ClearComponents();
 
 		for(int i=0; i<v_componentsInfo.size(); ++i)
 		{
@@ -127,7 +137,10 @@ namespace asapi
 
 			auto &recreationString = v_componentsInfo[i].m_recreationString.GetRef();
 			if(recreationString.size() > 0)
+			{
 				v_components.back()->Deserialize( v_componentsInfo[i].m_recreationString.GetRef() );
+				v_components.back()->OnIsDirty();
+			}
 		}
 		ClearComponentInfo();
 	}
