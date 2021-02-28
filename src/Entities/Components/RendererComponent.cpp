@@ -18,6 +18,8 @@ namespace asapi
 		systems.RESOURCES.requestResource( &m_material, "---" );
 		
 		systems.RESOURCES.requestResource( &m_mesh, "---" );
+
+		p_modelViewMat = (Uniform<glm::mat4>*) m_material->GetUniformPtr("modelViewMat");
 	};
 
 	void RendererComponent::OnAttach()
@@ -31,9 +33,7 @@ namespace asapi
 
 	void RendererComponent::Render()
 	{
-		const float *pSource = (const float*)glm::value_ptr( m_owner->GetTransform3D()->GetModelMatrix() );
-		//glLoadMatrixf( pSource );
-		//glUniformMatrix4fv(0, 16, false, pSource);
+		p_modelViewMat->SetUniform( m_owner->GetTransform3D()->GetMVMatrix() );
 
 		m_material->BindMaterial();
 		m_mesh->Render();

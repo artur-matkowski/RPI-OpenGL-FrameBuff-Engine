@@ -58,7 +58,9 @@ namespace asapi
 		    switch(type)
 		    {
 		    	default:
-		    		log::warning << "Unsuported attribute type found in " << materialName << ": " << name << std::endl;
+		    		char buff[128];
+		    		sprintf(buff, "%#04X", type);
+		    		log::warning << "Unsuported attribute type found in " << materialName << ": " << name << " type: " << buff << std::endl;
 		    		break;
 		    }
 		}
@@ -83,8 +85,13 @@ namespace asapi
 		    	case GL_FLOAT_VEC3:
 		    		m_uniformMap[std::string(name)] = new Uniform<glm::vec3>(location, this);
 		    		break;
+		    	case GL_FLOAT_MAT4:
+		    		m_uniformMap[std::string(name)] = new Uniform<glm::mat4>(location, this);
+		    		break;
 		    	default:
-		    		log::warning << "Unsuported uniform type found in " << materialName << ": " << name << std::endl;
+		    		char buff[128];
+		    		sprintf(buff, "%#04X", type);
+		    		log::warning << "Unsuported uniform type found in " << materialName << ": " << name << " type: " << buff << std::endl;
 		    		break;
 		    }
 		}

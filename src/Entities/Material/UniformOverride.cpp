@@ -28,4 +28,5 @@ namespace asapi
 	template class UniformOverride<float>;
 	template class UniformOverride<int>;
 	template class UniformOverride<glm::vec3>;
+	template class UniformOverride<glm::mat4>;
 }

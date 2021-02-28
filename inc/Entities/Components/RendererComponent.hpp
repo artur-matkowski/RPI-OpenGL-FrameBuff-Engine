@@ -15,7 +15,7 @@ namespace asapi
 		ResourcePtr< MaterialType > 				m_material;
 		ResourcePtr< Mesh >		 					m_mesh;
 
-
+		Uniform<glm::mat4>*							p_modelViewMat;
 
 	public:
 		RendererComponent(bfu::MemBlockBase* mBlock);
