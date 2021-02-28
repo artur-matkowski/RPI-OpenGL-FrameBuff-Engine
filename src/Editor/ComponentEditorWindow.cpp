@@ -1,4 +1,4 @@
-#include "GameObjectViewWindow.hpp"
+#include "ComponentEditorWindow.hpp"
 #include "GameObject.hpp"
 #include "imgui.h"
 #include <cstdio>
@@ -22,9 +22,9 @@ namespace asapi
 		}
 	}
 
-	GameObjectViewWindow::GameObjectViewWindow()
+	ComponentEditorWindow::ComponentEditorWindow()
 	{
-		//log::error << "GameObjectViewWindow::GameObjectViewWindow()" << std::endl;
+		//log::error << "ComponentEditorWindow::ComponentEditorWindow()" << std::endl;
 
 		TypeInfo* types = TypeInfo::GetTypeInfo();
 		int typesC = TypeInfo::GetTypeInfoSize();
@@ -37,11 +37,11 @@ namespace asapi
 
 		print(m_rootNode);
 	};
-	GameObjectViewWindow::~GameObjectViewWindow(){};
+	ComponentEditorWindow::~ComponentEditorWindow(){};
 
 	GameObject* _selected = 0;
 
-	void GameObjectViewWindow::SetSelectedGameObject( GameObject* ptr )
+	void ComponentEditorWindow::SetSelectedGameObject( GameObject* ptr )
 	{
 		_selected = ptr;
 	}
@@ -68,9 +68,9 @@ namespace asapi
 		}
 	}
 
-	void GameObjectViewWindow::OnGUI()
+	void ComponentEditorWindow::OnGUI()
 	{
-		static GameObjectViewWindow _this;
+		static ComponentEditorWindow _this;
 		auto window_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking;
 
 		ImGui::Begin("GameObject View", NULL, window_flags); 

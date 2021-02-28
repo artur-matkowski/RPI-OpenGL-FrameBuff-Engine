@@ -1,7 +1,7 @@
 #include "HierarchyWindow.hpp"
 #include "imgui.h"
 #include "Systems.hpp"
-#include "GameObjectViewWindow.hpp"
+#include "ComponentEditorWindow.hpp"
 #ifdef IS_EDITOR
 
 
@@ -166,11 +166,11 @@ namespace asapi
 
         if( _this.v_SelectedGameObjects.size() > 0)
         {
-        	GameObjectViewWindow::SetSelectedGameObject( _this.v_SelectedGameObjects[0] );
+        	ComponentEditorWindow::SetSelectedGameObject( _this.v_SelectedGameObjects[0] );
         }
         else
         {
-        	GameObjectViewWindow::SetSelectedGameObject( nullptr );
+        	ComponentEditorWindow::SetSelectedGameObject( nullptr );
         }
 
 	}

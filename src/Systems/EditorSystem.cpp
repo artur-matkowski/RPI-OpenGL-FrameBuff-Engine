@@ -2,7 +2,7 @@
 #ifdef IS_EDITOR
 #include "StatsWindow.hpp"
 #include "HierarchyWindow.hpp"
-#include "GameObjectViewWindow.hpp"
+#include "ComponentEditorWindow.hpp"
 
 namespace asapi
 {
@@ -23,7 +23,7 @@ namespace asapi
 
 		HierarchyWindow::OnGUI();
 
-		GameObjectViewWindow::OnGUI();
+		ComponentEditorWindow::OnGUI();
 	}	
 }
 

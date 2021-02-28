@@ -8,22 +8,22 @@ namespace asapi
 	class Transform3D: public ComponentBase<Transform3D>
 	{
 	protected:
-		SerializableArray<float>   m_position;
-		SerializableArray<float>   m_rotation;
-		SerializableArray<float>   m_scale;
+		SerializableArray<float>   	m_position;
+		SerializableArray<float>   	m_rotation;
+		SerializableArray<float>   	m_scale;
+
+		glm::mat4 					m_modelMatix;
 		
 	public:
-		Transform3D(bfu::MemBlockBase* mBlock)
-			:ComponentBase<Transform3D>(mBlock)
-			,m_position("m_position", this, 3, mBlock)
-			,m_rotation("m_rotation", this, 3, mBlock)
-			,m_scale("m_scale", this, 3, mBlock)
-		{};
+		Transform3D(bfu::MemBlockBase* mBlock);
 		Transform3D(const Transform3D&) = delete;
 		~Transform3D(){};
 
 
-		
+		void UpdateModelMatrix();
+		glm::mat4& GetModelMatrix() 		{ return m_modelMatix; } 
+
+		virtual void OnAttach() override;
 	};
 }
 

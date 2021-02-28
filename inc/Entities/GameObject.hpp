@@ -1,7 +1,7 @@
 #ifndef _H_GameObject
 #define _H_GameObject
 #include "EntityBase.hpp"
-#include "ComponentBase.hpp"
+#include "_ComponentList.hpp"
 
 namespace asapi
 {
@@ -42,8 +42,7 @@ namespace asapi
 		void ClearComponentInfo();
 		void ReconstructComponentsFromComponentInfo();
 	protected:
-		bool 											b_isGameObjectLoader = false;
-		GameObject*										p_parrent = 0;
+		GameObject*										p_parent = 0;
 
 		bfu::SerializableVar<bfu::string>  				m_myName;
 		bfu::SerializableVarVector<GameObject*>			v_children;
@@ -53,6 +52,7 @@ namespace asapi
 
 		std::vector<ComponentInterface*, bfu::custom_allocator<ComponentInterface*>> 
 														v_components;
+		Transform3D										*p_myTransform = 0;
 
 		virtual void RegisterChild(GameObject* newChild);
 		virtual void UnRegisterChild(GameObject* deleteChild);
@@ -92,25 +92,13 @@ namespace asapi
 
 
 		void SetName(const char*);
-		inline const char* GetName()
-		{
-			return m_myName.c_str();
-		}
+		inline const char* GetName()					{ return m_myName.c_str(); }
 
-		inline int GetChildCount()
-		{
-			return v_children.size();
-		}
+		inline int GetChildCount()						{ return v_children.size();	}
+		inline GameObject* GetChild(int index)			{ return v_children[index]; }
 
-		inline GameObject* GetChild(int index)
-		{
-			return v_children[index];
-		}
-
-		inline bool IsGameObjectLoader()
-		{
-			return b_isGameObjectLoader;
-		}
+		inline Transform3D* GetTransform3D()			{ return p_myTransform;	}
+		inline GameObject* GetParent()					{ return p_parent; }
 
 		#ifdef IS_EDITOR
 		void OnGUI();

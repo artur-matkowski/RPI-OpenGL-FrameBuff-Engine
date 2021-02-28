@@ -26,7 +26,6 @@ namespace asapi
 
 	GameObject::GameObject(  )
 		:EntityBase( SYSTEMS::STD_ALLOCATOR )
-		,b_isGameObjectLoader(false)
 		,m_myName("m_myName", this, SYSTEMS::STD_ALLOCATOR )
 		,v_children("v_children", this, SYSTEMS::STD_ALLOCATOR )
 		,v_componentsInfo("v_componentsInfo", this, SYSTEMS::STD_ALLOCATOR ) //it is only usefull when de/serializing JSON
@@ -35,12 +34,11 @@ namespace asapi
 		m_myName.resize(GAMEOBJECT_MAX_NAME_LENGTH, '\0');
 		m_myName = "GameObject";
 
-		AddComponent( TypeInfo::GetTypeInfo("asapi::Transform3D")->id );
+		p_myTransform = (Transform3D*)AddComponent( TypeInfo::GetTypeInfo("asapi::Transform3D")->id );
 	}
 
 	GameObject::GameObject( bfu::MemBlockBase* mBlock )
 		:EntityBase(mBlock)
-		,b_isGameObjectLoader(false)
 		,m_myName("m_myName", this, mBlock)
 		,v_children("v_children", this, mBlock)
 		,v_componentsInfo("v_componentsInfo", this, SYSTEMS::STD_ALLOCATOR ) //it is only usefull when de/serializing JSON
@@ -49,7 +47,7 @@ namespace asapi
 		m_myName.resize(GAMEOBJECT_MAX_NAME_LENGTH, '\0');
 		m_myName = "GameObject";
 
-		AddComponent( TypeInfo::GetTypeInfo("asapi::Transform3D")->id );
+		p_myTransform = (Transform3D*)AddComponent( TypeInfo::GetTypeInfo("asapi::Transform3D")->id );
 	}
 
 	GameObject::~GameObject()
@@ -68,7 +66,7 @@ namespace asapi
 	// 	Dispouse();
 	// 	Init(cp.m_mBlock);
 	// 	m_myName = "Copy of " + cp.m_myName;
-	// 	OnAttach(cp.p_parrent);
+	// 	OnAttach(cp.p_parent);
 
 	// 	return *this;
 	// }
@@ -203,21 +201,21 @@ namespace asapi
 	}
 
 
-	void GameObject::OnAttach(GameObject* newParrent)
+	void GameObject::OnAttach(GameObject* newParent)
 	{
-		p_parrent = newParrent;
-		newParrent->RegisterChild( this );
+		p_parent = newParent;
+		newParent->RegisterChild( this );
 	}
 	void GameObject::OnDetach()
 	{
-		p_parrent->UnRegisterChild( this );
-		p_parrent = 0;
+		p_parent->UnRegisterChild( this );
+		p_parent = 0;
 	}
-	void GameObject::ReAttach(GameObject* newParrent)
+	void GameObject::ReAttach(GameObject* newParent)
 	{
-		p_parrent->UnRegisterChild( this );
-		p_parrent = newParrent;
-		newParrent->RegisterChild( this );
+		p_parent->UnRegisterChild( this );
+		p_parent = newParent;
+		newParent->RegisterChild( this );
 	}
 
 
@@ -236,6 +234,12 @@ namespace asapi
 	}
 	void GameObject::RemoveComponent(ComponentInterface* ptr)
 	{
+		if( ptr->TypeHash() == typeid(Transform3D).hash_code() )
+		{
+			log::warning << "Can not remove Transform3D. One has to be present on GameObject node" << std::endl;
+			return;
+		}
+
 		for(auto it = v_components.begin(); it!=v_components.end(); ++it)
 		{
 			if(*it==ptr)
