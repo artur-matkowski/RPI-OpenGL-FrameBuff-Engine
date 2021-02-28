@@ -25,11 +25,7 @@ namespace asapi
 		virtual void OnDetach() override;
 	
 	
-		inline void Render()
-		{
-			m_material->BindMaterial();
-			m_mesh->Render();
-		};
+		void Render();
 		
 	};
 }

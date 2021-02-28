@@ -1,5 +1,10 @@
 #include "Systems.hpp"
 #include "RendererComponent.hpp"
+#include "GameObject.hpp"
+#include "glm.hpp"
+#include "ext.hpp"
+#include <GLES3/gl3.h> 
+
 
 namespace asapi
 {
@@ -23,4 +28,15 @@ namespace asapi
 	{
 		SYSTEMS::GetObject().RENDERER.UnRegisterRenderer( this );
 	}
+
+	void RendererComponent::Render()
+	{
+		const float *pSource = (const float*)glm::value_ptr( m_owner->GetTransform3D()->GetModelMatrix() );
+		//glLoadMatrixf( pSource );
+		//glUniformMatrix4fv(0, 16, false, pSource);
+
+		m_material->BindMaterial();
+		m_mesh->Render();
+	}
+
 }
