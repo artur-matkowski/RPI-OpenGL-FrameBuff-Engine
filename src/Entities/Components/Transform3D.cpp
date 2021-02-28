@@ -2,6 +2,7 @@
 #include "glm.hpp"
 #include "ext.hpp"
 #include "GameObject.hpp"
+#include "imgui.h"
 
 namespace asapi
 {
@@ -20,6 +21,7 @@ namespace asapi
 
 	void Transform3D::UpdateModelMatrix()
 	{
+		//log::debug << "UpdateModelMatrix" << std::endl;
 		GameObject* parent = m_owner->GetParent();
 
 		m_modelMatix = parent!=0 ? parent->GetTransform3D()->m_modelMatix : glm::mat4(1.0f);
@@ -43,5 +45,15 @@ namespace asapi
 	void Transform3D::OnAttach()
 	{
 		UpdateModelMatrix();
+	}
+	void Transform3D::OnGUI()
+	{
+		bool updated = false;
+		updated |= ImGui::InputFloat3("Position", &m_position[0]);
+		updated |= ImGui::InputFloat3("Rotation", &m_rotation[0]);
+		updated |= ImGui::InputFloat3("Scale", &m_scale[0]);
+
+		if(updated)
+			UpdateModelMatrix();
 	}
 }

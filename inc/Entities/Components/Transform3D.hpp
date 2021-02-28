@@ -24,6 +24,7 @@ namespace asapi
 		glm::mat4& GetModelMatrix() 		{ return m_modelMatix; } 
 
 		virtual void OnAttach() override;
+		virtual void OnGUI() override;
 	};
 }
 
