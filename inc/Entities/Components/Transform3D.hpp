@@ -22,7 +22,7 @@ namespace asapi
 
 
 		void UpdateModelMatrix();
-		glm::mat4& GetModelMatrix() 		{ return m_modelMatix; } 
+		//glm::mat4& GetModelMatrix() 		{ return m_modelMatix; } 
 		glm::mat4& GetMVMatrix() 			{ return m_MVP; } 
 
 		virtual void OnAttach() override;

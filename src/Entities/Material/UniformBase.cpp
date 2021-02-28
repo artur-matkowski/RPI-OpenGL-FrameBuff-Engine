@@ -59,16 +59,20 @@ namespace asapi
 		glUniform3fv(m_location, 3, glm::value_ptr(override) );
 	}
 
+
 	template class Uniform<glm::mat4>;
 	template<>
 	void Uniform<glm::mat4>::SendUniform()
 	{
-		glUniformMatrix4fv(m_location, 16, false, glm::value_ptr(m_data) );
+		glUniformMatrix4fv(m_location, 1, GL_FALSE, glm::value_ptr(m_data) );
 	}
 	template<>
 	void Uniform<glm::mat4>::SendUniform(const glm::mat4& override) const
 	{
-		glUniformMatrix4fv(m_location, 16, false, glm::value_ptr(override) );
+		//glm::mat4 m = glm::mat4(1.0f);
+		log::debug << "Ccalling SendUniform() for mat4" << std::endl;
+
+		glUniformMatrix4fv(m_location, 1, GL_FALSE, glm::value_ptr(override) );
 	}
 
 }

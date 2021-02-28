@@ -34,7 +34,7 @@ namespace asapi
 		m_myName.resize(GAMEOBJECT_MAX_NAME_LENGTH, '\0');
 		m_myName = "GameObject";
 
-		p_myTransform = (Transform3D*)AddComponent( TypeInfo::GetTypeInfo("asapi::Transform3D")->id );
+		AddComponent( TypeInfo::GetTypeInfo("asapi::Transform3D")->id );
 	}
 
 	GameObject::GameObject( bfu::MemBlockBase* mBlock )
@@ -47,7 +47,7 @@ namespace asapi
 		m_myName.resize(GAMEOBJECT_MAX_NAME_LENGTH, '\0');
 		m_myName = "GameObject";
 
-		p_myTransform = (Transform3D*)AddComponent( TypeInfo::GetTypeInfo("asapi::Transform3D")->id );
+		AddComponent( TypeInfo::GetTypeInfo("asapi::Transform3D")->id );
 	}
 
 	GameObject::~GameObject()
@@ -113,11 +113,18 @@ namespace asapi
 	}
 	void GameObject::ReconstructComponentsFromComponentInfo()
 	{
-		v_components.clear();
+		while( v_components.size() != 0 )
+		{
+			ComponentInterface* ptr = *v_components.begin();
+			v_components.erase( v_components.begin() );
+			ptr->Detached();
+			m_mBlock->deallocate(ptr, TypeInfo::GetTypeInfo( ptr->TypeHash() )->sizeOf ); // TODO wrong sizeof
+		}
 
 		for(int i=0; i<v_componentsInfo.size(); ++i)
 		{
-			this->AddComponent( v_componentsInfo[i].m_typeId );
+			this->AddComponent( v_componentsInfo[i].m_typeId );			
+
 			auto &recreationString = v_componentsInfo[i].m_recreationString.GetRef();
 			if(recreationString.size() > 0)
 				v_components.back()->Deserialize( v_componentsInfo[i].m_recreationString.GetRef() );
@@ -225,6 +232,16 @@ namespace asapi
 			return nullptr;
 
 		ComponentInterface* newComp = ComponentInterface::AllocateAndInitObjectFromTypeHash(typeHash, m_mBlock);
+
+
+		if( newComp->TypeHash()			== typeid(Transform3D).hash_code() )
+		{
+			p_myTransform = (Transform3D*)newComp;
+		}
+		else if( newComp->TypeHash()	== typeid(RendererComponent).hash_code() )
+		{
+			p_myRenderer = (RendererComponent*)newComp;
+		}
 
 		v_components.push_back(newComp);
 

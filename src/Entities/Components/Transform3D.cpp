@@ -15,12 +15,6 @@ namespace asapi
 		m_scale[0] = 1.0f;
 		m_scale[1] = 1.0f;
 		m_scale[2] = 1.0f;
-
-		m_modelMatix = glm::mat4(1.0f);
-		m_modelMatix = glm::translate(m_modelMatix, glm::vec3( m_position[0], m_position[1], m_position[2] ) );
-		m_modelMatix = glm::rotate(m_modelMatix, m_rotation[1], glm::vec3(0.0, 1.0, 0.0));
-		m_modelMatix = glm::rotate(m_modelMatix, m_rotation[0], glm::vec3(1.0, 0.0, 0.0));
-		m_modelMatix = glm::rotate(m_modelMatix, m_rotation[2], glm::vec3(0.0, 0.0, 1.0));
 	};
 
 	void Transform3D::UpdateModelMatrix()
@@ -37,17 +31,16 @@ namespace asapi
 		m_modelMatix = glm::rotate(m_modelMatix, m_rotation[2], glm::vec3(0.0, 0.0, 1.0));
 		//m_modelMatix = glm::translate(m_modelMatix, localPivot * glm::vec3(-1.0f, 1.0f, -1.0f));
 
-		glm::mat4 View = glm::lookAt(
-		    glm::vec3(0.0f ,0.0f ,-5.0f ), // Camera is at (0,0,-5), in World Space
-		    glm::vec3(0.0f ,0.0f ,0.0f), // and looks at the origin
-		    glm::vec3(0.0f ,1.0f ,0.0f)  // Head is up (set to 0,-1,0 to look upside-down)
-		    );
+		// glm::mat4 View = glm::lookAt(
+		//     glm::vec3(0.0f ,0.0f ,-5.0f ), // Camera is at (0,0,-5), in World Space
+		//     glm::vec3(0.0f ,0.0f ,0.0f), // and looks at the origin
+		//     glm::vec3(0.0f ,1.0f ,0.0f)  // Head is up (set to 0,-1,0 to look upside-down)
+		//     );
 
-		glm::mat4 Projection = glm::perspective( 0.395f, 1.0f, 1.0f, 200.0f) * glm::ortho(0.0f, 1024.0f, 600.0f, 0.0f, 1.0f, -1.0f);	
+		// glm::mat4 Projection = glm::perspective( 0.395f, 1.0f, 1.0f, 200.0f) * glm::ortho(0.0f, 1024.0f, 600.0f, 0.0f, 1.0f, -1.0f);	
 
-		m_MVP = m_modelMatix * View * Projection;
-
-
+		m_MVP = m_modelMatix;
+	
 		const int size = m_owner->GetChildCount();
 		for(int i=0; i<size; ++i)
 		{
@@ -67,7 +60,12 @@ namespace asapi
 		updated |= ImGui::InputFloat3("Rotation", &m_rotation[0]);
 		updated |= ImGui::InputFloat3("Scale", &m_scale[0]);
 
+
 		if(updated)
 			UpdateModelMatrix();
+
+		glm::vec4 tmp = GetMVMatrix() * glm::vec4( m_position[0], m_position[1], m_position[2], 0.0f ) ;
+
+		ImGui::LabelText("Test position after model transformation", "%f - %f - %f", tmp.x, tmp.y, tmp.z);
 	}
 }

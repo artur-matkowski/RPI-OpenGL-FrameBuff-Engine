@@ -53,6 +53,7 @@ namespace asapi
 		std::vector<ComponentInterface*, bfu::custom_allocator<ComponentInterface*>> 
 														v_components;
 		Transform3D										*p_myTransform = 0;
+		RendererComponent								*p_myRenderer = 0;
 
 		virtual void RegisterChild(GameObject* newChild);
 		virtual void UnRegisterChild(GameObject* deleteChild);

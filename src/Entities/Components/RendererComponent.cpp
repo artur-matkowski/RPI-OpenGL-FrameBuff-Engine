@@ -3,8 +3,7 @@
 #include "GameObject.hpp"
 #include "glm.hpp"
 #include "ext.hpp"
-#include <GLES3/gl3.h> 
-
+#include "imgui.h"
 
 namespace asapi
 {
@@ -33,10 +32,22 @@ namespace asapi
 
 	void RendererComponent::Render()
 	{
-		p_modelViewMat->SetUniform( m_owner->GetTransform3D()->GetMVMatrix() );
+		ptr = (void*)m_owner->GetTransform3D();
+		glm::mat4 *tmp = &m_owner->GetTransform3D()->GetMVMatrix();
+
+
+		if(p_modelViewMat!=0)
+			p_modelViewMat->SetUniform( *tmp );
+		else
+			log::warning << "failing on matrix uniform update" << std::endl;
 
 		m_material->BindMaterial();
 		m_mesh->Render();
+	}
+	
+	void RendererComponent::OnGUI()
+	{
+		ImGui::Text(" %s %lld", m_owner->GetName(), (size_t)ptr );
 	}
 
 }
