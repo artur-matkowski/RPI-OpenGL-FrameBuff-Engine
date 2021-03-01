@@ -3,3 +3,5 @@ Logs/*
 *.out
 *.gch
 vendor/lib/*
+*.ini
+*.json
