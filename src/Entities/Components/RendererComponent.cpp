@@ -3,7 +3,9 @@
 #include "GameObject.hpp"
 #include "glm.hpp"
 #include "ext.hpp"
+#ifdef IS_EDITOR
 #include "imgui.h"
+#endif
 
 namespace asapi
 {
@@ -41,9 +43,11 @@ namespace asapi
 		m_mesh->Render();
 	}
 	
+	#ifdef IS_EDITOR
 	void RendererComponent::OnGUI()
 	{
 
 	}
+	#endif
 
 }

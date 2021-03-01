@@ -2,7 +2,9 @@
 #include "glm.hpp"
 #include "ext.hpp"
 #include "GameObject.hpp"
+#ifdef IS_EDITOR
 #include "imgui.h"
+#endif
 #define M_PIf           3.14159265358979323846f  /* pi */
 
 namespace asapi
@@ -53,6 +55,7 @@ namespace asapi
 		}
 	}
 
+	#ifdef IS_EDITOR
 	void Transform3D::OnGUI()
 	{
 		bool updated = false;
@@ -64,4 +67,5 @@ namespace asapi
 		if(updated)
 			OnIsDirty(); // OnIsDirty()
 	}
+	#endif
 }

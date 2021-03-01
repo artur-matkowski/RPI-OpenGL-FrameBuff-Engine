@@ -55,16 +55,20 @@ print:
 	$(OBJECTS)
 
 debug-player: DEBUG_CC 	+= -DIS_PLAYER
+debug-player: BUILDPATH 	= build/dbg/player/
 debug-player: debug
 
 release-player: RELEASE_CC 	+= -DIS_PLAYER
+release-player: BUILDPATH 	= build/rel/player/
 release-player: release
 
 
 debug-editor: DEBUG_CC 	+= -DIS_EDITOR
+debug-editor: BUILDPATH 	= build/dbg/editor/
 debug-editor: debug
 
 release-editor: RELEASE_CC 	+= -DIS_EDITOR
+release-editor: BUILDPATH 	= build/rel/editor/
 release-editor: release
 
 ifeq ($(ARCHITECTURE),armhf)
@@ -72,9 +76,7 @@ ifeq ($(ARCHITECTURE),armhf)
 debug: DEBUG_CC 	+= -DIS_TARGET
 endif
 debug: CC 			+= $(DEBUG_CC)
-#debug: CC 			+= -DPROFILER_ACTIVE
-debug: BUILDPATH 	= build/dbg/
-debug: OBJDIR 		= build/dbg/obj/
+debug: OBJDIR 		= $(BUILDPATH)obj/
 debug: OBJECTS 		= $(SOURCES:%.cpp=$(OBJDIR)%.o)
 debug: STATIC_LINK	= $(BUILDPATH)lib/*.a
 debug:  $(OUT) 
@@ -85,8 +87,7 @@ ifeq ($(ARCHITECTURE),armhf)
 release: RELEASE_CC 	+= -DIS_TARGET
 endif
 release: CC 			+= $(RELEASE_CC)
-release: BUILDPATH 		= build/rel/
-release: OBJDIR 		= build/rel/obj/
+release: OBJDIR 		= $(BUILDPATH)obj/
 release: OBJECTS 		= $(SOURCES:%.cpp=$(OBJDIR)%.o)
 release: STATIC_LINK	= $(BUILDPATH)lib/*.a
 release: $(OUT) 

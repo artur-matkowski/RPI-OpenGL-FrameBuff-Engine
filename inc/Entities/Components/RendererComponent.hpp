@@ -26,8 +26,9 @@ namespace asapi
 	
 	
 		void Render();
+		#ifdef IS_EDITOR
 		virtual void OnGUI() override;
-
+		#endif
 
 	};
 }

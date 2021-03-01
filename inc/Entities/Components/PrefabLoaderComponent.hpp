@@ -17,7 +17,9 @@ namespace asapi
 		~PrefabLoaderComponent(){};
 
 
+		#ifdef IS_EDITOR
 		virtual void OnGUI() override;
+		#endif
 
 		void Save();
 		void Load();

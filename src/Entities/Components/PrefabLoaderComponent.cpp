@@ -1,9 +1,13 @@
 #include "PrefabLoaderComponent.hpp"
+#ifdef IS_EDITOR
 #include "imgui.h"
+#endif
 #include "Systems.hpp"
 
 namespace asapi
 {
+
+	#ifdef IS_EDITOR
 	void PrefabLoaderComponent::OnGUI()
 	{
 		ImGui::LabelText("Prefab ID", "%lld", m_prefabID.GetRef().ID() );
@@ -17,6 +21,7 @@ namespace asapi
 		if( ImGui::Button("Save") ) Save();
 		ImGui::PopItemWidth();
 	}
+	#endif
 
 
 	void PrefabLoaderComponent::Save()
