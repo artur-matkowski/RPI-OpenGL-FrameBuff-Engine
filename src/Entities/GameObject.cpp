@@ -118,7 +118,7 @@ namespace asapi
 		{
 			v_componentsInfo.emplace_back( SYSTEMS::STD_ALLOCATOR );
 
-			v_componentsInfo.back().m_typeId = v_components[i]->TypeHash();
+			v_componentsInfo.back().m_componentTypeName.GetRef().sprintf( v_components[i]->TypeName() );
 			//v_componentsInfo.back().m_recreationString << *v_components[i]; //Can't really do that is we have a ptr not a full reference
 			v_components[i]->Serialize( v_componentsInfo.back().m_recreationString.GetRef() );
 		}
@@ -133,7 +133,7 @@ namespace asapi
 
 		for(int i=0; i<v_componentsInfo.size(); ++i)
 		{
-			this->AddComponent( v_componentsInfo[i].m_typeId );			
+			this->AddComponent( v_componentsInfo[i].m_componentTypeName.GetRef().c_str() );			
 
 			auto &recreationString = v_componentsInfo[i].m_recreationString.GetRef();
 			if(recreationString.size() > 0)
@@ -238,6 +238,10 @@ namespace asapi
 		newParent->RegisterChild( this );
 	}
 
+	ComponentInterface* GameObject::AddComponent(const char* componentName)
+	{
+		return AddComponent( TypeInfo::GetTypeInfo( componentName )->id );
+	}
 
 	ComponentInterface* GameObject::AddComponent(size_t typeHash)
 	{

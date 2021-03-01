@@ -20,20 +20,21 @@ namespace asapi
 
 		struct ComponentInfo: public EntityBase
 		{
-			bfu::SerializableVar<size_t>  				m_typeId;
+			char buff[255];
+			bfu::SerializableVar<bfu::stream>  			m_componentTypeName;
 			bfu::SerializableVar<bfu::JSONStream>  		m_recreationString;
 
 			ComponentInfo( bfu::MemBlockBase* mBlock )
 				:EntityBase(mBlock)
-				,m_typeId("m_typeId", this)
+				,m_componentTypeName("m_componentTypeName", this, buff, 255, mBlock)
 				,m_recreationString("m_recreationString", this, mBlock)
 				{};
 			ComponentInfo( const ComponentInfo& cp )
 				:EntityBase(cp.m_mBlock)
-				,m_typeId("m_typeId", this)
+				,m_componentTypeName("m_componentTypeName", this, buff, 255, cp.m_mBlock)
 				,m_recreationString("m_recreationString", this, cp.m_mBlock)
 				{ 
-					m_typeId = cp.m_typeId; 
+					m_componentTypeName = cp.m_componentTypeName; 
 					m_recreationString = cp.m_recreationString;
 				};
 		};
@@ -89,6 +90,7 @@ namespace asapi
 		void ReAttach(GameObject* newParrent);
 
 		ComponentInterface* AddComponent(size_t typeHash);
+		ComponentInterface* AddComponent(const char* componentName);
 		void RemoveComponent(ComponentInterface* ptr);
 		ComponentInterface* GetComponentOfTypeHash(size_t typeHash);
 
