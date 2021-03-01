@@ -46,7 +46,7 @@ namespace asapi
 	#ifdef IS_EDITOR
 	void RendererComponent::OnGUI()
 	{
-
+		m_material->OnGUI();
 	}
 	#endif
 

@@ -3,9 +3,20 @@
 #include "MaterialType.hpp"
 #include "UniformOverride.hpp"
 #include <gtc/type_ptr.hpp>
+#ifdef IS_EDITOR
+#include "imgui.h"
+#endif
 
 namespace asapi
 {
+	#ifdef IS_EDITOR
+	void UniformBase::OnGUI(const char* UniformName)
+	{
+		ImGui::LabelText("Unsuported Uniform of: ", UniformName);
+	}
+	#endif
+
+
 	template<class T>
 	void Uniform<T>::SetUniform(const T& in)
 	{
@@ -19,7 +30,6 @@ namespace asapi
 		return new UniformOverride<T>(this, materialInstanceOverrideOwner);
 	}
 
-
 	template class Uniform<int>;
 	template<>
 	void Uniform<int>::SendUniform()
@@ -30,6 +40,11 @@ namespace asapi
 	void Uniform<int>::SendUniform(const int& override) const
 	{
 		glUniform1i(m_location, override );
+	}
+	template<>
+	void Uniform<int>::OnGUI(const char* UniformName)
+	{
+		ImGui::InputInt(UniformName, &m_data );
 	}
 
 	
@@ -45,6 +60,11 @@ namespace asapi
 	{
 		glUniform1f(m_location, override );
 	}
+	template<>
+	void Uniform<float>::OnGUI(const char* UniformName)
+	{
+		ImGui::InputFloat(UniformName, &m_data );
+	}
 
 
 	template class Uniform<glm::vec3>;
@@ -57,6 +77,11 @@ namespace asapi
 	void Uniform<glm::vec3>::SendUniform(const glm::vec3& override) const
 	{
 		glUniform3fv(m_location, 3, glm::value_ptr(override) );
+	}
+	template<>
+	void Uniform<glm::vec3>::OnGUI(const char* UniformName)
+	{
+		ImGui::InputFloat3(UniformName, glm::value_ptr(m_data) );
 	}
 
 
@@ -73,6 +98,14 @@ namespace asapi
 		log::debug << "Ccalling SendUniform() for mat4" << std::endl;
 
 		glUniformMatrix4fv(m_location, 1, GL_FALSE, glm::value_ptr(override) );
+	}
+	template<>
+	void Uniform<glm::mat4>::OnGUI(const char* UniformName)
+	{
+		ImGui::InputFloat4(UniformName, glm::value_ptr(m_data)+0 );
+		ImGui::InputFloat4(UniformName, glm::value_ptr(m_data)+4 );
+		ImGui::InputFloat4(UniformName, glm::value_ptr(m_data)+8 );
+		ImGui::InputFloat4(UniformName, glm::value_ptr(m_data)+12 );
 	}
 
 }

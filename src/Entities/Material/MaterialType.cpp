@@ -1,6 +1,9 @@
 #include "MaterialType.hpp"
 #include "Systems.hpp"
 #include <GLES2/gl2.h>
+#ifdef IS_EDITOR
+#include "imgui.h"
+#endif
 
 
 namespace asapi
@@ -97,4 +100,16 @@ namespace asapi
 		}
 
 	}
+
+	#ifdef IS_EDITOR
+	void MaterialType::OnGUI()
+	{
+		for(auto it = m_uniformMap.begin(); it!=m_uniformMap.end(); ++it)
+		{	
+			ImGui::Spacing();
+			ImGui::Separator();
+			it->second->OnGUI( it->first.c_str() );
+		}
+	}
+	#endif
 }

@@ -22,6 +22,9 @@ namespace asapi
 		~UniformBase(){};
 
 		virtual void SendUniform() = 0;
+		#ifdef IS_EDITOR
+		virtual void OnGUI(const char* UniformName);
+		#endif
 
 		inline void SetUniformLocation(const uint32_t& location)
 		{
@@ -47,6 +50,9 @@ namespace asapi
 		virtual void SendUniform(const T& override) const;
 
 		virtual void SetUniform(const T& in);
+		#ifdef IS_EDITOR
+		virtual void OnGUI(const char* UniformName);
+		#endif
 		
 		virtual void GetUniform(T& out)
 		{

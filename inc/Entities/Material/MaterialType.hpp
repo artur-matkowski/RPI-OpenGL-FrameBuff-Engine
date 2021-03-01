@@ -88,6 +88,10 @@ namespace asapi
 			//glUniform1i(texUnitLoc , 0);
 			//glUniform1f(blendLoc , 1.0);
 		}
+
+		#ifdef IS_EDITOR
+		void OnGUI();
+		#endif
 	};
 }
 
