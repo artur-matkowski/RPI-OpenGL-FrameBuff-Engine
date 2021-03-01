@@ -22,7 +22,7 @@ namespace asapi
 		#endif
 
 		void Save_JSON();
-		void Load_JSON();
+		bool Load_JSON();
 		void Save_MMP();
 		void Load_MMP();
 		void UnLoad();

@@ -41,7 +41,7 @@ namespace asapi
 		
 		SceneSystem::JSON2File( jsonStream, path.c_str() ) ;
 	}
-	void PrefabLoaderComponent::Load_JSON()
+	bool PrefabLoaderComponent::Load_JSON()
 	{
 		char buff[2048];
 		bfu::stream path(buff, 2048, SYSTEMS::STD_ALLOCATOR );
@@ -56,7 +56,9 @@ namespace asapi
 		if( SceneSystem::File2JSON( jsonStream, path.c_str() ) )
 		{
 			m_owner->DeserializeChildren( jsonStream );
+			return true;
 		}
+		return false;
 	}
 	void PrefabLoaderComponent::Save_MMP()
 	{

@@ -20,7 +20,7 @@ namespace asapi
 			return *p_root;
 		}
 
-		void Init( bfu::MemBlockBase* mBlock );
+		void Init( bfu::MemBlockBase* mBlock, const int argc, const char** argv );
 
 		void OnGUI();
 
@@ -31,6 +31,8 @@ namespace asapi
 
 		void SetProjectPath(const char* path);
 		const char* GetProjectPath(){ return m_ProjectPath; }
+		bool OpenProject();
+		bool LoadRootMMP();
 	};
 }
 

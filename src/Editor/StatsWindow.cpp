@@ -105,9 +105,26 @@ namespace asapi
 	bool StatsWindow::OpenProject(const char* path)
 	{
 		SYSTEMS::GetObject().SCENE.SetProjectPath(path);
-    	PrefabLoaderComponent* cmp = (PrefabLoaderComponent*) SYSTEMS::GetObject().SCENE.GetRootNode().GET_COMPONENT(PrefabLoaderComponent);
-    	cmp->Load_JSON(); 
 
-		return true;
+		if ( SYSTEMS::GetObject().SCENE.OpenProject() )
+		{
+            ImGui::OpenPopup("CanNotOpen");
+		}
+
+        // Always center this window when appearing
+        ImVec2 center(ImGui::GetIO().DisplaySize.x * 0.5f, ImGui::GetIO().DisplaySize.y * 0.5f);
+        ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+        if (ImGui::BeginPopupModal("CanNotOpen", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            ImGui::Text("Can not open project at path: \n%s!\n\n", path);
+            ImGui::Separator();
+
+            if (ImGui::Button("OK", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+            ImGui::SetItemDefaultFocus();
+
+            ImGui::EndPopup();
+        }
+        return true;
 	}
 }

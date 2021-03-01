@@ -4,6 +4,14 @@
 #include "ImguiXlib.hpp"
 #include "StatsWindow.hpp"
 
+#define HELP \
+"Parameters accepted by this executable:"\
+"\n\t?              <- prints this help message"\
+"\n\t-json          <- [player-only] start player using json files instaed of mmp"\
+"\n\t-path (...)    <- select path for project to read (default path is: './'"
+
+
+
 namespace asapi
 {
 	SYSTEMS SYSTEMS::_this;
@@ -46,6 +54,10 @@ namespace asapi
 
 	bool SYSTEMS::init(const int argc, const char** argv)
 	{
+		if( argc>1 && argv[1][0]=='?'){
+			log::info << HELP << std::endl;
+			exit(0);
+		}
 		//srand (time(NULL)); // moved to TIME.RANDOM
 
 		PRIFILE( RENDERER.SetupEvents(); );
@@ -57,7 +69,7 @@ namespace asapi
 		#endif
 		PRIFILE( RENDERER.Init(); );
 
-		PRIFILE( SCENE.Init( SYSTEMS::SYSTEMS_ALLOCATOR ); );
+		PRIFILE( SCENE.Init( SYSTEMS::SYSTEMS_ALLOCATOR, argc, argv ); );
 
 		#ifdef IS_EDITOR
 		PRIFILE (

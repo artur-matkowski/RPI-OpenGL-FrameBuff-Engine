@@ -14,7 +14,7 @@ namespace asapi
 		#endif
 	}
 
-	void SceneSystem::Init( bfu::MemBlockBase* mBlock )
+	void SceneSystem::Init( bfu::MemBlockBase* mBlock, const int argc, const char** argv )
 	{
 		p_root = (GameObject*) mBlock->allocate(1, sizeof(GameObject), alignof(GameObject));
 		p_root->Init(mBlock);
@@ -22,7 +22,33 @@ namespace asapi
 		PrefabLoaderComponent* rootLoader = (PrefabLoaderComponent*) p_root->ADD_COMPONENT( PrefabLoaderComponent );
 		rootLoader->SetPrefabID(1);
 
-		GameObject *pgo, *pgo2 ;
+		GameObject *pgo, *pgo2;
+
+		bool startWithJSON = false;
+		for(int i=1; i<argc; ++i)
+		{
+			#ifdef IS_PLAYER
+			if( strcmp(argv[i], "-json") == 0 )
+			{
+				startWithJSON = true;
+			}
+			else
+			#endif
+			if( strcmp(argv[i], "-path") == 0 )
+			{
+				if(argc > i) // if there is next argument
+				{
+					SetProjectPath(argv[i+1]);
+				}
+				else
+				{
+					log::error << "You did not suplied path for project. Run '?' fur help." << std::endl;
+				}
+			}
+		}
+		#ifdef IS_PLAYER
+		startWithJSON ? OpenProject() : LoadRootMMP();
+		#endif
 	}
 
 	void SceneSystem::OnGUI()
@@ -82,5 +108,17 @@ namespace asapi
 	void SceneSystem::SetProjectPath(const char* path)
 	{
 		strcpy(m_ProjectPath, path );
+	}
+
+
+	bool SceneSystem::OpenProject()
+	{
+    	PrefabLoaderComponent* cmp = (PrefabLoaderComponent*) GetRootNode().GET_COMPONENT(PrefabLoaderComponent);
+    	return cmp->Load_JSON(); 
+	}
+
+	bool SceneSystem::LoadRootMMP()
+	{
+		return false;
 	}
 }
