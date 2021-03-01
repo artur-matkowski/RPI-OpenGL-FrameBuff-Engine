@@ -1,4 +1,5 @@
 #include "Texture.hpp"
+#include "Systems.hpp"
 #include <png.h>
 #include <bitforge/utils/bfu.hpp>
 
@@ -134,7 +135,9 @@ namespace asapi
 	{
 		void *textureImage = 0;
 
-		textureImage = LoadPNG(filename);
+		char buff[1024];
+		sprintf(buff, "%s/images/%s", SYSTEMS::GetObject().SCENE.GetProjectPath(), filename);
+		textureImage = LoadPNG(buff);
 
 		SendTextureToGPU( textureImage );
 	}
