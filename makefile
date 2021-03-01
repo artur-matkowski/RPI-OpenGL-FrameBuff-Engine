@@ -48,8 +48,11 @@ NC=\033[0m # No Color
 
 all:
 	./prebuild.sh
-	make debug
-	make release
+	make lib
+	make debug-editor
+	make release-editor
+	make debug-player
+	make release-player
 
 print:
 	$(OBJECTS)
@@ -125,3 +128,4 @@ install:
 	cp -r inc $(HEADERDIR)$(OUT) 
 
 lib:
+	$(MAKE) -C vendor lib
