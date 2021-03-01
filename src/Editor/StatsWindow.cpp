@@ -55,17 +55,11 @@ namespace asapi
 				    if ( ImGui::MenuItem(persistance->m_lastOpenProject3.GetRef().c_str()) ) { OpenProject( persistance->m_lastOpenProject3.GetRef().c_str() ); }
 	           		ImGui::EndMenu();
 		        }
-			    ImGui::Separator();
 
-			    if (ImGui::MenuItem("Save root")) 
+			    if (ImGui::MenuItem("Save Project...")) 
 			    { 
 			    	PrefabLoaderComponent* cmp = (PrefabLoaderComponent*) SCENE.GetRootNode().GET_COMPONENT(PrefabLoaderComponent);
-			    	cmp->Save(); 
-			    }
-			    if (ImGui::MenuItem("Load root")) 
-			    { 
-			    	PrefabLoaderComponent* cmp = (PrefabLoaderComponent*) SCENE.GetRootNode().GET_COMPONENT(PrefabLoaderComponent);
-			    	cmp->Load(); 
+			    	cmp->Save_JSON(); 
 			    }
 			    ImGui::Separator();
 
@@ -111,6 +105,8 @@ namespace asapi
 	bool StatsWindow::OpenProject(const char* path)
 	{
 		SYSTEMS::GetObject().SCENE.SetProjectPath(path);
+    	PrefabLoaderComponent* cmp = (PrefabLoaderComponent*) SYSTEMS::GetObject().SCENE.GetRootNode().GET_COMPONENT(PrefabLoaderComponent);
+    	cmp->Load_JSON(); 
 
 		return true;
 	}

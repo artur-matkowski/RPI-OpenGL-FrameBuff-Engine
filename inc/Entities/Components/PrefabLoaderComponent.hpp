@@ -21,8 +21,10 @@ namespace asapi
 		virtual void OnGUI() override;
 		#endif
 
-		void Save();
-		void Load();
+		void Save_JSON();
+		void Load_JSON();
+		void Save_MMP();
+		void Load_MMP();
 		void UnLoad();
 
 		void SetPrefabID(uint64_t id);

@@ -11,20 +11,21 @@ namespace asapi
 	void PrefabLoaderComponent::OnGUI()
 	{
 		ImGui::LabelText("Prefab ID", "%lld", m_prefabID.GetRef().ID() );
-		if( ImGui::Button("Load") ) Load();
+
+		if( ImGui::Button("Load from JSON") ) Load_JSON();
 		ImGui::SameLine();
-		ImGui::PushItemWidth(-(ImGui::GetWindowContentRegionWidth() * 0.5f - ImGui::CalcItemWidth()));
+		if( ImGui::Button("Save to JSON") ) Save_JSON();
+		ImGui::SameLine();
+		if( ImGui::Button("Load from MMP") ) Load_MMP();
+		ImGui::SameLine();
+		if( ImGui::Button("Save to MMP") ) Save_MMP();
+
 		if( ImGui::Button("Unload") ) UnLoad();
-		ImGui::PopItemWidth();
-		ImGui::SameLine();
-		ImGui::PushItemWidth(-(ImGui::GetWindowContentRegionWidth()  - ImGui::CalcItemWidth()));
-		if( ImGui::Button("Save") ) Save();
-		ImGui::PopItemWidth();
 	}
 	#endif
 
 
-	void PrefabLoaderComponent::Save()
+	void PrefabLoaderComponent::Save_JSON()
 	{
 		char buff[2048];
 		bfu::stream path(buff, 2048, SYSTEMS::STD_ALLOCATOR );
@@ -40,7 +41,7 @@ namespace asapi
 		
 		SceneSystem::JSON2File( jsonStream, path.c_str() ) ;
 	}
-	void PrefabLoaderComponent::Load()
+	void PrefabLoaderComponent::Load_JSON()
 	{
 		char buff[2048];
 		bfu::stream path(buff, 2048, SYSTEMS::STD_ALLOCATOR );
@@ -57,6 +58,16 @@ namespace asapi
 			m_owner->DeserializeChildren( jsonStream );
 		}
 	}
+	void PrefabLoaderComponent::Save_MMP()
+	{
+
+	}
+
+	void PrefabLoaderComponent::Load_MMP()
+	{
+
+	}
+
 	void PrefabLoaderComponent::UnLoad()
 	{
 		m_owner->ClearChildren();
