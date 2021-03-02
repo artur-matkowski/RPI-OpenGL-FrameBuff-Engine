@@ -55,6 +55,18 @@ namespace asapi
 	}
 
 	template<>
+	void SerializableRenderer< Serializable<bfu::stream> >::OnGUI()
+	{
+		char buff[1024];
+		strncpy(buff, m_obj.GetRef().c_str(), 1024 );
+
+		ImGui::InputText(m_name,     buff, 1024);
+
+		m_obj.GetRef().clear();
+		m_obj.GetRef().sprintf( buff );
+	}
+
+	template<>
 	void SerializableRenderer< Serializable<bool> >::OnGUI()
 	{
 		ImGui::Checkbox(m_name, &m_obj.GetRef() );

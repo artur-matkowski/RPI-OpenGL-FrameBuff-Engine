@@ -19,10 +19,6 @@ namespace asapi{
 
 		//RendererComponent* 	m_rendererComponent = 0;
 
-	
-		void SendTextureToGPU(void *textureImage);
-		void BindTexture();
-
 	public:
 		RendererSystem();
 		~RendererSystem();

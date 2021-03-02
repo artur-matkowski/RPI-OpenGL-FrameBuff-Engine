@@ -9,13 +9,17 @@ namespace asapi
 {
 	class RendererComponent: public ComponentBase<RendererComponent>
 	{
-		//bfu::SerializableVar< bfu::string > 		m_usedMaterial;
-		//bfu::SerializableVar< bfu::string >	 		m_usedMesh;
+		bool 										m_isAttached = false;
 
 		ResourcePtr< MaterialType > 				m_material;
 		ResourcePtr< Mesh >		 					m_mesh;
 
 		Uniform<glm::mat4>*							p_modelViewMat;
+
+		char buffMat[255];
+		char buffMesh[255];
+		Serializable<bfu::stream>					m_MaterialName;
+		Serializable<bfu::stream>					m_meshName;
 
 	public:
 		RendererComponent(bfu::MemBlockBase* mBlock);
@@ -23,6 +27,10 @@ namespace asapi
 
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;
+		virtual void OnIsDirty() override;
+
+		void SetMaterial_Blocking(const char*);
+		void SetMesh_Blocking(const char*);
 	
 	
 		void Render();

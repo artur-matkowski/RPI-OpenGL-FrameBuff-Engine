@@ -103,7 +103,6 @@ namespace asapi
 		    		break;
 		    }
 		}
-
 	}
 
 	#ifdef IS_EDITOR
