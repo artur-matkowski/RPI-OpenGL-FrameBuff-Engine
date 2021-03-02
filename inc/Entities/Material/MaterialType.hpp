@@ -16,7 +16,6 @@ namespace asapi
 		//SERIALIZABLE_VAR_VEC( std::string )		 	m_usedTextures;
 
 		ResourcePtr< Shader > 						m_shader;
-		std::vector< ResourcePtr< Texture > > 		m_textures;
 
 		std::map<std::string, UniformBase*>			m_uniformMap;
 
@@ -51,13 +50,6 @@ namespace asapi
 		inline void BindMaterial()
 		{
 			m_shader->UseProgram();
-
-			int size = m_textures.size();
-
-			for(int i=0; i<size; ++i)
-			{
-				m_textures[i]->BindTexture();
-			}
 
 			static float blend = 1.0;
 

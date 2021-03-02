@@ -27,12 +27,6 @@ namespace asapi
 
 		systems.RESOURCES.requestResource( &m_shader, materialName );
 
-
-		// ResourcePtr< Texture > tmp;
-		// systems.RESOURCES.requestResource( &tmp, "debug.png" );
-		// m_textures.push_back(tmp);
-
-
 		m_shader->UseProgram();
 
 
