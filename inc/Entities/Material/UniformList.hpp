@@ -2,6 +2,5 @@
 #define _H_UniformList
 
 #include "UniformBase.hpp"
-#include "UniformTexture.hpp"
 
 #endif

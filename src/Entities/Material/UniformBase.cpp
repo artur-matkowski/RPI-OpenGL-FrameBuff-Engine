@@ -94,18 +94,47 @@ namespace asapi
 	template<>
 	void Uniform<glm::mat4>::SendUniform(const glm::mat4& override) const
 	{
-		//glm::mat4 m = glm::mat4(1.0f);
-		log::debug << "Ccalling SendUniform() for mat4" << std::endl;
-
 		glUniformMatrix4fv(m_location, 1, GL_FALSE, glm::value_ptr(override) );
 	}
 	template<>
 	void Uniform<glm::mat4>::OnGUI(const char* UniformName)
 	{
-		ImGui::InputFloat4(UniformName, glm::value_ptr(m_data)+0 );
-		ImGui::InputFloat4(UniformName, glm::value_ptr(m_data)+4 );
-		ImGui::InputFloat4(UniformName, glm::value_ptr(m_data)+8 );
-		ImGui::InputFloat4(UniformName, glm::value_ptr(m_data)+12 );
+		ImGui::LabelText(UniformName, "%3.2f    %3.2f    %3.2f    %3.2f"
+														, glm::value_ptr(m_data)+0
+														, glm::value_ptr(m_data)+1 
+														, glm::value_ptr(m_data)+2 
+														, glm::value_ptr(m_data)+3 );
+		ImGui::Text("%3.2f    %3.2f    %3.2f    %3.2f"	, glm::value_ptr(m_data)+4
+														, glm::value_ptr(m_data)+5 
+														, glm::value_ptr(m_data)+6 
+														, glm::value_ptr(m_data)+7 );
+		ImGui::Text("%3.2f    %3.2f    %3.2f    %3.2f"	, glm::value_ptr(m_data)+8
+														, glm::value_ptr(m_data)+9 
+														, glm::value_ptr(m_data)+10 
+														, glm::value_ptr(m_data)+11 );
+		ImGui::Text("%3.2f    %3.2f    %3.2f    %3.2f"	, glm::value_ptr(m_data)+12
+														, glm::value_ptr(m_data)+13 
+														, glm::value_ptr(m_data)+14 
+														, glm::value_ptr(m_data)+15 );
+	}
+
+	template class Uniform<ResourcePtr<Texture>>;
+	template<>
+	void Uniform<ResourcePtr< Texture >>::SendUniform()
+	{
+		m_data->BindTexture();
+	}
+	template<>
+	void Uniform<ResourcePtr<Texture>>::SendUniform(const ResourcePtr<Texture>& override) const
+	{
+		override->BindTexture();
+	}
+	template<>
+	void Uniform<ResourcePtr<Texture>>::OnGUI(const char* UniformName)
+	{
+		ImGui::LabelText(m_data->GetName(), UniformName);
+		//auto texid = m_data->GetTextureID();
+		//ImGui::Image((void*)texid, ImVec2(100.0f, 100.0f));
 	}
 
 }

@@ -80,6 +80,7 @@ namespace asapi
 		    printf("Uniform #%d Type: %u Name: %s\n", i, type, name);
 		    location = glGetUniformLocation(m_shader->GetProgramID(), name);
 
+		    //TODO custom_allocator instead of operator new
 		    switch(type)
 		    {
 		    	case GL_FLOAT:
@@ -91,6 +92,9 @@ namespace asapi
 		    	case GL_FLOAT_MAT4:
 		    		m_uniformMap[std::string(name)] = new Uniform<glm::mat4>(location, this);
 		    		break;
+		    	case GL_SAMPLER_2D:
+		    		m_uniformMap[std::string(name)] = new Uniform<ResourcePtr<Texture>>(location, this);
+		    		break;		    		
 		    	default:
 		    		char buff[128];
 		    		sprintf(buff, "%#04X", type);
@@ -107,7 +111,6 @@ namespace asapi
 		for(auto it = m_uniformMap.begin(); it!=m_uniformMap.end(); ++it)
 		{	
 			ImGui::Spacing();
-			ImGui::Separator();
 			it->second->OnGUI( it->first.c_str() );
 		}
 	}

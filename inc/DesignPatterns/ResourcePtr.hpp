@@ -30,17 +30,17 @@ public:
 
     ~ResourcePtr();
 
-    T& operator* ()
+    T& operator* () const
 	{
 	    return *pData;
 	}
 
-    T* operator-> ()
+    T* operator-> () const
 	{
 	    return pData;
 	}
 
-	void* GetRawPtr()
+	void* GetRawPtr() const
 	{
 		return (void*)pData;
 	}

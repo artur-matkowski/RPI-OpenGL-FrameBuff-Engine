@@ -29,4 +29,5 @@ namespace asapi
 	template class UniformOverride<int>;
 	template class UniformOverride<glm::vec3>;
 	template class UniformOverride<glm::mat4>;
+	template class UniformOverride<ResourcePtr<Texture>>;
 }

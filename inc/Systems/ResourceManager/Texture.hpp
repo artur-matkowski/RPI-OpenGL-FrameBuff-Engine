@@ -10,6 +10,10 @@ namespace asapi
 
 		uint32_t m_textureID = -1;
 
+		#ifdef IS_EDITOR
+		char name[255];
+		#endif
+
 		void* LoadPNG(const char*);
 
 	public:
@@ -18,7 +22,7 @@ namespace asapi
 
 		void SendTextureToGPU(void *textureImage);
 
-		inline void BindTexture()
+		inline const void BindTexture() const
 		{
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, m_textureID);
@@ -26,7 +30,13 @@ namespace asapi
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		}
+
+
+		#ifdef IS_EDITOR
+		const char* GetName(){ return name; }
+		#endif
 		
+		uint32_t GetTextureID() {return m_textureID; }
 	};
 }
 

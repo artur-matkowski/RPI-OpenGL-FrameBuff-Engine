@@ -133,6 +133,9 @@ namespace asapi
 
 	Texture::Texture(const char* filename)
 	{
+		#ifdef IS_EDITOR
+		strcpy(name, filename);
+		#endif
 		void *textureImage = 0;
 
 		char buff[1024];
