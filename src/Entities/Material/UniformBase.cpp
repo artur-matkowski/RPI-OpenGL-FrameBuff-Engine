@@ -133,8 +133,8 @@ namespace asapi
 	void Uniform<ResourcePtr<Texture>>::OnGUI(const char* UniformName)
 	{
 		ImGui::LabelText(m_data->GetName(), UniformName);
-		//auto texid = m_data->GetTextureID();
-		//ImGui::Image((void*)texid, ImVec2(100.0f, 100.0f));
+		auto texid = m_data->GetTextureID();
+		ImGui::Image((void*)texid, ImVec2(100.0f, 100.0f));
 	}
 
 }

@@ -28,9 +28,9 @@ namespace asapi
 		systems.RESOURCES.requestResource( &m_shader, materialName );
 
 
-		ResourcePtr< Texture > tmp;
-		systems.RESOURCES.requestResource( &tmp, "debug.png" );
-		m_textures.push_back(tmp);
+		// ResourcePtr< Texture > tmp;
+		// systems.RESOURCES.requestResource( &tmp, "debug.png" );
+		// m_textures.push_back(tmp);
 
 
 		m_shader->UseProgram();
@@ -80,20 +80,27 @@ namespace asapi
 		    printf("Uniform #%d Type: %u Name: %s\n", i, type, name);
 		    location = glGetUniformLocation(m_shader->GetProgramID(), name);
 
+		    std::string s_name(name);
+			ResourcePtr< Texture > texturePtr;
+			Uniform<ResourcePtr<Texture>>* textureUniform;
+
 		    //TODO custom_allocator instead of operator new
 		    switch(type)
 		    {
 		    	case GL_FLOAT:
-		    		m_uniformMap[std::string(name)] = new Uniform<float>(location, this);
+		    		m_uniformMap[s_name] = new Uniform<float>(location, this);
 		    		break;
 		    	case GL_FLOAT_VEC3:
-		    		m_uniformMap[std::string(name)] = new Uniform<glm::vec3>(location, this);
+		    		m_uniformMap[s_name] = new Uniform<glm::vec3>(location, this);
 		    		break;
 		    	case GL_FLOAT_MAT4:
-		    		m_uniformMap[std::string(name)] = new Uniform<glm::mat4>(location, this);
+		    		m_uniformMap[s_name] = new Uniform<glm::mat4>(location, this);
 		    		break;
 		    	case GL_SAMPLER_2D:
-		    		m_uniformMap[std::string(name)] = new Uniform<ResourcePtr<Texture>>(location, this);
+					systems.RESOURCES.requestResource( &texturePtr, "debug.png" );
+					textureUniform = new Uniform<ResourcePtr<Texture>>(location, this);
+		    		textureUniform->SetUniform(texturePtr);
+		    		m_uniformMap[s_name] = textureUniform;
 		    		break;		    		
 		    	default:
 		    		char buff[128];
