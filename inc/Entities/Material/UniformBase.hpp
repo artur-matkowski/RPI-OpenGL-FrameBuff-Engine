@@ -7,7 +7,6 @@ namespace asapi
 {
 	class MaterialType;
 	class MaterialInstance;
-	class UniformOverrideBase;
 
 	class UniformBase: public object//, public bfu::SerializableClassBase
 	{
@@ -30,8 +29,6 @@ namespace asapi
 		{
 			m_location = location;
 		}
-
-		virtual UniformOverrideBase* BuildUniformOverride(MaterialInstance* materialInstanceOverrideOwner) = 0;
 	};
 
 	template<typename T>
@@ -58,9 +55,6 @@ namespace asapi
 		{
 			out = m_data;
 		}
-
-		virtual UniformOverrideBase* BuildUniformOverride(MaterialInstance* materialInstanceOverrideOwner);
-
 	};
 }
 

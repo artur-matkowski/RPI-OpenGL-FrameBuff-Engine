@@ -1,7 +1,6 @@
 #include "UniformBase.hpp"
 #include <GLES2/gl2.h>
 #include "MaterialType.hpp"
-#include "UniformOverride.hpp"
 #include <gtc/type_ptr.hpp>
 #ifdef IS_EDITOR
 #include "imgui.h"
@@ -22,12 +21,6 @@ namespace asapi
 	{
 		m_data = in;
 		m_owner->SetUniformDirty(this);
-	}
-
-	template<class T>
-	UniformOverrideBase* Uniform<T>::BuildUniformOverride(MaterialInstance* materialInstanceOverrideOwner)
-	{
-		return new UniformOverride<T>(this, materialInstanceOverrideOwner);
 	}
 
 	template class Uniform<int>;
