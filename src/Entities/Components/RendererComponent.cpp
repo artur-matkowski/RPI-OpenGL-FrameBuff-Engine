@@ -18,16 +18,13 @@ namespace asapi
 
 	void RendererComponent::OnAttach()
 	{
-		m_isAttached = true;
-
-		if( m_material.GetRawPtr() != nullptr && m_mesh.GetRawPtr() != nullptr && m_isAttached)
+		if( m_material.GetRawPtr() != nullptr && m_mesh.GetRawPtr() != nullptr && m_owner != nullptr)
 		{
 			SYSTEMS::GetObject().RENDERER.RegisterRenderer( this );
 		}
 	}
 	void RendererComponent::OnDetach()
 	{
-		m_isAttached = false;
 		SYSTEMS::GetObject().RENDERER.UnRegisterRenderer( this );
 	}
 	void RendererComponent::OnIsDirty()
@@ -42,7 +39,7 @@ namespace asapi
 		systems.RESOURCES.requestResource( &m_material, name );
 		p_modelViewMat = (Uniform<glm::mat4>*) m_material->GetUniformPtr("modelViewMat");
 
-		if( m_material.GetRawPtr() != nullptr && m_mesh.GetRawPtr() != nullptr && m_isAttached)
+		if( m_material.GetRawPtr() != nullptr && m_mesh.GetRawPtr() != nullptr && m_owner != nullptr)
 		{
 			SYSTEMS::GetObject().RENDERER.RegisterRenderer( this );
 		}
@@ -58,7 +55,7 @@ namespace asapi
 		SYSTEMS& systems = SYSTEMS::GetObject();
 		systems.RESOURCES.requestResource( &m_mesh, name );
 
-		if( m_material.GetRawPtr() != nullptr && m_mesh.GetRawPtr() != nullptr && m_isAttached)
+		if( m_material.GetRawPtr() != nullptr && m_mesh.GetRawPtr() != nullptr && m_owner != nullptr)
 		{
 			SYSTEMS::GetObject().RENDERER.RegisterRenderer( this );
 		}

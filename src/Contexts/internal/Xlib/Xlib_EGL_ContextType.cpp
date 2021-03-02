@@ -513,10 +513,10 @@ namespace asapi
 
 		#ifdef IS_EDITOR
     	//ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-    	ImGuiIO& io = ImGui::GetIO(); (void)io;    	
-		Mesh 			cursorMesh( glm::vec2(m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y) );
-		MaterialType 	cursorMaterial("cursor");
-		Uniform<glm::vec3>* uCursorPos = (Uniform<glm::vec3>*)cursorMaterial.GetUniformPtr("offset");
+     	ImGuiIO& io = ImGui::GetIO(); (void)io;    	
+		// Mesh 			cursorMesh( glm::vec2(m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y) );
+		// MaterialType 	cursorMaterial("cursor");
+		// Uniform<glm::vec3>* uCursorPos = (Uniform<glm::vec3>*)cursorMaterial.GetUniformPtr("offset");
 		#endif
 
 		std::chrono::duration<double> elapsed;
@@ -581,14 +581,14 @@ namespace asapi
 		        }
 		        
 
-				glm::vec2 mousePos(m_mainEglWindow->cursorPos.x / (float)m_mainEglWindow->resolution.x*2.0f - 1.0f
-					, 1.0f - m_mainEglWindow->cursorPos.y / (float)m_mainEglWindow->resolution.y*2.0f );
+				// glm::vec2 mousePos(m_mainEglWindow->cursorPos.x / (float)m_mainEglWindow->resolution.x*2.0f - 1.0f
+				// 	, 1.0f - m_mainEglWindow->cursorPos.y / (float)m_mainEglWindow->resolution.y*2.0f );
 
 
 
-				cursorMaterial.BindMaterial();
-				uCursorPos->SetUniform(glm::vec3(mousePos.x, mousePos.y, 0.0f));
-				cursorMesh.Render();
+				// cursorMaterial.BindMaterial();
+				// uCursorPos->SetUniform(glm::vec3(mousePos.x, mousePos.y, 0.0f));
+				// cursorMesh.Render();
 				#endif
 				
 				SwapBuffer();

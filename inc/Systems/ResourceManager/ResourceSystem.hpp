@@ -64,7 +64,13 @@ namespace asapi
 
 			if( it==m_shaders.end() )
 			{
-				res->Rebuild( new Shader(str) );
+				Shader* newShader = Shader::LoadShader(str);
+				if( newShader==0 )
+				{
+					log::warning << "Could not load shader '" << str << "' reattemping with 'debug' shader" << std::endl;
+					newShader = Shader::LoadShader("debug");
+				}
+				res->Rebuild( newShader );
 				m_shaders[id] = *res;
 			}
 			else

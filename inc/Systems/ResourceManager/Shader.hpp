@@ -1,14 +1,15 @@
 #ifndef _H_Shader
 #define _H_Shader
+#include "ResourceBase.hpp"
 #include <GLES2/gl2.h>
 
 namespace asapi
 {
-	class Shader
+	class Shader: public ResourceBase
 	{
 		uint32_t m_programID = -1;
+		Shader(uint32_t id);
 	public:
-		Shader(const char*);
 		~Shader();
 
 		inline void UseProgram()
@@ -21,6 +22,7 @@ namespace asapi
 			return m_programID;
 		}
 		
+		static Shader* LoadShader(const char* filename);
 	};
 }
 

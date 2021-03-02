@@ -71,7 +71,7 @@ namespace asapi
 	bool SceneSystem::File2JSON(bfu::JSONStream& jsonStream, const char* filePath)
 	{
 		char buff[2048];
-		bfu::stream stream(buff, 2048, SYSTEMS::SYSTEMS_ALLOCATOR );
+		bfu::stream stream(buff, 2048, SYSTEMS::STD_ALLOCATOR );
 		FILE * pFile = fopen (filePath,"rb");
 
 		if( pFile==NULL )

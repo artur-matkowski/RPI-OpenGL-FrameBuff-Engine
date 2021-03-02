@@ -1,44 +1,9 @@
 #include "Shader.hpp"
+#include "Systems.hpp"
 #include <bitforge/utils/bfu.hpp>
 
 namespace asapi
-{
-	struct
-	{
-		const char *vertex_source =
-			"#version 100\n"
-			"precision mediump float;\n"
-			"attribute vec4 position;\n"
-			"attribute vec4 color;\n"
-			"attribute vec2 texCoord;\n"
-			"uniform mat4 modelViewMat;\n"
-			"\n"
-			"varying vec4 vcolor;\n"
-			"varying vec2 UV;\n"
-			"\n"
-			"void main()\n"
-			"{\n"
-			"  gl_Position = modelViewMat * position;\n"
-			"  vcolor = color;\n"
-			"  UV = texCoord;\n"
-			"}\n";
-
-		const char *fragment_source =
-			"#version 100\n"
-			"precision mediump float;\n"
-			"varying vec4 vcolor;\n"
-			"varying vec2 UV;\n"
-			"uniform sampler2D texUnit;\n"
-			"uniform float blend;\n"
-			"\n"
-			"void main()\n"
-			"{\n"
-			//"  gl_FragColor = texture2D(texUnit, UV) * vcolor;\n"
-			"  gl_FragColor = texture2D(texUnit, UV) * vcolor * (blend+1.0);\n"
-			//"  gl_FragColor = UV.xyyy * blend;\n"
-			"}\n";
-	}static debugShaderSrc;
-		
+{	
 	struct
 	{
 		const char *vertex_source =
@@ -55,8 +20,7 @@ namespace asapi
 			"\n"
 			"void main()\n"
 			"{\n"
-			"  gl_Position = modelViewMat * position + vec4(offset, 0.0);\n"
-			"  vcolor = color;\n"
+			"  gl_Position = modelViewMat * position;\n"
 			"  UV = texCoord;\n"
 			"}\n";
 
@@ -66,37 +30,43 @@ namespace asapi
 			"varying vec4 vcolor;\n"
 			"varying vec2 UV;\n"
 			"uniform sampler2D texUnit;\n"
-			"uniform float blend;\n"
 			"\n"
 			"void main()\n"
 			"{\n"
-			//"  gl_FragColor = texture2D(texUnit, UV) * vcolor;\n"
-			"  gl_FragColor = vec4(1.0) * (blend+1.0);\n"
-			//"  gl_FragColor = UV.xyyy * blend;\n"
+			"  gl_FragColor = vec4(1.0);\n"
 			"}\n";
-	}static cursorShaderSrc;
+	}static debugShaderSrc;
 
+	Shader::Shader(uint32_t id)
+		:m_programID(id)
+	{}
 
-	Shader::Shader(const char* filename)
+	Shader* Shader::LoadShader(const char* filename)
 	{
+		char buff[1024];
 		char* vertex_source = 0;
 		char* fragment_source = 0;
 		GLuint vertex, fragment;
 		GLint isCompiled = GL_FALSE;
+		uint32_t programID = -1;
+		Shader* ret = nullptr;
+		bool isDebug = strcmp(filename, "debug") == 0;
 		
-		if( strcmp(filename, "cursor") == 0 )
+
+		if( isDebug )
 		{
-			vertex_source = (char*)cursorShaderSrc.vertex_source;
-			fragment_source = (char*)cursorShaderSrc.fragment_source;
+			vertex_source = (char*)debugShaderSrc.vertex_source;
 		}
 		else
 		{
-			vertex_source = (char*)debugShaderSrc.vertex_source;
-			fragment_source = (char*)debugShaderSrc.fragment_source;
+			sprintf(buff, "%s/shaders/%s.vert.glsl", SYSTEMS::GetObject().SCENE.GetProjectPath(), filename);
+
+			if( !SceneSystem::File2JSON( ResourceBase::m_JSONStream, buff ) ) return nullptr;
+			vertex_source = (char*)ResourceBase::m_JSONStream.c_str();
 		}
 
-
 		vertex = glCreateShader(GL_VERTEX_SHADER);
+
 		glShaderSource(vertex, 1, &vertex_source, NULL);
 		glCompileShader(vertex);
 		glGetShaderiv(vertex, GL_COMPILE_STATUS, &isCompiled);
@@ -116,7 +86,21 @@ namespace asapi
 			// Provide the infolog in whatever manor you deem best.
 			// Exit with failure.
 			glDeleteShader(vertex); // Don't leak the shader.
-			return;
+			return nullptr;
+		}
+
+
+
+
+		if( isDebug )
+		{
+			fragment_source = (char*)debugShaderSrc.fragment_source;
+		}
+		else
+		{
+			sprintf(buff, "%s/shaders/%s.frag.glsl", SYSTEMS::GetObject().SCENE.GetProjectPath(), filename);
+			if( !SceneSystem::File2JSON( ResourceBase::m_JSONStream, buff ) ) return nullptr;
+			fragment_source = (char*)ResourceBase::m_JSONStream.c_str();
 		}
 
 		fragment = glCreateShader(GL_FRAGMENT_SHADER);
@@ -140,31 +124,31 @@ namespace asapi
 			// Provide the infolog in whatever manor you deem best.
 			// Exit with failure.
 			glDeleteShader(fragment); // Don't leak the shader.
-			return;
+			return nullptr;
 		}
 
 
 
-		m_programID = glCreateProgram();
+		programID = glCreateProgram();
 
-		glAttachShader(m_programID, vertex);
-		glAttachShader(m_programID, fragment);
+		glAttachShader(programID, vertex);
+		glAttachShader(programID, fragment);
 		
-		glBindAttribLocation(m_programID, 0, "position");
-		glBindAttribLocation(m_programID, 1, "color");
-		glBindAttribLocation(m_programID, 2, "texCoord");
+		glBindAttribLocation(programID, 0, "position");
+		glBindAttribLocation(programID, 1, "color");
+		glBindAttribLocation(programID, 2, "texCoord");
 
-		glLinkProgram(m_programID);
+		glLinkProgram(programID);
 
-		glGetProgramiv(m_programID, GL_LINK_STATUS, &isCompiled);
+		glGetProgramiv(programID, GL_LINK_STATUS, &isCompiled);
 		if(isCompiled == GL_FALSE)
 		{
 			GLint maxLength = 0;
-			glGetProgramiv(m_programID, GL_INFO_LOG_LENGTH, &maxLength);
+			glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &maxLength);
 
 			// The maxLength includes the NULL character
 			std::vector<GLchar> errorLog(maxLength);
-			glGetProgramInfoLog(m_programID, maxLength, &maxLength, &errorLog[0]);
+			glGetProgramInfoLog(programID, maxLength, &maxLength, &errorLog[0]);
 
 			std::string str(&errorLog[0]);
 
@@ -172,26 +156,30 @@ namespace asapi
 
 			// Provide the infolog in whatever manor you deem best.
 			// Exit with failure.
-			glDeleteProgram(m_programID); // Don't leak the shader.
-			return;
+			glDeleteProgram(programID); // Don't leak the shader.
+			return nullptr;
 		}
 
 		// Always detach shaders after a successful link.
-		glDetachShader(m_programID, vertex);
-		glDetachShader(m_programID, fragment);
+		glDetachShader(programID, vertex);
+		glDetachShader(programID, fragment);
+
+		ret = new Shader(programID);
 
 		glDeleteShader(vertex);
 		glDeleteShader(fragment);
+
+		return ret;
 /*
-		glGetProgramiv(m_programID, GL_VALIDATE_STATUS, &isCompiled);
+		glGetProgramiv(programID, GL_VALIDATE_STATUS, &isCompiled);
 		if(isCompiled == GL_FALSE)
 		{
 			GLint maxLength = 0;
-			glGetProgramiv(m_programID, GL_INFO_LOG_LENGTH, &maxLength);
+			glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &maxLength);
 
 			// The maxLength includes the NULL character
 			std::vector<GLchar> errorLog(maxLength);
-			glGetProgramInfoLog(m_programID, maxLength, &maxLength, &errorLog[0]);
+			glGetProgramInfoLog(programID, maxLength, &maxLength, &errorLog[0]);
 
 			std::string str(&errorLog[0]);
 
@@ -199,7 +187,7 @@ namespace asapi
 
 			// Provide the infolog in whatever manor you deem best.
 			// Exit with failure.
-			glDeleteProgram(m_programID); // Don't leak the shader.
+			glDeleteProgram(programID); // Don't leak the shader.
 			return;
 		}
 */

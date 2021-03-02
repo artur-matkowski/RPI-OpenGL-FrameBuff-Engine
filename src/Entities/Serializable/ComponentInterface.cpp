@@ -61,8 +61,9 @@ namespace asapi
 		this->OnAttach();	
 	}
 	void ComponentInterface::Detached()
-	{
+	{	
 		this->OnDetach();	
+		m_owner = nullptr;
 	}
 
 	#ifdef IS_EDITOR
