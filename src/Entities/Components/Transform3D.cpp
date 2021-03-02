@@ -66,6 +66,32 @@ namespace asapi
 
 		if(updated)
 			OnIsDirty(); // OnIsDirty()
+
+
+		if (ImGui::TreeNode("Preview current model matrix"))
+		{
+			const float* data = glm::value_ptr(m_modelMatix);
+
+
+			ImGui::Text("%.3f    %.3f    %.3f    %.3f"		, data[0]
+															, data[4] 
+															, data[8] 
+															, data[12] );
+			ImGui::Text("%.3f    %.3f    %.3f    %.3f"		, data[1]
+															, data[5] 
+															, data[9] 
+															, data[13] );
+			ImGui::Text("%.3f    %.3f    %.3f    %.3f"		, data[2]
+															, data[6] 
+															, data[10] 
+															, data[14] );
+			ImGui::Text("%.3f    %.3f    %.3f    %.3f"		, data[3]
+															, data[7] 
+															, data[11] 
+															, data[15] );
+
+	        ImGui::TreePop();
+	    }
 	}
 	#endif
 }

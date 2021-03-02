@@ -98,24 +98,32 @@ namespace asapi
 	}
 	template<>
 	void Uniform<glm::mat4>::OnGUI(const char* UniformName)
-	{
-		ImGui::LabelText(UniformName, "%3.2f    %3.2f    %3.2f    %3.2f"
-														, glm::value_ptr(m_data)+0
-														, glm::value_ptr(m_data)+1 
-														, glm::value_ptr(m_data)+2 
-														, glm::value_ptr(m_data)+3 );
-		ImGui::Text("%3.2f    %3.2f    %3.2f    %3.2f"	, glm::value_ptr(m_data)+4
-														, glm::value_ptr(m_data)+5 
-														, glm::value_ptr(m_data)+6 
-														, glm::value_ptr(m_data)+7 );
-		ImGui::Text("%3.2f    %3.2f    %3.2f    %3.2f"	, glm::value_ptr(m_data)+8
-														, glm::value_ptr(m_data)+9 
-														, glm::value_ptr(m_data)+10 
-														, glm::value_ptr(m_data)+11 );
-		ImGui::Text("%3.2f    %3.2f    %3.2f    %3.2f"	, glm::value_ptr(m_data)+12
-														, glm::value_ptr(m_data)+13 
-														, glm::value_ptr(m_data)+14 
-														, glm::value_ptr(m_data)+15 );
+	{ 
+		if (ImGui::TreeNode("Used model matrix"))
+		{
+			const float* data = glm::value_ptr(m_data);
+
+
+			ImGui::LabelText(UniformName, "%.3f    %.3f    %.3f    %.3f"		
+															, data[0]
+															, data[4] 
+															, data[8] 
+															, data[12] );
+			ImGui::Text("%.3f    %.3f    %.3f    %.3f"		, data[1]
+															, data[5] 
+															, data[9] 
+															, data[13] );
+			ImGui::Text("%.3f    %.3f    %.3f    %.3f"		, data[2]
+															, data[6] 
+															, data[10] 
+															, data[14] );
+			ImGui::Text("%.3f    %.3f    %.3f    %.3f"		, data[3]
+															, data[7] 
+															, data[11] 
+															, data[15] );
+
+	        ImGui::TreePop();
+	    }
 	}
 
 	template class Uniform<ResourcePtr<Texture>>;
@@ -133,9 +141,7 @@ namespace asapi
 	void Uniform<ResourcePtr<Texture>>::OnGUI(const char* UniformName)
 	{
 		ImGui::LabelText(UniformName, m_data->GetName());
-		GLuint my_tex = m_data->GetTextureID();
-		void* my_void_ptr;
-		my_void_ptr = (void*)(intptr_t)my_tex;
+		void* my_void_ptr = (void*)(intptr_t)m_data->GetTextureID();
 		ImGui::Image(my_void_ptr, ImVec2(100.0f, 100.0f));
 	}
 
