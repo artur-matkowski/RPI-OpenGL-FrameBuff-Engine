@@ -41,11 +41,13 @@ namespace asapi
 	{
 		glUniform1i(m_location, override );
 	}
+	#ifdef IS_EDITOR
 	template<>
 	void Uniform<int>::OnGUI(const char* UniformName)
 	{
 		ImGui::InputInt(UniformName, &m_data );
 	}
+	#endif
 
 	
 
@@ -60,11 +62,13 @@ namespace asapi
 	{
 		glUniform1f(m_location, override );
 	}
+	#ifdef IS_EDITOR
 	template<>
 	void Uniform<float>::OnGUI(const char* UniformName)
 	{
 		ImGui::InputFloat(UniformName, &m_data );
 	}
+	#endif
 
 
 	template class Uniform<glm::vec3>;
@@ -78,11 +82,13 @@ namespace asapi
 	{
 		glUniform3fv(m_location, 3, glm::value_ptr(override) );
 	}
+	#ifdef IS_EDITOR
 	template<>
 	void Uniform<glm::vec3>::OnGUI(const char* UniformName)
 	{
 		ImGui::InputFloat3(UniformName, glm::value_ptr(m_data) );
 	}
+	#endif
 
 
 	template class Uniform<glm::mat4>;
@@ -96,6 +102,7 @@ namespace asapi
 	{
 		glUniformMatrix4fv(m_location, 1, GL_FALSE, glm::value_ptr(override) );
 	}
+	#ifdef IS_EDITOR
 	template<>
 	void Uniform<glm::mat4>::OnGUI(const char* UniformName)
 	{ 
@@ -125,6 +132,7 @@ namespace asapi
 	        ImGui::TreePop();
 	    }
 	}
+	#endif
 
 	template class Uniform<ResourcePtr<Texture>>;
 	template<>
@@ -137,6 +145,7 @@ namespace asapi
 	{
 		override->BindTexture();
 	}
+	#ifdef IS_EDITOR
 	template<>
 	void Uniform<ResourcePtr<Texture>>::OnGUI(const char* UniformName)
 	{
@@ -144,5 +153,6 @@ namespace asapi
 		void* my_void_ptr = (void*)(intptr_t)m_data->GetTextureID();
 		ImGui::Image(my_void_ptr, ImVec2(100.0f, 100.0f));
 	}
+	#endif
 
 }
