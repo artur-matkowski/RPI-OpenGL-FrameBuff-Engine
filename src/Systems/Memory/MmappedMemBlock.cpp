@@ -1,29 +1,269 @@
 #include "MmappedMemBlock.hpp"
 #include "Systems.hpp"
+#include <unistd.h>
+#include <sys/mman.h>
+#include <memory>
+
 
 namespace asapi
 {
-	MmappedMemBlock::MmappedMemBlock(void* reqAddr, size_t size, const char* name)
-		:bfu::MmappedMemBlock(reqAddr, size, name)
+	size_t MmappedMemBlock::PageSize()
 	{
+		static size_t pageSize = sysconf(_SC_PAGE_SIZE);
+	    return pageSize;
+	}
+	void* MmappedMemBlock::s_unclaimedMemPtr = (void*)PageSize();
+
+	MmappedMemBlock::MmappedMemBlock(const char* name)
+		:MemBlockBase(name)
+		,m_buffFreePtr()
+		,m_selfRefCounter()
+		,m_buffEndPtr()
+	{}
+
+	MmappedMemBlock::MmappedMemBlock(const char* name, size_t size)
+		:MemBlockBase(name)
+		,m_buffFreePtr()
+		,m_selfRefCounter()
+		,m_buffEndPtr()
+	{
+		if(size==0) size = PageSize();
+
+		void* ptr = mmap(s_unclaimedMemPtr, size, 
+                PROT_READ | PROT_WRITE, 
+                MAP_PRIVATE | MAP_ANONYMOUS, 
+                -1, 0);
+
+		std::memset(ptr, 0, size);
+
+		//We are going to build our sharedPtrs inside our own managed memory, We asume a firstly builded object will be the last to go.
+
+		void* freePtr = ptr;
+		int* i_ptr1 = nullptr;
+		int* i_ptr2 = nullptr;
+		int* i_ptr3 = nullptr;
+		int* i_ptr4 = nullptr;
+		void* v_ptr1 = nullptr;
+		void* v_ptr2 = nullptr;
+		int*  i_ptr33= nullptr;
+		void* v_ptr4 = nullptr;
+
+		if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
+		{
+			i_ptr1 = (int*)freePtr;
+			freePtr = (void*) ((size_t)freePtr + sizeof(int));
+		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+
+
+		if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
+		{
+			i_ptr2 = (int*)freePtr;
+			freePtr = (void*) ((size_t)freePtr + sizeof(int));
+		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+
+
+		if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
+		{
+			i_ptr3 = (int*)freePtr;
+			freePtr = (void*) ((size_t)freePtr + sizeof(int));
+		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+
+
+		if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
+		{
+			i_ptr4 = (int*)freePtr;
+			freePtr = (void*) ((size_t)freePtr + sizeof(int));
+		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+
+
+		if( nullptr != std::align(alignof(void), sizeof(void), freePtr, size ) )
+		{
+			v_ptr1 = (void*)freePtr;
+			freePtr = (void*) ((size_t)freePtr + sizeof(void));
+		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+
+		if( nullptr != std::align(alignof(void), sizeof(void), freePtr, size ) )
+		{
+			v_ptr2 = (void*)freePtr;
+			freePtr = (void*) ((size_t)freePtr + sizeof(void));
+		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+
+		if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
+		{
+			i_ptr33= (int*)freePtr;
+			freePtr = (void*) ((size_t)freePtr + sizeof(int));
+		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+
+		if( nullptr != std::align(alignof(void), sizeof(void), freePtr, size ) )
+		{
+			v_ptr4 = (void*)freePtr;
+			freePtr = (void*) ((size_t)freePtr + sizeof(void));
+		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+
+
+		new (&m_buffStartPtr) 	SharedPtr<void*>(v_ptr1, i_ptr1);
+		new (&m_buffFreePtr)  	SharedPtr<void*>(v_ptr2, i_ptr2);
+		new (&m_selfRefCounter) SharedPtr<int*> (i_ptr33,i_ptr3);
+		new (&m_buffEndPtr) 	SharedPtr<void*>(v_ptr4, i_ptr4);
+
+
+		*m_buffStartPtr			= ptr;
+		*m_buffFreePtr			= freePtr;
+		*m_selfRefCounter		= 1;
+		*m_buffEndPtr			= (void*)((size_t)ptr + size);
+
+
 		SYSTEMS::GetObject().MEMORY.RegisterMemBlock( this );
 	}
 	MmappedMemBlock::MmappedMemBlock(const MmappedMemBlock& cp)
-		:bfu::MmappedMemBlock(cp)
+		:MemBlockBase(cp)
+		,m_buffStartPtr(cp.m_buffStartPtr)
+		,m_buffFreePtr(cp.m_buffFreePtr)
+		,m_selfRefCounter(cp.m_selfRefCounter)
+		,m_buffEndPtr(cp.m_buffEndPtr)
+		,m_deallocatedMemory(cp.m_deallocatedMemory)
 	{
-
+		++(*m_selfRefCounter);
 	}
 	MmappedMemBlock::~MmappedMemBlock()
 	{
-
+		--(*m_selfRefCounter);
+		if(*m_selfRefCounter==0)
+			munmap(*m_buffFreePtr, (size_t)*m_buffEndPtr - (size_t)m_buffStartPtr);
 	}
 
-	void MmappedMemBlock::Init(void* reqAddr, size_t size, const char* name)
+	
+	MmappedMemBlock* MmappedMemBlock::InitNoFile(	 const char* 	blockName, size_t size)
 	{
-		new (this) MmappedMemBlock(reqAddr, size, name);
+		if(size==0) size = PageSize();
+
+		void* ptr = mmap(s_unclaimedMemPtr, size, 
+                PROT_READ | PROT_WRITE, 
+                MAP_PRIVATE | MAP_ANONYMOUS, 
+                -1, 0);
+		void* endPtr = (void*)((size_t)ptr + size)
+
+		std::memset(ptr, 0, size);
+
+
+		MmappedMemBlock* memb = std::align(alignof(MmappedMemBlock), sizeof(MmappedMemBlock), ptr, size )
+
+		new (memb) MmappedMemBlock(blockName);
+
+
+		memb->m_buffStartPtr = ptr;
+		*memb->m_buffFreePtr = memb+sizeof(MmappedMemBlock);
+		*memb->m_buffEndPtr = endPtr;
+
+
+		SYSTEMS::GetObject().MEMORY.RegisterMemBlock( this );
+	}
+	MmappedMemBlock* MmappedMemBlock::InitFileRead(	 const char* 	blockName)
+	{
+		// new (this) MmappedMemBlock(blockName);
+
+		// SYSTEMS::GetObject().MEMORY.RegisterMemBlock( this );
+	}
+	MmappedMemBlock* MmappedMemBlock::InitFileWrite(	 const char* 	blockName)
+	{
+		// new (this) MmappedMemBlock(blockName);
+
+		// SYSTEMS::GetObject().MEMORY.RegisterMemBlock( this );
+	}
+		
+	void MmappedMemBlockResize(size_t newSize)
+	{
+		reqAddr = std::align(PageSize(), 1, reqAddr, size);
+		m_buffStartPtr = mmap(reqAddr, newSize-size(), 
+                PROT_READ | PROT_WRITE, 
+                MAP_PRIVATE | MAP_ANONYMOUS, 
+                -1, 0);
+
+		//as we can not emlpace shared pointer we need temporary m_buffFreePtr to be able to later allocate m_selfRefCounter & m_buffFreePtr by custom_allocator<...>
+		//m_buffFreePtr = std::make_shared<void*>(m_buffStartPtr);
+		auto tmpStdMBlock = StdAllocatorMemBlock();
+		m_buffFreePtr = std::allocate_shared<void*>(custom_allocator<void*>( &tmpStdMBlock ), m_buffStartPtr);
+
+
+		std::memset(m_buffStartPtr, 0, size);
+		*m_buffEndPtr = (void*)((size_t)m_buffStartPtr + size);
+
+
+		m_selfRefCounter = std::allocate_shared<int>(custom_allocator<int>(this), 1);
+		m_buffFreePtr = std::allocate_shared<void*>(custom_allocator<void*>(this), *m_buffFreePtr);
 	}
 	void MmappedMemBlock::Dispouse()
 	{
+		SYSTEMS::GetObject().MEMORY.UnRegisterMemBlock( this );
 		this->~MmappedMemBlock();
+	}
+
+	void* MmappedMemBlock::allocate (int elements, std::size_t sizeOf, std::size_t alignOf)
+	{
+		size_t size = getFreeMemory();
+
+		void* tmp = *m_buffFreePtr;
+
+		if ( *m_buffFreePtr = std::align(alignOf, sizeOf, *m_buffFreePtr, size ))
+        {
+            void* result = *m_buffFreePtr;
+            size_t size = sizeOf * elements;
+            size = size > 0 ? size : 1;
+            *m_buffFreePtr = (void*)((size_t) *m_buffFreePtr + size);
+
+
+            if(*m_buffFreePtr >= *m_buffEndPtr)
+	        {
+	            //std::cout << "Failed to allocate memory by MmappedMemBlock, requested size: " << sizeOf * elements << std::endl;
+					//std::cout.flush();
+					return nullptr;
+	        }
+
+			if(result == *m_buffFreePtr)
+			{
+				*m_buffFreePtr = (void*)((size_t)*m_buffFreePtr +1);
+			}
+
+			++m_allocationCount;
+			#ifdef DEBUG_MEMORY_ALLOC
+			logAlloc(	result, 
+	    			size, 
+	    			m_memBlockDescriptor,
+	    			getUsedMemory(),
+	    			getFreeMemory(),
+	    			m_deallocatedMemory,
+	    			m_allocationCount,
+	    			m_deallocationCount,
+	    			m_buffStartPtr);
+			#endif
+
+            return result;
+        }
+        return nullptr;
+	}
+
+	void MmappedMemBlock::deallocate (void* p, std::size_t n) 
+	{
+		m_deallocatedMemory += n;
+		memset(p, 0, n);
+		if( (size_t)p+n==(size_t)*m_buffFreePtr)
+		{
+            //std::cout << "Regaining memory becouse deallocate was called right after allocate on the same ptr" << std::endl;
+			//std::cout.flush();
+			*m_buffFreePtr = (void*)((size_t)*m_buffFreePtr - n);
+		}
+
+		++m_deallocationCount;
+		#ifdef DEBUG_MEMORY_ALLOC
+			logDealloc(	p, 
+			n, 
+			m_memBlockDescriptor,
+			getUsedMemory(),
+			getFreeMemory(),
+			m_deallocatedMemory,
+			m_allocationCount,
+			m_deallocationCount,
+			m_buffStartPtr);
+		#endif
 	}
 }

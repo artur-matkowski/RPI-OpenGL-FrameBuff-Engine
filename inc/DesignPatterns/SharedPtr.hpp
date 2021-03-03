@@ -13,10 +13,12 @@ public:
    		:pData(0)
    		,reference(0)
    	{}
-    SharedPtr(T* pValue)
+    SharedPtr(T* pValue, int* refPtr = new int(1))
    		:pData(pValue)
-   		,reference(new int(1))
-   	{}
+   		,reference(refPtr)
+   	{
+   		*reference = 1;
+   	}
     SharedPtr(const SharedPtr<T>& sp) 
     	:pData(sp.pData)
     	,reference(sp.reference)

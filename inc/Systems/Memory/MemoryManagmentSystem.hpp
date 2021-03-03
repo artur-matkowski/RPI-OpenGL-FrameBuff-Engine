@@ -24,7 +24,7 @@ namespace asapi
 
 		MemoryManagmentSystem()
 			:v_memBlocks(bfu::custom_allocator<bfu::MemBlockBase*>(&SystemsMemoryBlock))
-			,SystemsMemoryBlock((void*)1, 1024*1024*10, "SystemsMemoryBlock")
+			,SystemsMemoryBlock("SystemsMemoryBlock", 1024*1024*10)
 		{
 			v_memBlocks.reserve(16);
 			// v_memBlocks.push_back(&SystemsMemoryBlock); // self registerable
@@ -60,7 +60,7 @@ namespace asapi
 	  		SystemsMemoryBlock.deallocate(p, n * sizeof(T));	
 		}
 
-		inline bfu::MmappedMemBlock* GetSystemsAllocator()
+		inline MmappedMemBlock* GetSystemsAllocator()
 		{
 			return &SystemsMemoryBlock;
 		}
