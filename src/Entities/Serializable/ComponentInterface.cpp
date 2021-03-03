@@ -1,7 +1,7 @@
 #include "ComponentInterface.hpp"
 #include "imgui.h"
 #include "GameObject.hpp"
-
+#include "Systems.hpp"
 
 namespace asapi
 {
@@ -65,6 +65,12 @@ namespace asapi
 		this->OnDetach();	
 		m_owner = nullptr;
 	}
+	ComponentInterface::ComponentInterface(bfu::MemBlockBase* mBlock)
+		:EntityBase(mBlock)
+		#ifdef IS_EDITOR
+		,v_SerializableRenderers( SYSTEMS::STD_ALLOCATOR )
+		#endif
+	{};
 
 	#ifdef IS_EDITOR
 

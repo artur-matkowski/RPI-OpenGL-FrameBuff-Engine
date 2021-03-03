@@ -31,13 +31,11 @@ namespace asapi
 	protected:
 		GameObject *m_owner = nullptr;
 		#ifdef IS_EDITOR
-		std::vector<SerializableRendererBase*>
+		std::vector<SerializableRendererBase*, bfu::custom_allocator<SerializableRendererBase*>>
 					v_SerializableRenderers;
 		#endif
 	public:	
-		ComponentInterface(bfu::MemBlockBase* mBlock)
-			:EntityBase(mBlock)
-		{};
+		ComponentInterface(bfu::MemBlockBase* mBlock);
 		~ComponentInterface(){};
 		
 		void Attached(GameObject* owner);

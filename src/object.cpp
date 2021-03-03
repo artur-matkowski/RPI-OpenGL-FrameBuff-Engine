@@ -11,7 +11,7 @@ void * operator new(std::size_t size)
 	if(allocator==nullptr)
 	{
 		allocator = early_allocator = (asapi::EarlyAlocMemBlock<1024*1024>*)malloc(sizeof(asapi::EarlyAlocMemBlock<1024*1024>));
-		new (early_allocator) asapi::EarlyAlocMemBlock<1024*1024>();
+		new (early_allocator) asapi::EarlyAlocMemBlock<1024*1024>("Early [operator new()] allocator (stack)");
 	}
 
 	return allocator->allocate(1, size, 1);

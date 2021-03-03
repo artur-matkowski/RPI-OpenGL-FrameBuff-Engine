@@ -16,7 +16,7 @@ namespace asapi
 		size_t m_deallocatedMemory = 0;
 
 	public:
-		EarlyAlocMemBlock(const char* name = "Early Allocator MemBlock")
+		EarlyAlocMemBlock(const char* name = "EarlyAlocMemBlock")
 			:MemBlockBase(name)
 		{
 			if( m_buffFreePtr == nullptr )

@@ -13,7 +13,7 @@ namespace asapi
 	{
 
 		MmappedMemBlock				 			SystemsMemoryBlock;
-		bfu::MallocAllocator					m_operatorNEWstatistics;
+		//bfu::MallocAllocator					m_operatorNEWstatistics;
 		bfu::StdAllocatorMemBlock				m_StdAllocatorMemBlock;
 
 
@@ -27,10 +27,11 @@ namespace asapi
 		MemoryManagmentSystem()
 			:SystemsMemoryBlock("SystemsMemoryBlock", 1024*1024*10)
 			,v_memBlocks(bfu::custom_allocator<bfu::MemBlockBase*>(&SystemsMemoryBlock))
+			,m_StdAllocatorMemBlock("Late [operator new()] allocator (malloc)")
 		{
 			v_memBlocks.reserve(16);
 			v_memBlocks.push_back(&SystemsMemoryBlock);
-			v_memBlocks.push_back(&m_operatorNEWstatistics);
+			//v_memBlocks.push_back(&m_operatorNEWstatistics);
 			v_memBlocks.push_back(&m_StdAllocatorMemBlock);
 
 			auto oldEarlyAllocator = SetNewAllocator(&m_StdAllocatorMemBlock);
