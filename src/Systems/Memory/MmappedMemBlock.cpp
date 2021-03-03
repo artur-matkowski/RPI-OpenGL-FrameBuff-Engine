@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <sys/mman.h>
 #include <memory>
+#include "GameObject.hpp"
 
 
 namespace asapi
@@ -43,10 +44,10 @@ namespace asapi
 		int* i_ptr2 = nullptr;
 		int* i_ptr3 = nullptr;
 		int* i_ptr4 = nullptr;
-		void* v_ptr1 = nullptr;
-		void* v_ptr2 = nullptr;
-		int*  i_ptr33= nullptr;
-		void* v_ptr4 = nullptr;
+		void** v_ptr1 = nullptr;
+		void** v_ptr2 = nullptr;
+		int*  i_ptr33 = nullptr;
+		void** v_ptr4 = nullptr;
 
 		if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
 		{
@@ -76,16 +77,16 @@ namespace asapi
 		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
 
 
-		if( nullptr != std::align(alignof(void), sizeof(void), freePtr, size ) )
+		if( nullptr != std::align(alignof(void*), sizeof(void*), freePtr, size ) )
 		{
-			v_ptr1 = (void*)freePtr;
-			freePtr = (void*) ((size_t)freePtr + sizeof(void));
+			v_ptr1 = (void**)freePtr;
+			freePtr = (void*) ((size_t)freePtr + sizeof(void*));
 		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
 
-		if( nullptr != std::align(alignof(void), sizeof(void), freePtr, size ) )
+		if( nullptr != std::align(alignof(void*), sizeof(void*), freePtr, size ) )
 		{
-			v_ptr2 = (void*)freePtr;
-			freePtr = (void*) ((size_t)freePtr + sizeof(void));
+			v_ptr2 = (void**)freePtr;
+			freePtr = (void*) ((size_t)freePtr + sizeof(void*));
 		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
 
 		if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
@@ -94,16 +95,16 @@ namespace asapi
 			freePtr = (void*) ((size_t)freePtr + sizeof(int));
 		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
 
-		if( nullptr != std::align(alignof(void), sizeof(void), freePtr, size ) )
+		if( nullptr != std::align(alignof(void*), sizeof(void*), freePtr, size ) )
 		{
-			v_ptr4 = (void*)freePtr;
-			freePtr = (void*) ((size_t)freePtr + sizeof(void));
+			v_ptr4 = (void**)freePtr;
+			freePtr = (void*) ((size_t)freePtr + sizeof(void*));
 		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
 
 
 		new (&m_buffStartPtr) 	SharedPtr<void*>(v_ptr1, i_ptr1);
 		new (&m_buffFreePtr)  	SharedPtr<void*>(v_ptr2, i_ptr2);
-		new (&m_selfRefCounter) SharedPtr<int*> (i_ptr33,i_ptr3);
+		new (&m_selfRefCounter) SharedPtr<int>  (i_ptr33,i_ptr3);
 		new (&m_buffEndPtr) 	SharedPtr<void*>(v_ptr4, i_ptr4);
 
 
@@ -112,8 +113,9 @@ namespace asapi
 		*m_selfRefCounter		= 1;
 		*m_buffEndPtr			= (void*)((size_t)ptr + size);
 
+		m_prefabEntryPoint = (GameObject*) this->allocate(1, sizeof(GameObject), alignof(GameObject));
 
-		SYSTEMS::GetObject().MEMORY.RegisterMemBlock( this );
+		//SYSTEMS::GetObject().MEMORY.RegisterMemBlock( this );
 	}
 	MmappedMemBlock::MmappedMemBlock(const MmappedMemBlock& cp)
 		:MemBlockBase(cp)
@@ -129,34 +131,111 @@ namespace asapi
 	{
 		--(*m_selfRefCounter);
 		if(*m_selfRefCounter==0)
-			munmap(*m_buffFreePtr, (size_t)*m_buffEndPtr - (size_t)m_buffStartPtr);
+			munmap(*m_buffFreePtr, (size_t)*m_buffEndPtr - (size_t)*m_buffStartPtr);
 	}
 
 	
 	MmappedMemBlock* MmappedMemBlock::InitNoFile(	 const char* 	blockName, size_t size)
 	{
+		
 		if(size==0) size = PageSize();
 
 		void* ptr = mmap(s_unclaimedMemPtr, size, 
                 PROT_READ | PROT_WRITE, 
                 MAP_PRIVATE | MAP_ANONYMOUS, 
                 -1, 0);
-		void* endPtr = (void*)((size_t)ptr + size)
 
 		std::memset(ptr, 0, size);
 
+		//We are going to build our sharedPtrs inside our own managed memory, We asume a firstly builded object will be the last to go.
 
-		MmappedMemBlock* memb = std::align(alignof(MmappedMemBlock), sizeof(MmappedMemBlock), ptr, size )
+		void* freePtr = ptr;
+		int* i_ptr1 = nullptr;
+		int* i_ptr2 = nullptr;
+		int* i_ptr3 = nullptr;
+		int* i_ptr4 = nullptr;
+		void** v_ptr1 = nullptr;
+		void** v_ptr2 = nullptr;
+		int*  i_ptr33 = nullptr;
+		void** v_ptr4 = nullptr;
+		MmappedMemBlock* mmb = nullptr;
 
-		new (memb) MmappedMemBlock(blockName);
+		if( nullptr != std::align(alignof(MmappedMemBlock), sizeof(MmappedMemBlock), freePtr, size ) )
+		{
+			mmb = (MmappedMemBlock*)freePtr;
+			freePtr = (void*) ((size_t)freePtr + sizeof(MmappedMemBlock));
+		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
 
 
-		memb->m_buffStartPtr = ptr;
-		*memb->m_buffFreePtr = memb+sizeof(MmappedMemBlock);
-		*memb->m_buffEndPtr = endPtr;
+		if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
+		{
+			i_ptr1 = (int*)freePtr;
+			freePtr = (void*) ((size_t)freePtr + sizeof(int));
+		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
 
 
-		SYSTEMS::GetObject().MEMORY.RegisterMemBlock( this );
+		if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
+		{
+			i_ptr2 = (int*)freePtr;
+			freePtr = (void*) ((size_t)freePtr + sizeof(int));
+		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+
+
+		if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
+		{
+			i_ptr3 = (int*)freePtr;
+			freePtr = (void*) ((size_t)freePtr + sizeof(int));
+		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+
+
+		if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
+		{
+			i_ptr4 = (int*)freePtr;
+			freePtr = (void*) ((size_t)freePtr + sizeof(int));
+		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+
+
+		if( nullptr != std::align(alignof(void*), sizeof(void*), freePtr, size ) )
+		{
+			v_ptr1 = (void**)freePtr;
+			freePtr = (void*) ((size_t)freePtr + sizeof(void*));
+		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+
+		if( nullptr != std::align(alignof(void*), sizeof(void*), freePtr, size ) )
+		{
+			v_ptr2 = (void**)freePtr;
+			freePtr = (void*) ((size_t)freePtr + sizeof(void*));
+		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+
+		if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
+		{
+			i_ptr33= (int*)freePtr;
+			freePtr = (void*) ((size_t)freePtr + sizeof(int));
+		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+
+		if( nullptr != std::align(alignof(void*), sizeof(void*), freePtr, size ) )
+		{
+			v_ptr4 = (void**)freePtr;
+			freePtr = (void*) ((size_t)freePtr + sizeof(void*));
+		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+
+
+		new (&mmb->m_buffStartPtr) 		SharedPtr<void*>(v_ptr1, i_ptr1);
+		new (&mmb->m_buffFreePtr)  		SharedPtr<void*>(v_ptr2, i_ptr2);
+		new (&mmb->m_selfRefCounter) 	SharedPtr<int>  (i_ptr33,i_ptr3);
+		new (&mmb->m_buffEndPtr) 		SharedPtr<void*>(v_ptr4, i_ptr4);
+
+
+		*mmb->m_buffStartPtr		= ptr;
+		*mmb->m_buffFreePtr			= freePtr;
+		*mmb->m_selfRefCounter		= 1;
+		*mmb->m_buffEndPtr			= (void*)((size_t)ptr + size);
+
+		mmb->m_prefabEntryPoint = (GameObject*) mmb->allocate(1, sizeof(GameObject), alignof(GameObject));
+
+		SYSTEMS::GetObject().MEMORY.RegisterMemBlock( mmb );
+
+		return mmb;
 	}
 	MmappedMemBlock* MmappedMemBlock::InitFileRead(	 const char* 	blockName)
 	{
@@ -173,24 +252,24 @@ namespace asapi
 		
 	void MmappedMemBlockResize(size_t newSize)
 	{
-		reqAddr = std::align(PageSize(), 1, reqAddr, size);
-		m_buffStartPtr = mmap(reqAddr, newSize-size(), 
-                PROT_READ | PROT_WRITE, 
-                MAP_PRIVATE | MAP_ANONYMOUS, 
-                -1, 0);
+		// reqAddr = std::align(PageSize(), 1, reqAddr, size);
+		// m_buffStartPtr = mmap(reqAddr, newSize-size(), 
+  //               PROT_READ | PROT_WRITE, 
+  //               MAP_PRIVATE | MAP_ANONYMOUS, 
+  //               -1, 0);
 
-		//as we can not emlpace shared pointer we need temporary m_buffFreePtr to be able to later allocate m_selfRefCounter & m_buffFreePtr by custom_allocator<...>
-		//m_buffFreePtr = std::make_shared<void*>(m_buffStartPtr);
-		auto tmpStdMBlock = StdAllocatorMemBlock();
-		m_buffFreePtr = std::allocate_shared<void*>(custom_allocator<void*>( &tmpStdMBlock ), m_buffStartPtr);
-
-
-		std::memset(m_buffStartPtr, 0, size);
-		*m_buffEndPtr = (void*)((size_t)m_buffStartPtr + size);
+		// //as we can not emlpace shared pointer we need temporary m_buffFreePtr to be able to later allocate m_selfRefCounter & m_buffFreePtr by custom_allocator<...>
+		// //m_buffFreePtr = std::make_shared<void*>(m_buffStartPtr);
+		// auto tmpStdMBlock = StdAllocatorMemBlock();
+		// m_buffFreePtr = std::allocate_shared<void*>(custom_allocator<void*>( &tmpStdMBlock ), m_buffStartPtr);
 
 
-		m_selfRefCounter = std::allocate_shared<int>(custom_allocator<int>(this), 1);
-		m_buffFreePtr = std::allocate_shared<void*>(custom_allocator<void*>(this), *m_buffFreePtr);
+		// std::memset(m_buffStartPtr, 0, size);
+		// *m_buffEndPtr = (void*)((size_t)m_buffStartPtr + size);
+
+
+		// m_selfRefCounter = std::allocate_shared<int>(custom_allocator<int>(this), 1);
+		// m_buffFreePtr = std::allocate_shared<void*>(custom_allocator<void*>(this), *m_buffFreePtr);
 	}
 	void MmappedMemBlock::Dispouse()
 	{
@@ -225,17 +304,6 @@ namespace asapi
 			}
 
 			++m_allocationCount;
-			#ifdef DEBUG_MEMORY_ALLOC
-			logAlloc(	result, 
-	    			size, 
-	    			m_memBlockDescriptor,
-	    			getUsedMemory(),
-	    			getFreeMemory(),
-	    			m_deallocatedMemory,
-	    			m_allocationCount,
-	    			m_deallocationCount,
-	    			m_buffStartPtr);
-			#endif
 
             return result;
         }
@@ -254,16 +322,5 @@ namespace asapi
 		}
 
 		++m_deallocationCount;
-		#ifdef DEBUG_MEMORY_ALLOC
-			logDealloc(	p, 
-			n, 
-			m_memBlockDescriptor,
-			getUsedMemory(),
-			getFreeMemory(),
-			m_deallocatedMemory,
-			m_allocationCount,
-			m_deallocationCount,
-			m_buffStartPtr);
-		#endif
 	}
 }

@@ -2,6 +2,7 @@
 #define _H_MemoryManagmentSystem
 #include <bitforge/utils/bfu.hpp>
 #include <vector>
+#include "object.hpp"
 #include "MmappedMemBlock.hpp"
 
 namespace asapi
@@ -10,32 +11,37 @@ namespace asapi
 	
 	class MemoryManagmentSystem
 	{
-		std::vector<bfu::MemBlockBase*, bfu::custom_allocator<bfu::MemBlockBase*>> v_memBlocks;
 
 		MmappedMemBlock				 			SystemsMemoryBlock;
 		bfu::MallocAllocator					m_operatorNEWstatistics;
 		bfu::StdAllocatorMemBlock				m_StdAllocatorMemBlock;
 
 
-		MmappedMemBlock* 						p_memBlockCache = 0;
-		void* 									p_memBlocksEnd = 0;
+		std::vector<bfu::MemBlockBase*, bfu::custom_allocator<bfu::MemBlockBase*>> v_memBlocks;
+
+		// MmappedMemBlock* 						p_memBlockCache = 0;
+		// void* 									p_memBlocksEnd = 0;
 
 	public:
 
 		MemoryManagmentSystem()
-			:v_memBlocks(bfu::custom_allocator<bfu::MemBlockBase*>(&SystemsMemoryBlock))
-			,SystemsMemoryBlock("SystemsMemoryBlock", 1024*1024*10)
+			:SystemsMemoryBlock("SystemsMemoryBlock", 1024*1024*10)
+			,v_memBlocks(bfu::custom_allocator<bfu::MemBlockBase*>(&SystemsMemoryBlock))
 		{
 			v_memBlocks.reserve(16);
-			// v_memBlocks.push_back(&SystemsMemoryBlock); // self registerable
+			v_memBlocks.push_back(&SystemsMemoryBlock);
 			v_memBlocks.push_back(&m_operatorNEWstatistics);
 			v_memBlocks.push_back(&m_StdAllocatorMemBlock);
 
-			p_memBlocksEnd = SystemsMemoryBlock.end();
+			auto oldEarlyAllocator = SetNewAllocator(&m_StdAllocatorMemBlock);
 
-			p_memBlockCache = (MmappedMemBlock*) SystemsMemoryBlock.allocate( 1
-																			, sizeof(MmappedMemBlock)
-																			, alignof(MmappedMemBlock));
+			v_memBlocks.push_back( oldEarlyAllocator );
+
+			// p_memBlocksEnd = SystemsMemoryBlock.end();
+
+			// p_memBlockCache = (MmappedMemBlock*) SystemsMemoryBlock.allocate( 1
+																			// , sizeof(MmappedMemBlock)
+																			// , alignof(MmappedMemBlock));
 
 		}
 

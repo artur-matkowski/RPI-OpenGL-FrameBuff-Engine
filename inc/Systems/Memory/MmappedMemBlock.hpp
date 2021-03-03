@@ -1,11 +1,12 @@
 #ifndef H_MmappedMemBlock
 #define H_MmappedMemBlock
 #include <bitforge/utils/bfu.hpp>
-#include <SharedPtr.hpp>
+#include "SharedPtr.hpp"
 
 namespace asapi
 {
 	class MemoryManagmentSystem;
+	class GameObject;
 
 	class MmappedMemBlock: public bfu::MemBlockBase
 	{
@@ -18,14 +19,16 @@ namespace asapi
 		SharedPtr<int> 				m_selfRefCounter 	= nullptr;
 		SharedPtr<void*> 			m_buffEndPtr 		= nullptr;
 		size_t 						m_deallocatedMemory = 0;
+		GameObject* 				m_prefabEntryPoint  = nullptr;
 		static void* 				s_unclaimedMemPtr;
 
 		MmappedMemBlock(const char* blockName, size_t size = 0);
 		MmappedMemBlock(const char* name);
-		MmappedMemBlock(const MmappedMemBlock& cp);
 
 
 	public:
+		MmappedMemBlock(const MmappedMemBlock& cp);
+		
 		static size_t PageSize();
 
 		~MmappedMemBlock();
@@ -40,7 +43,6 @@ namespace asapi
 
 
 
-
 		virtual void* 	allocate(	int 			elements
 									,std::size_t 	sizeOf
 									,std::size_t	alignOf		) override;
@@ -50,17 +52,19 @@ namespace asapi
 									,std::size_t 	size 		) override;
 
 
-		void free()						{ *m_buffFreePtr = m_buffStartPtr;							}
+		GameObject* GetEntryPoint()		{ return m_prefabEntryPoint; 								}
+
+		void free()						{ *m_buffFreePtr = *m_buffStartPtr;							}
 
 		size_t getFreeMemory() 			{ return (size_t)*m_buffEndPtr  - (size_t)*m_buffFreePtr; 	}
-		size_t getUsedMemory() 			{ return (size_t)*m_buffFreePtr - (size_t)m_buffStartPtr;	}
-		size_t size()					{ return (size_t)*m_buffEndPtr  - (size_t)m_buffStartPtr;	}
+		size_t getUsedMemory() 			{ return (size_t)*m_buffFreePtr - (size_t)*m_buffStartPtr;	}
+		size_t size()					{ return (size_t)*m_buffEndPtr  - (size_t)*m_buffStartPtr;	}
 
 		void* end()						{ return *m_buffEndPtr;										}
 		void* getRefPtr()				{ return this;												}
-		void* getMemPtr()				{ return m_buffStartPtr; 									}
+		void* getMemPtr()				{ return *m_buffStartPtr; 									}
 
-		virtual bool owns(void* ptr)	{ return ((size_t)m_buffStartPtr<(size_t)ptr && (size_t)ptr < (size_t)*m_buffEndPtr); }
+		virtual bool owns(void* ptr)	{ return ((size_t)*m_buffStartPtr<(size_t)ptr && (size_t)ptr < (size_t)*m_buffEndPtr); }
 	};
 }
 

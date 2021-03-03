@@ -13,7 +13,7 @@ namespace asapi
 		char 				m_ProjectPath[2048] = ".";
 
 	public:
-		SceneSystem( bfu::MemBlockBase* mBlock );
+		SceneSystem();
 
 		inline GameObject& GetRootNode()
 		{

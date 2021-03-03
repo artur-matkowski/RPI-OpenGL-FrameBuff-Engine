@@ -1,5 +1,6 @@
 #ifndef _H_OBJECT
 #define _H_OBJECT
+#include <bitforge/utils/bfu.hpp>
 #include "SharedPtr.hpp"
 #include "glm.hpp"
 #include "Profiler.hpp"
@@ -43,6 +44,6 @@ namespace asapi
 
 void* operator new(std::size_t size);
 void operator delete(void* p) noexcept;
-
+bfu::MemBlockBase* SetNewAllocator(bfu::MemBlockBase* allocator);
 
 #endif

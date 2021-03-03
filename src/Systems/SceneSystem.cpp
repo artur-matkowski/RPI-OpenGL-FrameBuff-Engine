@@ -6,16 +6,18 @@
 namespace asapi
 {
 
-	SceneSystem::SceneSystem( bfu::MemBlockBase* mBlock )
-		:m_stream(tmpbuff, 2/*, mBlock*/) // using std allocator to dont waste large chunks of memory on reallocations
+	SceneSystem::SceneSystem()
+		:m_stream(tmpbuff, 2) // using std allocator to dont waste large chunks of memory on reallocations
 	{
-		#ifdef IS_EDITOR
-		m_stream.resize(1024*1024*10); // reserve 10 Mb buff for reading json
-		#endif
+
 	}
 
 	void SceneSystem::Init( bfu::MemBlockBase* mBlock, const int argc, const char** argv )
 	{
+		#ifdef IS_EDITOR
+		m_stream.resize(1024*1024*10); // reserve 10 Mb buff for reading json
+		#endif
+
 		p_root = (GameObject*) mBlock->allocate(1, sizeof(GameObject), alignof(GameObject));
 		p_root->Init(mBlock);
 		p_root->SetName("EntryPoint");
