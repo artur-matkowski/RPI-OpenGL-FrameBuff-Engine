@@ -1,4 +1,4 @@
-#include "MmappedMemBlock.hpp"
+#include "PrefabMemBlock.hpp"
 #include "Systems.hpp"
 #include <unistd.h>
 #include <sys/mman.h>
@@ -8,21 +8,21 @@
 
 namespace asapi
 {
-	size_t MmappedMemBlock::PageSize()
+	size_t PrefabMemBlock::PageSize()
 	{
 		static size_t pageSize = sysconf(_SC_PAGE_SIZE);
 	    return pageSize;
 	}
-	void* MmappedMemBlock::s_unclaimedMemPtr = (void*)PageSize();
+	void* PrefabMemBlock::s_unclaimedMemPtr = (void*)PageSize();
 
-	MmappedMemBlock::MmappedMemBlock(const char* name)
+	PrefabMemBlock::PrefabMemBlock(const char* name)
 		:MemBlockBase(name)
 		,m_buffFreePtr()
 		,m_selfRefCounter()
 		,m_buffEndPtr()
 	{}
 
-	MmappedMemBlock::MmappedMemBlock(const char* name, size_t size)
+	PrefabMemBlock::PrefabMemBlock(const char* name, size_t size)
 		:MemBlockBase(name)
 		,m_buffFreePtr()
 		,m_selfRefCounter()
@@ -53,53 +53,53 @@ namespace asapi
 		{
 			i_ptr1 = (int*)freePtr;
 			freePtr = (void*) ((size_t)freePtr + sizeof(int));
-		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+		} else { log::error << "Can not build PrefabMemBlock" << std::endl; }
 
 
 		if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
 		{
 			i_ptr2 = (int*)freePtr;
 			freePtr = (void*) ((size_t)freePtr + sizeof(int));
-		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+		} else { log::error << "Can not build PrefabMemBlock" << std::endl; }
 
 
 		if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
 		{
 			i_ptr3 = (int*)freePtr;
 			freePtr = (void*) ((size_t)freePtr + sizeof(int));
-		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+		} else { log::error << "Can not build PrefabMemBlock" << std::endl; }
 
 
 		if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
 		{
 			i_ptr4 = (int*)freePtr;
 			freePtr = (void*) ((size_t)freePtr + sizeof(int));
-		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+		} else { log::error << "Can not build PrefabMemBlock" << std::endl; }
 
 
 		if( nullptr != std::align(alignof(void*), sizeof(void*), freePtr, size ) )
 		{
 			v_ptr1 = (void**)freePtr;
 			freePtr = (void*) ((size_t)freePtr + sizeof(void*));
-		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+		} else { log::error << "Can not build PrefabMemBlock" << std::endl; }
 
 		if( nullptr != std::align(alignof(void*), sizeof(void*), freePtr, size ) )
 		{
 			v_ptr2 = (void**)freePtr;
 			freePtr = (void*) ((size_t)freePtr + sizeof(void*));
-		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+		} else { log::error << "Can not build PrefabMemBlock" << std::endl; }
 
 		if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
 		{
 			i_ptr33= (int*)freePtr;
 			freePtr = (void*) ((size_t)freePtr + sizeof(int));
-		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+		} else { log::error << "Can not build PrefabMemBlock" << std::endl; }
 
 		if( nullptr != std::align(alignof(void*), sizeof(void*), freePtr, size ) )
 		{
 			v_ptr4 = (void**)freePtr;
 			freePtr = (void*) ((size_t)freePtr + sizeof(void*));
-		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+		} else { log::error << "Can not build PrefabMemBlock" << std::endl; }
 
 
 		new (&m_buffStartPtr) 	SharedPtr<void*>(v_ptr1, i_ptr1);
@@ -113,11 +113,11 @@ namespace asapi
 		*m_selfRefCounter		= 1;
 		*m_buffEndPtr			= (void*)((size_t)ptr + size);
 
-		m_prefabEntryPoint = (GameObject*) this->allocate(1, sizeof(GameObject), alignof(GameObject));
+		m_prefabEntryVector = (GameObject*) this->allocate(1, sizeof(GameObject), alignof(GameObject));
 
 		//SYSTEMS::GetObject().MEMORY.RegisterMemBlock( this );
 	}
-	MmappedMemBlock::MmappedMemBlock(const MmappedMemBlock& cp)
+	PrefabMemBlock::PrefabMemBlock(const PrefabMemBlock& cp)
 		:MemBlockBase(cp)
 		,m_buffStartPtr(cp.m_buffStartPtr)
 		,m_buffFreePtr(cp.m_buffFreePtr)
@@ -127,7 +127,7 @@ namespace asapi
 	{
 		++(*m_selfRefCounter);
 	}
-	MmappedMemBlock::~MmappedMemBlock()
+	PrefabMemBlock::~PrefabMemBlock()
 	{
 		--(*m_selfRefCounter);
 		if(*m_selfRefCounter==0)
@@ -135,7 +135,7 @@ namespace asapi
 	}
 
 	
-	MmappedMemBlock* MmappedMemBlock::InitNoFile(	 const char* 	blockName, size_t size)
+	PrefabMemBlock* PrefabMemBlock::InitNoFile(	 const char* 	blockName, size_t size)
 	{
 		
 		if(size==0) size = PageSize();
@@ -158,66 +158,66 @@ namespace asapi
 		void** v_ptr2 = nullptr;
 		int*  i_ptr33 = nullptr;
 		void** v_ptr4 = nullptr;
-		MmappedMemBlock* mmb = nullptr;
+		PrefabMemBlock* mmb = nullptr;
 
-		if( nullptr != std::align(alignof(MmappedMemBlock), sizeof(MmappedMemBlock), freePtr, size ) )
+		if( nullptr != std::align(alignof(PrefabMemBlock), sizeof(PrefabMemBlock), freePtr, size ) )
 		{
-			mmb = (MmappedMemBlock*)freePtr;
-			freePtr = (void*) ((size_t)freePtr + sizeof(MmappedMemBlock));
-		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+			mmb = (PrefabMemBlock*)freePtr;
+			freePtr = (void*) ((size_t)freePtr + sizeof(PrefabMemBlock));
+		} else { log::error << "Can not build PrefabMemBlock" << std::endl; }
 
 
 		if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
 		{
 			i_ptr1 = (int*)freePtr;
 			freePtr = (void*) ((size_t)freePtr + sizeof(int));
-		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+		} else { log::error << "Can not build PrefabMemBlock" << std::endl; }
 
 
 		if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
 		{
 			i_ptr2 = (int*)freePtr;
 			freePtr = (void*) ((size_t)freePtr + sizeof(int));
-		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+		} else { log::error << "Can not build PrefabMemBlock" << std::endl; }
 
 
 		if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
 		{
 			i_ptr3 = (int*)freePtr;
 			freePtr = (void*) ((size_t)freePtr + sizeof(int));
-		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+		} else { log::error << "Can not build PrefabMemBlock" << std::endl; }
 
 
 		if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
 		{
 			i_ptr4 = (int*)freePtr;
 			freePtr = (void*) ((size_t)freePtr + sizeof(int));
-		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+		} else { log::error << "Can not build PrefabMemBlock" << std::endl; }
 
 
 		if( nullptr != std::align(alignof(void*), sizeof(void*), freePtr, size ) )
 		{
 			v_ptr1 = (void**)freePtr;
 			freePtr = (void*) ((size_t)freePtr + sizeof(void*));
-		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+		} else { log::error << "Can not build PrefabMemBlock" << std::endl; }
 
 		if( nullptr != std::align(alignof(void*), sizeof(void*), freePtr, size ) )
 		{
 			v_ptr2 = (void**)freePtr;
 			freePtr = (void*) ((size_t)freePtr + sizeof(void*));
-		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+		} else { log::error << "Can not build PrefabMemBlock" << std::endl; }
 
 		if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
 		{
 			i_ptr33= (int*)freePtr;
 			freePtr = (void*) ((size_t)freePtr + sizeof(int));
-		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+		} else { log::error << "Can not build PrefabMemBlock" << std::endl; }
 
 		if( nullptr != std::align(alignof(void*), sizeof(void*), freePtr, size ) )
 		{
 			v_ptr4 = (void**)freePtr;
 			freePtr = (void*) ((size_t)freePtr + sizeof(void*));
-		} else { log::error << "Can not build MmappedMemBlock" << std::endl; }
+		} else { log::error << "Can not build PrefabMemBlock" << std::endl; }
 
 
 		new (&mmb->m_buffStartPtr) 		SharedPtr<void*>(v_ptr1, i_ptr1);
@@ -231,26 +231,26 @@ namespace asapi
 		*mmb->m_selfRefCounter		= 1;
 		*mmb->m_buffEndPtr			= (void*)((size_t)ptr + size);
 
-		mmb->m_prefabEntryPoint = (GameObject*) mmb->allocate(1, sizeof(GameObject), alignof(GameObject));
+		mmb->m_prefabEntryVector = (GameObject*) mmb->allocate(1, sizeof(GameObject), alignof(GameObject));
 
 		SYSTEMS::GetObject().MEMORY.RegisterMemBlock( mmb );
 
 		return mmb;
 	}
-	MmappedMemBlock* MmappedMemBlock::InitFileRead(	 const char* 	blockName)
+	PrefabMemBlock* PrefabMemBlock::InitFileRead(	 const char* 	blockName)
 	{
-		// new (this) MmappedMemBlock(blockName);
+		// new (this) PrefabMemBlock(blockName);
 
 		// SYSTEMS::GetObject().MEMORY.RegisterMemBlock( this );
 	}
-	MmappedMemBlock* MmappedMemBlock::InitFileWrite(	 const char* 	blockName)
+	PrefabMemBlock* PrefabMemBlock::InitFileWrite(	 const char* 	blockName)
 	{
-		// new (this) MmappedMemBlock(blockName);
+		// new (this) PrefabMemBlock(blockName);
 
 		// SYSTEMS::GetObject().MEMORY.RegisterMemBlock( this );
 	}
 		
-	void MmappedMemBlockResize(size_t newSize)
+	void PrefabMemBlock::Resize(size_t newSize)
 	{
 		// reqAddr = std::align(PageSize(), 1, reqAddr, size);
 		// m_buffStartPtr = mmap(reqAddr, newSize-size(), 
@@ -271,13 +271,13 @@ namespace asapi
 		// m_selfRefCounter = std::allocate_shared<int>(custom_allocator<int>(this), 1);
 		// m_buffFreePtr = std::allocate_shared<void*>(custom_allocator<void*>(this), *m_buffFreePtr);
 	}
-	void MmappedMemBlock::Dispouse()
+	void PrefabMemBlock::Dispouse()
 	{
 		SYSTEMS::GetObject().MEMORY.UnRegisterMemBlock( this );
-		this->~MmappedMemBlock();
+		this->~PrefabMemBlock();
 	}
 
-	void* MmappedMemBlock::allocate (int elements, std::size_t sizeOf, std::size_t alignOf)
+	void* PrefabMemBlock::allocate (int elements, std::size_t sizeOf, std::size_t alignOf)
 	{
 		size_t size = getFreeMemory();
 
@@ -293,7 +293,7 @@ namespace asapi
 
             if(*m_buffFreePtr >= *m_buffEndPtr)
 	        {
-	            //std::cout << "Failed to allocate memory by MmappedMemBlock, requested size: " << sizeOf * elements << std::endl;
+	            //std::cout << "Failed to allocate memory by PrefabMemBlock, requested size: " << sizeOf * elements << std::endl;
 					//std::cout.flush();
 					return nullptr;
 	        }
@@ -310,7 +310,7 @@ namespace asapi
         return nullptr;
 	}
 
-	void MmappedMemBlock::deallocate (void* p, std::size_t n) 
+	void PrefabMemBlock::deallocate (void* p, std::size_t n) 
 	{
 		m_deallocatedMemory += n;
 		memset(p, 0, n);

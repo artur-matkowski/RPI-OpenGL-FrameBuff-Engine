@@ -24,18 +24,18 @@ namespace asapi
 		}
 	}
 
-	GameObject::GameObject(  )
-		:EntityBase( SYSTEMS::STD_ALLOCATOR )
-		,m_myName("m_myName", this, SYSTEMS::STD_ALLOCATOR )
-		,v_children("v_children", this, SYSTEMS::STD_ALLOCATOR )
-		,v_componentsInfo("v_componentsInfo", this, SYSTEMS::STD_ALLOCATOR ) //it is only usefull when de/serializing JSON
-		,v_components( SYSTEMS::STD_ALLOCATOR )
-	{
-		m_myName.resize(GAMEOBJECT_MAX_NAME_LENGTH, '\0');
-		m_myName = "GameObject";
+	// GameObject::GameObject(  )
+	// 	:EntityBase( SYSTEMS::STD_ALLOCATOR )
+	// 	,m_myName("m_myName", this, SYSTEMS::STD_ALLOCATOR )
+	// 	,v_children("v_children", this, SYSTEMS::STD_ALLOCATOR )
+	// 	,v_componentsInfo("v_componentsInfo", this, SYSTEMS::STD_ALLOCATOR ) //it is only usefull when de/serializing JSON
+	// 	,v_components( SYSTEMS::STD_ALLOCATOR )
+	// {
+	// 	m_myName.resize(GAMEOBJECT_MAX_NAME_LENGTH, '\0');
+	// 	m_myName = "GameObject";
 
-		AddComponent( TypeInfo::GetTypeInfo("asapi::Transform3D")->id );
-	}
+	// 	AddComponent( TypeInfo::GetTypeInfo("asapi::Transform3D")->id );
+	// }
 
 	GameObject::GameObject( bfu::MemBlockBase* mBlock )
 		:EntityBase(mBlock)

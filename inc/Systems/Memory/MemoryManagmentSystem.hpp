@@ -3,7 +3,7 @@
 #include <bitforge/utils/bfu.hpp>
 #include <vector>
 #include "object.hpp"
-#include "MmappedMemBlock.hpp"
+#include "PrefabMemBlock.hpp"
 
 namespace asapi
 {
@@ -12,7 +12,7 @@ namespace asapi
 	class MemoryManagmentSystem
 	{
 
-		MmappedMemBlock				 			SystemsMemoryBlock;
+		PrefabMemBlock				 			SystemsMemoryBlock;
 		//bfu::MallocAllocator					m_operatorNEWstatistics;
 		bfu::StdAllocatorMemBlock				m_StdAllocatorMemBlock;
 
@@ -27,7 +27,7 @@ namespace asapi
 		MemoryManagmentSystem()
 			:SystemsMemoryBlock("SystemsMemoryBlock", 1024*1024*10)
 			,v_memBlocks(bfu::custom_allocator<bfu::MemBlockBase*>(&SystemsMemoryBlock))
-			,m_StdAllocatorMemBlock("Late [operator new()] allocator (malloc)")
+			,m_StdAllocatorMemBlock("Late [operator new()]\nallocator (malloc)")
 		{
 			v_memBlocks.reserve(16);
 			v_memBlocks.push_back(&SystemsMemoryBlock);
@@ -67,7 +67,7 @@ namespace asapi
 	  		SystemsMemoryBlock.deallocate(p, n * sizeof(T));	
 		}
 
-		inline MmappedMemBlock* GetSystemsAllocator()
+		inline PrefabMemBlock* GetSystemsAllocator()
 		{
 			return &SystemsMemoryBlock;
 		}
@@ -77,7 +77,7 @@ namespace asapi
 			return &m_StdAllocatorMemBlock;
 		}
 
-		MmappedMemBlock* ObtainPrefabMemBlock(size_t size, GameObject* &ret_entryPointRaw, const char* description);
+		PrefabMemBlock* ObtainPrefabMemBlock(size_t size, GameObject* &ret_entryPointRaw, const char* description);
 	};
 
 

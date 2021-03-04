@@ -1,6 +1,5 @@
 [{
 "m_myName": "GameObject 1", 
-"v_children": [], 
 "v_componentsInfo": [{
 "m_componentTypeName": "asapi::Transform3D", 
 "m_recreationString": "{
@@ -13,6 +12,11 @@
 "m_recreationString": "{
 \"m_MaterialName\": \"textured\", 
 \"m_meshName\": \"---\"
+}"
+}, {
+"m_componentTypeName": "asapi::PrefabLoaderComponent", 
+"m_recreationString": "{
+\"m_prefabID\": 8790487077889241377
 }"
 }]
 }, {

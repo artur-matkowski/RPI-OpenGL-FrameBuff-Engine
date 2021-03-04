@@ -1,5 +1,5 @@
-#ifndef H_MmappedMemBlock
-#define H_MmappedMemBlock
+#ifndef H_PrefabMemBlock
+#define H_PrefabMemBlock
 #include <bitforge/utils/bfu.hpp>
 #include "SharedPtr.hpp"
 
@@ -8,7 +8,7 @@ namespace asapi
 	class MemoryManagmentSystem;
 	class GameObject;
 
-	class MmappedMemBlock: public bfu::MemBlockBase
+	class PrefabMemBlock: public bfu::MemBlockBase
 	{
 		//we need to make it friend to allow stack initialization, and we need stack initialziation becouse we need to have it available ASAP
 		friend MemoryManagmentSystem;
@@ -19,23 +19,23 @@ namespace asapi
 		SharedPtr<int> 				m_selfRefCounter 	= nullptr;
 		SharedPtr<void*> 			m_buffEndPtr 		= nullptr;
 		size_t 						m_deallocatedMemory = 0;
-		GameObject* 				m_prefabEntryPoint  = nullptr;
+		GameObject* 				m_prefabEntryVector = nullptr;
 		static void* 				s_unclaimedMemPtr;
 
-		MmappedMemBlock(const char* blockName, size_t size = 0);
-		MmappedMemBlock(const char* name);
+		PrefabMemBlock(const char* blockName, size_t size = 0);
+		PrefabMemBlock(const char* name);
 
 
 	public:
-		MmappedMemBlock(const MmappedMemBlock& cp);
+		PrefabMemBlock(const PrefabMemBlock& cp);
 		
 		static size_t PageSize();
 
-		~MmappedMemBlock();
+		~PrefabMemBlock();
 
-		static MmappedMemBlock* InitNoFile(	 const char* 	blockName, size_t size = 0);
-		static MmappedMemBlock* InitFileRead(	 const char* 	blockName);
-		static MmappedMemBlock* InitFileWrite(	 const char* 	blockName);
+		static PrefabMemBlock* InitNoFile(	 const char* 	blockName, size_t size = 0);
+		static PrefabMemBlock* InitFileRead(	 const char* 	blockName);
+		static PrefabMemBlock* InitFileWrite(	 const char* 	blockName);
 		
 		void Resize( size_t 		newSize);
 		
@@ -52,7 +52,7 @@ namespace asapi
 									,std::size_t 	size 		) override;
 
 
-		GameObject* GetEntryPoint()		{ return m_prefabEntryPoint; 								}
+		GameObject* GetEntryPoint()		{ return m_prefabEntryVector; 								}
 
 		void free()						{ *m_buffFreePtr = *m_buffStartPtr;							}
 

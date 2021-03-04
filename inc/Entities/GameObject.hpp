@@ -59,10 +59,10 @@ namespace asapi
 		virtual void RegisterChild(GameObject* newChild);
 		virtual void UnRegisterChild(GameObject* deleteChild);
 
-		GameObject(); //should never be used for prefabs. Is needed for template edduction in serialization
-		GameObject( bfu::MemBlockBase* mBlock );
+		//GameObject(); //should never be used for prefabs. Is needed for template deduction in serialization
 
 	public:
+		GameObject( bfu::MemBlockBase* mBlock );
 		GameObject( const GameObject& cp ) = delete;
 		~GameObject();
 		void ClearChildren();
@@ -97,13 +97,13 @@ namespace asapi
 
 
 		void SetName(const char*);
-		inline const char* GetName()					{ return m_myName.c_str(); }
+		inline const char* GetName()					{ return m_myName.c_str(); 		}
 
 		inline int GetChildCount()						{ return v_children.size();	}
-		inline GameObject* GetChild(int index)			{ return v_children[index]; }
+		inline GameObject* GetChild(int index)			{ return (v_children)[index];	}
 
-		inline Transform3D* GetTransform3D()			{ return p_myTransform;	}
-		inline GameObject* GetParent()					{ return p_parent; }
+		inline Transform3D* GetTransform3D()			{ return p_myTransform;			}
+		inline GameObject* GetParent()					{ return p_parent; 				}
 
 		#ifdef IS_EDITOR
 		void OnGUI();

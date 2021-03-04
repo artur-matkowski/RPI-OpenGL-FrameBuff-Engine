@@ -18,7 +18,7 @@ namespace asapi
 		ImGui::SameLine();
 		if( ImGui::Button("Load from MMP") ) Load_MMP();
 		ImGui::SameLine();
-		if( ImGui::Button("Save to MMP") ) Save_MMP();
+		if( ImGui::Button("Compile to MMP") ) Save_MMP();
 
 		if( ImGui::Button("Unload") ) UnLoad();
 	}

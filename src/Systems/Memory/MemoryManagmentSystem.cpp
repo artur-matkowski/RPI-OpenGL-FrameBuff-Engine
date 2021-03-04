@@ -36,9 +36,9 @@ namespace asapi
         }
     }
 
-    MmappedMemBlock* MemoryManagmentSystem::ObtainPrefabMemBlock(size_t size, GameObject* &ret_entryPoint, const char* description)
+    PrefabMemBlock* MemoryManagmentSystem::ObtainPrefabMemBlock(size_t size, GameObject* &ret_entryPoint, const char* description)
     {
-        MmappedMemBlock* mBlock = MmappedMemBlock::InitNoFile(description, size);
+        PrefabMemBlock* mBlock = PrefabMemBlock::InitNoFile(description, size);
 
         ret_entryPoint = mBlock->GetEntryPoint();
 
