@@ -146,7 +146,7 @@ namespace asapi
 	PrefabMemBlock* PrefabMemBlock::InitNoFile(	 const char* 	blockName, size_t size)
 	{
 		
-		if(size==0) size = PageSize();
+		if(size==0) size = PageSize()*5;
 
 		void* ptr = mmap(s_unclaimedMemPtr, size, 
                 PROT_READ | PROT_WRITE, 
@@ -271,12 +271,32 @@ namespace asapi
 	void PrefabMemBlock::Resize(size_t newSize)
 	{
 		if(newSize==0) 
-			newSize = size() + PageSize();
+			newSize = size()*2;
+
+		void* buffStartPtr 		= *m_buffStartPtr;
+		void* buffFreePtr 		= *m_buffFreePtr;
+		void* buffEndPtr 		= *m_buffEndPtr;
+		size_t oldSize 			= size();
+
+		log::debug << "Resizing Preafab Mem Block, new size: " << newSize/1024.0 << "kb" << std::endl;
 
 
-		void* ptr = mremap(*m_buffStartPtr, size(), newSize, 0);
+		void* ptr = mremap(buffStartPtr, oldSize, newSize, MREMAP_MAYMOVE);
+		if( ptr==buffStartPtr )
+		{
+			*m_buffEndPtr = (void*)((size_t)*m_buffStartPtr + newSize);
+			return;
+		}
 
-		ASSERT(ptr!=*m_buffStartPtr, "Could not allocate hinted pointer on resize");
+		int unpatRet = munmap(buffStartPtr, oldSize );
+		ASSERT(unpatRet==0, "Could not un map ptr " << (size_t) buffStartPtr );
+
+		void* ret = mremap(ptr, newSize, newSize, MREMAP_MAYMOVE | MREMAP_FIXED, buffStartPtr);
+		ASSERT(ret!=buffStartPtr, "Could not allocate hinted pointer on resize " << (size_t)ret );
+
+		unpatRet = munmap(ptr, newSize);
+		ASSERT(unpatRet==0, "Could not un map ptr " << (size_t) ptr );
+
 
 		*m_buffEndPtr = (void*)((size_t)*m_buffStartPtr + newSize);
 	}

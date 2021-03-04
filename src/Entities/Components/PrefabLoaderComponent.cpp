@@ -51,7 +51,7 @@ namespace asapi
 
 		if(m_prefabMemBlock!=0) m_prefabMemBlock->ForceDispouse();
 
-		m_prefabMemBlock = PrefabMemBlock::InitNoFile( path.c_str() , 1024*1024);
+		m_prefabMemBlock = PrefabMemBlock::InitNoFile( path.c_str() , 0);
 
 		path.clear();
 		path.sprintf( "%s/json/%lld.json"
