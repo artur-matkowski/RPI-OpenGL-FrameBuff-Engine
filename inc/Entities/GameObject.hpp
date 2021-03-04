@@ -46,7 +46,7 @@ namespace asapi
 		GameObject*										p_parent = 0;
 
 		bfu::SerializableVar<bfu::string>  				m_myName;
-		bfu::SerializableVarVector<GameObject*>			v_children;
+		bfu::SerializableVarVector<GameObject*>			*v_children;
 		// If you change name of v_children you need to change { if( loader!=0 && strcmp(it->first.c_str(), "v_children")==0 ) }
 
 		bfu::SerializableVarVector<ComponentInfo>		v_componentsInfo;
@@ -58,8 +58,6 @@ namespace asapi
 
 		virtual void RegisterChild(GameObject* newChild);
 		virtual void UnRegisterChild(GameObject* deleteChild);
-
-		//GameObject(); //should never be used for prefabs. Is needed for template deduction in serialization
 
 	public:
 		GameObject( bfu::MemBlockBase* mBlock );
@@ -88,6 +86,7 @@ namespace asapi
 		void OnAttach(GameObject* newParrent);
 		void OnDetach();
 		void ReAttach(GameObject* newParrent);
+		void OverrideChildVector(bfu::SerializableVarVector<GameObject*>* newChildrenVector, bfu::MemBlockBase* prefabMemBlock );
 
 		ComponentInterface* AddComponent(size_t typeHash);
 		ComponentInterface* AddComponent(const char* componentName);
@@ -99,8 +98,8 @@ namespace asapi
 		void SetName(const char*);
 		inline const char* GetName()					{ return m_myName.c_str(); 		}
 
-		inline int GetChildCount()						{ return v_children.size();	}
-		inline GameObject* GetChild(int index)			{ return (v_children)[index];	}
+		inline int GetChildCount()						{ return v_children==0 ? 0 : v_children->size();	}
+		inline GameObject* GetChild(int index)			{ return (*v_children)[index];	}
 
 		inline Transform3D* GetTransform3D()			{ return p_myTransform;			}
 		inline GameObject* GetParent()					{ return p_parent; 				}

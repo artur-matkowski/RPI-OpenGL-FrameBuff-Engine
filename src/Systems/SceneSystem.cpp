@@ -24,7 +24,6 @@ namespace asapi
 		PrefabLoaderComponent* rootLoader = (PrefabLoaderComponent*) p_root->ADD_COMPONENT( PrefabLoaderComponent );
 		rootLoader->SetPrefabID(1);
 
-		GameObject *pgo, *pgo2;
 		const char* path = "--wrong path--";
 
 		bool startWithJSON = false;

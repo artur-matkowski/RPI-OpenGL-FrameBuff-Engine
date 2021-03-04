@@ -1,13 +1,15 @@
 #ifndef H_PrefabLoaderComponent
 #define H_PrefabLoaderComponent
 #include "ComponentBase.hpp"
+#include "PrefabMemBlock.hpp"
 
 namespace asapi
 {
 	class PrefabLoaderComponent: public ComponentBase<PrefabLoaderComponent>
 	{
 	protected:
-		Serializable<UniqueID> m_prefabID;
+		Serializable<UniqueID> 			m_prefabID;
+		PrefabMemBlock* 				m_prefabMemBlock = nullptr;
 	public:
 		PrefabLoaderComponent(bfu::MemBlockBase* mBlock)
 			:ComponentBase<PrefabLoaderComponent>(mBlock)

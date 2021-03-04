@@ -4,6 +4,8 @@
 #include <vector>
 #include "object.hpp"
 #include "PrefabMemBlock.hpp"
+#include "StaticAllocatorMemBlock.hpp"
+
 
 namespace asapi
 {
@@ -11,8 +13,8 @@ namespace asapi
 	
 	class MemoryManagmentSystem
 	{
-
-		PrefabMemBlock				 			SystemsMemoryBlock;
+		char buff[1024*1024*10];
+		StaticAllocatorMemBlock 				SystemsMemoryBlock;
 		//bfu::MallocAllocator					m_operatorNEWstatistics;
 		bfu::StdAllocatorMemBlock				m_StdAllocatorMemBlock;
 
@@ -25,7 +27,7 @@ namespace asapi
 	public:
 
 		MemoryManagmentSystem()
-			:SystemsMemoryBlock("SystemsMemoryBlock", 1024*1024*10)
+			:SystemsMemoryBlock(buff, 1024*1024*10, "Systems Memory Block")
 			,v_memBlocks(bfu::custom_allocator<bfu::MemBlockBase*>(&SystemsMemoryBlock))
 			,m_StdAllocatorMemBlock("Late [operator new()]\nallocator (malloc)")
 		{
@@ -44,6 +46,10 @@ namespace asapi
 																			// , sizeof(MmappedMemBlock)
 																			// , alignof(MmappedMemBlock));
 
+		}
+
+		~MemoryManagmentSystem()
+		{
 		}
 
 
@@ -67,7 +73,7 @@ namespace asapi
 	  		SystemsMemoryBlock.deallocate(p, n * sizeof(T));	
 		}
 
-		inline PrefabMemBlock* GetSystemsAllocator()
+		inline bfu::MemBlockBase* GetSystemsAllocator()
 		{
 			return &SystemsMemoryBlock;
 		}
@@ -76,8 +82,6 @@ namespace asapi
 		{
 			return &m_StdAllocatorMemBlock;
 		}
-
-		PrefabMemBlock* ObtainPrefabMemBlock(size_t size, GameObject* &ret_entryPointRaw, const char* description);
 	};
 
 

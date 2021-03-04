@@ -7,45 +7,36 @@ namespace asapi
 {
 	void GameObject::RegisterChild(GameObject* newChild)
 	{
-		v_children.push_back( newChild );
+		v_children->push_back( newChild );
 	}
 
 	void GameObject::UnRegisterChild(GameObject* deleteChild)
 	{
-		for(auto it = v_children.begin(); 
-			it != v_children.end();
+		for(auto it = v_children->begin(); 
+			it != v_children->end();
 			++it)
 		{
 			if(*it==deleteChild)
 			{
-				v_children.erase(it);
+				v_children->erase(it);
 				break;
 			}
 		}
 	}
 
-	// GameObject::GameObject(  )
-	// 	:EntityBase( SYSTEMS::STD_ALLOCATOR )
-	// 	,m_myName("m_myName", this, SYSTEMS::STD_ALLOCATOR )
-	// 	,v_children("v_children", this, SYSTEMS::STD_ALLOCATOR )
-	// 	,v_componentsInfo("v_componentsInfo", this, SYSTEMS::STD_ALLOCATOR ) //it is only usefull when de/serializing JSON
-	// 	,v_components( SYSTEMS::STD_ALLOCATOR )
-	// {
-	// 	m_myName.resize(GAMEOBJECT_MAX_NAME_LENGTH, '\0');
-	// 	m_myName = "GameObject";
-
-	// 	AddComponent( TypeInfo::GetTypeInfo("asapi::Transform3D")->id );
-	// }
-
 	GameObject::GameObject( bfu::MemBlockBase* mBlock )
 		:EntityBase(mBlock)
 		,m_myName("m_myName", this, mBlock)
-		,v_children("v_children", this, mBlock)
 		,v_componentsInfo("v_componentsInfo", this, SYSTEMS::STD_ALLOCATOR ) //it is only usefull when de/serializing JSON
 		,v_components(mBlock)
 	{
 		m_myName.resize(GAMEOBJECT_MAX_NAME_LENGTH, '\0');
 		m_myName = "GameObject";
+
+		v_children = (bfu::SerializableVarVector<GameObject*>*)mBlock->allocate( 1
+										, sizeof(bfu::SerializableVarVector<GameObject*>)
+						 				, alignof(bfu::SerializableVarVector<GameObject*>) );
+		new (v_children) bfu::SerializableVarVector<GameObject*>("v_children", this, mBlock);
 
 		AddComponent( TypeInfo::GetTypeInfo("asapi::Transform3D")->id );
 	}
@@ -54,16 +45,19 @@ namespace asapi
 	{
 		ClearComponents();
 		ClearChildren();
+
+		v_children->~SerializableVarVector<GameObject*>();
+		m_mBlock->deallocate( v_children, 1*sizeof(bfu::SerializableVarVector<GameObject*>) );
 	}
 	void GameObject::ClearChildren()
 	{
-		for(auto it = v_children.begin(); 
-			it != v_children.end();
+		for(auto it = v_children->begin(); 
+			it != v_children->end();
 			++it)
 		{
 			(*it)->DispouseAndDeallocate();
 		}
-		v_children.clear();
+		v_children->clear();
 	}
 	void GameObject::ClearComponents()
 	{
@@ -213,11 +207,11 @@ namespace asapi
 
 	void GameObject::SerializeChildren(bfu::JSONStream& stream)
 	{
-		stream << v_children;
+		stream << *v_children;
 	}
 	void GameObject::DeserializeChildren(bfu::JSONStream& stream)
 	{
-		stream >> v_children;
+		stream >> *v_children;
 	}
 
 
@@ -236,6 +230,13 @@ namespace asapi
 		p_parent->UnRegisterChild( this );
 		p_parent = newParent;
 		newParent->RegisterChild( this );
+	}
+	void GameObject::OverrideChildVector(bfu::SerializableVarVector<GameObject*>* newChildrenVector, bfu::MemBlockBase* prefabMemBlock )
+	{
+		v_children->~SerializableVarVector<GameObject*>();
+		m_mBlock->deallocate( v_children, 1*sizeof(bfu::SerializableVarVector<GameObject*>) );
+		v_children = newChildrenVector;
+		new (v_children) bfu::SerializableVarVector<GameObject*>("v_children", this, prefabMemBlock);
 	}
 
 	ComponentInterface* GameObject::AddComponent(const char* componentName)

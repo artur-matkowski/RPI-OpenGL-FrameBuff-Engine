@@ -46,12 +46,22 @@ namespace asapi
 		char buff[2048];
 		bfu::stream path(buff, 2048, SYSTEMS::STD_ALLOCATOR );
 
+		path.sprintf( "prefab allocator: %lld"
+						, m_prefabID.GetRef().ID() );
+
+		if(m_prefabMemBlock!=0) m_prefabMemBlock->ForceDispouse();
+
+		m_prefabMemBlock = PrefabMemBlock::InitNoFile( path.c_str() , 1024*1024);
+
+		path.clear();
 		path.sprintf( "%s/json/%lld.json"
 						, SYSTEMS::GetObject().SCENE.GetProjectPath()
 						, GetPrefabID() );
 
 		bfu::JSONStream& jsonStream = SYSTEMS::GetObject().SCENE.GetJSONStreamWorkBuffer();
 		jsonStream.clear();
+
+		m_owner->OverrideChildVector( m_prefabMemBlock->GetEntryVector(), m_prefabMemBlock );
 
 		if( SceneSystem::File2JSON( jsonStream, path.c_str() ) )
 		{

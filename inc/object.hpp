@@ -41,6 +41,11 @@ namespace asapi
 	class object{};
 }
 
+#ifdef IS_EDITOR
+	#define ASSERT(b, msg) if(b) log::error << msg << std::endl
+#else
+	#define ASSERT(b, msg)
+#endif
 
 void* operator new(std::size_t size);
 void operator delete(void* p) noexcept;

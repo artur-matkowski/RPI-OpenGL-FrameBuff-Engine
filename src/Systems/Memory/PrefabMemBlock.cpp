@@ -13,7 +13,7 @@ namespace asapi
 		static size_t pageSize = sysconf(_SC_PAGE_SIZE);
 	    return pageSize;
 	}
-	void* PrefabMemBlock::s_unclaimedMemPtr = (void*)PageSize();
+	void* PrefabMemBlock::s_unclaimedMemPtr = (void*)(PageSize() * 1000);
 
 	PrefabMemBlock::PrefabMemBlock(const char* name)
 		:MemBlockBase(name)
@@ -35,7 +35,11 @@ namespace asapi
                 MAP_PRIVATE | MAP_ANONYMOUS, 
                 -1, 0);
 
-		std::memset(ptr, 0, size);
+		ASSERT(ptr!=s_unclaimedMemPtr, "Could not allocate hinted pointer");
+
+		s_unclaimedMemPtr = (void*) ((size_t)s_unclaimedMemPtr + size);
+
+		//std::memset(ptr, 0, size);
 
 		//We are going to build our sharedPtrs inside our own managed memory, We asume a firstly builded object will be the last to go.
 
@@ -63,11 +67,12 @@ namespace asapi
 		} else { log::error << "Can not build PrefabMemBlock" << std::endl; }
 
 
-		if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
-		{
-			i_ptr3 = (int*)freePtr;
-			freePtr = (void*) ((size_t)freePtr + sizeof(int));
-		} else { log::error << "Can not build PrefabMemBlock" << std::endl; }
+		i_ptr3 = new int;
+		// if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
+		// {
+		// 	i_ptr3 = (int*)freePtr;
+		// 	freePtr = (void*) ((size_t)freePtr + sizeof(int));
+		// } else { log::error << "Can not build PrefabMemBlock" << std::endl; }
 
 
 		if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
@@ -89,11 +94,12 @@ namespace asapi
 			freePtr = (void*) ((size_t)freePtr + sizeof(void*));
 		} else { log::error << "Can not build PrefabMemBlock" << std::endl; }
 
-		if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
-		{
-			i_ptr33= (int*)freePtr;
-			freePtr = (void*) ((size_t)freePtr + sizeof(int));
-		} else { log::error << "Can not build PrefabMemBlock" << std::endl; }
+		i_ptr33= new int;
+		// if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
+		// {
+		// 	i_ptr33= (int*)freePtr;
+		// 	freePtr = (void*) ((size_t)freePtr + sizeof(int));
+		// } else { log::error << "Can not build PrefabMemBlock" << std::endl; }
 
 		if( nullptr != std::align(alignof(void*), sizeof(void*), freePtr, size ) )
 		{
@@ -113,7 +119,9 @@ namespace asapi
 		*m_selfRefCounter		= 1;
 		*m_buffEndPtr			= (void*)((size_t)ptr + size);
 
-		m_prefabEntryVector = (GameObject*) this->allocate(1, sizeof(GameObject), alignof(GameObject));
+		m_prefabEntryVector = (bfu::SerializableVarVector<GameObject*>*) this->allocate(1
+							, sizeof(bfu::SerializableVarVector<GameObject*>)
+							, alignof(bfu::SerializableVarVector<GameObject*>));
 
 		//SYSTEMS::GetObject().MEMORY.RegisterMemBlock( this );
 	}
@@ -125,13 +133,13 @@ namespace asapi
 		,m_buffEndPtr(cp.m_buffEndPtr)
 		,m_deallocatedMemory(cp.m_deallocatedMemory)
 	{
-		++(*m_selfRefCounter);
+		if( *m_selfRefCounter > 0)
+			++(*m_selfRefCounter);
 	}
 	PrefabMemBlock::~PrefabMemBlock()
 	{
-		--(*m_selfRefCounter);
-		if(*m_selfRefCounter==0)
-			munmap(*m_buffFreePtr, (size_t)*m_buffEndPtr - (size_t)*m_buffStartPtr);
+		if(*m_selfRefCounter>0)
+			--(*m_selfRefCounter);
 	}
 
 	
@@ -145,7 +153,11 @@ namespace asapi
                 MAP_PRIVATE | MAP_ANONYMOUS, 
                 -1, 0);
 
-		std::memset(ptr, 0, size);
+		ASSERT(ptr!=s_unclaimedMemPtr, "Could not allocate hinted pointer");
+
+		s_unclaimedMemPtr = (void*) ((size_t)s_unclaimedMemPtr + size);
+
+		//std::memset(ptr, 0, size);
 
 		//We are going to build our sharedPtrs inside our own managed memory, We asume a firstly builded object will be the last to go.
 
@@ -163,6 +175,7 @@ namespace asapi
 		if( nullptr != std::align(alignof(PrefabMemBlock), sizeof(PrefabMemBlock), freePtr, size ) )
 		{
 			mmb = (PrefabMemBlock*)freePtr;
+			new (mmb) PrefabMemBlock(blockName);
 			freePtr = (void*) ((size_t)freePtr + sizeof(PrefabMemBlock));
 		} else { log::error << "Can not build PrefabMemBlock" << std::endl; }
 
@@ -181,11 +194,12 @@ namespace asapi
 		} else { log::error << "Can not build PrefabMemBlock" << std::endl; }
 
 
-		if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
-		{
-			i_ptr3 = (int*)freePtr;
-			freePtr = (void*) ((size_t)freePtr + sizeof(int));
-		} else { log::error << "Can not build PrefabMemBlock" << std::endl; }
+		i_ptr3 = new int;
+		// if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
+		// {
+		// 	i_ptr3 = (int*)freePtr;
+		// 	freePtr = (void*) ((size_t)freePtr + sizeof(int));
+		// } else { log::error << "Can not build PrefabMemBlock" << std::endl; }
 
 
 		if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
@@ -207,11 +221,12 @@ namespace asapi
 			freePtr = (void*) ((size_t)freePtr + sizeof(void*));
 		} else { log::error << "Can not build PrefabMemBlock" << std::endl; }
 
-		if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
-		{
-			i_ptr33= (int*)freePtr;
-			freePtr = (void*) ((size_t)freePtr + sizeof(int));
-		} else { log::error << "Can not build PrefabMemBlock" << std::endl; }
+		i_ptr33= new int;
+		// if( nullptr != std::align(alignof(int), sizeof(int), freePtr, size ) )
+		// {
+		// 	i_ptr33= (int*)freePtr;
+		// 	freePtr = (void*) ((size_t)freePtr + sizeof(int));
+		// } else { log::error << "Can not build PrefabMemBlock" << std::endl; }
 
 		if( nullptr != std::align(alignof(void*), sizeof(void*), freePtr, size ) )
 		{
@@ -231,7 +246,10 @@ namespace asapi
 		*mmb->m_selfRefCounter		= 1;
 		*mmb->m_buffEndPtr			= (void*)((size_t)ptr + size);
 
-		mmb->m_prefabEntryVector = (GameObject*) mmb->allocate(1, sizeof(GameObject), alignof(GameObject));
+		
+		mmb->m_prefabEntryVector = (bfu::SerializableVarVector<GameObject*>*) mmb->allocate(1
+							, sizeof(bfu::SerializableVarVector<GameObject*>)
+							, alignof(bfu::SerializableVarVector<GameObject*>));
 
 		SYSTEMS::GetObject().MEMORY.RegisterMemBlock( mmb );
 
@@ -252,30 +270,28 @@ namespace asapi
 		
 	void PrefabMemBlock::Resize(size_t newSize)
 	{
-		// reqAddr = std::align(PageSize(), 1, reqAddr, size);
-		// m_buffStartPtr = mmap(reqAddr, newSize-size(), 
-  //               PROT_READ | PROT_WRITE, 
-  //               MAP_PRIVATE | MAP_ANONYMOUS, 
-  //               -1, 0);
-
-		// //as we can not emlpace shared pointer we need temporary m_buffFreePtr to be able to later allocate m_selfRefCounter & m_buffFreePtr by custom_allocator<...>
-		// //m_buffFreePtr = std::make_shared<void*>(m_buffStartPtr);
-		// auto tmpStdMBlock = StdAllocatorMemBlock();
-		// m_buffFreePtr = std::allocate_shared<void*>(custom_allocator<void*>( &tmpStdMBlock ), m_buffStartPtr);
+		if(newSize==0) 
+			newSize = size() + PageSize();
 
 
-		// std::memset(m_buffStartPtr, 0, size);
-		// *m_buffEndPtr = (void*)((size_t)m_buffStartPtr + size);
+		void* ptr = mremap(*m_buffStartPtr, size(), newSize, 0);
 
+		ASSERT(ptr!=*m_buffStartPtr, "Could not allocate hinted pointer on resize");
 
-		// m_selfRefCounter = std::allocate_shared<int>(custom_allocator<int>(this), 1);
-		// m_buffFreePtr = std::allocate_shared<void*>(custom_allocator<void*>(this), *m_buffFreePtr);
+		*m_buffEndPtr = (void*)((size_t)*m_buffStartPtr + newSize);
 	}
-	void PrefabMemBlock::Dispouse()
+
+	void PrefabMemBlock::ForceDispouse()
 	{
 		SYSTEMS::GetObject().MEMORY.UnRegisterMemBlock( this );
 		this->~PrefabMemBlock();
+
+		ASSERT(true, "Dispousing prefab memory block of :\'" << GetDescription() << "\' while having " << *m_selfRefCounter << "instances." );
+
+		if(*m_selfRefCounter==0)
+			munmap(*m_buffFreePtr, (size_t)*m_buffEndPtr - (size_t)*m_buffStartPtr);
 	}
+
 
 	void* PrefabMemBlock::allocate (int elements, std::size_t sizeOf, std::size_t alignOf)
 	{
@@ -293,14 +309,13 @@ namespace asapi
 
             if(*m_buffFreePtr >= *m_buffEndPtr)
 	        {
-	            //std::cout << "Failed to allocate memory by PrefabMemBlock, requested size: " << sizeOf * elements << std::endl;
-					//std::cout.flush();
-					return nullptr;
+	        	Resize();
+	        	return allocate(elements, sizeOf, alignOf);
 	        }
 
 			if(result == *m_buffFreePtr)
 			{
-				*m_buffFreePtr = (void*)((size_t)*m_buffFreePtr +1);
+				*m_buffFreePtr = (void*)((size_t)*m_buffFreePtr + 1);
 			}
 
 			++m_allocationCount;
