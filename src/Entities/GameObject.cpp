@@ -37,7 +37,7 @@ namespace asapi
 	GameObject::GameObject( bfu::MemBlockBase* mBlock )
 		:EntityBase(mBlock)
 		,m_myName("m_myName", this, mBlock)
-		,v_componentsInfo("v_componentsInfo", this, SYSTEMS::STD_ALLOCATOR ) //it is only usefull when de/serializing JSON
+		,v_componentsInfo("v_componentsInfo", this, SYSTEMS::JSON_ALLOCATOR ) //it is only usefull when de/serializing JSON
 		,v_components(mBlock)
 	{
 		m_myName.resize(GAMEOBJECT_MAX_NAME_LENGTH, '\0');

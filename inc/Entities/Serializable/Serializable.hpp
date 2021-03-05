@@ -5,6 +5,10 @@
 
 namespace asapi
 {
+	#ifdef IS_EDITOR
+	bfu::MemBlockBase* GetGUIAllocator();
+	#endif
+
 	template<class T>
 	class Serializable: public bfu::SerializableVar<T>
 	{
@@ -28,7 +32,12 @@ namespace asapi
 			:bfu::SerializableVarArray<T>(Name, parent, Fargs...)
 		{
 			#ifdef IS_EDITOR
-			parent->PushSerializableRenderer( new SerializableRenderer< SerializableArray<T> >(*this, Name) );
+			SerializableRenderer< SerializableArray<T> >* ptr
+				 = (SerializableRenderer< SerializableArray<T> >*)GetGUIAllocator()->allocate(1
+				 			,sizeof(SerializableRenderer< SerializableArray<T> >)
+				 			,alignof(SerializableRenderer< SerializableArray<T> >));
+			new (ptr) SerializableRenderer< SerializableArray<T> >(*this, Name);
+			parent->PushSerializableRenderer( ptr );
 			#endif
 		}
 	};

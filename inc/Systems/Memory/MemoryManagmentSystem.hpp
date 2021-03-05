@@ -5,6 +5,7 @@
 #include "object.hpp"
 #include "PrefabMemBlock.hpp"
 #include "StaticAllocatorMemBlock.hpp"
+#include "StdAllocatorMemBlock.hpp"
 
 
 namespace asapi
@@ -17,7 +18,10 @@ namespace asapi
 		StaticAllocatorMemBlock 				SystemsMemoryBlock;
 		//bfu::MallocAllocator					m_operatorNEWstatistics;
 		bfu::StdAllocatorMemBlock				m_StdAllocatorMemBlock;
-
+		#ifdef IS_EDITOR
+		asapi::StdAllocatorMemBlock					m_GUIAllocatorMemBlock;
+		#endif
+		asapi::StdAllocatorMemBlock 					m_JSONAllocator;
 
 		std::vector<bfu::MemBlockBase*, bfu::custom_allocator<bfu::MemBlockBase*>> v_memBlocks;
 
@@ -30,22 +34,21 @@ namespace asapi
 			:SystemsMemoryBlock(buff, 1024*1024*10, "Systems Memory Block")
 			,v_memBlocks(bfu::custom_allocator<bfu::MemBlockBase*>(&SystemsMemoryBlock))
 			,m_StdAllocatorMemBlock("Late [operator new()]\nallocator (malloc)")
+			,m_GUIAllocatorMemBlock("GUI Allocator (malloc)")
+			,m_JSONAllocator("JSON Allocator (malloc)")
 		{
 			v_memBlocks.reserve(16);
 			v_memBlocks.push_back(&SystemsMemoryBlock);
 			//v_memBlocks.push_back(&m_operatorNEWstatistics);
 			v_memBlocks.push_back(&m_StdAllocatorMemBlock);
+			#ifdef IS_EDITOR
+			v_memBlocks.push_back(&m_GUIAllocatorMemBlock);
+			#endif
+			v_memBlocks.push_back(&m_JSONAllocator);
 
 			auto oldEarlyAllocator = SetNewAllocator(&m_StdAllocatorMemBlock);
 
 			v_memBlocks.push_back( oldEarlyAllocator );
-
-			// p_memBlocksEnd = SystemsMemoryBlock.end();
-
-			// p_memBlockCache = (MmappedMemBlock*) SystemsMemoryBlock.allocate( 1
-																			// , sizeof(MmappedMemBlock)
-																			// , alignof(MmappedMemBlock));
-
 		}
 
 		~MemoryManagmentSystem()
@@ -82,6 +85,17 @@ namespace asapi
 		{
 			return &m_StdAllocatorMemBlock;
 		}
+		#ifdef IS_EDITOR
+		inline bfu::MemBlockBase* GetGUIAllocator()
+		{
+			return &m_GUIAllocatorMemBlock;
+		}
+		#endif
+
+		inline bfu::MemBlockBase* GetJSONAllocator()
+		{
+			return &m_JSONAllocator;
+		}
 	};
 
 
@@ -91,5 +105,10 @@ namespace asapi
 #define DEALLOCATE 				GetObject().MEMORY.deallocateSystemInBlock
 #define SYSTEMS_ALLOCATOR 		GetObject().MEMORY.GetSystemsAllocator()
 #define STD_ALLOCATOR 			GetObject().MEMORY.GetStdAllocator()
+#ifdef IS_EDITOR
+#define GUI_ALLOCATOR 			GetObject().MEMORY.GetGUIAllocator()
+#endif
+#define JSON_ALLOCATOR 			GetObject().MEMORY.GetJSONAllocator()
+
 
 #endif
