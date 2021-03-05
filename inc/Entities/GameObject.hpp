@@ -56,8 +56,8 @@ namespace asapi
 		Transform3D										*p_myTransform = 0;
 		RendererComponent								*p_myRenderer = 0;
 
-		virtual void RegisterChild(GameObject* newChild);
-		virtual void UnRegisterChild(GameObject* deleteChild);
+		bool RegisterChild(GameObject* newChild);
+		void UnRegisterChild(GameObject* deleteChild);
 
 	public:
 		GameObject( bfu::MemBlockBase* mBlock );
@@ -65,6 +65,7 @@ namespace asapi
 		~GameObject();
 		void ClearChildren();
 		void ClearComponents(); 
+		void AddChild();
 
 		//TODO
 		//GameObject& operator=(const GameObject& cp);
@@ -83,7 +84,7 @@ namespace asapi
 		void SerializeChildren(bfu::JSONStream& stream);
 		void DeserializeChildren(bfu::JSONStream& stream);
 
-		void OnAttach(GameObject* newParrent);
+		PROTECTED( void OnAttach(GameObject* newParrent) );
 		void OnDetach();
 		void ReAttach(GameObject* newParrent);
 		void OverrideChildVector(bfu::SerializableVarVector<GameObject*>* newChildrenVector, bfu::MemBlockBase* prefabMemBlock );
@@ -92,6 +93,7 @@ namespace asapi
 		ComponentInterface* AddComponent(const char* componentName);
 		void RemoveComponent(ComponentInterface* ptr);
 		ComponentInterface* GetComponentOfTypeHash(size_t typeHash);
+		PrefabLoaderComponent* GetRegionalPrefabLoader();
 
 
 

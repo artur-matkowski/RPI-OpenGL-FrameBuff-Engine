@@ -5,9 +5,19 @@
 
 namespace asapi
 {
-	void GameObject::RegisterChild(GameObject* newChild)
+	bool GameObject::RegisterChild(GameObject* newChild)
 	{
-		v_children->push_back( newChild );
+		if(v_children!=nullptr)
+		{
+			v_children->push_back( newChild );
+			return true;
+		}
+		else
+		{
+			PrefabLoaderComponent* prefabLoader = (PrefabLoaderComponent*)GET_COMPONENT(PrefabLoaderComponent);
+			prefabLoader->RequestPrefabMemBlock();
+		}
+		return false;
 	}
 
 	void GameObject::UnRegisterChild(GameObject* deleteChild)
@@ -51,6 +61,9 @@ namespace asapi
 	}
 	void GameObject::ClearChildren()
 	{
+		if(v_children==nullptr)
+			return;
+
 		for(auto it = v_children->begin(); 
 			it != v_children->end();
 			++it)
@@ -68,6 +81,15 @@ namespace asapi
 			ptr->Detached();
 			m_mBlock->deallocate(ptr, TypeInfo::GetTypeInfo( ptr->TypeHash() )->sizeOf ); // TODO wrong sizeof
 		}
+	}
+	void GameObject::AddChild()
+	{
+		PrefabLoaderComponent* plc = GetRegionalPrefabLoader();
+		PrefabMemBlock* allocator = plc->RequestPrefabMemBlock();
+
+		GameObject *newChild = (GameObject*)allocator->allocate(1, sizeof(GameObject), alignof(GameObject));
+		newChild->Init( this->GetMemBlock() );
+		newChild->OnAttach(this);
 	}
 
 	//TODO copy all children, and all components
@@ -203,6 +225,13 @@ namespace asapi
 		}
 
 		ReconstructComponentsFromComponentInfo();
+
+		if(v_children!=nullptr)
+		for(int i=0; i<v_children->size(); ++i)
+		{
+			//OnAttach
+			(*v_children)[i]->p_parent = this;
+		}
 	}
 
 	void GameObject::SerializeChildren(bfu::JSONStream& stream)
@@ -212,6 +241,13 @@ namespace asapi
 	void GameObject::DeserializeChildren(bfu::JSONStream& stream)
 	{
 		stream >> *v_children;
+
+		if(v_children!=nullptr)
+		for(int i=0; i<v_children->size(); ++i)
+		{
+			//OnAttach
+			(*v_children)[i]->p_parent = this;
+		}
 	}
 
 
@@ -233,10 +269,13 @@ namespace asapi
 	}
 	void GameObject::OverrideChildVector(bfu::SerializableVarVector<GameObject*>* newChildrenVector, bfu::MemBlockBase* prefabMemBlock )
 	{
-		v_children->~SerializableVarVector<GameObject*>();
-		m_mBlock->deallocate( v_children, 1*sizeof(bfu::SerializableVarVector<GameObject*>) );
+		if(v_children!=nullptr)
+		{
+			v_children->~SerializableVarVector<GameObject*>();
+			m_mBlock->deallocate( v_children, 1*sizeof(bfu::SerializableVarVector<GameObject*>) );
+		}
+
 		v_children = newChildrenVector;
-		new (v_children) bfu::SerializableVarVector<GameObject*>("v_children", this, prefabMemBlock);
 	}
 
 	ComponentInterface* GameObject::AddComponent(const char* componentName)
@@ -296,6 +335,19 @@ namespace asapi
 			}
 		}
 
+		return nullptr;
+	}
+	PrefabLoaderComponent* GameObject::GetRegionalPrefabLoader()
+	{
+		for(GameObject* ptr = this; ptr!=nullptr; ptr = ptr->GetParent())
+		{
+			PrefabLoaderComponent* ret = (PrefabLoaderComponent*)ptr->GET_COMPONENT(PrefabLoaderComponent);
+			if( ret!= nullptr )
+			{
+				return ret;
+			}
+		}
+		ASSERT(true, "Could not find PrefabLoaderComponent in region");
 		return nullptr;
 	}
 

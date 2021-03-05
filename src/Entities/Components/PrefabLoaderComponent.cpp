@@ -7,6 +7,9 @@
 namespace asapi
 {
 
+	char _buff[2048];
+	bfu::stream buff(_buff, 2048, SYSTEMS::STD_ALLOCATOR );
+
 	#ifdef IS_EDITOR
 	void PrefabLoaderComponent::OnGUI()
 	{
@@ -24,13 +27,28 @@ namespace asapi
 	}
 	#endif
 
+	void PrefabLoaderComponent::OnAttach()
+	{
+		m_owner->OverrideChildVector(nullptr, nullptr);
+	}
+	PrefabMemBlock* PrefabLoaderComponent::RequestPrefabMemBlock()
+	{
+		if(m_prefabMemBlock!=0) return m_prefabMemBlock;
+
+		buff.clear();
+		buff.sprintf( "prefab allocator: %lld"
+						, m_prefabID.GetRef().ID() );
+
+		m_prefabMemBlock = PrefabMemBlock::InitNoFile( buff.c_str(), m_owner , 0);
+
+		m_owner->OverrideChildVector( m_prefabMemBlock->GetEntryVector(), m_prefabMemBlock );
+		return m_prefabMemBlock;
+	}
 
 	void PrefabLoaderComponent::Save_JSON()
 	{
-		char buff[2048];
-		bfu::stream path(buff, 2048, SYSTEMS::STD_ALLOCATOR );
-
-		path.sprintf( "%s/json/%lld.json"
+		buff.clear();
+		buff.sprintf( "%s/json/%lld.json"
 						, SYSTEMS::GetObject().SCENE.GetProjectPath()
 						, GetPrefabID() );
 
@@ -39,22 +57,20 @@ namespace asapi
 
 		m_owner->SerializeChildren( jsonStream );
 		
-		SceneSystem::JSON2File( jsonStream, path.c_str() ) ;
+		SceneSystem::JSON2File( jsonStream, buff.c_str() ) ;
 	}
 	bool PrefabLoaderComponent::Load_JSON()
 	{
-		char buff[2048];
-		bfu::stream path(buff, 2048, SYSTEMS::STD_ALLOCATOR );
-
-		path.sprintf( "prefab allocator: %lld"
+		buff.clear();
+		buff.sprintf( "prefab allocator: %lld"
 						, m_prefabID.GetRef().ID() );
 
 		if(m_prefabMemBlock!=0) m_prefabMemBlock->ForceDispouse();
 
-		m_prefabMemBlock = PrefabMemBlock::InitNoFile( path.c_str() , 0);
+		m_prefabMemBlock = PrefabMemBlock::InitNoFile( buff.c_str(), m_owner, 0);
 
-		path.clear();
-		path.sprintf( "%s/json/%lld.json"
+		buff.clear();
+		buff.sprintf( "%s/json/%lld.json"
 						, SYSTEMS::GetObject().SCENE.GetProjectPath()
 						, GetPrefabID() );
 
@@ -63,7 +79,7 @@ namespace asapi
 
 		m_owner->OverrideChildVector( m_prefabMemBlock->GetEntryVector(), m_prefabMemBlock );
 
-		if( SceneSystem::File2JSON( jsonStream, path.c_str() ) )
+		if( SceneSystem::File2JSON( jsonStream, buff.c_str() ) )
 		{
 			m_owner->DeserializeChildren( jsonStream );
 			return true;
@@ -83,6 +99,7 @@ namespace asapi
 	void PrefabLoaderComponent::UnLoad()
 	{
 		m_owner->ClearChildren();
+		m_prefabMemBlock->ForceDispouse();
 	}
 
 	void PrefabLoaderComponent::SetPrefabID(uint64_t id)

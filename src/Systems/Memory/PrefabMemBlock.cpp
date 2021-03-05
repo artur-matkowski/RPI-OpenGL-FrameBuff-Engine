@@ -22,7 +22,7 @@ namespace asapi
 		,m_buffEndPtr()
 	{}
 
-	PrefabMemBlock::PrefabMemBlock(const char* name, size_t size)
+	PrefabMemBlock::PrefabMemBlock(const char* name, GameObject* entryVectorOwner, size_t size)
 		:MemBlockBase(name)
 		,m_buffFreePtr()
 		,m_selfRefCounter()
@@ -123,7 +123,9 @@ namespace asapi
 							, sizeof(bfu::SerializableVarVector<GameObject*>)
 							, alignof(bfu::SerializableVarVector<GameObject*>));
 
-		//SYSTEMS::GetObject().MEMORY.RegisterMemBlock( this );
+		new (m_prefabEntryVector) bfu::SerializableVarVector<GameObject*>("v_children", entryVectorOwner, this);
+
+		SYSTEMS::GetObject().MEMORY.RegisterMemBlock( this );
 	}
 	PrefabMemBlock::PrefabMemBlock(const PrefabMemBlock& cp)
 		:MemBlockBase(cp)
@@ -143,7 +145,7 @@ namespace asapi
 	}
 
 	
-	PrefabMemBlock* PrefabMemBlock::InitNoFile(	 const char* 	blockName, size_t size)
+	PrefabMemBlock* PrefabMemBlock::InitNoFile(	 const char* 	blockName, GameObject* entryVectorOwner, size_t size)
 	{
 		
 		if(size==0) size = PageSize()*5;
@@ -251,17 +253,19 @@ namespace asapi
 							, sizeof(bfu::SerializableVarVector<GameObject*>)
 							, alignof(bfu::SerializableVarVector<GameObject*>));
 
+		new (mmb->m_prefabEntryVector) bfu::SerializableVarVector<GameObject*>("v_children", entryVectorOwner, mmb);
+
 		SYSTEMS::GetObject().MEMORY.RegisterMemBlock( mmb );
 
 		return mmb;
 	}
-	PrefabMemBlock* PrefabMemBlock::InitFileRead(	 const char* 	blockName)
+	PrefabMemBlock* PrefabMemBlock::InitFileRead(	 const char* 	blockName, GameObject* entryVectorOwner)
 	{
 		// new (this) PrefabMemBlock(blockName);
 
 		// SYSTEMS::GetObject().MEMORY.RegisterMemBlock( this );
 	}
-	PrefabMemBlock* PrefabMemBlock::InitFileWrite(	 const char* 	blockName)
+	PrefabMemBlock* PrefabMemBlock::InitFileWrite(	 const char* 	blockName, GameObject* entryVectorOwner)
 	{
 		// new (this) PrefabMemBlock(blockName);
 

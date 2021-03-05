@@ -23,11 +23,16 @@ namespace asapi
 		virtual void OnGUI() override;
 		#endif
 
+		virtual void OnAttach() override;
+		PrefabMemBlock* RequestPrefabMemBlock();
+
 		void Save_JSON();
 		bool Load_JSON();
 		void Save_MMP();
 		void Load_MMP();
 		void UnLoad();
+
+
 
 		void SetPrefabID(uint64_t id);
 		uint64_t GetPrefabID();

@@ -23,7 +23,7 @@ namespace asapi
 									m_prefabEntryVector = nullptr;
 		static void* 				s_unclaimedMemPtr;
 
-		PrefabMemBlock(const char* blockName, size_t size);
+		PrefabMemBlock(const char* blockName, GameObject* entryVectorOwner, size_t size);
 		PrefabMemBlock(const char* name);
 
 
@@ -34,9 +34,9 @@ namespace asapi
 
 		~PrefabMemBlock();
 
-		static PrefabMemBlock* InitNoFile(	 const char* 	blockName, size_t size = 0);
-		static PrefabMemBlock* InitFileRead(	 const char* 	blockName);
-		static PrefabMemBlock* InitFileWrite(	 const char* 	blockName);
+		static PrefabMemBlock* InitNoFile(	 const char* 	blockName, GameObject* entryVectorOwner, size_t size = 0);
+		static PrefabMemBlock* InitFileRead(	 const char* 	blockName, GameObject* entryVectorOwner);
+		static PrefabMemBlock* InitFileWrite(	 const char* 	blockName, GameObject* entryVectorOwner);
 		
 		void Resize( size_t 		newSize = 0);
 		

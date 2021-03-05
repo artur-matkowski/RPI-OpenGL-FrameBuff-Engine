@@ -47,6 +47,8 @@ namespace asapi
 	#define ASSERT(b, msg)
 #endif
 
+#define PROTECTED(x) protected: x; public:
+
 void* operator new(std::size_t size);
 void operator delete(void* p) noexcept;
 bfu::MemBlockBase* SetNewAllocator(bfu::MemBlockBase* allocator);
