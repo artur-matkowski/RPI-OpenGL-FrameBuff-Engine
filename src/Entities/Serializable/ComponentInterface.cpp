@@ -68,7 +68,7 @@ namespace asapi
 	ComponentInterface::ComponentInterface(bfu::MemBlockBase* mBlock)
 		:EntityBase(mBlock)
 		#ifdef IS_EDITOR
-		,v_SerializableRenderers( SYSTEMS::STD_ALLOCATOR )
+		,v_SerializableRenderers( SYSTEMS::GUI_ALLOCATOR )
 		#endif
 	{};
 

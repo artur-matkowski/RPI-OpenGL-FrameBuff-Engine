@@ -214,9 +214,13 @@ namespace asapi
 
 				stream.Deserialize( m_token );
 
-				auto &tmp = m_membersMap[ m_token.str() ];
+				auto it = m_membersMap.find( m_token );
+				if( it == m_membersMap.end() )
+				{
+					log::error << "co do kurwy " << m_token.c_str() << std::endl;
+				}
 
-				tmp->Deserialize( stream );
+				it->second->Deserialize( stream );
 
 				stream.skipToOneOf("\"}");
 

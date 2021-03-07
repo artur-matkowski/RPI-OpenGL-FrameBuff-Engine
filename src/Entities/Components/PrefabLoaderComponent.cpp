@@ -67,7 +67,7 @@ namespace asapi
 
 		if(m_prefabMemBlock!=0) m_prefabMemBlock->ForceDispouse();
 
-		m_prefabMemBlock = PrefabMemBlock::InitNoFile( buff.c_str(), m_owner, 0);
+		m_prefabMemBlock = PrefabMemBlock::InitNoFile( buff.c_str(), m_owner, 1024*1024*1);
 
 		buff.clear();
 		buff.sprintf( "%s/json/%lld.json"
