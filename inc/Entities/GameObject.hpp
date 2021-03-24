@@ -21,21 +21,21 @@ namespace asapi
 		struct ComponentInfo: public EntityBase
 		{
 			char buff[255];
-			bfu::SerializableVar<bfu::stream>  			m_componentTypeName;
-			bfu::SerializableVar<bfu::JSONStream>  		m_recreationString;
+			//bfu::SerializableVar<bfu::stream>  			m_componentTypeName;
+			//bfu::SerializableVar<bfu::JSONStream>  		m_recreationString;
 
 			ComponentInfo( bfu::MemBlockBase* mBlock )
 				:EntityBase(mBlock)
-				,m_componentTypeName("m_componentTypeName", this, buff, 255, mBlock)
-				,m_recreationString("m_recreationString", this, mBlock)
+				//,m_componentTypeName("m_componentTypeName", this, buff, 255, mBlock)
+				//,m_recreationString("m_recreationString", this, mBlock)
 				{};
 			ComponentInfo( const ComponentInfo& cp )
 				:EntityBase(cp.m_mBlock)
-				,m_componentTypeName("m_componentTypeName", this, buff, 255, cp.m_mBlock)
-				,m_recreationString("m_recreationString", this, cp.m_mBlock)
+				//,m_componentTypeName("m_componentTypeName", this, buff, 255, cp.m_mBlock)
+				//,m_recreationString("m_recreationString", this, cp.m_mBlock)
 				{ 
-					m_componentTypeName = cp.m_componentTypeName; 
-					m_recreationString = cp.m_recreationString;
+					//m_componentTypeName = cp.m_componentTypeName; 
+					//m_recreationString = cp.m_recreationString;
 				};
 		};
 
@@ -45,11 +45,11 @@ namespace asapi
 	protected:
 		GameObject*										p_parent = 0;
 
-		bfu::SerializableVar<bfu::string>  				m_myName;
-		bfu::SerializableVarVector<GameObject*>			*v_children;
+		//bfu::SerializableVar<bfu::string>  				m_myName;
+		//bfu::SerializableVarVector<GameObject*>			*v_children;
 		// If you change name of v_children you need to change { if( loader!=0 && strcmp(it->first.c_str(), "v_children")==0 ) }
 
-		bfu::SerializableVarVector<ComponentInfo>		v_componentsInfo;
+		//bfu::SerializableVarVector<ComponentInfo>		v_componentsInfo;
 
 		std::vector<ComponentInterface*, bfu::custom_allocator<ComponentInterface*>> 
 														v_components;
@@ -78,8 +78,8 @@ namespace asapi
 		void OnUnLoad();
 		
 
-		virtual void Serialize(bfu::JSONStream& stream);
-		virtual void Deserialize(bfu::JSONStream& stream);
+		//virtual void Serialize(bfu::JSONStream& stream);
+		//virtual void Deserialize(bfu::JSONStream& stream);
 
 		void SerializeChildren(bfu::JSONStream& stream);
 		void DeserializeChildren(bfu::JSONStream& stream);
@@ -98,10 +98,10 @@ namespace asapi
 
 
 		void SetName(const char*);
-		inline const char* GetName()					{ return m_myName.c_str(); 		}
+		inline const char* GetName()					{ return "---"; }// m_myName.c_str(); 		}
 
-		inline int GetChildCount()						{ return v_children==0 ? 0 : v_children->size();	}
-		inline GameObject* GetChild(int index)			{ return (*v_children)[index];	}
+		inline int GetChildCount()						{ return 0; } //v_children==0 ? 0 : v_children->size();	}
+		inline GameObject* GetChild(int index)			{ return 0; } //(*v_children)[index];	}
 
 		inline Transform3D* GetTransform3D()			{ return p_myTransform;			}
 		inline GameObject* GetParent()					{ return p_parent; 				}

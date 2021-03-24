@@ -3,10 +3,12 @@
 
 namespace asapi
 {
+	/*
 	#ifdef IS_EDITOR
 	bfu::MemBlockBase* GetGUIAllocator()
 	{
 		return asapi::SYSTEMS::GUI_ALLOCATOR;
 	}
 	#endif
+	*/
 }

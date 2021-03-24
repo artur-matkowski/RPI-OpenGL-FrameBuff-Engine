@@ -5,6 +5,7 @@
 
 namespace asapi
 {
+	/*
 	#ifdef IS_EDITOR
 	bfu::MemBlockBase* GetGUIAllocator();
 	#endif
@@ -40,7 +41,7 @@ namespace asapi
 			parent->PushSerializableRenderer( ptr );
 			#endif
 		}
-	};
+	};*/
 }
 
 #endif

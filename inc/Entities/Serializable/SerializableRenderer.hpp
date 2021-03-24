@@ -4,6 +4,7 @@
 
 namespace asapi
 {
+	/*
 	class SerializableRendererBase
 	{
 	protected:
@@ -31,6 +32,7 @@ namespace asapi
 
 		virtual void OnGUI() override { this->SerializableRendererBase::OnGUI(); };
 	};
+	*/
 }
 
 #endif

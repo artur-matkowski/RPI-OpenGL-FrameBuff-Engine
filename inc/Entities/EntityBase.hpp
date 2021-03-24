@@ -5,18 +5,19 @@
 
 namespace asapi
 {
-	class EntityBase: public object, public bfu::SerializableClassBase
+	class EntityBase: public object//, public bfu::SerializableClassBase
 	{
 	protected:
 		//bfu::SerializableVar<UniqueID> m_ID;
+		bfu::MemBlockBase* m_mBlock;
 
 	public:
 		EntityBase( bfu::MemBlockBase* mBlock )
-			:bfu::SerializableClassBase(mBlock)
+			:m_mBlock(mBlock)
 			//,m_ID("m_ID", this, mBlock)
 		{};
 		EntityBase( const EntityBase& cp )
-			:bfu::SerializableClassBase(cp.m_mBlock)
+			:m_mBlock(cp.m_mBlock)
 			//,m_ID("m_ID", this, cp.m_mBlock)
 		{};
 		~EntityBase(){};

@@ -18,8 +18,8 @@ namespace asapi
 
 		char buffMat[255];
 		char buffMesh[255];
-		Serializable<bfu::stream>					m_MaterialName;
-		Serializable<bfu::stream>					m_meshName;
+		//Serializable<bfu::stream>					m_MaterialName;
+		//Serializable<bfu::stream>					m_meshName;
 
 	public:
 		RendererComponent(bfu::MemBlockBase* mBlock);

@@ -7,48 +7,48 @@ namespace asapi
 {
 	bool GameObject::RegisterChild(GameObject* newChild)
 	{
-		if(v_children!=nullptr)
-		{
-			v_children->push_back( newChild );
-			return true;
-		}
-		else
-		{
-			PrefabLoaderComponent* prefabLoader = (PrefabLoaderComponent*)GET_COMPONENT(PrefabLoaderComponent);
-			prefabLoader->RequestPrefabMemBlock();
-		}
+		// if(v_children!=nullptr)
+		// {
+		// 	v_children->push_back( newChild );
+		// 	return true;
+		// }
+		// else
+		// {
+		// 	PrefabLoaderComponent* prefabLoader = (PrefabLoaderComponent*)GET_COMPONENT(PrefabLoaderComponent);
+		// 	prefabLoader->RequestPrefabMemBlock();
+		// }
 		return false;
 	}
 
 	void GameObject::UnRegisterChild(GameObject* deleteChild)
 	{
-		for(auto it = v_children->begin(); 
-			it != v_children->end();
-			++it)
-		{
-			if(*it==deleteChild)
-			{
-				v_children->erase(it);
-				break;
-			}
-		}
+		// for(auto it = v_children->begin(); 
+		// 	it != v_children->end();
+		// 	++it)
+		// {
+		// 	if(*it==deleteChild)
+		// 	{
+		// 		v_children->erase(it);
+		// 		break;
+		// 	}
+		// }
 	}
 
 	GameObject::GameObject( bfu::MemBlockBase* mBlock )
 		:EntityBase(mBlock)
-		,m_myName("m_myName", this, mBlock)
-		,v_componentsInfo("v_componentsInfo", this, SYSTEMS::JSON_ALLOCATOR ) //it is only usefull when de/serializing JSON
+		//,m_myName("m_myName", this, mBlock)
+		//,v_componentsInfo("v_componentsInfo", this, SYSTEMS::JSON_ALLOCATOR ) //it is only usefull when de/serializing JSON
 		,v_components(mBlock)
 	{
-		m_myName.resize(GAMEOBJECT_MAX_NAME_LENGTH, '\0');
-		m_myName = "GameObject";
+		// m_myName.resize(GAMEOBJECT_MAX_NAME_LENGTH, '\0');
+		// m_myName = "GameObject";
 
-		v_children = (bfu::SerializableVarVector<GameObject*>*)mBlock->allocate( 1
-										, sizeof(bfu::SerializableVarVector<GameObject*>)
-						 				, alignof(bfu::SerializableVarVector<GameObject*>) );
-		new (v_children) bfu::SerializableVarVector<GameObject*>("v_children", this, mBlock);
+		// v_children = (bfu::SerializableVarVector<GameObject*>*)mBlock->allocate( 1
+		// 								, sizeof(bfu::SerializableVarVector<GameObject*>)
+		// 				 				, alignof(bfu::SerializableVarVector<GameObject*>) );
+		// new (v_children) bfu::SerializableVarVector<GameObject*>("v_children", this, mBlock);
 
-		AddComponent( TypeInfo::GetTypeInfo("asapi::Transform3D")->id );
+		// AddComponent( TypeInfo::GetTypeInfo("asapi::Transform3D")->id );
 	}
 
 	GameObject::~GameObject()
@@ -56,21 +56,21 @@ namespace asapi
 		ClearComponents();
 		ClearChildren();
 
-		v_children->~SerializableVarVector<GameObject*>();
-		m_mBlock->deallocate( v_children, 1*sizeof(bfu::SerializableVarVector<GameObject*>) );
+		// v_children->~SerializableVarVector<GameObject*>();
+		// m_mBlock->deallocate( v_children, 1*sizeof(bfu::SerializableVarVector<GameObject*>) );
 	}
 	void GameObject::ClearChildren()
 	{
-		if(v_children==nullptr)
-			return;
+		// if(v_children==nullptr)
+		// 	return;
 
-		for(auto it = v_children->begin(); 
-			it != v_children->end();
-			++it)
-		{
-			(*it)->DispouseAndDeallocate();
-		}
-		v_children->clear();
+		// for(auto it = v_children->begin(); 
+		// 	it != v_children->end();
+		// 	++it)
+		// {
+		// 	(*it)->DispouseAndDeallocate();
+		// }
+		// v_children->clear();
 	}
 	void GameObject::ClearComponents()
 	{
@@ -130,40 +130,40 @@ namespace asapi
 	{
 		ClearComponentInfo();
 
-		for(int i=0; i<v_components.size(); ++i)
-		{
-			v_componentsInfo.emplace_back( SYSTEMS::STD_ALLOCATOR );
+		// for(int i=0; i<v_components.size(); ++i)
+		// {
+		// 	v_componentsInfo.emplace_back( SYSTEMS::STD_ALLOCATOR );
 
-			v_componentsInfo.back().m_componentTypeName.GetRef().sprintf( v_components[i]->TypeName() );
-			//v_componentsInfo.back().m_recreationString << *v_components[i]; //Can't really do that is we have a ptr not a full reference
-			v_components[i]->Serialize( v_componentsInfo.back().m_recreationString.GetRef() );
-		}
+		// 	v_componentsInfo.back().m_componentTypeName.GetRef().sprintf( v_components[i]->TypeName() );
+		// 	//v_componentsInfo.back().m_recreationString << *v_components[i]; //Can't really do that is we have a ptr not a full reference
+		// 	v_components[i]->Serialize( v_componentsInfo.back().m_recreationString.GetRef() );
+		// }
 	}
 	void GameObject::ClearComponentInfo()
 	{
-		v_componentsInfo.clear();
+		//v_componentsInfo.clear();
 	}
 	void GameObject::ReconstructComponentsFromComponentInfo()
 	{
 		ClearComponents();
 
-		for(int i=0; i<v_componentsInfo.size(); ++i)
-		{
-			this->AddComponent( v_componentsInfo[i].m_componentTypeName.GetRef().c_str() );			
+		// for(int i=0; i<v_componentsInfo.size(); ++i)
+		// {
+		// 	this->AddComponent( v_componentsInfo[i].m_componentTypeName.GetRef().c_str() );			
 
-			auto &recreationString = v_componentsInfo[i].m_recreationString.GetRef();
-			if(recreationString.size() > 0)
-			{
-				v_components.back()->Deserialize( v_componentsInfo[i].m_recreationString.GetRef() );
-				v_components.back()->OnIsDirty();
-			}
-		}
+		// 	auto &recreationString = v_componentsInfo[i].m_recreationString.GetRef();
+		// 	if(recreationString.size() > 0)
+		// 	{
+		// 		v_components.back()->Deserialize( v_componentsInfo[i].m_recreationString.GetRef() );
+		// 		v_components.back()->OnIsDirty();
+		// 	}
+		// }
 		ClearComponentInfo();
 	}
 
 
 
-
+/*
 	void GameObject::Serialize(bfu::JSONStream& stream)
 	{
 		PopulateComponentInfo();
@@ -240,21 +240,21 @@ namespace asapi
 			(*v_children)[i]->p_parent = this;
 		}
 	}
-
+*/
 	void GameObject::SerializeChildren(bfu::JSONStream& stream)
 	{
-		stream << *v_children;
+		//stream << *v_children;
 	}
 	void GameObject::DeserializeChildren(bfu::JSONStream& stream)
 	{
-		stream >> *v_children;
+		// stream >> *v_children;
 
-		if(v_children!=nullptr)
-		for(int i=0; i<v_children->size(); ++i)
-		{
-			//OnAttach
-			(*v_children)[i]->p_parent = this;
-		}
+		// if(v_children!=nullptr)
+		// for(int i=0; i<v_children->size(); ++i)
+		// {
+		// 	//OnAttach
+		// 	(*v_children)[i]->p_parent = this;
+		// }
 	}
 
 
@@ -276,13 +276,13 @@ namespace asapi
 	}
 	void GameObject::OverrideChildVector(bfu::SerializableVarVector<GameObject*>* newChildrenVector, bfu::MemBlockBase* prefabMemBlock )
 	{
-		if(v_children!=nullptr)
-		{
-			v_children->~SerializableVarVector<GameObject*>();
-			m_mBlock->deallocate( v_children, 1*sizeof(bfu::SerializableVarVector<GameObject*>) );
-		}
+		// if(v_children!=nullptr)
+		// {
+		// 	v_children->~SerializableVarVector<GameObject*>();
+		// 	m_mBlock->deallocate( v_children, 1*sizeof(bfu::SerializableVarVector<GameObject*>) );
+		// }
 
-		v_children = newChildrenVector;
+		// v_children = newChildrenVector;
 	}
 
 	ComponentInterface* GameObject::AddComponent(const char* componentName)
@@ -361,7 +361,7 @@ namespace asapi
 
 	void GameObject::SetName(const char* name)
 	{
-		m_myName = name;
+		//m_myName = name;
 	}
 
 

@@ -66,10 +66,6 @@ namespace asapi
 		m_owner = nullptr;
 	}
 	ComponentInterface::ComponentInterface(bfu::MemBlockBase* mBlock)
-		:EntityBase(mBlock)
-		#ifdef IS_EDITOR
-		,v_SerializableRenderers( SYSTEMS::GUI_ALLOCATOR )
-		#endif
 	{};
 
 	#ifdef IS_EDITOR
@@ -92,14 +88,9 @@ namespace asapi
 
 	void ComponentInterface::OnGUI()
 	{
-		for(int i=0; i<v_SerializableRenderers.size(); ++i)
-			v_SerializableRenderers[i]->OnGUI();
+
 	}
 
-	void ComponentInterface::PushSerializableRenderer(SerializableRendererBase* in)
-	{
-		v_SerializableRenderers.push_back(in);
-	}
 	#endif
 
 	void ComponentInterface::RemovedMarkedComponent()

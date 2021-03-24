@@ -11,8 +11,8 @@ namespace asapi
 {
 	RendererComponent::RendererComponent(bfu::MemBlockBase* mBlock)
 		:ComponentBase<RendererComponent>(mBlock)
-		,m_MaterialName("m_MaterialName",this, buffMat, 255, mBlock)
-		,m_meshName("m_meshName",this, buffMesh, 255, mBlock)
+		//,m_MaterialName("m_MaterialName",this, buffMat, 255, mBlock)
+		//,m_meshName("m_meshName",this, buffMesh, 255, mBlock)
 	{
 	};
 
@@ -29,8 +29,8 @@ namespace asapi
 	}
 	void RendererComponent::OnIsDirty()
 	{
-		SetMaterial_Blocking( m_MaterialName.GetRef().c_str() );
-		SetMesh_Blocking( m_meshName.GetRef().c_str() );
+		// SetMaterial_Blocking( m_MaterialName.GetRef().c_str() );
+		// SetMesh_Blocking( m_meshName.GetRef().c_str() );
 	}
 
 	void RendererComponent::SetMaterial_Blocking(const char* name)
@@ -44,11 +44,11 @@ namespace asapi
 			SYSTEMS::GetObject().RENDERER.RegisterRenderer( this );
 		}
 
-		if( m_MaterialName.GetRef().c_str() != name )
-		{
-			m_MaterialName.GetRef().clear();
-			m_MaterialName.GetRef().sprintf(name);
-		}
+		// if( m_MaterialName.GetRef().c_str() != name )
+		// {
+		// 	m_MaterialName.GetRef().clear();
+		// 	m_MaterialName.GetRef().sprintf(name);
+		// }
 	}
 	void RendererComponent::SetMesh_Blocking(const char* name)
 	{
@@ -60,11 +60,11 @@ namespace asapi
 			SYSTEMS::GetObject().RENDERER.RegisterRenderer( this );
 		}
 
-		if( m_meshName.GetRef().c_str() != name )
-		{
-			m_meshName.GetRef().clear();
-			m_meshName.GetRef().sprintf(name);
-		}
+		// if( m_meshName.GetRef().c_str() != name )
+		// {
+		// 	m_meshName.GetRef().clear();
+		// 	m_meshName.GetRef().sprintf(name);
+		// }
 	}
 
 	void RendererComponent::Render()
@@ -83,33 +83,33 @@ namespace asapi
 	void RendererComponent::OnGUI()
 	{
 
-		{
-			char buff1[255];
-			strncpy(buff1, m_MaterialName.GetRef().c_str(), 255 );
+		// {
+		// 	char buff1[255];
+		// 	strncpy(buff1, m_MaterialName.GetRef().c_str(), 255 );
 
-			if( ImGui::InputText("Material name",     buff1, 255, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue) )
-			{
-				log::debug << "updated material name " << buff1 << std::endl;
+		// 	if( ImGui::InputText("Material name",     buff1, 255, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue) )
+		// 	{
+		// 		log::debug << "updated material name " << buff1 << std::endl;
 
-				SetMaterial_Blocking(buff1);
-			}
+		// 		SetMaterial_Blocking(buff1);
+		// 	}
 
-		}
-		if(m_material.GetRawPtr()!=nullptr)
-			m_material->OnGUI();
+		// }
+		// if(m_material.GetRawPtr()!=nullptr)
+		// 	m_material->OnGUI();
 
-		ImGui::Spacing();
-		{
-			char buff2[255];
-			strncpy(buff2, m_meshName.GetRef().c_str(), 255 );
+		// ImGui::Spacing();
+		// {
+		// 	char buff2[255];
+		// 	strncpy(buff2, m_meshName.GetRef().c_str(), 255 );
 
-			if( ImGui::InputText("Mesh name",     buff2, 255, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue) )
-			{
-				log::debug << "updated mesh name " << buff2 << std::endl;
+		// 	if( ImGui::InputText("Mesh name",     buff2, 255, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue) )
+		// 	{
+		// 		log::debug << "updated mesh name " << buff2 << std::endl;
 
-				SetMesh_Blocking(buff2);				
-			}
-		}
+		// 		SetMesh_Blocking(buff2);				
+		// 	}
+		// }
 
 	}
 	#endif

@@ -119,11 +119,11 @@ namespace asapi
 		*m_selfRefCounter		= 1;
 		*m_buffEndPtr			= (void*)((size_t)ptr + size);
 
-		m_prefabEntryVector = (bfu::SerializableVarVector<GameObject*>*) this->allocate(1
-							, sizeof(bfu::SerializableVarVector<GameObject*>)
-							, alignof(bfu::SerializableVarVector<GameObject*>));
+		// m_prefabEntryVector = (bfu::SerializableVarVector<GameObject*>*) this->allocate(1
+		// 					, sizeof(bfu::SerializableVarVector<GameObject*>)
+		// 					, alignof(bfu::SerializableVarVector<GameObject*>));
 
-		new (m_prefabEntryVector) bfu::SerializableVarVector<GameObject*>("v_children", entryVectorOwner, this);
+		//new (m_prefabEntryVector) bfu::SerializableVarVector<GameObject*>("v_children", entryVectorOwner, this);
 
 		SYSTEMS::GetObject().MEMORY.RegisterMemBlock( this );
 	}
@@ -249,11 +249,11 @@ namespace asapi
 		*mmb->m_buffEndPtr			= (void*)((size_t)ptr + size);
 
 		
-		mmb->m_prefabEntryVector = (bfu::SerializableVarVector<GameObject*>*) mmb->allocate(1
-							, sizeof(bfu::SerializableVarVector<GameObject*>)
-							, alignof(bfu::SerializableVarVector<GameObject*>));
+		// mmb->m_prefabEntryVector = (bfu::SerializableVarVector<GameObject*>*) mmb->allocate(1
+		// 					, sizeof(bfu::SerializableVarVector<GameObject*>)
+		// 					, alignof(bfu::SerializableVarVector<GameObject*>));
 
-		new (mmb->m_prefabEntryVector) bfu::SerializableVarVector<GameObject*>("v_children", entryVectorOwner, mmb);
+		// new (mmb->m_prefabEntryVector) bfu::SerializableVarVector<GameObject*>("v_children", entryVectorOwner, mmb);
 
 		SYSTEMS::GetObject().MEMORY.RegisterMemBlock( mmb );
 

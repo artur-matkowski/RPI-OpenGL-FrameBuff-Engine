@@ -8,9 +8,9 @@ namespace asapi
 	class Transform3D: public ComponentBase<Transform3D>
 	{
 	protected:
-		SerializableArray<float>   	m_position;
-		SerializableArray<float>   	m_rotation;
-		SerializableArray<float>   	m_scale;
+		// SerializableArray<float>   	m_position;
+		// SerializableArray<float>   	m_rotation;
+		// SerializableArray<float>   	m_scale;
 
 		glm::mat4 					m_modelMatix;
 		

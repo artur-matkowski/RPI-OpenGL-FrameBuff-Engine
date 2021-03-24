@@ -5,6 +5,7 @@
 
 namespace asapi
 {
+	/*
 	SerializableRendererBase::SerializableRendererBase(const char* name)
 	{
 		int nameI = 0;
@@ -132,7 +133,7 @@ namespace asapi
 		}
 	}
 
-
+*/
 }
 
 #endif
