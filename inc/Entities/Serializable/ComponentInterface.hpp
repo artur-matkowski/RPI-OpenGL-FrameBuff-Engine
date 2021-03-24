@@ -1,7 +1,6 @@
 #ifndef H_ComponentInterface
 #define H_ComponentInterface
 #include "EntityBase.hpp"
-#include "SerializableRenderer.hpp"
 
 namespace asapi
 {
