@@ -200,6 +200,9 @@ namespace asapi
 	}
 	void GameObject::Deserialize(bfu::JSONStream& stream)
 	{
+    	char buff[1024] = {'0'};
+    	bfu::stream token(buff, 1024, m_mBlock);
+    	
 		//this->EntityBase::Deserialize(stream);	
 		{
 			stream.skipTo('{');
@@ -210,14 +213,14 @@ namespace asapi
 
 			while( stream.peak() != '}' )
 			{
-				m_token.clear();
+				token.clear();
 
-				stream.Deserialize( m_token );
+				stream.Deserialize( token );
 
-				auto it = m_membersMap.find( m_token );
+				auto it = m_membersMap.find( token );
 				if( it == m_membersMap.end() )
 				{
-					log::error << "co do kurwy " << m_token.c_str() << std::endl;
+					log::error << "co do kurwy " << token.c_str() << std::endl;
 				}
 
 				it->second->Deserialize( stream );

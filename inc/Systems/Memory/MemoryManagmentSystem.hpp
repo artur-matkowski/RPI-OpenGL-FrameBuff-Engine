@@ -5,7 +5,6 @@
 #include "object.hpp"
 #include "PrefabMemBlock.hpp"
 #include "StaticAllocatorMemBlock.hpp"
-#include "StdAllocatorMemBlock.hpp"
 
 
 namespace asapi
@@ -19,9 +18,9 @@ namespace asapi
 		//bfu::MallocAllocator					m_operatorNEWstatistics;
 		bfu::StdAllocatorMemBlock				m_StdAllocatorMemBlock;
 		#ifdef IS_EDITOR
-		asapi::StdAllocatorMemBlock					m_GUIAllocatorMemBlock;
+		bfu::StdAllocatorMemBlock					m_GUIAllocatorMemBlock;
 		#endif
-		asapi::StdAllocatorMemBlock 					m_JSONAllocator;
+		bfu::StdAllocatorMemBlock 					m_JSONAllocator;
 
 		std::vector<bfu::MemBlockBase*, bfu::custom_allocator<bfu::MemBlockBase*>> v_memBlocks;
 

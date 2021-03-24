@@ -30,7 +30,7 @@ namespace asapi
 	{
 		if(size==0) size = PageSize();
 
-		void* ptr = mmap(s_unclaimedMemPtr, size, 
+		void* ptr = mmap(nullptr, size, 
                 PROT_READ | PROT_WRITE, 
                 MAP_PRIVATE | MAP_ANONYMOUS, 
                 -1, 0);
@@ -319,47 +319,13 @@ namespace asapi
 
 	void* PrefabMemBlock::allocate (int elements, std::size_t sizeOf, std::size_t alignOf)
 	{
-		size_t size = getFreeMemory();
-
-		void* tmp = *m_buffFreePtr;
-
-		if ( *m_buffFreePtr = std::align(alignOf, sizeOf, *m_buffFreePtr, size ))
-        {
-            void* result = *m_buffFreePtr;
-            size_t size = sizeOf * elements;
-            size = size > 0 ? size : 1;
-            *m_buffFreePtr = (void*)((size_t) *m_buffFreePtr + size);
-
-
-            if(*m_buffFreePtr >= *m_buffEndPtr)
-	        {
-	        	Resize();
-	        	return allocate(elements, sizeOf, alignOf);
-	        }
-
-			if(result == *m_buffFreePtr)
-			{
-				*m_buffFreePtr = (void*)((size_t)*m_buffFreePtr + 1);
-			}
-
-			++m_allocationCount;
-
-            return result;
-        }
-        return nullptr;
+		bfu::StdAllocatorMemBlock m;
+		return m.allocate(elements, sizeOf, alignOf);
 	}
 
 	void PrefabMemBlock::deallocate (void* p, std::size_t n) 
 	{
-		m_deallocatedMemory += n;
-		memset(p, 0, n);
-		if( (size_t)p+n==(size_t)*m_buffFreePtr)
-		{
-            //std::cout << "Regaining memory becouse deallocate was called right after allocate on the same ptr" << std::endl;
-			//std::cout.flush();
-			*m_buffFreePtr = (void*)((size_t)*m_buffFreePtr - n);
-		}
-
-		++m_deallocationCount;
+		bfu::StdAllocatorMemBlock m;
+		m.deallocate(p, n);
 	}
 }
