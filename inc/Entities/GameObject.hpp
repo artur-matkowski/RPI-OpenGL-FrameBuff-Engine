@@ -14,39 +14,44 @@ namespace asapi
 	#define GET_COMPONENT(x) GetComponentOfTypeHash(typeid(x).hash_code())
 	#define ADD_COMPONENT(x) AddComponent(typeid(x).hash_code())
 
-	class GameObject: public EntityBase
+	using bfu::string;
+
+	struct ComponentInfo: public EntityBase<ComponentInfo>
+	{
+		char buff[255];
+		//bfu::SerializableVar<bfu::stream>  			m_componentTypeName;
+		//bfu::SerializableVar<bfu::JSONStream>  		m_recreationString;
+
+		ComponentInfo( bfu::MemBlockBase* mBlock )
+			:EntityBase(mBlock)
+			//,m_componentTypeName("m_componentTypeName", this, buff, 255, mBlock)
+			//,m_recreationString("m_recreationString", this, mBlock)
+			{};
+		ComponentInfo( const ComponentInfo& cp )
+			:EntityBase(cp.m_mBlock)
+			//,m_componentTypeName("m_componentTypeName", this, buff, 255, cp.m_mBlock)
+			//,m_recreationString("m_recreationString", this, cp.m_mBlock)
+			{ 
+				//m_componentTypeName = cp.m_componentTypeName; 
+				//m_recreationString = cp.m_recreationString;
+			};
+	};
+
+	class GameObject: public EntityBase<GameObject>
 	{
 		friend bfu::ConditionalBuilder;
 
-		struct ComponentInfo: public EntityBase
-		{
-			char buff[255];
-			//bfu::SerializableVar<bfu::stream>  			m_componentTypeName;
-			//bfu::SerializableVar<bfu::JSONStream>  		m_recreationString;
-
-			ComponentInfo( bfu::MemBlockBase* mBlock )
-				:EntityBase(mBlock)
-				//,m_componentTypeName("m_componentTypeName", this, buff, 255, mBlock)
-				//,m_recreationString("m_recreationString", this, mBlock)
-				{};
-			ComponentInfo( const ComponentInfo& cp )
-				:EntityBase(cp.m_mBlock)
-				//,m_componentTypeName("m_componentTypeName", this, buff, 255, cp.m_mBlock)
-				//,m_recreationString("m_recreationString", this, cp.m_mBlock)
-				{ 
-					//m_componentTypeName = cp.m_componentTypeName; 
-					//m_recreationString = cp.m_recreationString;
-				};
-		};
+		
 
 		void PopulateComponentInfo();
 		void ClearComponentInfo();
 		void ReconstructComponentsFromComponentInfo();
+
 	protected:
 		GameObject*										p_parent = 0;
 
-		//bfu::SerializableVar<bfu::string>  				m_myName;
-		//bfu::SerializableVarVector<GameObject*>			*v_children;
+		SERIALIZABLE_VAR( GameObject, string, m_myName );
+		SERIALIZABLE_OBJ_VEC(GameObject, GameObject, v_children );
 		// If you change name of v_children you need to change { if( loader!=0 && strcmp(it->first.c_str(), "v_children")==0 ) }
 
 		//bfu::SerializableVarVector<ComponentInfo>		v_componentsInfo;
@@ -98,10 +103,10 @@ namespace asapi
 
 
 		void SetName(const char*);
-		inline const char* GetName()					{ return "---"; }// m_myName.c_str(); 		}
+		inline const char* GetName()					{ return m_myName.c_str(); 		}
 
-		inline int GetChildCount()						{ return 0; } //v_children==0 ? 0 : v_children->size();	}
-		inline GameObject* GetChild(int index)			{ return 0; } //(*v_children)[index];	}
+		inline int GetChildCount()						{ return v_children.size();	}
+		inline GameObject* GetChild(int index)			{ return (GameObject*)v_children[index];	}
 
 		inline Transform3D* GetTransform3D()			{ return p_myTransform;			}
 		inline GameObject* GetParent()					{ return p_parent; 				}

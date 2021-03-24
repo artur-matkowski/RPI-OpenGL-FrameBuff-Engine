@@ -7,31 +7,22 @@ namespace asapi
 {
 	bool GameObject::RegisterChild(GameObject* newChild)
 	{
-		// if(v_children!=nullptr)
-		// {
-		// 	v_children->push_back( newChild );
-		// 	return true;
-		// }
-		// else
-		// {
-		// 	PrefabLoaderComponent* prefabLoader = (PrefabLoaderComponent*)GET_COMPONENT(PrefabLoaderComponent);
-		// 	prefabLoader->RequestPrefabMemBlock();
-		// }
-		return false;
+		v_children.push_back( newChild );
+		return true;
 	}
 
 	void GameObject::UnRegisterChild(GameObject* deleteChild)
 	{
-		// for(auto it = v_children->begin(); 
-		// 	it != v_children->end();
-		// 	++it)
-		// {
-		// 	if(*it==deleteChild)
-		// 	{
-		// 		v_children->erase(it);
-		// 		break;
-		// 	}
-		// }
+		for(auto it = v_children.begin(); 
+			it != v_children.end();
+			++it)
+		{
+			if(*it==deleteChild)
+			{
+				v_children.erase(it);
+				break;
+			}
+		}
 	}
 
 	GameObject::GameObject( bfu::MemBlockBase* mBlock )
@@ -41,7 +32,7 @@ namespace asapi
 		,v_components(mBlock)
 	{
 		// m_myName.resize(GAMEOBJECT_MAX_NAME_LENGTH, '\0');
-		// m_myName = "GameObject";
+		m_myName = "GameObject";
 
 		// v_children = (bfu::SerializableVarVector<GameObject*>*)mBlock->allocate( 1
 		// 								, sizeof(bfu::SerializableVarVector<GameObject*>)
@@ -55,9 +46,6 @@ namespace asapi
 	{
 		ClearComponents();
 		ClearChildren();
-
-		// v_children->~SerializableVarVector<GameObject*>();
-		// m_mBlock->deallocate( v_children, 1*sizeof(bfu::SerializableVarVector<GameObject*>) );
 	}
 	void GameObject::ClearChildren()
 	{
@@ -361,7 +349,7 @@ namespace asapi
 
 	void GameObject::SetName(const char* name)
 	{
-		//m_myName = name;
+		m_myName = name;
 	}
 
 
