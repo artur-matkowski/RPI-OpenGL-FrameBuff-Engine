@@ -24,15 +24,13 @@ namespace asapi
 		ID64 = cp.ID64;
 	}
 
-	void UniqueID::Serialize(bfu::JSONStream& stream)
-	{
-		m_ID = ID64;
-		stream << m_ID;
-	}
 
-	void UniqueID::Deserialize(bfu::JSONStream& stream)
-	{
-		stream >> m_ID;
-		ID64 = m_ID;
-	}
+	// void UniqueID::PreSerializationCallback()
+	// {
+	// 	m_ID = ID64;
+	// }
+	// void UniqueID::PostDeserializationCallback()
+	// {
+	// 	ID64 = m_ID;
+	// }
 }

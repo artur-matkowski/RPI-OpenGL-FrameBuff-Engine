@@ -19,9 +19,6 @@ namespace asapi
 		UniqueID( const UniqueID& cp );
 		~UniqueID(){};
 
-		virtual void Serialize(bfu::JSONStream& stream);
-		virtual void Deserialize(bfu::JSONStream& stream);
-
 		inline uint64_t ID()
 		{
 			return ID64;

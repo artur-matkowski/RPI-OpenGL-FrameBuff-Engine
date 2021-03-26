@@ -47,17 +47,18 @@ namespace asapi
 
 	void PrefabLoaderComponent::Save_JSON()
 	{
-		// buff.clear();
-		// buff.sprintf( "%s/json/%lld.json"
-		// 				, SYSTEMS::GetObject().SCENE.GetProjectPath()
-		// 				, GetPrefabID() );
 
-		// bfu::JSONStream& jsonStream = SYSTEMS::GetObject().SCENE.GetJSONStreamWorkBuffer();
-		// jsonStream.clear();
+		buff.clear();
+		buff.sprintf( "%s/json/%lld.json"
+						, SYSTEMS::GetObject().SCENE.GetProjectPath()
+						, GetPrefabID() );
 
-		// m_owner->SerializeChildren( jsonStream );
-		
-		// SceneSystem::JSON2File( jsonStream, buff.c_str() ) ;
+		bfu2::JSONSerializer &jsonSerializer = SYSTEMS::GetObject().SCENE.GetJSONSerializer();
+		jsonSerializer.clear();
+
+		jsonSerializer.Serialize( m_owner );
+
+		SceneSystem::JSON2File( jsonSerializer, buff.c_str() ) ;
 	}
 	bool PrefabLoaderComponent::Load_JSON()
 	{
@@ -74,14 +75,15 @@ namespace asapi
 		// 				, SYSTEMS::GetObject().SCENE.GetProjectPath()
 		// 				, GetPrefabID() );
 
-		// bfu::JSONStream& jsonStream = SYSTEMS::GetObject().SCENE.GetJSONStreamWorkBuffer();
-		// jsonStream.clear();
+		
+		// bfu2::JSONSerializer &jsonSerializer = SYSTEMS::GetObject().SCENE.GetJSONSerializer();
+		// jsonSerializer.clear();
 
 		// m_owner->OverrideChildVector( m_prefabMemBlock->GetEntryVector(), m_prefabMemBlock );
 
-		// if( SceneSystem::File2JSON( jsonStream, buff.c_str() ) )
+		// if( SceneSystem::File2JSON( jsonSerializer, buff.c_str() ) )
 		// {
-		// 	m_owner->DeserializeChildren( jsonStream );
+		// 	jsonSerializer.Deserialize( m_owner );
 		// 	return true;
 		// }
 		return false;

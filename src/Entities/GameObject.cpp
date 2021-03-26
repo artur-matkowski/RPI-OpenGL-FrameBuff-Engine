@@ -114,6 +114,24 @@ namespace asapi
 
 	}
 
+
+	void GameObject::PreDeserializationCallback()
+	{
+
+	}
+	void GameObject::PostDeserializationCallback()
+	{
+
+	}
+	void GameObject::PreSerializationCallback()
+	{
+
+	}
+	void GameObject::PostSerializationCallback()
+	{
+
+	}
+
 	void GameObject::PopulateComponentInfo()
 	{
 		ClearComponentInfo();

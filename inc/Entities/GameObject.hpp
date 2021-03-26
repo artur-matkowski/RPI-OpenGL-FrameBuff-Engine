@@ -75,6 +75,11 @@ namespace asapi
 		//TODO
 		//GameObject& operator=(const GameObject& cp);
 
+		virtual void PreDeserializationCallback()	override;
+		virtual void PostDeserializationCallback()	override;
+		virtual void PreSerializationCallback()		override;
+		virtual void PostSerializationCallback()	override;
+
 		void Init( bfu::MemBlockBase* mBlock );
 		virtual void Dispouse();
 		virtual void DispouseAndDeallocate();
