@@ -64,10 +64,10 @@ namespace asapi
 	{
 		while( v_components.size() != 0 )
 		{
-			ComponentInterface* ptr = *v_components.begin();
+			ComponentInterface* ptr = v_components.begin()->p_ComponentInterface;
 			v_components.erase( v_components.begin() );
 			ptr->Detached();
-			m_mBlock->deallocate(ptr, TypeInfo::GetTypeInfo( ptr->TypeHash() )->sizeOf ); // TODO wrong sizeof
+			ptr->Dispouse();
 		}
 	}
 	void GameObject::AddChild()
@@ -144,13 +144,14 @@ namespace asapi
 			ComponentInfo* obj = (ComponentInfo*) ComponentInfo::AllocateAndInit( SYSTEMS::JSON_ALLOCATOR );
 			v_componentsInfo.push_back( obj );
 
-			obj->m_componentTypeName.sprintf( v_components[i]->TypeName() );
+			obj->m_componentTypeName.sprintf( v_components[i].p_ComponentInterface->TypeName() );
 
 
 
 			//v_componentsInfo.back().m_recreationString << *v_components[i]; //Can't really do that is we have a ptr not a full reference
-			bfu2::JSONSerializer* serializer = (bfu2::JSONSerializer*) &obj->m_recreationString;
-			serializer->Serialize( (bfu2::SerializableVector<bfu2::SerializableClassInterface>*) v_components[i] );
+			bfu2::JSONSerializer serializer( std::move( obj->m_recreationString ) );
+			serializer.Serialize( v_components[i].p_SerializableClassInterface );
+			obj->m_recreationString = std::move( serializer );
 		}
 	}
 	void GameObject::PostSerializationCallback()
@@ -285,7 +286,12 @@ namespace asapi
 		if( GetComponentOfTypeHash(typeHash) != nullptr)
 			return nullptr;
 
-		ComponentInterface* newComp = ComponentInterface::AllocateAndInitObjectFromTypeHash(typeHash, m_mBlock);
+		ComponentTranslatePointers copmponentInterfaces;
+
+		ComponentInterface::AllocateAndInitObjectFromTypeHash(typeHash, m_mBlock, copmponentInterfaces);
+
+		v_components.push_back( copmponentInterfaces );
+		ComponentInterface* newComp = v_components.back().p_ComponentInterface;
 
 
 		if( newComp->TypeHash()			== typeid(Transform3D).hash_code() )
@@ -296,8 +302,6 @@ namespace asapi
 		{
 			p_myRenderer = (RendererComponent*)newComp;
 		}
-
-		v_components.push_back(newComp);
 
 		newComp->Attached(this);
 
@@ -313,11 +317,11 @@ namespace asapi
 
 		for(auto it = v_components.begin(); it!=v_components.end(); ++it)
 		{
-			if(*it==ptr)
+			if(it->p_ComponentInterface==ptr)
 			{
 				v_components.erase(it);
 				ptr->Detached();
-				m_mBlock->deallocate(ptr, TypeInfo::GetTypeInfo( ptr->TypeHash() )->sizeOf ); // TODO wrong sizeof
+				ptr->Dispouse();
 				break;
 			}
 		}
@@ -326,9 +330,9 @@ namespace asapi
 	{
 		for(auto it = v_components.begin(); it!=v_components.end(); ++it)
 		{
-			if( (*it)->TypeHash() == typeHash)
+			if( it->p_ComponentInterface->TypeHash() == typeHash)
 			{
-				return *it;
+				return it->p_ComponentInterface;
 			}
 		}
 
@@ -366,7 +370,7 @@ namespace asapi
 			ImGui::Spacing();
 			ImGui::Separator();
 			ImGui::Spacing();
-			v_components[i]->OnGUI_NameAndVirtual();
+			v_components[i].p_ComponentInterface->OnGUI_NameAndVirtual();
 		}
 	}
 	#endif

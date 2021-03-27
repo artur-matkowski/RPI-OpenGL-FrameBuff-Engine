@@ -7,7 +7,13 @@ namespace asapi
 	class GameObject;
 	class ComponentInterface;
 
-	typedef ComponentInterface* (*InitFuncPtr)(bfu::MemBlockBase*);
+	struct ComponentTranslatePointers
+	{
+		ComponentInterface* 				p_ComponentInterface = nullptr;
+		bfu2::SerializableClassInterface* 	p_SerializableClassInterface = nullptr;
+	};
+
+	typedef void (*InitFuncPtr)(bfu::MemBlockBase*, ComponentTranslatePointers&);
 
 	#define TYPE_INFO_CAPACITY 1024
 	struct TypeInfo
@@ -36,9 +42,9 @@ namespace asapi
 		void Attached(GameObject* owner);
 		void Detached();
 
-		static ComponentInterface* AllocateAndInitObjectFromTypeHash(size_t hash, bfu::MemBlockBase* mBlock)
+		static void AllocateAndInitObjectFromTypeHash(size_t hash, bfu::MemBlockBase* mBlock, ComponentTranslatePointers& ret)
 		{
-			return TypeInfo::GetTypeInfo(hash)->fPtr(mBlock);
+			TypeInfo::GetTypeInfo(hash)->fPtr(mBlock, ret);
 		}
 
 		#ifdef IS_EDITOR
@@ -51,6 +57,7 @@ namespace asapi
 		virtual void OnDetach(){};
 		virtual void OnIsDirty(){};
 		virtual size_t TypeHash() = 0;
+		virtual void Dispouse() = 0;
 
 		virtual const char* TypeName()
 		{

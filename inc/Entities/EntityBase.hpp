@@ -39,11 +39,6 @@ namespace asapi
 			:EntityInterface(cp.m_mBlock)
 		{};
 		~EntityBase(){};
-
-		bfu::MemBlockBase* GetMemBlock()
-		{
-			return m_mBlock;
-		}
 	};
 }
 

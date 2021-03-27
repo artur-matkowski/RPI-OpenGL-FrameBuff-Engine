@@ -38,6 +38,7 @@ namespace asapi
 			};
 	};
 
+
 	class GameObject: public EntityBase<GameObject>
 	{
 		friend bfu::ConditionalBuilder;
@@ -54,8 +55,9 @@ namespace asapi
 
 		SERIALIZABLE_OBJ_VEC( GameObject, ComponentInfo, v_componentsInfo );
 
-		std::vector<ComponentInterface*, bfu::custom_allocator<ComponentInterface*>> 
+		std::vector<ComponentTranslatePointers, bfu::custom_allocator<ComponentTranslatePointers>> 
 														v_components;
+
 		Transform3D										*p_myTransform = 0;
 		RendererComponent								*p_myRenderer = 0;
 
