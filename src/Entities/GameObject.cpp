@@ -117,23 +117,25 @@ namespace asapi
 
 	void GameObject::PreDeserializationCallback()
 	{
-
+		v_componentsInfo.clear();
 	}
 	void GameObject::PostDeserializationCallback()
 	{
-		//v_componentsInfo.clear();
-		// for(int i=0; i<v_componentsInfo.size(); ++i)
-		// {
-		// 	this->AddComponent( v_componentsInfo[i].m_componentTypeName.GetRef().c_str() );			
+		for(int i=0; i<v_componentsInfo.size(); ++i)
+		{
+			this->AddComponent( v_componentsInfo[i].m_componentTypeName.c_str() );			
 
-		// 	auto &recreationString = v_componentsInfo[i].m_recreationString.GetRef();
-		// 	if(recreationString.size() > 0)
-		// 	{
-		// 		v_components.back()->Deserialize( v_componentsInfo[i].m_recreationString.GetRef() );
-		// 		v_components.back()->OnIsDirty();
-		// 	}
-		// }
-		//v_componentsInfo.clear();
+			auto &recreationString = v_componentsInfo[i].m_recreationString;
+			if(recreationString.size() > 0)
+			{
+				bfu2::JSONSerializer serializer( std::move( v_componentsInfo[i].m_recreationString ) );
+				serializer.Deserialize( v_components[i].p_SerializableClassInterface );
+				v_componentsInfo[i].m_recreationString = std::move( serializer );
+
+				v_components.back().p_ComponentInterface->OnIsDirty();
+			}
+		}
+		v_componentsInfo.clear();
 	}
 	void GameObject::PreSerializationCallback()
 	{
@@ -146,9 +148,6 @@ namespace asapi
 
 			obj->m_componentTypeName.sprintf( v_components[i].p_ComponentInterface->TypeName() );
 
-
-
-			//v_componentsInfo.back().m_recreationString << *v_components[i]; //Can't really do that is we have a ptr not a full reference
 			bfu2::JSONSerializer serializer( std::move( obj->m_recreationString ) );
 			serializer.Serialize( v_components[i].p_SerializableClassInterface );
 			obj->m_recreationString = std::move( serializer );
@@ -156,7 +155,7 @@ namespace asapi
 	}
 	void GameObject::PostSerializationCallback()
 	{
-
+		v_componentsInfo.clear();
 	}
 
 
@@ -290,7 +289,8 @@ namespace asapi
 
 		ComponentInterface::AllocateAndInitObjectFromTypeHash(typeHash, m_mBlock, copmponentInterfaces);
 
-		v_components.push_back( copmponentInterfaces );
+		v_components.emplace_back( copmponentInterfaces );
+
 		ComponentInterface* newComp = v_components.back().p_ComponentInterface;
 
 

@@ -111,7 +111,7 @@ namespace asapi
 		inline const char* GetName()					{ return m_myName.c_str(); 		}
 
 		inline int GetChildCount()						{ return v_children.size();	}
-		inline GameObject* GetChild(int index)			{ return (GameObject*)v_children[index];	}
+		inline GameObject* GetChild(int index)			{ return &v_children[index];	}
 
 		inline Transform3D* GetTransform3D()			{ return p_myTransform;			}
 		inline GameObject* GetParent()					{ return p_parent; 				}
