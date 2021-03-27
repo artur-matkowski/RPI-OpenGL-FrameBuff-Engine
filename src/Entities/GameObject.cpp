@@ -121,38 +121,7 @@ namespace asapi
 	}
 	void GameObject::PostDeserializationCallback()
 	{
-
-	}
-	void GameObject::PreSerializationCallback()
-	{
-
-	}
-	void GameObject::PostSerializationCallback()
-	{
-
-	}
-
-	void GameObject::PopulateComponentInfo()
-	{
-		ClearComponentInfo();
-
-		// for(int i=0; i<v_components.size(); ++i)
-		// {
-		// 	v_componentsInfo.emplace_back( SYSTEMS::STD_ALLOCATOR );
-
-		// 	v_componentsInfo.back().m_componentTypeName.GetRef().sprintf( v_components[i]->TypeName() );
-		// 	//v_componentsInfo.back().m_recreationString << *v_components[i]; //Can't really do that is we have a ptr not a full reference
-		// 	v_components[i]->Serialize( v_componentsInfo.back().m_recreationString.GetRef() );
-		// }
-	}
-	void GameObject::ClearComponentInfo()
-	{
 		//v_componentsInfo.clear();
-	}
-	void GameObject::ReconstructComponentsFromComponentInfo()
-	{
-		ClearComponents();
-
 		// for(int i=0; i<v_componentsInfo.size(); ++i)
 		// {
 		// 	this->AddComponent( v_componentsInfo[i].m_componentTypeName.GetRef().c_str() );			
@@ -164,9 +133,30 @@ namespace asapi
 		// 		v_components.back()->OnIsDirty();
 		// 	}
 		// }
-		ClearComponentInfo();
+		//v_componentsInfo.clear();
 	}
+	void GameObject::PreSerializationCallback()
+	{
+		v_componentsInfo.clear();
 
+		for(int i=0; i<v_components.size(); ++i)
+		{
+			ComponentInfo* obj = (ComponentInfo*) ComponentInfo::AllocateAndInit( SYSTEMS::JSON_ALLOCATOR );
+			v_componentsInfo.push_back( obj );
+
+			obj->m_componentTypeName.sprintf( v_components[i]->TypeName() );
+
+
+
+			//v_componentsInfo.back().m_recreationString << *v_components[i]; //Can't really do that is we have a ptr not a full reference
+			bfu2::JSONSerializer* serializer = (bfu2::JSONSerializer*) &obj->m_recreationString;
+			serializer->Serialize( (bfu2::SerializableVector<bfu2::SerializableClassInterface>*) v_components[i] );
+		}
+	}
+	void GameObject::PostSerializationCallback()
+	{
+
+	}
 
 
 /*
@@ -247,21 +237,6 @@ namespace asapi
 		}
 	}
 */
-	void GameObject::SerializeChildren(bfu::JSONStream& stream)
-	{
-		//stream << *v_children;
-	}
-	void GameObject::DeserializeChildren(bfu::JSONStream& stream)
-	{
-		// stream >> *v_children;
-
-		// if(v_children!=nullptr)
-		// for(int i=0; i<v_children->size(); ++i)
-		// {
-		// 	//OnAttach
-		// 	(*v_children)[i]->p_parent = this;
-		// }
-	}
 
 	void GameObject::SerializeChildren(bfu2::JSONSerializer& stream)
 	{
