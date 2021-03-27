@@ -9,15 +9,13 @@ namespace asapi
 	class EntityInterface: public object
 	{
 	protected:
-		//bfu::SerializableVar<UniqueID> m_ID;
 		bfu::MemBlockBase* m_mBlock;
 
 	public:
 		EntityInterface( bfu::MemBlockBase* mBlock )
 			:m_mBlock(mBlock)
-			//,m_ID("m_ID", this, mBlock)
 		{};
-		//EntityInterface( const EntityInterface& cp ) = delete;
+		EntityInterface( const EntityInterface& cp ) = delete;
 
 		~EntityInterface(){};
 
@@ -32,7 +30,7 @@ namespace asapi
 	class EntityBase: public EntityInterface, public bfu2::SerializableClassBase<T>
 	{
 	protected:
-
+		
 	public:
 		EntityBase( bfu::MemBlockBase* mBlock )
 			:EntityInterface(mBlock)

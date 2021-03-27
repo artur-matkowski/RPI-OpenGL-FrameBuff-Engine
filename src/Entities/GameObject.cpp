@@ -263,6 +263,15 @@ namespace asapi
 		// }
 	}
 
+	void GameObject::SerializeChildren(bfu2::JSONSerializer& stream)
+	{
+		stream.Serialize( (bfu2::SerializableVector<SerializableClassInterface>*) &v_children );
+	}
+	void GameObject::DeserializeChildren(bfu2::JSONSerializer& stream)
+	{
+		stream.Deserialize( (bfu2::SerializableVector<SerializableClassInterface>*) &v_children );
+	}
+
 
 	void GameObject::OnAttach(GameObject* newParent)
 	{

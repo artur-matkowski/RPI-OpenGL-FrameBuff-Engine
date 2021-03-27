@@ -37,7 +37,7 @@ namespace asapi
 
 		buff.clear();
 		buff.sprintf( "prefab allocator: %lld"
-						, 0 );//m_prefabID.GetRef().ID() );
+						, m_prefabID.ID() );
 
 		m_prefabMemBlock = PrefabMemBlock::InitNoFile( buff.c_str(), m_owner , 0);
 
@@ -56,36 +56,36 @@ namespace asapi
 		bfu2::JSONSerializer &jsonSerializer = SYSTEMS::GetObject().SCENE.GetJSONSerializer();
 		jsonSerializer.clear();
 
-		jsonSerializer.Serialize( m_owner );
+		m_owner->SerializeChildren( jsonSerializer );
 
 		SceneSystem::JSON2File( jsonSerializer, buff.c_str() ) ;
 	}
 	bool PrefabLoaderComponent::Load_JSON()
 	{
-		// buff.clear();
-		// buff.sprintf( "prefab allocator: %lld"
-		// 				, m_prefabID.GetRef().ID() );
+		buff.clear();
+		buff.sprintf( "prefab allocator: %lld"
+						, m_prefabID.ID() );
 
-		// if(m_prefabMemBlock!=0) m_prefabMemBlock->ForceDispouse();
+		if(m_prefabMemBlock!=0) m_prefabMemBlock->ForceDispouse();
 
-		// m_prefabMemBlock = PrefabMemBlock::InitNoFile( buff.c_str(), m_owner, 1024*1024*1);
+		m_prefabMemBlock = PrefabMemBlock::InitNoFile( buff.c_str(), m_owner, 1024*1024*1);
 
-		// buff.clear();
-		// buff.sprintf( "%s/json/%lld.json"
-		// 				, SYSTEMS::GetObject().SCENE.GetProjectPath()
-		// 				, GetPrefabID() );
+		buff.clear();
+		buff.sprintf( "%s/json/%lld.json"
+						, SYSTEMS::GetObject().SCENE.GetProjectPath()
+						, GetPrefabID() );
 
 		
-		// bfu2::JSONSerializer &jsonSerializer = SYSTEMS::GetObject().SCENE.GetJSONSerializer();
-		// jsonSerializer.clear();
+		bfu2::JSONSerializer &jsonSerializer = SYSTEMS::GetObject().SCENE.GetJSONSerializer();
+		jsonSerializer.clear();
 
-		// m_owner->OverrideChildVector( m_prefabMemBlock->GetEntryVector(), m_prefabMemBlock );
+		m_owner->OverrideChildVector( m_prefabMemBlock->GetEntryVector(), m_prefabMemBlock );
 
-		// if( SceneSystem::File2JSON( jsonSerializer, buff.c_str() ) )
-		// {
-		// 	jsonSerializer.Deserialize( m_owner );
-		// 	return true;
-		// }
+		if( SceneSystem::File2JSON( jsonSerializer, buff.c_str() ) )
+		{
+			m_owner->DeserializeChildren( jsonSerializer );
+			return true;
+		}
 		return false;
 	}
 	void PrefabLoaderComponent::Save_MMP()
@@ -106,10 +106,10 @@ namespace asapi
 
 	void PrefabLoaderComponent::SetPrefabID(uint64_t id)
 	{
-		//m_prefabID.GetRef().SetID(id);
+		m_prefabID.SetID(id);
 	}
 	uint64_t PrefabLoaderComponent::GetPrefabID()
 	{
-		return 0;//m_prefabID.GetRef().ID();
+		return m_prefabID.ID();
 	}
 }

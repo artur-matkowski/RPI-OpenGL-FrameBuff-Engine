@@ -5,9 +5,9 @@
 
 namespace asapi
 {
-	class UniqueID: public bfu::SerializableClassBase
+	class UniqueID: public bfu2::SerializableClassBase<UniqueID>
 	{
-		bfu::SerializableVar<uint64_t> m_ID;
+		SERIALIZABLE_VAR(UniqueID, uint64_t, m_ID);
 
 		union{
 			uint64_t ID64;
@@ -15,7 +15,7 @@ namespace asapi
 		};
 
 	public:
-		UniqueID( bfu::MemBlockBase* mBlock );
+		UniqueID();
 		UniqueID( const UniqueID& cp );
 		~UniqueID(){};
 
@@ -28,6 +28,9 @@ namespace asapi
 			ID64 = id;
 			m_ID = id;
 		}
+
+		virtual void PreSerializationCallback() override;
+		virtual void PostDeserializationCallback() override;
 	};
 }
 

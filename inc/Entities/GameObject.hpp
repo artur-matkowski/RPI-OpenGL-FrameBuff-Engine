@@ -50,6 +50,7 @@ namespace asapi
 	protected:
 		GameObject*										p_parent = 0;
 
+
 		SERIALIZABLE_VAR( GameObject, string, m_myName );
 		SERIALIZABLE_OBJ_VEC(GameObject, GameObject, v_children );
 		// If you change name of v_children you need to change { if( loader!=0 && strcmp(it->first.c_str(), "v_children")==0 ) }
@@ -93,6 +94,8 @@ namespace asapi
 
 		void SerializeChildren(bfu::JSONStream& stream);
 		void DeserializeChildren(bfu::JSONStream& stream);
+		void SerializeChildren(bfu2::JSONSerializer& stream);
+		void DeserializeChildren(bfu2::JSONSerializer& stream);
 
 		PROTECTED( void OnAttach(GameObject* newParrent) );
 		void OnDetach();
@@ -115,6 +118,7 @@ namespace asapi
 
 		inline Transform3D* GetTransform3D()			{ return p_myTransform;			}
 		inline GameObject* GetParent()					{ return p_parent; 				}
+
 
 		#ifdef IS_EDITOR
 		void OnGUI();

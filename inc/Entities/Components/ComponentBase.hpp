@@ -3,6 +3,7 @@
 #include "ComponentInterface.hpp"
 #include <cxxabi.h>
 #include <vector>
+#include <bitforge/utils/bfu.hpp>
 
 namespace asapi
 {
@@ -16,7 +17,7 @@ namespace asapi
 
 
 	template<class T>
-	class ComponentBase: public ComponentInterface
+	class ComponentBase: public ComponentInterface, public bfu2::SerializableClassBase<T>
 	{
 		static char ClassName[255];
 

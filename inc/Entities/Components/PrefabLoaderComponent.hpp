@@ -7,13 +7,12 @@ namespace asapi
 {
 	class PrefabLoaderComponent: public ComponentBase<PrefabLoaderComponent>
 	{
-	protected:
-		//SERIALIZABLE_OBJ( PrefabLoaderComponent, UniqueID, m_prefabID );
+	protected:	
+		SERIALIZABLE_OBJ( PrefabLoaderComponent, UniqueID, m_prefabID );
 		PrefabMemBlock* 				m_prefabMemBlock = nullptr;
 	public:
 		PrefabLoaderComponent(bfu::MemBlockBase* mBlock)
 			:ComponentBase<PrefabLoaderComponent>(mBlock)
-			//,m_prefabID("m_prefabID", this, mBlock)
 		{};
 		PrefabLoaderComponent(const PrefabLoaderComponent&) = delete;
 		~PrefabLoaderComponent(){};

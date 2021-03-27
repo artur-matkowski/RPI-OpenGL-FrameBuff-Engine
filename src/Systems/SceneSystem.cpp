@@ -23,7 +23,7 @@ namespace asapi
 		p_root->Init(mBlock);
 		p_root->SetName("EntryPoint");
 		PrefabLoaderComponent* rootLoader = (PrefabLoaderComponent*) p_root->ADD_COMPONENT( PrefabLoaderComponent );
-		rootLoader->SetPrefabID(1);
+		rootLoader->SetPrefabID(0);
 
 		const char* path = "--wrong path--";
 

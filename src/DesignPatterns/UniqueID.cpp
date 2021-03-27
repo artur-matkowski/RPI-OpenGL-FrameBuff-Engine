@@ -6,9 +6,7 @@
 namespace asapi
 {
 	
-	UniqueID::UniqueID( bfu::MemBlockBase* mBlock )
-		:bfu::SerializableClassBase(mBlock)
-		,m_ID("m_ID", this)
+	UniqueID::UniqueID()
 	{
 		auto &TIME = SYSTEMS::GetObject().TIME;
 
@@ -18,19 +16,17 @@ namespace asapi
 		m_ID = ID64;
 	}
 	UniqueID::UniqueID( const UniqueID& cp )
-		:bfu::SerializableClassBase(cp)
-		,m_ID("m_ID", this)
 	{
 		ID64 = cp.ID64;
 	}
 
 
-	// void UniqueID::PreSerializationCallback()
-	// {
-	// 	m_ID = ID64;
-	// }
-	// void UniqueID::PostDeserializationCallback()
-	// {
-	// 	ID64 = m_ID;
-	// }
+	void UniqueID::PreSerializationCallback()
+	{
+		m_ID = ID64;
+	}
+	void UniqueID::PostDeserializationCallback()
+	{
+		ID64 = m_ID;
+	}
 }
