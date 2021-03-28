@@ -89,15 +89,8 @@ namespace asapi
 		virtual void Dispouse();
 		virtual void DispouseAndDeallocate();
 
-		void OnLoad();
-		void OnUnLoad();
-		
-
-		//virtual void Serialize(bfu::JSONStream& stream);
-		//virtual void Deserialize(bfu::JSONStream& stream);
-
 		void SerializeChildren(bfu2::JSONSerializer& stream);
-		void DeserializeChildren(bfu2::JSONSerializer& stream);
+		void DeserializeChildren(bfu2::JSONSerializer& stream, PrefabMemBlock* prefabMemBlock);
 
 		PROTECTED( void OnAttach(GameObject* newParrent) );
 		void OnDetach();

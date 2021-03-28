@@ -80,7 +80,7 @@ namespace asapi
 
 		if( SceneSystem::File2JSON( jsonSerializer, buff.c_str() ) )
 		{
-			m_owner->DeserializeChildren( jsonSerializer );
+			m_owner->DeserializeChildren( jsonSerializer, m_prefabMemBlock );
 			return true;
 		}
 		return false;

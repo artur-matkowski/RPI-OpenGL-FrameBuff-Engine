@@ -119,16 +119,6 @@ namespace asapi
 		m_mBlock->deallocate(this, sizeof(GameObject));
 	}
 
-	void GameObject::OnLoad()
-	{
-
-	}
-	void GameObject::OnUnLoad()
-	{
-
-	}
-
-
 	void GameObject::PreDeserializationCallback()
 	{
 		v_componentsInfo.clear();
@@ -150,6 +140,11 @@ namespace asapi
 			}
 		}
 		v_componentsInfo.clear();
+
+		for(int i=0; i<v_children.size(); ++i)
+		{
+			v_children[i].p_parent = this;
+		}
 	}
 	void GameObject::PreSerializationCallback()
 	{
@@ -173,92 +168,20 @@ namespace asapi
 	}
 
 
-/*
-	void GameObject::Serialize(bfu::JSONStream& stream)
-	{
-		PopulateComponentInfo();
-
-		ComponentInterface* loader = this->GET_COMPONENT(PrefabLoaderComponent);
-
-		//this->EntityBase::Serialize(stream);	
-		{
-			stream.sprintf("{");
-
-			auto last = m_membersMap.end();
-
-			for(auto it = m_membersMap.begin(); it != last; )
-			{
-				if( loader!=0 && strcmp(it->first.c_str(), "v_children")==0 ){
-					++it;
-					continue;
-				}
-
-				stream.sprintf("\n\"%s\": ", it->first.c_str() );
-
-				it->second->Serialize( stream );
-
-				++it;
-
-				if( it != last )
-				{
-					stream.sprintf(", ");
-				}
-			}
-
-			stream.sprintf("\n}");
-		}
-	}
-	void GameObject::Deserialize(bfu::JSONStream& stream)
-	{
-    	char buff[1024] = {'0'};
-    	bfu::stream token(buff, 1024, m_mBlock);
-    	
-		//this->EntityBase::Deserialize(stream);	
-		{
-			stream.skipTo('{');
-			stream.skip( 1 );
-
-			if(stream.peak() == '\n')
-				stream.skip( 1 );
-
-			while( stream.peak() != '}' )
-			{
-				token.clear();
-
-				stream.Deserialize( token );
-
-				auto it = m_membersMap.find( token );
-				if( it == m_membersMap.end() )
-				{
-					log::error << "co do kurwy " << token.c_str() << std::endl;
-				}
-
-				it->second->Deserialize( stream );
-
-				stream.skipToOneOf("\"}");
-
-			}
-			stream.skip(1);
-		}
-
-		ReconstructComponentsFromComponentInfo();
-
-		if(v_children!=nullptr)
-		for(int i=0; i<v_children->size(); ++i)
-		{
-			//OnAttach
-			(*v_children)[i]->p_parent = this;
-		}
-	}
-*/
-
 	void GameObject::SerializeChildren(bfu2::JSONSerializer& stream)
 	{
 		stream.Serialize( (bfu2::SerializableVector<SerializableClassInterface>*) &v_children );
 	}
-	void GameObject::DeserializeChildren(bfu2::JSONSerializer& stream)
+	void GameObject::DeserializeChildren(bfu2::JSONSerializer& stream, PrefabMemBlock* prefabMemBlock)
 	{
+		v_children.~SerializableVector<GameObject>();
+		new (&v_children) bfu2::SerializableVector<GameObject>( prefabMemBlock );
 		stream.Deserialize( (bfu2::SerializableVector<SerializableClassInterface>*) &v_children );
+
+		for(int i=0; i<v_children.size(); ++i)
+		{
+			v_children[i].p_parent = this;
+		}
 	}
 
 
