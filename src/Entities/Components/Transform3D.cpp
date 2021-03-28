@@ -22,6 +22,7 @@ namespace asapi
 
 	void Transform3D::OnAttach()
 	{
+		m_owner->RegisterTransform3D(this);
 		OnIsDirty();
 	}
 

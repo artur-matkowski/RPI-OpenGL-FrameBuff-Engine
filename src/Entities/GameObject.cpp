@@ -80,6 +80,20 @@ namespace asapi
 		newChild->OnAttach(this);
 	}
 
+
+	void GameObject::RegisterTransform3D(Transform3D* ptr)
+	{
+		p_myTransform = ptr;
+	}
+	void GameObject::RegisterRendererComponent(RendererComponent* ptr)
+	{
+		p_myRenderer = ptr;
+	}
+	void GameObject::RegisterPrefabLoaderComponent(PrefabLoaderComponent* ptr)
+	{
+		p_myPrefabLoader = ptr;
+	}
+
 	//TODO copy all children, and all components
 	// GameObject& GameObject::operator=(const GameObject& cp)
 	// {
@@ -264,16 +278,7 @@ namespace asapi
 		p_parent = newParent;
 		newParent->RegisterChild( this );
 	}
-	void GameObject::OverrideChildVector(bfu::SerializableVarVector<GameObject*>* newChildrenVector, bfu::MemBlockBase* prefabMemBlock )
-	{
-		// if(v_children!=nullptr)
-		// {
-		// 	v_children->~SerializableVarVector<GameObject*>();
-		// 	m_mBlock->deallocate( v_children, 1*sizeof(bfu::SerializableVarVector<GameObject*>) );
-		// }
 
-		// v_children = newChildrenVector;
-	}
 
 	ComponentInterface* GameObject::AddComponent(const char* componentName)
 	{
@@ -292,16 +297,6 @@ namespace asapi
 		v_components.emplace_back( copmponentInterfaces );
 
 		ComponentInterface* newComp = v_components.back().p_ComponentInterface;
-
-
-		if( newComp->TypeHash()			== typeid(Transform3D).hash_code() )
-		{
-			p_myTransform = (Transform3D*)newComp;
-		}
-		else if( newComp->TypeHash()	== typeid(RendererComponent).hash_code() )
-		{
-			p_myRenderer = (RendererComponent*)newComp;
-		}
 
 		newComp->Attached(this);
 

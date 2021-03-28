@@ -18,6 +18,8 @@ namespace asapi
 
 	void RendererComponent::OnAttach()
 	{
+		m_owner->RegisterRendererComponent(this);
+		
 		if( m_material.GetRawPtr() != nullptr && m_mesh.GetRawPtr() != nullptr && m_owner != nullptr)
 		{
 			SYSTEMS::GetObject().RENDERER.RegisterRenderer( this );

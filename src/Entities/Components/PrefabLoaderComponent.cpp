@@ -29,7 +29,7 @@ namespace asapi
 
 	void PrefabLoaderComponent::OnAttach()
 	{
-		m_owner->OverrideChildVector(nullptr, nullptr);
+		m_owner->RegisterPrefabLoaderComponent(this);
 	}
 	PrefabMemBlock* PrefabLoaderComponent::RequestPrefabMemBlock()
 	{
@@ -41,7 +41,6 @@ namespace asapi
 
 		m_prefabMemBlock = PrefabMemBlock::InitNoFile( buff.c_str(), m_owner , 0);
 
-		m_owner->OverrideChildVector( m_prefabMemBlock->GetEntryVector(), m_prefabMemBlock );
 		return m_prefabMemBlock;
 	}
 
@@ -78,8 +77,6 @@ namespace asapi
 		
 		bfu2::JSONSerializer &jsonSerializer = SYSTEMS::GetObject().SCENE.GetJSONSerializer();
 		jsonSerializer.clear();
-
-		m_owner->OverrideChildVector( m_prefabMemBlock->GetEntryVector(), m_prefabMemBlock );
 
 		if( SceneSystem::File2JSON( jsonSerializer, buff.c_str() ) )
 		{

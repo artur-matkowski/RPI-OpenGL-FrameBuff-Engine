@@ -58,8 +58,9 @@ namespace asapi
 		std::vector<ComponentTranslatePointers, bfu::custom_allocator<ComponentTranslatePointers>> 
 														v_components;
 
-		Transform3D										*p_myTransform = 0;
-		RendererComponent								*p_myRenderer = 0;
+		Transform3D										*p_myTransform = nullptr;
+		RendererComponent								*p_myRenderer = nullptr;
+		PrefabLoaderComponent							*p_myPrefabLoader = nullptr;
 
 		bool RegisterChild(GameObject* newChild);
 		void UnRegisterChild(GameObject* deleteChild);
@@ -71,6 +72,10 @@ namespace asapi
 		void ClearChildren();
 		void ClearComponents(); 
 		void AddChild();
+
+		void RegisterTransform3D(Transform3D*);
+		void RegisterRendererComponent(RendererComponent*);
+		void RegisterPrefabLoaderComponent(PrefabLoaderComponent*);
 
 		//TODO
 		//GameObject& operator=(const GameObject& cp);
@@ -97,7 +102,6 @@ namespace asapi
 		PROTECTED( void OnAttach(GameObject* newParrent) );
 		void OnDetach();
 		void ReAttach(GameObject* newParrent);
-		void OverrideChildVector(bfu::SerializableVarVector<GameObject*>* newChildrenVector, bfu::MemBlockBase* prefabMemBlock );
 
 		ComponentInterface* AddComponent(size_t typeHash);
 		ComponentInterface* AddComponent(const char* componentName);
