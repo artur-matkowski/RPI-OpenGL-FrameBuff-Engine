@@ -11,13 +11,15 @@ namespace asapi
 {
 	RendererComponent::RendererComponent(bfu::MemBlockBase* mBlock)
 		:ComponentBase<RendererComponent>(mBlock)
-		,m_MaterialName("m_MaterialName",this, buffMat, 255, mBlock)
-		,m_meshName("m_meshName",this, buffMesh, 255, mBlock)
+		,m_MaterialName(buffMat, 255, mBlock)
+		,m_meshName(buffMesh, 255, mBlock)
 	{
 	};
 
 	void RendererComponent::OnAttach()
 	{
+		m_owner->RegisterRendererComponent(this);
+		
 		if( m_material.GetRawPtr() != nullptr && m_mesh.GetRawPtr() != nullptr && m_owner != nullptr)
 		{
 			SYSTEMS::GetObject().RENDERER.RegisterRenderer( this );
@@ -29,8 +31,8 @@ namespace asapi
 	}
 	void RendererComponent::OnIsDirty()
 	{
-		SetMaterial_Blocking( m_MaterialName.GetRef().c_str() );
-		SetMesh_Blocking( m_meshName.GetRef().c_str() );
+		SetMaterial_Blocking( m_MaterialName.c_str() );
+		SetMesh_Blocking( m_meshName.c_str() );
 	}
 
 	void RendererComponent::SetMaterial_Blocking(const char* name)
@@ -44,10 +46,10 @@ namespace asapi
 			SYSTEMS::GetObject().RENDERER.RegisterRenderer( this );
 		}
 
-		if( m_MaterialName.GetRef().c_str() != name )
+		if( m_MaterialName.c_str() != name )
 		{
-			m_MaterialName.GetRef().clear();
-			m_MaterialName.GetRef().sprintf(name);
+			m_MaterialName.clear();
+			m_MaterialName.sprintf(name);
 		}
 	}
 	void RendererComponent::SetMesh_Blocking(const char* name)
@@ -60,10 +62,10 @@ namespace asapi
 			SYSTEMS::GetObject().RENDERER.RegisterRenderer( this );
 		}
 
-		if( m_meshName.GetRef().c_str() != name )
+		if( m_meshName.c_str() != name )
 		{
-			m_meshName.GetRef().clear();
-			m_meshName.GetRef().sprintf(name);
+			m_meshName.clear();
+			m_meshName.sprintf(name);
 		}
 	}
 
@@ -85,7 +87,7 @@ namespace asapi
 
 		{
 			char buff1[255];
-			strncpy(buff1, m_MaterialName.GetRef().c_str(), 255 );
+			strncpy(buff1, m_MaterialName.c_str(), 255 );
 
 			if( ImGui::InputText("Material name",     buff1, 255, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue) )
 			{
@@ -101,7 +103,7 @@ namespace asapi
 		ImGui::Spacing();
 		{
 			char buff2[255];
-			strncpy(buff2, m_meshName.GetRef().c_str(), 255 );
+			strncpy(buff2, m_meshName.c_str(), 255 );
 
 			if( ImGui::InputText("Mesh name",     buff2, 255, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue) )
 			{

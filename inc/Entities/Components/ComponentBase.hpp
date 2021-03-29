@@ -1,23 +1,28 @@
 #ifndef _H_ComponentBase
 #define _H_ComponentBase
 #include "ComponentInterface.hpp"
-#include "Serializable.hpp"
 #include <cxxabi.h>
 #include <vector>
+#include <bitforge/utils/bfu.hpp>
 
 namespace asapi
 {
+
+
+
 	template<class T>
-	static ComponentInterface* AllocateAndInit( bfu::MemBlockBase* mBlock )
+	static void AllocateAndInit( bfu::MemBlockBase* mBlock, ComponentTranslatePointers& ret )
 	{
 		T* obj = (T*) mBlock->allocate(1, sizeof(T), alignof(T) );
 		obj->Init(mBlock);
-		return obj;
+
+		ret.p_ComponentInterface = obj;
+		ret.p_SerializableClassInterface = obj;
 	}
 
 
 	template<class T>
-	class ComponentBase: public ComponentInterface
+	class ComponentBase: public bfu2::SerializableClassBase<T>, public ComponentInterface
 	{
 		static char ClassName[255];
 
@@ -56,9 +61,14 @@ namespace asapi
 			return typeid(T).hash_code();
 		}
 
-		virtual const char* TypeName()
+		virtual const char* TypeName() override
 		{
 			return ClassName;
+		}
+		virtual void Dispouse() override
+		{
+			T* _obj = (T*)this;
+			bfu::MemBlockBase::DeallocateUnknown(_obj);
 		}
 	};
 

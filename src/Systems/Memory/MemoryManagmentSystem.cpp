@@ -36,30 +36,6 @@ namespace asapi
         }
     }
 
-    MmappedMemBlock* MemoryManagmentSystem::ObtainPrefabMemBlock(size_t size, GameObject* &ret_entryPoint, const char* description)
-    {
-        p_memBlockCache->Init( p_memBlocksEnd, size, description );
-        p_memBlocksEnd = p_memBlockCache->end();
-
-        size_t* data = (size_t*)p_memBlockCache->allocate(3, sizeof(size_t), alignof(size_t));
-
-        MmappedMemBlock* mBlock = (MmappedMemBlock*) p_memBlockCache->allocate(1, sizeof(MmappedMemBlock), alignof(MmappedMemBlock));
-        new (mBlock) MmappedMemBlock(*p_memBlockCache);
-        p_memBlockCache->Dispouse();
-
-
-        GameObject* entryPoint = (GameObject*) mBlock->allocate(1, sizeof(GameObject), alignof(GameObject));
-        ret_entryPoint = entryPoint;
-        
-
-        data[0] = size;
-        data[1] = (size_t)mBlock;
-        data[2] = (size_t)ret_entryPoint;
-
-        return mBlock;
-    }
-
-
     #ifdef IS_EDITOR
 	void MemoryManagmentSystem::OnGUI()
 	{

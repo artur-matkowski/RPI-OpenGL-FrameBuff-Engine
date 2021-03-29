@@ -2,7 +2,7 @@ OUT		  	= asapi
 VERSION	 	= .1.0.0
 ARCHITECTURE = $(shell dpkg --print-architecture)
 
-CC 		  	= g++ -std=c++11 -I/usr/include/libdrm 
+CC 		  	= g++ -std=c++14 -I/usr/include/libdrm -I/usr/include/bitforge/utils
 
 CPPFLAGS 	= -I/usr/include/freetype2 -I/usr/include/freetype2/freetype -DIMGUI_IMPL_OPENGL_ES2 
 #-DDEBUG_MEMORY_ALLOC

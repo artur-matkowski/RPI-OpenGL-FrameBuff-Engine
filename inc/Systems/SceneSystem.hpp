@@ -9,11 +9,12 @@ namespace asapi
 		GameObject  		*p_root = 0;
 
 		bfu::JSONStream 	m_stream;
+		bfu2::JSONSerializer m_jsonSerializer;
 		char 				tmpbuff[2];
 		char 				m_ProjectPath[2048] = ".";
 
 	public:
-		SceneSystem( bfu::MemBlockBase* mBlock );
+		SceneSystem();
 
 		inline GameObject& GetRootNode()
 		{
@@ -25,9 +26,12 @@ namespace asapi
 		void OnGUI();
 
 		bfu::JSONStream& GetJSONStreamWorkBuffer();
+		bfu2::JSONSerializer& GetJSONSerializer();
 
 		static bool File2JSON(bfu::JSONStream&, const char* path);
 		static bool JSON2File(bfu::JSONStream&, const char* path);
+		static bool File2JSON(bfu2::JSONSerializer&, const char* path);
+		static bool JSON2File(bfu2::JSONSerializer&, const char* path);
 
 		void SetProjectPath(const char* path);
 		const char* GetProjectPath(){ return m_ProjectPath; }

@@ -11,10 +11,11 @@ namespace asapi
 {
 	Transform3D::Transform3D(bfu::MemBlockBase* mBlock)
 		:ComponentBase<Transform3D>(mBlock)
-		,m_position("m_position", this, 3, mBlock)
-		,m_rotation("m_rotation", this, 3, mBlock)
-		,m_scale("m_scale", this, 3, mBlock)
 	{
+		m_position.resize(3);
+		m_rotation.resize(3);
+		m_scale.resize(3);
+		
 		m_scale[0] = 1.0f;
 		m_scale[1] = 1.0f;
 		m_scale[2] = 1.0f;
@@ -22,6 +23,7 @@ namespace asapi
 
 	void Transform3D::OnAttach()
 	{
+		m_owner->RegisterTransform3D(this);
 		OnIsDirty();
 	}
 

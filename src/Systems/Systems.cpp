@@ -17,7 +17,8 @@ namespace asapi
 	SYSTEMS SYSTEMS::_this;
 
 	SYSTEMS::SYSTEMS()
-		:SCENE( SYSTEMS::SYSTEMS_ALLOCATOR )
+		:MEMORY()
+		,SCENE()
 	{
 
 	}

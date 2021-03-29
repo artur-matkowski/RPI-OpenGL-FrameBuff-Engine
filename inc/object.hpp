@@ -1,5 +1,6 @@
 #ifndef _H_OBJECT
 #define _H_OBJECT
+#include <bitforge/utils/bfu.hpp>
 #include "SharedPtr.hpp"
 #include "glm.hpp"
 #include "Profiler.hpp"
@@ -40,9 +41,16 @@ namespace asapi
 	class object{};
 }
 
+#ifdef IS_EDITOR
+	#define ASSERT(b, msg) if(b) log::error << msg << std::endl
+#else
+	#define ASSERT(b, msg)
+#endif
+
+#define PROTECTED(x) protected: x; public:
 
 void* operator new(std::size_t size);
 void operator delete(void* p) noexcept;
-
+bfu::MemBlockBase* SetNewAllocator(bfu::MemBlockBase* allocator);
 
 #endif

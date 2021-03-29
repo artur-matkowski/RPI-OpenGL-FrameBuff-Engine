@@ -1,14 +1,19 @@
 #ifndef H_ComponentInterface
 #define H_ComponentInterface
 #include "EntityBase.hpp"
-#include "SerializableRenderer.hpp"
 
 namespace asapi
 {
 	class GameObject;
 	class ComponentInterface;
 
-	typedef ComponentInterface* (*InitFuncPtr)(bfu::MemBlockBase*);
+	struct ComponentTranslatePointers
+	{
+		ComponentInterface* 				p_ComponentInterface = nullptr;
+		bfu2::SerializableClassInterface* 	p_SerializableClassInterface = nullptr;
+	};
+
+	typedef void (*InitFuncPtr)(bfu::MemBlockBase*, ComponentTranslatePointers&);
 
 	#define TYPE_INFO_CAPACITY 1024
 	struct TypeInfo
@@ -26,36 +31,23 @@ namespace asapi
 	};
 
 
-	class ComponentInterface: public EntityBase
+	class ComponentInterface: public object
 	{
 	protected:
 		GameObject *m_owner = nullptr;
-		#ifdef IS_EDITOR
-		std::vector<SerializableRendererBase*>
-					v_SerializableRenderers;
-		#endif
 	public:	
-		ComponentInterface(bfu::MemBlockBase* mBlock)
-			:EntityBase(mBlock)
-		{};
+		ComponentInterface(bfu::MemBlockBase* mBlock);
 		~ComponentInterface(){};
 		
 		void Attached(GameObject* owner);
 		void Detached();
 
-		static ComponentInterface* AllocateAndInitObjectFromTypeHash(size_t hash, bfu::MemBlockBase* mBlock)
+		static void AllocateAndInitObjectFromTypeHash(size_t hash, bfu::MemBlockBase* mBlock, ComponentTranslatePointers& ret)
 		{
-			return TypeInfo::GetTypeInfo(hash)->fPtr(mBlock);
-		}
-
-		virtual void PushReferenceToMap(const char* memberName, SerializableBase* memberReference)
-		{
-			bfu::SerializableClassBase::PushReferenceToMap(memberName, memberReference);
-			//TODO add serializablefields to vector for easier rendering
+			TypeInfo::GetTypeInfo(hash)->fPtr(mBlock, ret);
 		}
 
 		#ifdef IS_EDITOR
-		void PushSerializableRenderer(SerializableRendererBase*);
 		void OnGUI_NameAndVirtual();
 		virtual void OnGUI();
 		#endif
@@ -65,6 +57,7 @@ namespace asapi
 		virtual void OnDetach(){};
 		virtual void OnIsDirty(){};
 		virtual size_t TypeHash() = 0;
+		virtual void Dispouse() = 0;
 
 		virtual const char* TypeName()
 		{

@@ -7,10 +7,13 @@
 namespace asapi
 {
 
+	char _buff[2048];
+	bfu::stream buff(_buff, 2048, SYSTEMS::STD_ALLOCATOR );
+
 	#ifdef IS_EDITOR
 	void PrefabLoaderComponent::OnGUI()
 	{
-		ImGui::LabelText("Prefab ID", "%lld", m_prefabID.GetRef().ID() );
+		//ImGui::LabelText("Prefab ID", "%lld", m_prefabID.GetRef().ID() );
 
 		if( ImGui::Button("Load from JSON") ) Load_JSON();
 		ImGui::SameLine();
@@ -18,44 +21,66 @@ namespace asapi
 		ImGui::SameLine();
 		if( ImGui::Button("Load from MMP") ) Load_MMP();
 		ImGui::SameLine();
-		if( ImGui::Button("Save to MMP") ) Save_MMP();
+		if( ImGui::Button("Compile to MMP") ) Save_MMP();
 
 		if( ImGui::Button("Unload") ) UnLoad();
 	}
 	#endif
 
+	void PrefabLoaderComponent::OnAttach()
+	{
+		m_owner->RegisterPrefabLoaderComponent(this);
+	}
+	PrefabMemBlock* PrefabLoaderComponent::RequestPrefabMemBlock()
+	{
+		if(m_prefabMemBlock!=0) return m_prefabMemBlock;
+
+		buff.clear();
+		buff.sprintf( "prefab allocator: %lld"
+						, m_prefabID.ID() );
+
+		m_prefabMemBlock = PrefabMemBlock::InitNoFile( buff.c_str(), m_owner , 0);
+
+		return m_prefabMemBlock;
+	}
 
 	void PrefabLoaderComponent::Save_JSON()
 	{
-		char buff[2048];
-		bfu::stream path(buff, 2048, SYSTEMS::STD_ALLOCATOR );
 
-		path.sprintf( "%s/json/%lld.json"
+		buff.clear();
+		buff.sprintf( "%s/json/%lld.json"
 						, SYSTEMS::GetObject().SCENE.GetProjectPath()
 						, GetPrefabID() );
 
-		bfu::JSONStream& jsonStream = SYSTEMS::GetObject().SCENE.GetJSONStreamWorkBuffer();
-		jsonStream.clear();
+		bfu2::JSONSerializer &jsonSerializer = SYSTEMS::GetObject().SCENE.GetJSONSerializer();
+		jsonSerializer.clear();
 
-		m_owner->SerializeChildren( jsonStream );
-		
-		SceneSystem::JSON2File( jsonStream, path.c_str() ) ;
+		m_owner->SerializeChildren( jsonSerializer );
+
+		SceneSystem::JSON2File( jsonSerializer, buff.c_str() ) ;
 	}
 	bool PrefabLoaderComponent::Load_JSON()
 	{
-		char buff[2048];
-		bfu::stream path(buff, 2048, SYSTEMS::STD_ALLOCATOR );
+		buff.clear();
+		buff.sprintf( "prefab allocator: %lld"
+						, m_prefabID.ID() );
 
-		path.sprintf( "%s/json/%lld.json"
+		if(m_prefabMemBlock!=0) m_prefabMemBlock->ForceDispouse();
+
+		m_prefabMemBlock = PrefabMemBlock::InitNoFile( buff.c_str(), m_owner, 1024*1024*1);
+
+		buff.clear();
+		buff.sprintf( "%s/json/%lld.json"
 						, SYSTEMS::GetObject().SCENE.GetProjectPath()
 						, GetPrefabID() );
 
-		bfu::JSONStream& jsonStream = SYSTEMS::GetObject().SCENE.GetJSONStreamWorkBuffer();
-		jsonStream.clear();
+		
+		bfu2::JSONSerializer &jsonSerializer = SYSTEMS::GetObject().SCENE.GetJSONSerializer();
+		jsonSerializer.clear();
 
-		if( SceneSystem::File2JSON( jsonStream, path.c_str() ) )
+		if( SceneSystem::File2JSON( jsonSerializer, buff.c_str() ) )
 		{
-			m_owner->DeserializeChildren( jsonStream );
+			m_owner->DeserializeChildren( jsonSerializer, m_prefabMemBlock );
 			return true;
 		}
 		return false;
@@ -73,14 +98,15 @@ namespace asapi
 	void PrefabLoaderComponent::UnLoad()
 	{
 		m_owner->ClearChildren();
+		m_prefabMemBlock->ForceDispouse();
 	}
 
 	void PrefabLoaderComponent::SetPrefabID(uint64_t id)
 	{
-		m_prefabID.GetRef().SetID(id);
+		m_prefabID.SetID(id);
 	}
 	uint64_t PrefabLoaderComponent::GetPrefabID()
 	{
-		return m_prefabID.GetRef().ID();
+		return m_prefabID.ID();
 	}
 }

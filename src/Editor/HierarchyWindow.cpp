@@ -48,9 +48,7 @@ namespace asapi
 
 	void AddGameObject(GameObject* parrent)
 	{
-		GameObject *pgo = SYSTEMS::ALLOCATE<GameObject>(1);
-		pgo->Init( parrent->GetMemBlock() );
-		pgo->OnAttach(parrent);
+		parrent->AddChild();
 	}
 	void RemoveGameObject(GameObject* obj)
 	{

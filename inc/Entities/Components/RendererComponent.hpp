@@ -7,6 +7,8 @@
 
 namespace asapi
 {
+	using bfu::stream;
+
 	class RendererComponent: public ComponentBase<RendererComponent>
 	{
 		bool 										m_isAttached = false;
@@ -18,8 +20,8 @@ namespace asapi
 
 		char buffMat[255];
 		char buffMesh[255];
-		Serializable<bfu::stream>					m_MaterialName;
-		Serializable<bfu::stream>					m_meshName;
+		SERIALIZABLE_VAR(RendererComponent, stream, m_MaterialName );
+		SERIALIZABLE_VAR(RendererComponent, stream, m_meshName );
 
 	public:
 		RendererComponent(bfu::MemBlockBase* mBlock);

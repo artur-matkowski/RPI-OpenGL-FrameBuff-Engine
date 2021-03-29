@@ -1,7 +1,7 @@
 #include "ComponentInterface.hpp"
 #include "imgui.h"
 #include "GameObject.hpp"
-
+#include "Systems.hpp"
 
 namespace asapi
 {
@@ -65,6 +65,8 @@ namespace asapi
 		this->OnDetach();	
 		m_owner = nullptr;
 	}
+	ComponentInterface::ComponentInterface(bfu::MemBlockBase* mBlock)
+	{};
 
 	#ifdef IS_EDITOR
 
@@ -86,14 +88,9 @@ namespace asapi
 
 	void ComponentInterface::OnGUI()
 	{
-		for(int i=0; i<v_SerializableRenderers.size(); ++i)
-			v_SerializableRenderers[i]->OnGUI();
+
 	}
 
-	void ComponentInterface::PushSerializableRenderer(SerializableRendererBase* in)
-	{
-		v_SerializableRenderers.push_back(in);
-	}
 	#endif
 
 	void ComponentInterface::RemovedMarkedComponent()

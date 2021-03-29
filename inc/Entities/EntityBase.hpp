@@ -5,26 +5,40 @@
 
 namespace asapi
 {
-	class EntityBase: public object, public bfu::SerializableClassBase
+
+	class EntityInterface: public object
 	{
 	protected:
-		//bfu::SerializableVar<UniqueID> m_ID;
+		bfu::MemBlockBase* m_mBlock;
 
 	public:
-		EntityBase( bfu::MemBlockBase* mBlock )
-			:bfu::SerializableClassBase(mBlock)
-			//,m_ID("m_ID", this, mBlock)
+		EntityInterface( bfu::MemBlockBase* mBlock )
+			:m_mBlock(mBlock)
 		{};
-		EntityBase( const EntityBase& cp )
-			:bfu::SerializableClassBase(cp.m_mBlock)
-			//,m_ID("m_ID", this, cp.m_mBlock)
-		{};
-		~EntityBase(){};
+		EntityInterface( const EntityInterface& cp ) = delete;
+
+		~EntityInterface(){};
 
 		bfu::MemBlockBase* GetMemBlock()
 		{
 			return m_mBlock;
 		}
+	};
+
+
+	template<class T>
+	class EntityBase: public EntityInterface, public bfu2::SerializableClassBase<T>
+	{
+	protected:
+		
+	public:
+		EntityBase( bfu::MemBlockBase* mBlock )
+			:EntityInterface(mBlock)
+		{};
+		EntityBase( const EntityBase<T>& cp )
+			:EntityInterface(cp.m_mBlock)
+		{};
+		~EntityBase(){};
 	};
 }
 

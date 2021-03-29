@@ -51,15 +51,6 @@ namespace asapi
 		{
 			m_shader->UseProgram();
 
-			static float blend = 1.0;
-
-			//( (Uniform<float>*) (m_uniformMap["blend"]) )->SetUniform(blend);
-			//( (Uniform<glm::vec3>*) (m_uniformMap["offset"]) )->SetUniform(glm::vec3(cursor.x, cursor.y, 0.0f));
-			blend -= 0.01;
-			if(blend < 0.1)
-				blend = 1.0;
-
-
 			if(m_isDirty)
 			{
 				const int size = m_dirtyUniforms.size();
@@ -70,15 +61,6 @@ namespace asapi
 				m_dirtyUniforms.clear();
 				m_isDirty = false;
 			}
-
-			
-			//GLint texUnitLoc = glGetUniformLocation(m_shader->GetProgramID(), "texUnit");
-			//GLint blendLoc = glGetUniformLocation(m_shader->GetProgramID(), "blend");
-
-			//log::debug << "blendLoc: " << blendLoc << std::endl;
-
-			//glUniform1i(texUnitLoc , 0);
-			//glUniform1f(blendLoc , 1.0);
 		}
 
 		#ifdef IS_EDITOR

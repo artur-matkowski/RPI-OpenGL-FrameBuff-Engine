@@ -25,24 +25,20 @@ namespace asapi
 
 	void* StaticAllocatorMemBlock::allocate (int elements, std::size_t sizeOf, std::size_t alignOf)
 	{
-		size_t size = getFreeMemory();
+		size_t freeMemory = getFreeMemory()-sizeof(bfu::MemChunkHeader);
 
-		void* tmp = m_buffFreePtr;
+		void* tmp = m_buffFreePtr + sizeof(bfu::MemChunkHeader);
 
-		if ( m_buffFreePtr = std::align(alignOf, sizeOf, m_buffFreePtr, size ))
+		if ( tmp = std::align(alignOf, sizeOf, tmp, freeMemory ))
         {
-            void* result = m_buffFreePtr;
+            void* result = m_buffFreePtr = tmp;
             size_t size = sizeOf * elements;
             size = size > 0 ? size : 1;
             m_buffFreePtr = (void*)((size_t) m_buffFreePtr + size);
 
-
-            if(m_buffFreePtr >= m_buffEndPtr)
-	        {
-	            //std::cout << "Failed to allocate memory by MonotonicMemBlock, requested size: " << sizeOf * elements << std::endl;
-					//std::cout.flush();
-					return nullptr;
-	        }
+	        bfu::MemChunkHeader* headerInfo = (bfu::MemChunkHeader*)((size_t)result-(size_t)sizeof(bfu::MemChunkHeader));
+	        headerInfo->m_MemBlockOwner = this;
+	        headerInfo->m_sizeOfChunk = size + sizeof(bfu::MemChunkHeader);
 
 			++m_allocationCount;
 			#ifdef DEBUG_MEMORY_ALLOC
@@ -64,14 +60,10 @@ namespace asapi
 
 	void StaticAllocatorMemBlock::deallocate (void* p, std::size_t n) 
 	{
-		m_deallocatedMemory += n;
-		memset(p, 0, n);
-		if( (size_t)p+n==(size_t)m_buffFreePtr)
-		{
-            //std::cout << "Regaining memory becouse deallocate was called right after allocate on the same ptr" << std::endl;
-			//std::cout.flush();
-			m_buffFreePtr = (void*)((size_t)m_buffFreePtr - n);
-		}
+	    bfu::MemChunkHeader* headerInfo = bfu::MemChunkHeader::InitFromLifePtr(p);
+		m_deallocatedMemory += headerInfo->m_sizeOfChunk;
+
+		memset(p, 0, headerInfo->m_sizeOfChunk-sizeof( bfu::MemChunkHeader) );
 
 		++m_deallocationCount;
 		#ifdef DEBUG_MEMORY_ALLOC
