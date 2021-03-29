@@ -39,7 +39,7 @@ namespace asapi
 		// 				 				, alignof(bfu::SerializableVarVector<GameObject*>) );
 		// new (v_children) bfu::SerializableVarVector<GameObject*>("v_children", this, mBlock);
 
-		// AddComponent( TypeInfo::GetTypeInfo("asapi::Transform3D")->id );
+		AddComponent( typeid(asapi::Transform3D).hash_code() );
 	}
 
 	GameObject::~GameObject()
