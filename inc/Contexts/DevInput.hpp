@@ -32,7 +32,6 @@ namespace asapi
 		bfu::Event* 		p_ev_MouseMoveEvent = nullptr;
 		bfu::Event* 		p_ev_MouseClickEvent = nullptr;
 		bfu::Event*			p_ev_KeyboardEvent = nullptr;
-		bfu::Event* 		p_ev_ResizeWindow = nullptr;
 
 		static void ResizeWindowCallback(void* _this, void* data);
 

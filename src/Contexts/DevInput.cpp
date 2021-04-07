@@ -605,7 +605,7 @@ namespace asapi
 		// 		m_mouseYmax = args->m_height; 
 		// 	});
 
-		p_ev_ResizeWindow->RegisterCallback(this, devinput::ResizeWindowCallback);
+		es.GetFastEvent("ResizeWindow")->RegisterCallback(this, devinput::ResizeWindowCallback);
 	}
 
 	void devinput::ResizeWindowCallback(void* receiver, void* data)
