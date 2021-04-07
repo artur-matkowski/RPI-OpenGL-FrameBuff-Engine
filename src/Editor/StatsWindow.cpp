@@ -5,7 +5,7 @@
 
 namespace asapi
 {
-	StatsWindow::Persistance* StatsWindow::persistance;
+	Persistance* StatsWindow::persistance = nullptr;
 	ImGuiFileDialog instance;
 
 	#ifdef IS_EDITOR
@@ -49,10 +49,10 @@ namespace asapi
 			    if (ImGui::MenuItem("Open Project...")) { showFileWindow = true; }
 			    if (ImGui::BeginMenu("Open Recent"))
 		        {
-				    if ( ImGui::MenuItem(persistance->m_lastOpenProject0.GetRef().c_str()) ) { OpenProject( persistance->m_lastOpenProject0.GetRef().c_str() ); }
-				    if ( ImGui::MenuItem(persistance->m_lastOpenProject1.GetRef().c_str()) ) { OpenProject( persistance->m_lastOpenProject1.GetRef().c_str() ); }
-				    if ( ImGui::MenuItem(persistance->m_lastOpenProject2.GetRef().c_str()) ) { OpenProject( persistance->m_lastOpenProject2.GetRef().c_str() ); }
-				    if ( ImGui::MenuItem(persistance->m_lastOpenProject3.GetRef().c_str()) ) { OpenProject( persistance->m_lastOpenProject3.GetRef().c_str() ); }
+				    if ( ImGui::MenuItem(persistance->m_lastOpenProject0.c_str()) ) { OpenProject( persistance->m_lastOpenProject0.c_str() ); }
+				    if ( ImGui::MenuItem(persistance->m_lastOpenProject1.c_str()) ) { OpenProject( persistance->m_lastOpenProject1.c_str() ); }
+				    if ( ImGui::MenuItem(persistance->m_lastOpenProject2.c_str()) ) { OpenProject( persistance->m_lastOpenProject2.c_str() ); }
+				    if ( ImGui::MenuItem(persistance->m_lastOpenProject3.c_str()) ) { OpenProject( persistance->m_lastOpenProject3.c_str() ); }
 	           		ImGui::EndMenu();
 		        }
 

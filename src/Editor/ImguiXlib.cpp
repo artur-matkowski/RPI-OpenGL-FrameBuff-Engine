@@ -23,6 +23,67 @@ namespace asapi
 	static void ImGui_ImplXlib_InitPlatformInterface();
 	static void ImGui_ImplXlib_UpdateMonitors();
 
+	void MouseClickXlibCallback(void* receiver, void* data)
+	{
+		MouseClickEvent* args = (MouseClickEvent*)data;
+		static ImGuiIO& io = ImGui::GetIO();
+
+	    if (args->m_state == (int)asapi::keystates::snapi_down &&
+	    	 (int)args->m_key >= 0 &&
+	    	 (int)args->m_key < IM_ARRAYSIZE(g_MouseJustPressed))
+	    {
+	        g_MouseJustPressed[args->m_key] = true;
+	    }
+	    if( (int)args->m_key >= 0 &&
+	    	 (int)args->m_key < IM_ARRAYSIZE(g_MouseJustPressed) )
+	    {
+	    	g_MouseButtonState[args->m_key] = args->m_state == (int)asapi::keystates::snapi_down;
+	    }
+
+	    if( args->m_key == (int)asapi::mousecodes::snapi_wheelY )
+	    {
+	    	if( args->m_state == (int)asapi::keystates::snapi_down )
+		    	io.MouseWheel -= (float)1.0;
+	    	else if( args->m_state == (int)asapi::keystates::snapi_up )
+		    	io.MouseWheel += (float)1.0;
+	    }
+	    else if( args->m_key == (int)asapi::mousecodes::snapi_wheelX )
+	    {
+	    	if( args->m_state == (int)asapi::keystates::snapi_down )
+		    	io.MouseWheelH -= (float)1.0;
+	    	else if( args->m_state == (int)asapi::keystates::snapi_up )
+		    	io.MouseWheelH += (float)1.0;
+	    }
+	}
+	void KeyboardXlibCallback(void* receiver, void* data)
+	{
+		KeyboardEvent* args = (KeyboardEvent*)data;
+		static ImGuiIO& io = ImGui::GetIO();
+
+		if( args->m_char != '\0' && args->m_state == (int)asapi::keystates::snapi_down )
+    		io.AddInputCharacter( args->m_char );
+
+		if (args->m_state == (int)asapi::keystates::snapi_down)
+	        io.KeysDown[args->m_key] = true;
+	    if (args->m_state == (int)asapi::keystates::snapi_up)
+	        io.KeysDown[args->m_key] = false;
+
+	    // Modifiers are not reliable across systems
+	    io.KeyCtrl = io.KeysDown[(int)asapi::keycodes::snapi_leftctrl] || io.KeysDown[(int)asapi::keycodes::snapi_rightctrl];
+	    io.KeyShift = io.KeysDown[(int)asapi::keycodes::snapi_leftshift] || io.KeysDown[(int)asapi::keycodes::snapi_rightshift];
+	    io.KeyAlt = io.KeysDown[(int)asapi::keycodes::snapi_leftalt] || io.KeysDown[(int)asapi::keycodes::snapi_rightalt];
+	    //io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
+	}
+	void MouseMoveXlibCallback(void* receiver, void* data)
+	{
+	    MouseMoveEvent* args = (MouseMoveEvent*)data;
+	    g_MousePos.x = (int)args->m_Xpos;
+	    g_MousePos.y = (int)args->m_Ypos;
+	    g_MousePosRoot.x = (int)args->m_XposRoot;
+	    g_MousePosRoot.y = (int)args->m_YposRoot;
+	}
+
+
 	int	error_handler(Display *display, XErrorEvent *err)
 	{
 		if(err->type == BadWindow)
@@ -83,70 +144,12 @@ namespace asapi
 	    //io.GetClipboardTextFn = ImGui_ImplXlib_GetClipboardText;
 	    //io.ClipboardUserData = g_Window;
 
-		bfu::CallbackId id;
-		bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
+		bfu::EventSystem& es = SYSTEMS::GetObject().EVENTS;
 
-	    events.RegisterCallback<MouseClickEvent>(id, [&](bfu::EventArgsBase& a)
-	    {
-		    MouseClickEvent* args = (MouseClickEvent*)&a;
-			static ImGuiIO& io = ImGui::GetIO();
+		es.GetFastEvent("MouseClickEvent")->RegisterCallback(nullptr, MouseClickXlibCallback);
+		es.GetFastEvent("KeyboardEvent")->RegisterCallback(nullptr, KeyboardXlibCallback);
+		es.GetFastEvent("MouseMoveEvent")->RegisterCallback(nullptr, MouseMoveXlibCallback);
 
-		    if (args->m_state == (int)asapi::keystates::snapi_down &&
-		    	 (int)args->m_key >= 0 &&
-		    	 (int)args->m_key < IM_ARRAYSIZE(g_MouseJustPressed))
-		    {
-		        g_MouseJustPressed[args->m_key] = true;
-		    }
-		    if( (int)args->m_key >= 0 &&
-		    	 (int)args->m_key < IM_ARRAYSIZE(g_MouseJustPressed) )
-		    {
-		    	g_MouseButtonState[args->m_key] = args->m_state == (int)asapi::keystates::snapi_down;
-		    }
-
-		    if( args->m_key == (int)asapi::mousecodes::snapi_wheelY )
-		    {
-		    	if( args->m_state == (int)asapi::keystates::snapi_down )
-			    	io.MouseWheel -= (float)1.0;
-		    	else if( args->m_state == (int)asapi::keystates::snapi_up )
-			    	io.MouseWheel += (float)1.0;
-		    }
-		    else if( args->m_key == (int)asapi::mousecodes::snapi_wheelX )
-		    {
-		    	if( args->m_state == (int)asapi::keystates::snapi_down )
-			    	io.MouseWheelH -= (float)1.0;
-		    	else if( args->m_state == (int)asapi::keystates::snapi_up )
-			    	io.MouseWheelH += (float)1.0;
-		    }
-	    });
-
-	    events.RegisterCallback<KeyboardEvent>(id, [&](bfu::EventArgsBase& a)
-	    {
-		    KeyboardEvent* args = (KeyboardEvent*)&a;
-			static ImGuiIO& io = ImGui::GetIO();
-
-			if( args->m_char != '\0' && args->m_state == (int)asapi::keystates::snapi_down )
-	    		io.AddInputCharacter( args->m_char );
-
-			if (args->m_state == (int)asapi::keystates::snapi_down)
-		        io.KeysDown[args->m_key] = true;
-		    if (args->m_state == (int)asapi::keystates::snapi_up)
-		        io.KeysDown[args->m_key] = false;
-
-		    // Modifiers are not reliable across systems
-		    io.KeyCtrl = io.KeysDown[(int)asapi::keycodes::snapi_leftctrl] || io.KeysDown[(int)asapi::keycodes::snapi_rightctrl];
-		    io.KeyShift = io.KeysDown[(int)asapi::keycodes::snapi_leftshift] || io.KeysDown[(int)asapi::keycodes::snapi_rightshift];
-		    io.KeyAlt = io.KeysDown[(int)asapi::keycodes::snapi_leftalt] || io.KeysDown[(int)asapi::keycodes::snapi_rightalt];
-		    //io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
-	    });
-
-	    events.RegisterCallback<MouseMoveEvent>(id, [&](bfu::EventArgsBase& a)
-	    {
-		    MouseMoveEvent* args = (MouseMoveEvent*)&a;
-		    g_MousePos.x = (int)args->m_Xpos;
-		    g_MousePos.y = (int)args->m_Ypos;
-		    g_MousePosRoot.x = (int)args->m_XposRoot;
-		    g_MousePosRoot.y = (int)args->m_YposRoot;
-	    });
 
    // Update monitors the first time (note: monitor callback are broken in GLFW 3.2 and earlier, see github.com/glfw/glfw/issues/784)
 	    ImGui_ImplXlib_UpdateMonitors();

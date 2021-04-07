@@ -21,6 +21,9 @@ namespace asapi
 		struct input_event ev[64];
 		int result;
 		static bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
+		KeyboardEvent keyboardEvent;
+		MouseClickEvent mouseClickEvent;
+		MouseMoveEvent mouseMoveEvent;
 
 		for(int i=0; i<m_kbdFdsSize; ++i)
 		{
@@ -57,19 +60,17 @@ namespace asapi
 				    		asapi::keystates state = (evp->value != 1) ? asapi::keystates::snapi_up : asapi::keystates::snapi_down;
 			        		if(evp->code < 255)
 			        		{
-							    events.Invoke<KeyboardEvent>([&](KeyboardEvent& args) 
-							    {
-							    	args.m_key = (int)m_keyCodeMap[evp->code]; 
-							    	args.m_state = (int)state; 
-							    });
+						    	keyboardEvent.m_key = (int)m_keyCodeMap[evp->code]; 
+						    	keyboardEvent.m_state = (int)state; 
+
+						    	p_ev_KeyboardEvent->Invoke( &keyboardEvent );
 			        		}
 			        		else
 			        		{
-			        			events.Invoke<KeyboardEvent>([&](KeyboardEvent& args) 
-							    {
-							    	args.m_key = (int)asapi::keycodes::unknown; 
-							    	args.m_state = (int)state; 
-							    });
+						    	keyboardEvent.m_key = (int)asapi::keycodes::unknown; 
+						    	keyboardEvent.m_state = (int)state; 
+
+						    	p_ev_KeyboardEvent->Invoke( &keyboardEvent );							    
 			        		}
 			    		}
 			    	}
@@ -116,13 +117,13 @@ namespace asapi
 				        	else if(evp->code == REL_WHEEL) //touchscreen coords Y
 				        	{
 				    			asapi::keystates state = (evp->value == 0) ? asapi::keystates::snapi_up : asapi::keystates::snapi_down;
-				        		events.Invoke<MouseClickEvent>([&](MouseClickEvent& args) 
-							    {
-									args.m_Xpos = (int)m_mouse_posX;
-									args.m_Ypos = (int)m_mouse_posY;
-									args.m_key = (int)asapi::mousecodes::snapi_wheelY;
-									args.m_state = (int)state;
-							    });
+				        		
+								mouseClickEvent.m_Xpos = (int)m_mouse_posX;
+								mouseClickEvent.m_Ypos = (int)m_mouse_posY;
+								mouseClickEvent.m_key = (int)asapi::mousecodes::snapi_wheelY;
+								mouseClickEvent.m_state = (int)state;
+
+								p_ev_MouseClickEvent->Invoke( &mouseClickEvent );
 				        	}
 				        }
 				        else if(evp->type == EV_ABS)
@@ -146,13 +147,13 @@ namespace asapi
 				        	if(evp->code == 330) // touchscreen click
 				        	{
 				    			asapi::keystates state = (evp->value == 0) ? asapi::keystates::snapi_up : asapi::keystates::snapi_down;
-				        		events.Invoke<MouseClickEvent>([&](MouseClickEvent& args) 
-							    {
-									args.m_Xpos = (int)m_mouse_posX;
-									args.m_Ypos = (int)m_mouse_posY;
-									args.m_key = (int)asapi::mousecodes::snapi_left;
-									args.m_state = (int)state;
-							    });
+				        		
+								mouseClickEvent.m_Xpos = (int)m_mouse_posX;
+								mouseClickEvent.m_Ypos = (int)m_mouse_posY;
+								mouseClickEvent.m_key = (int)asapi::mousecodes::snapi_left;
+								mouseClickEvent.m_state = (int)state;
+
+								p_ev_MouseClickEvent->Invoke( &mouseClickEvent );							    
 				        	}
 				        	else 
 				        	{
@@ -161,23 +162,21 @@ namespace asapi
 
 				        		if(it == m_mouseCodeMap.end() )
 				        		{
-				        			events.Invoke<MouseClickEvent>([&](MouseClickEvent& args) 
-								    {
-										args.m_Xpos = (int)m_mouse_posX;
-										args.m_Ypos = (int)m_mouse_posY;
-										args.m_key = (int)asapi::mousecodes::unknown;
-										args.m_state = (int)state;
-								    });
+									mouseClickEvent.m_Xpos = (int)m_mouse_posX;
+									mouseClickEvent.m_Ypos = (int)m_mouse_posY;
+									mouseClickEvent.m_key = (int)asapi::mousecodes::unknown;
+									mouseClickEvent.m_state = (int)state;
+								    
+									p_ev_MouseClickEvent->Invoke( &mouseClickEvent );
 				        		}
 				        		else
 				        		{
-				        			events.Invoke<MouseClickEvent>([&](MouseClickEvent& args) 
-								    {
-										args.m_Xpos = (int)m_mouse_posX;
-										args.m_Ypos = (int)m_mouse_posY;
-										args.m_key = (int)it->second;
-										args.m_state = (int)state;
-								    });
+									mouseClickEvent.m_Xpos = (int)m_mouse_posX;
+									mouseClickEvent.m_Ypos = (int)m_mouse_posY;
+									mouseClickEvent.m_key = (int)it->second;
+									mouseClickEvent.m_state = (int)state;
+								    
+									p_ev_MouseClickEvent->Invoke( &mouseClickEvent );
 				        		}
 
 				        		//m_mouseClickCallback(m_mouse_posX, m_mouse_posY, evp->code, evp->value);
@@ -202,11 +201,10 @@ namespace asapi
 			else if(m_mouse_posY > m_mouseYmax)
 				m_mouse_posY = m_mouseYmax;
 
-			events.Invoke<MouseMoveEvent>([&](MouseMoveEvent& args) 
-		    {
-				args.m_Xpos = (int)m_mouse_posX;
-				args.m_Ypos = (int)m_mouse_posY;
-		    });
+			mouseMoveEvent.m_Xpos = (int)m_mouse_posX;
+			mouseMoveEvent.m_Ypos = (int)m_mouse_posY;
+		    
+		    p_ev_MouseMoveEvent->Invoke( &mouseMoveEvent );
 		}
 		//printf("mouse x:%d\t y:%d\n", m_mouse_posX, m_mouse_posY);
 
@@ -336,6 +334,11 @@ namespace asapi
 
 	devinput::devinput()
 	{
+		bfu::EventSystem& es = SYSTEMS::GetObject().EVENTS;
+		p_ev_KeyboardEvent = es.GetFastEvent("KeyboardEvent");
+		p_ev_MouseMoveEvent = es.GetFastEvent("MouseMoveEvent");
+		p_ev_MouseClickEvent = es.GetFastEvent("MouseClickEvent");
+
 	   	scanForDevices();
 
 	   	m_mouseCodeMap[ BTN_LEFT ]					= asapi::mousecodes::snapi_left;
@@ -594,13 +597,23 @@ namespace asapi
 		m_keyCodeMap[ KEY_MICMUTE ]					= asapi::keycodes::snapi_micmute;
 
 
-    	bfu::CallbackId id;
-		SYSTEMS::GetObject().EVENTS.RegisterCallback<ResizeWindowArgs>(id, [&](bfu::EventArgsBase& a)
-	    {
-		    ResizeWindowArgs* args = (ResizeWindowArgs*)&a;
-	    	m_mouseXmax = args->m_width; 
-	    	m_mouseYmax = args->m_height; 
-	    });
+		// bfu::CallbackId id;
+		// SYSTEMS::GetObject().EVENTS.RegisterCallback<ResizeWindowArgs>(id, [&](bfu::EventArgsBase& a)
+		// 	{
+		// 		ResizeWindowArgs* args = (ResizeWindowArgs*)&a;
+		// 		m_mouseXmax = args->m_width; 
+		// 		m_mouseYmax = args->m_height; 
+		// 	});
+
+		p_ev_ResizeWindow->RegisterCallback(this, devinput::ResizeWindowCallback);
 	}
 
+	void devinput::ResizeWindowCallback(void* receiver, void* data)
+	{
+		devinput* _this = (devinput*)receiver;
+		ResizeWindowArgs* args = (ResizeWindowArgs*)data;
+
+		_this->m_mouseXmax = args->m_width; 
+		_this->m_mouseYmax = args->m_height; 
+	}
 }

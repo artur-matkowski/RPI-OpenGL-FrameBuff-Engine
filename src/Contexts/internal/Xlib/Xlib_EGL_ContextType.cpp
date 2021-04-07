@@ -221,15 +221,16 @@ namespace asapi
 			return;
 		}*/
 
+		ResizeWindowArgs resizeWindowArgs;
+    	resizeWindowArgs.m_width = width; 
+    	resizeWindowArgs.m_height = height; 
+		#ifdef IS_EDITOR
+		resizeWindowArgs.m_eventSourceWindow = m_mainEglWindow->x11;
+		#endif
 
-		events.Invoke<ResizeWindowArgs>([&](ResizeWindowArgs& args) 
-	    {
-	    	args.m_width = width; 
-	    	args.m_height = height; 
-			#ifdef IS_EDITOR
-			args.m_eventSourceWindow = m_mainEglWindow->x11;
-			#endif
-	    });
+		p_ev_ResizeWindow->Invoke( &resizeWindowArgs );
+
+		
 /*
 		bfu::CallbackId id;
 	    events.RegisterCallback<KeyboardEvent>(id, [&](bfu::EventArgsBase& a)
@@ -319,6 +320,10 @@ namespace asapi
 	{
 		XEvent event;
 		static bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
+		ResizeWindowArgs resizeWindowArgs;
+		MouseMoveEvent mouseMoveEvent;	
+		MouseClickEvent mouseClickEvent;
+		KeyboardEvent keyboardEvent;
 
 
 
@@ -338,17 +343,18 @@ namespace asapi
 				break;
 
 			case MotionNotify:
+
+				mouseMoveEvent.m_Xpos = (int)event.xmotion.x;
+				mouseMoveEvent.m_Ypos = (int)event.xmotion.y;
+				#ifdef IS_EDITOR
+				mouseMoveEvent.m_XposRoot = (int)event.xmotion.x_root;
+				mouseMoveEvent.m_YposRoot = (int)event.xmotion.y_root;
+		    	mouseMoveEvent.m_eventSourceWindow = event.xmotion.window;
+			    #endif
+
+			    p_ev_MouseMoveEvent->Invoke( &mouseMoveEvent );
 				//log::debug << "MotionNotify: " << event.xmotion.x << " " << event.xmotion.y << " " << event.xmotion.window <<  std::endl;
-				events.Invoke<MouseMoveEvent>([&](MouseMoveEvent& args) 
-			    {
-					args.m_Xpos = (int)event.xmotion.x;
-					args.m_Ypos = (int)event.xmotion.y;
-					#ifdef IS_EDITOR
-					args.m_XposRoot = (int)event.xmotion.x_root;
-					args.m_YposRoot = (int)event.xmotion.y_root;
-			    	args.m_eventSourceWindow = event.xmotion.window;
-			    	#endif
-			    });
+			    
 			    for(int i=0; i<m_eglWindows.size(); ++i)
 			    {
 			    	if( m_eglWindows[i].x11 == event.xmotion.window )
@@ -359,63 +365,64 @@ namespace asapi
 			    	}
 			    }
 				m_focusedWindow = event.xmotion.window;
+
+				p_ev_MouseMoveEvent->Invoke( &mouseMoveEvent );
+
 				break;	
 
-			case ButtonPress:			
+			case ButtonPress:	
+				mouseClickEvent.m_Xpos = (int)event.xbutton.x;
+				mouseClickEvent.m_Ypos = (int)event.xbutton.y;
+				#ifdef IS_EDITOR
+		    	mouseClickEvent.m_eventSourceWindow = event.xbutton.window;
+		    	#endif
+		    	if(event.xbutton.button==5)
+		    	{
+					mouseClickEvent.m_key = (int)asapi::mousecodes::snapi_wheelY;
+					mouseClickEvent.m_state = (int)asapi::keystates::snapi_down;
+		    	}
+		    	else if(event.xbutton.button==4)
+		    	{
+					mouseClickEvent.m_key = (int)asapi::mousecodes::snapi_wheelY;
+					mouseClickEvent.m_state = (int)asapi::keystates::snapi_up;
+		    	}
+		    	else
+		    	{
+					mouseClickEvent.m_key = (int)m_mouseCodeMap[event.xbutton.button];
+					mouseClickEvent.m_state = (int)asapi::keystates::snapi_down;
+		    	}
 				// log::debug << "ButtonPress: " << event.xbutton.x << " " << event.xbutton.y 
 				// 	<< " " << event.xbutton.state << " " << event.xbutton.button << std::endl;
-				events.Invoke<MouseClickEvent>([&](MouseClickEvent& args) 
-			    {
-					args.m_Xpos = (int)event.xbutton.x;
-					args.m_Ypos = (int)event.xbutton.y;
-					#ifdef IS_EDITOR
-			    	args.m_eventSourceWindow = event.xbutton.window;
-			    	#endif
-			    	if(event.xbutton.button==5)
-			    	{
-						args.m_key = (int)asapi::mousecodes::snapi_wheelY;
-						args.m_state = (int)asapi::keystates::snapi_down;
-			    	}
-			    	else if(event.xbutton.button==4)
-			    	{
-						args.m_key = (int)asapi::mousecodes::snapi_wheelY;
-						args.m_state = (int)asapi::keystates::snapi_up;
-			    	}
-			    	else
-			    	{
-						args.m_key = (int)m_mouseCodeMap[event.xbutton.button];
-						args.m_state = (int)asapi::keystates::snapi_down;
-			    	}
-			    });
-				break;
+				p_ev_MouseClickEvent->Invoke( &mouseClickEvent );
 
+				break;
 			case ButtonRelease:			
 				// log::debug << "ButtonRelease: " << event.xbutton.x << " " << event.xbutton.y 
 				// 	<< " " << event.xbutton.state << " " << event.xbutton.button << std::endl;
-				events.Invoke<MouseClickEvent>([&](MouseClickEvent& args) 
-			    {
-					args.m_Xpos = (int)event.xbutton.x;
-					args.m_Ypos = (int)event.xbutton.y;
-					args.m_key = (int)m_mouseCodeMap[event.xbutton.button];
-					args.m_state = (int)asapi::keystates::snapi_up;
-					#ifdef IS_EDITOR
-			    	args.m_eventSourceWindow = event.xbutton.window;
-			    	#endif
-			    });
+				mouseClickEvent.m_Xpos = (int)event.xbutton.x;
+				mouseClickEvent.m_Ypos = (int)event.xbutton.y;
+				mouseClickEvent.m_key = (int)m_mouseCodeMap[event.xbutton.button];
+				mouseClickEvent.m_state = (int)asapi::keystates::snapi_up;
+				#ifdef IS_EDITOR
+		    	mouseClickEvent.m_eventSourceWindow = event.xbutton.window;
+		    	#endif
+
+				p_ev_MouseClickEvent->Invoke( &mouseClickEvent );
+			    
 				break;
 
 			case ConfigureNotify:
+
+		    	resizeWindowArgs.m_width = (GLint)event.xconfigure.width; 
+		    	resizeWindowArgs.m_height = (GLint)event.xconfigure.height; 
+		    	resizeWindowArgs.m_Xpos = (GLint)event.xconfigure.x; 
+		    	resizeWindowArgs.m_Ypos = (GLint)event.xconfigure.y; 
+				#ifdef IS_EDITOR
+		    	resizeWindowArgs.m_eventSourceWindow = event.xconfigure.window;
+		    	#endif
+		    	p_ev_ResizeWindow->Invoke( &resizeWindowArgs );
 				//log::debug << "ConfigureNotify: " << event.xconfigure.x << " " << event.xconfigure.y << " \\ " << event.xconfigure.width << " " << event.xconfigure.height << std::endl;
-			    events.Invoke<ResizeWindowArgs>([&](ResizeWindowArgs& args) 
-			    {
-			    	args.m_width = (GLint)event.xconfigure.width; 
-			    	args.m_height = (GLint)event.xconfigure.height; 
-			    	args.m_Xpos = (GLint)event.xconfigure.x; 
-			    	args.m_Ypos = (GLint)event.xconfigure.y; 
-					#ifdef IS_EDITOR
-			    	args.m_eventSourceWindow = event.xconfigure.window;
-			    	#endif
-			    });
+			   
 			    for(int i=0; i<m_eglWindows.size(); ++i)
 			    {
 			    	if( m_eglWindows[i].x11 == event.xconfigure.window )
@@ -437,15 +444,15 @@ namespace asapi
 					key = (int)m_keyCodeMap[(int)event.xkey.keycode];
 				}
 
-				events.Invoke<KeyboardEvent>([&](KeyboardEvent& args) 
-			    {
-			    	args.m_key = (int)key; 
-			    	args.m_state = (int)asapi::keystates::snapi_down; 
-			    	args.m_char = (char)keycodes2char[ key ];
-					#ifdef IS_EDITOR
-			    	args.m_eventSourceWindow = event.xkey.window;
-			    	#endif
-			    });
+		    	keyboardEvent.m_key = (int)key; 
+		    	keyboardEvent.m_state = (int)asapi::keystates::snapi_down; 
+		    	keyboardEvent.m_char = (char)keycodes2char[ key ];
+				#ifdef IS_EDITOR
+		    	keyboardEvent.m_eventSourceWindow = event.xkey.window;
+		    	#endif
+
+			    p_ev_KeyboardEvent->Invoke( &keyboardEvent );
+
 				break;
 
 			case KeyRelease:
@@ -455,15 +462,16 @@ namespace asapi
 					key = (int)m_keyCodeMap[(int)event.xkey.keycode];
 				}
 
-				events.Invoke<KeyboardEvent>([&](KeyboardEvent& args) 
-			    {
-			    	args.m_key = (int)key; 
-			    	args.m_state = (int)asapi::keystates::snapi_up; 
-			    	args.m_char = (char)keycodes2char[ key ];
-					#ifdef IS_EDITOR
-			    	args.m_eventSourceWindow = event.xkey.window;
-			    	#endif
-			    });
+				
+		    	keyboardEvent.m_key = (int)key; 
+		    	keyboardEvent.m_state = (int)asapi::keystates::snapi_up; 
+		    	keyboardEvent.m_char = (char)keycodes2char[ key ];
+				#ifdef IS_EDITOR
+		    	keyboardEvent.m_eventSourceWindow = event.xkey.window;
+		    	#endif
+			    
+			    p_ev_KeyboardEvent->Invoke( &keyboardEvent );
+			    
 			    break;
 			
 			case FocusIn:

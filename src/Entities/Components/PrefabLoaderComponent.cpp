@@ -52,7 +52,7 @@ namespace asapi
 						, SYSTEMS::GetObject().SCENE.GetProjectPath()
 						, GetPrefabID() );
 
-		bfu2::JSONSerializer &jsonSerializer = SYSTEMS::GetObject().SCENE.GetJSONSerializer();
+		bfu::JSONSerializer &jsonSerializer = SYSTEMS::GetObject().SCENE.GetJSONSerializer();
 		jsonSerializer.clear();
 
 		m_owner->SerializeChildren( jsonSerializer );
@@ -75,7 +75,7 @@ namespace asapi
 						, GetPrefabID() );
 
 		
-		bfu2::JSONSerializer &jsonSerializer = SYSTEMS::GetObject().SCENE.GetJSONSerializer();
+		bfu::JSONSerializer &jsonSerializer = SYSTEMS::GetObject().SCENE.GetJSONSerializer();
 		jsonSerializer.clear();
 
 		if( SceneSystem::File2JSON( jsonSerializer, buff.c_str() ) )

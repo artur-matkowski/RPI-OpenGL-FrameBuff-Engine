@@ -12,23 +12,12 @@
 
 
 namespace asapi{
-	void RendererSystem::SetupEvents()
-	{
-    	bfu::CallbackId id;
-		bfu::EventSystem& events = SYSTEMS::GetObject().EVENTS;
-
-		events.RegisterCallback<ResizeWindowArgs>(id, [&](bfu::EventArgsBase& a)
-	    {
-		    ResizeWindowArgs* args = (ResizeWindowArgs*)&a;
-	    	m_resolution.x = args->m_width; 
-	    	m_resolution.y = args->m_height; 
-			//log::debug << "resolution update invoked on RendererSystem: " << m_resolution.x << "x" << m_resolution.y  << std::endl;
-	    });
-	}
 
 	void RendererSystem::Init()
 	{
 		//m_rendererComponent = new RendererComponent( SYSTEMS::SYSTEMS_ALLOCATOR );
+		bfu::EventSystem& es = SYSTEMS::GetObject().EVENTS;
+		es.GetFastEvent("ResizeWindow")->RegisterCallback(this, RendererSystem::ResizeWidowCallback);
 	}
 
 	RendererSystem::RendererSystem()
@@ -70,4 +59,12 @@ namespace asapi{
 		}
 	}
 
+	void RendererSystem::ResizeWidowCallback(void* receiver, void* data)
+	{
+		RendererSystem* _this = (RendererSystem*)receiver;
+		ResizeWindowArgs* args = (ResizeWindowArgs*)data;
+
+    	_this->m_resolution.x = args->m_width; 
+    	_this->m_resolution.y = args->m_height; 
+	}
 }

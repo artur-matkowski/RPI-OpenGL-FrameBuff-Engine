@@ -7,18 +7,11 @@ namespace asapi
 {
 
 	SceneSystem::SceneSystem()
-		:m_stream(tmpbuff, 2) // using std allocator to dont waste large chunks of memory on reallocations
-		,m_jsonSerializer( SYSTEMS::GetObject().MEMORY.GetSystemsAllocator() )
-	{
-
-	}
+		:m_jsonSerializer( SYSTEMS::GetObject().MEMORY.GetSystemsAllocator() )
+	{}
 
 	void SceneSystem::Init( bfu::MemBlockBase* mBlock, const int argc, const char** argv )
 	{
-		#ifdef IS_EDITOR
-		m_stream.resize(1024*1024*10); // reserve 10 Mb buff for reading json
-		#endif
-
 		p_root = (GameObject*) mBlock->allocate(1, sizeof(GameObject), alignof(GameObject));
 		p_root->Init(mBlock);
 		p_root->SetName("EntryPoint");
@@ -64,20 +57,15 @@ namespace asapi
 	}
 
 
-	bfu::JSONStream& SceneSystem::GetJSONStreamWorkBuffer()
-	{
-		return m_stream;
-	}
-	bfu2::JSONSerializer& SceneSystem::GetJSONSerializer()
+	bfu::JSONSerializer& SceneSystem::GetJSONSerializer()
 	{
 		return m_jsonSerializer;
 	}
 
 
-	bool SceneSystem::File2JSON(bfu::JSONStream& jsonStream, const char* filePath)
+
+	bool SceneSystem::File2JSON(bfu::JSONSerializer& jsonStream, const char* filePath)
 	{
-		char buff[2048];
-		bfu::stream stream(buff, 2048, SYSTEMS::STD_ALLOCATOR );
 		FILE * pFile = fopen (filePath,"rb");
 
 		if( pFile==NULL )
@@ -99,7 +87,7 @@ namespace asapi
 	}
 
 
-	bool SceneSystem::JSON2File(bfu::JSONStream& jsonStream, const char* filePath)
+	bool SceneSystem::JSON2File(bfu::JSONSerializer& jsonStream, const char* filePath)
 	{
 		FILE * pFile = fopen (filePath,"wb");
 
@@ -115,10 +103,11 @@ namespace asapi
 		return true;
 	}
 
-	bool SceneSystem::File2JSON(bfu2::JSONSerializer& jsonStream, const char* filePath)
+	bool SceneSystem::File2JSON(bfu::SerializableClassInterface* obj, const char* filePath)
 	{
-		char buff[2048];
-		bfu::stream stream(buff, 2048, SYSTEMS::STD_ALLOCATOR );
+		bfu::JSONSerializer& jsonSerializer = SYSTEMS::GetObject().SCENE.GetJSONSerializer();
+		jsonSerializer.clear();
+
 		FILE * pFile = fopen (filePath,"rb");
 
 		if( pFile==NULL )
@@ -131,17 +120,23 @@ namespace asapi
 		auto fileSize = ftell(pFile); 
 		fseek(pFile, 0L, SEEK_SET); 
 
-		jsonStream.resize(fileSize);
-		fread(jsonStream.c_str(), 1, fileSize, pFile);
-		jsonStream.OverrideWriteCursorPos(fileSize);
+		jsonSerializer.resize(fileSize);
+		fread(jsonSerializer.c_str(), 1, fileSize, pFile);
+		jsonSerializer.OverrideWriteCursorPos(fileSize);
 
 		fclose (pFile);
+
+		jsonSerializer.Deserialize(obj);
+
 		return true;
 	}
 
 
-	bool SceneSystem::JSON2File(bfu2::JSONSerializer& jsonStream, const char* filePath)
+	bool SceneSystem::JSON2File(bfu::SerializableClassInterface* obj, const char* filePath)
 	{
+		bfu::JSONSerializer& jsonSerializer = SYSTEMS::GetObject().SCENE.GetJSONSerializer();
+		jsonSerializer.clear();
+
 		FILE * pFile = fopen (filePath,"wb");
 
 		if( pFile==NULL )
@@ -150,7 +145,8 @@ namespace asapi
 			return false;
  		}
 
-		fwrite(jsonStream.c_str(), 1, jsonStream.size(), pFile);
+		jsonSerializer.Serialize(obj);
+		fwrite(jsonSerializer.c_str(), 1, jsonSerializer.size(), pFile);
 
 		fclose (pFile);
 		return true;

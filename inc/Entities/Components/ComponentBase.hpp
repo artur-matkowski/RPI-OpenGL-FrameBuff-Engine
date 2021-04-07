@@ -22,7 +22,7 @@ namespace asapi
 
 
 	template<class T>
-	class ComponentBase: public bfu2::SerializableClassBase<T>, public ComponentInterface
+	class ComponentBase: public bfu::SerializableClassBase<T>, public ComponentInterface
 	{
 		static char ClassName[255];
 

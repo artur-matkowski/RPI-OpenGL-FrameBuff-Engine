@@ -40,9 +40,16 @@ namespace asapi
 		std::chrono::duration<double> 
 							m_frameDelay;
 
+		bfu::Event* 		p_ev_ResizeWindow = nullptr;
+		#ifdef IS_EDITOR
+		bfu::Event* 		p_ev_MoveWindowArgs = nullptr;
+		#endif
+		bfu::Event* 		p_ev_MouseMoveEvent = nullptr;
+		bfu::Event* 		p_ev_MouseClickEvent = nullptr;
+		bfu::Event* 		p_ev_KeyboardEvent = nullptr;
 
 	public:
-		ContextBase();
+		ContextBase(bfu::MemBlockBase* memBlock = bfu::StdAllocatorMemBlock::GetMemBlock());
 		~ContextBase(){};
 
 /*
@@ -70,13 +77,13 @@ namespace asapi
 
 
 	
-	class ResizeWindowArgs: public bfu::EventArgsBase
+	class ResizeWindowArgs
 	{
 	public:
-		bfu::SerializableVar<int> 	m_width;
-		bfu::SerializableVar<int> 	m_height;
-		bfu::SerializableVar<int> 	m_Xpos;
-		bfu::SerializableVar<int> 	m_Ypos;
+		int 	m_width;
+		int 	m_height;
+		int 	m_Xpos;
+		int 	m_Ypos;
 
 
 		#ifdef IS_EDITOR
@@ -85,12 +92,7 @@ namespace asapi
 
 
 	public:
-		ResizeWindowArgs(bfu::MemBlockBase* mBlock = 0)
-			:bfu::EventArgsBase()
-			,m_width("m_width",this)
-			,m_height("m_height",this)
-			,m_Xpos("m_Xpos",this)
-			,m_Ypos("m_Ypos",this)
+		ResizeWindowArgs()
 		{
 			m_width = -1;
 			m_height = -1;
@@ -99,11 +101,6 @@ namespace asapi
 		}
 
 		ResizeWindowArgs(const ResizeWindowArgs& copy)
-			:bfu::EventArgsBase()
-			,m_width("m_width",this)
-			,m_height("m_height",this)
-			,m_Xpos("m_Xpos",this)
-			,m_Ypos("m_Ypos",this)
 		{
 			m_width = copy.m_width;
 			m_height = copy.m_height;
@@ -115,40 +112,26 @@ namespace asapi
 		}
 	};
 
-	class MouseMoveEvent: public bfu::EventArgsBase
+	class MouseMoveEvent
 	{
 	public:
-		bfu::SerializableVar<int> m_Xpos;
-		bfu::SerializableVar<int> m_Ypos;
+		int 						m_Xpos;
+		int 						m_Ypos;
 
 		#ifdef IS_EDITOR
-		bfu::SerializableVar<int> m_XposRoot;
-		bfu::SerializableVar<int> m_YposRoot;
+		int 						m_XposRoot;
+		int 						m_YposRoot;
 		Window 						m_eventSourceWindow = 0;
 		#endif
 
 	public:
-		MouseMoveEvent(bfu::MemBlockBase* mBlock = 0)
-			:bfu::EventArgsBase()
-			,m_Xpos("m_Xpos",this)
-			,m_Ypos("m_Ypos",this)
-			#ifdef IS_EDITOR
-			,m_XposRoot("m_XposRoot",this)
-			,m_YposRoot("m_YposRoot",this)
-			#endif
+		MouseMoveEvent()
 		{
 			m_Xpos = -1;
 			m_Ypos = -1;
 		}
 
 		MouseMoveEvent(const MouseMoveEvent& copy)
-			:bfu::EventArgsBase()
-			,m_Xpos("m_Xpos",this)
-			,m_Ypos("m_Ypos",this)
-			#ifdef IS_EDITOR
-			,m_XposRoot("m_XposRoot",this)
-			,m_YposRoot("m_YposRoot",this)
-			#endif
 		{
 			m_Xpos = copy.m_Xpos;
 			m_Ypos = copy.m_Ypos;
@@ -160,25 +143,20 @@ namespace asapi
 		}
 	};
 
-	class MouseClickEvent: public bfu::EventArgsBase
+	class MouseClickEvent
 	{
 	public:
-		bfu::SerializableVar<int> m_Xpos;
-		bfu::SerializableVar<int> m_Ypos;
-		bfu::SerializableVar<int> m_key;
-		bfu::SerializableVar<int> m_state;
+		int 						m_Xpos;
+		int 						m_Ypos;
+		int 						m_key;
+		int 						m_state;
 
 		#ifdef IS_EDITOR
 		Window 						m_eventSourceWindow = 0;
 		#endif
 
 	public:
-		MouseClickEvent(bfu::MemBlockBase* mBlock = 0)
-			:bfu::EventArgsBase()
-			,m_Xpos("m_Xpos",this)
-			,m_Ypos("m_Ypos",this)
-			,m_key("m_key",this)
-			,m_state("m_state",this)
+		MouseClickEvent()
 		{
 			m_Xpos = -1;
 			m_Ypos = -1;
@@ -187,11 +165,6 @@ namespace asapi
 		}
 
 		MouseClickEvent(const MouseClickEvent& copy)
-			:bfu::EventArgsBase()
-			,m_Xpos("m_Xpos",this)
-			,m_Ypos("m_Ypos",this)
-			,m_key("m_key",this)
-			,m_state("m_state",this)
 		{
 			m_Xpos = copy.m_Xpos;
 			m_Ypos = copy.m_Ypos;
@@ -203,23 +176,19 @@ namespace asapi
 		}
 	};
 
-	class KeyboardEvent: public bfu::EventArgsBase
+	class KeyboardEvent
 	{
 	public:
-		bfu::SerializableVar<int> 		m_key;
-		bfu::SerializableVar<int> 		m_state;
-		bfu::SerializableVar<uint8_t> 	m_char;
+		int 						m_key;
+		int 						m_state;
+		uint8_t 					m_char;
 
 		#ifdef IS_EDITOR
 		Window 						m_eventSourceWindow = 0;
 		#endif
 
 	public:
-		KeyboardEvent(bfu::MemBlockBase* mBlock = 0)
-			:bfu::EventArgsBase()
-			,m_key("m_key",this)
-			,m_state("m_state",this)
-			,m_char("m_char",this)
+		KeyboardEvent()
 		{
 			m_key = (int) asapi::mousecodes::unknown;
 			m_key = (int) asapi::keystates::unknown;
@@ -227,10 +196,6 @@ namespace asapi
 		}
 
 		KeyboardEvent(const KeyboardEvent& copy)
-			:bfu::EventArgsBase()
-			,m_key("m_key",this)
-			,m_state("m_state",this)
-			,m_char("m_char",this)
 		{
 			m_key = copy.m_key;
 			m_state = copy.m_state;
@@ -243,11 +208,11 @@ namespace asapi
 
 
 	#ifdef IS_EDITOR
-	class MoveWindowArgs: public bfu::EventArgsBase
+	class MoveWindowArgs
 	{
 	public:
-		bfu::SerializableVar<int> 	m_X;
-		bfu::SerializableVar<int> 	m_Y;
+		int 						m_X;
+		int 						m_Y;
 
 
 		#ifdef IS_EDITOR
@@ -257,18 +222,12 @@ namespace asapi
 
 	public:
 		MoveWindowArgs(bfu::MemBlockBase* mBlock = 0)
-			:bfu::EventArgsBase()
-			,m_X("m_X",this)
-			,m_Y("m_Y",this)
 		{
 			m_X = 0;
 			m_Y = 0;
 		}
 
 		MoveWindowArgs(const MoveWindowArgs& copy)
-			:bfu::EventArgsBase()
-			,m_X("m_X",this)
-			,m_Y("m_Y",this)
 		{
 			m_X = copy.m_X;
 			m_Y = copy.m_Y;

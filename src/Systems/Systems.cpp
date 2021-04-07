@@ -61,7 +61,6 @@ namespace asapi
 		}
 		//srand (time(NULL)); // moved to TIME.RANDOM
 
-		PRIFILE( RENDERER.SetupEvents(); );
 		#ifdef USE_XLIB
 		PRIFILE( CONTEXT = ContextInit(); );
 		PRIFILE( CONTEXT->Init(argc, argv); );

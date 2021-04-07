@@ -19,12 +19,13 @@ namespace asapi{
 
 		//RendererComponent* 	m_rendererComponent = 0;
 
+	static void ResizeWidowCallback(void* _this, void* data);
+
 	public:
 		RendererSystem();
 		~RendererSystem();
 
 		void Init();
-		void SetupEvents();
 		void Render();
 
 		void RegisterRenderer(RendererComponent*);

@@ -5,52 +5,48 @@
 
 namespace asapi
 {
+	using bfu::string;
+
+	class Persistance: public bfu::SerializableClassBase<Persistance> 
+	{
+	public:
+		SERIALIZABLE_VAR( Persistance, string, m_lastOpenProject0 );
+		SERIALIZABLE_VAR( Persistance, string, m_lastOpenProject1 );
+		SERIALIZABLE_VAR( Persistance, string, m_lastOpenProject2 );
+		SERIALIZABLE_VAR( Persistance, string, m_lastOpenProject3 );
+
+		Persistance()
+			:m_lastOpenProject0( SYSTEMS::SYSTEMS_ALLOCATOR )
+			,m_lastOpenProject1( SYSTEMS::SYSTEMS_ALLOCATOR )
+			,m_lastOpenProject2( SYSTEMS::SYSTEMS_ALLOCATOR )
+			,m_lastOpenProject3( SYSTEMS::SYSTEMS_ALLOCATOR )
+		{
+			m_lastOpenProject3 = "...none";
+			m_lastOpenProject2 = "...none";
+			m_lastOpenProject1 = "...none";
+			m_lastOpenProject0 = "...none";
+
+			SceneSystem::File2JSON(this, ".persistance.json");
+		}
+
+		~Persistance()
+		{}
+
+		void Update(const char* path)
+		{
+			m_lastOpenProject3 = m_lastOpenProject2;
+			m_lastOpenProject2 = m_lastOpenProject1;
+			m_lastOpenProject1 = m_lastOpenProject0;
+			m_lastOpenProject0 = path;
+
+			SceneSystem::JSON2File(this, ".persistance.json");
+		}
+
+	};
+
+
 	class StatsWindow
 	{
-		class Persistance: public bfu::SerializableClassBase
-		{
-			bfu::JSONStream my_stream;
-		public:
-			bfu::SerializableVar<bfu::string> m_lastOpenProject0;
-			bfu::SerializableVar<bfu::string> m_lastOpenProject1;
-			bfu::SerializableVar<bfu::string> m_lastOpenProject2;
-			bfu::SerializableVar<bfu::string> m_lastOpenProject3;
-
-			Persistance()
-				:bfu::SerializableClassBase( SYSTEMS::SYSTEMS_ALLOCATOR )
-				,m_lastOpenProject0("m_lastOpenProject0", this, SYSTEMS::SYSTEMS_ALLOCATOR )
-				,m_lastOpenProject1("m_lastOpenProject1", this, SYSTEMS::SYSTEMS_ALLOCATOR )
-				,m_lastOpenProject2("m_lastOpenProject2", this, SYSTEMS::SYSTEMS_ALLOCATOR )
-				,m_lastOpenProject3("m_lastOpenProject3", this, SYSTEMS::SYSTEMS_ALLOCATOR )
-			{
-				m_lastOpenProject3.GetRef() = "...none";
-				m_lastOpenProject2.GetRef() = "...none";
-				m_lastOpenProject1.GetRef() = "...none";
-				m_lastOpenProject0.GetRef() = "...none";
-
-				if( SceneSystem::File2JSON(my_stream, ".persistance.json") )
-				{
-					my_stream >> *this;
-				}
-			}
-
-			~Persistance()
-			{}
-
-			void Update(const char* path)
-			{
-				m_lastOpenProject3.GetRef() = m_lastOpenProject2.GetRef().c_str();
-				m_lastOpenProject2.GetRef() = m_lastOpenProject1.GetRef().c_str();
-				m_lastOpenProject1.GetRef() = m_lastOpenProject0.GetRef().c_str();
-				m_lastOpenProject0.GetRef() = path;
-
-				my_stream.clear();
-				my_stream << *this;
-				SceneSystem::JSON2File(my_stream, ".persistance.json");
-			}
-
-		};
-
 		static char 	m_openedProjectPath[2048];
 		static Persistance* persistance;
 

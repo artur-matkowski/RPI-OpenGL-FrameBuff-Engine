@@ -60,9 +60,16 @@ namespace asapi
 		else
 		{
 			sprintf(buff, "%s/shaders/%s.vert.glsl", SYSTEMS::GetObject().SCENE.GetProjectPath(), filename);
+			FILE * pFile = fopen (buff,"rb");
 
-			if( !SceneSystem::File2JSON( ResourceBase::m_JSONStream, buff ) ) return nullptr;
-			vertex_source = (char*)ResourceBase::m_JSONStream.c_str();
+			fseek(pFile, 0L, SEEK_END); 
+			auto fileSize = ftell(pFile); 
+			fseek(pFile, 0L, SEEK_SET);
+
+			vertex_source = new char[fileSize];
+			fread(vertex_source, sizeof(char), fileSize, pFile);
+
+			fclose (pFile);
 		}
 
 		vertex = glCreateShader(GL_VERTEX_SHADER);
@@ -99,8 +106,16 @@ namespace asapi
 		else
 		{
 			sprintf(buff, "%s/shaders/%s.frag.glsl", SYSTEMS::GetObject().SCENE.GetProjectPath(), filename);
-			if( !SceneSystem::File2JSON( ResourceBase::m_JSONStream, buff ) ) return nullptr;
-			fragment_source = (char*)ResourceBase::m_JSONStream.c_str();
+			FILE * pFile = fopen (buff,"rb");
+
+			fseek(pFile, 0L, SEEK_END); 
+			auto fileSize = ftell(pFile); 
+			fseek(pFile, 0L, SEEK_SET);
+
+			fragment_source = new char[fileSize];
+			fread(fragment_source, sizeof(char), fileSize, pFile);
+
+			fclose (pFile);
 		}
 
 		fragment = glCreateShader(GL_FRAGMENT_SHADER);

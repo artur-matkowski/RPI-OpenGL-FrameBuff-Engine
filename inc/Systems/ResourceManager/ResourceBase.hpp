@@ -8,8 +8,6 @@ namespace asapi
 	class ResourceBase: public object
 	{
 	protected:
-		static char  				m_JSONbuff[2048];
-		static bfu::JSONStream		m_JSONStream;
 	};
 }
 

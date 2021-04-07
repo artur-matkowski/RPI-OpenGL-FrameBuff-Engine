@@ -168,12 +168,12 @@ namespace asapi
 		resolution.x = mode_info.hdisplay; 
 	    resolution.y = mode_info.vdisplay; 
 
+	    ResizeWindowArgs resizeWindowArgs;
 
-		events.Invoke<ResizeWindowArgs>([&](ResizeWindowArgs& args) 
-	    {
-	    	args.m_width = mode_info.hdisplay; 
-	    	args.m_height = mode_info.vdisplay; 
-	    });
+    	resizeWindowArgs.m_width = mode_info.hdisplay; 
+    	resizeWindowArgs.m_height = mode_info.vdisplay; 
+
+	    p_ev_ResizeWindow->Invoke( &resizeWindowArgs );
 
 
 		#ifdef IS_EDITOR

@@ -10,7 +10,7 @@ namespace asapi
 	struct ComponentTranslatePointers
 	{
 		ComponentInterface* 				p_ComponentInterface = nullptr;
-		bfu2::SerializableClassInterface* 	p_SerializableClassInterface = nullptr;
+		bfu::SerializableClassInterface* 	p_SerializableClassInterface = nullptr;
 	};
 
 	typedef void (*InitFuncPtr)(bfu::MemBlockBase*, ComponentTranslatePointers&);

@@ -16,7 +16,7 @@ namespace asapi
 
 	using bfu::string;
 	using bfu::stream;
-	using bfu2::JSONSerializer;
+	using bfu::JSONSerializer;
 
 	struct ComponentInfo: public EntityBase<ComponentInfo>
 	{
@@ -89,8 +89,8 @@ namespace asapi
 		virtual void Dispouse();
 		virtual void DispouseAndDeallocate();
 
-		void SerializeChildren(bfu2::JSONSerializer& stream);
-		void DeserializeChildren(bfu2::JSONSerializer& stream, PrefabMemBlock* prefabMemBlock);
+		void SerializeChildren(bfu::JSONSerializer& stream);
+		void DeserializeChildren(bfu::JSONSerializer& stream, PrefabMemBlock* prefabMemBlock);
 
 		PROTECTED( void OnAttach(GameObject* newParrent) );
 		void OnDetach();

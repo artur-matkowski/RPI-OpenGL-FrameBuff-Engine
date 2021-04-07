@@ -19,8 +19,7 @@ namespace asapi
 		SharedPtr<int> 				m_selfRefCounter 	= nullptr;
 		SharedPtr<void*> 			m_buffEndPtr 		= nullptr;
 		size_t 						m_deallocatedMemory = 0;
-		bfu::SerializableVarVector<GameObject*>*		
-									m_prefabEntryVector = nullptr;
+		
 		static void* 				s_unclaimedMemPtr;
 
 		PrefabMemBlock(const char* blockName, GameObject* entryVectorOwner, size_t size);
@@ -52,9 +51,6 @@ namespace asapi
 		virtual void 	deallocate(	void* 			ptr
 									,std::size_t 	size 		) override;
 
-
-		bfu::SerializableVarVector<GameObject*>*	 
-			GetEntryVector()			{ return m_prefabEntryVector; 								}
 
 		void free()						{ *m_buffFreePtr = *m_buffStartPtr;							}
 

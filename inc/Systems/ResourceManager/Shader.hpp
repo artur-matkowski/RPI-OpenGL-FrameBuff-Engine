@@ -5,7 +5,7 @@
 
 namespace asapi
 {
-	class Shader: public ResourceBase
+	class Shader
 	{
 		uint32_t m_programID = -1;
 		Shader(uint32_t id);

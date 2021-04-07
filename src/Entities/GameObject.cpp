@@ -132,7 +132,7 @@ namespace asapi
 			auto &recreationString = v_componentsInfo[i].m_recreationString;
 			if(recreationString.size() > 0)
 			{
-				bfu2::JSONSerializer serializer( std::move( v_componentsInfo[i].m_recreationString ) );
+				bfu::JSONSerializer serializer( std::move( v_componentsInfo[i].m_recreationString ) );
 				serializer.Deserialize( v_components[i].p_SerializableClassInterface );
 				v_componentsInfo[i].m_recreationString = std::move( serializer );
 
@@ -157,7 +157,7 @@ namespace asapi
 
 			obj->m_componentTypeName.sprintf( v_components[i].p_ComponentInterface->TypeName() );
 
-			bfu2::JSONSerializer serializer( std::move( obj->m_recreationString ) );
+			bfu::JSONSerializer serializer( std::move( obj->m_recreationString ) );
 			serializer.Serialize( v_components[i].p_SerializableClassInterface );
 			obj->m_recreationString = std::move( serializer );
 		}
@@ -168,15 +168,15 @@ namespace asapi
 	}
 
 
-	void GameObject::SerializeChildren(bfu2::JSONSerializer& stream)
+	void GameObject::SerializeChildren(bfu::JSONSerializer& stream)
 	{
-		stream.Serialize( (bfu2::SerializableVector<SerializableClassInterface>*) &v_children );
+		stream.Serialize( (bfu::SerializableVector<SerializableClassInterface>*) &v_children );
 	}
-	void GameObject::DeserializeChildren(bfu2::JSONSerializer& stream, PrefabMemBlock* prefabMemBlock)
+	void GameObject::DeserializeChildren(bfu::JSONSerializer& stream, PrefabMemBlock* prefabMemBlock)
 	{
 		v_children.~SerializableVector<GameObject>();
-		new (&v_children) bfu2::SerializableVector<GameObject>( prefabMemBlock );
-		stream.Deserialize( (bfu2::SerializableVector<SerializableClassInterface>*) &v_children );
+		new (&v_children) bfu::SerializableVector<GameObject>( prefabMemBlock );
+		stream.Deserialize( (bfu::SerializableVector<SerializableClassInterface>*) &v_children );
 
 		for(int i=0; i<v_children.size(); ++i)
 		{

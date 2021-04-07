@@ -27,7 +27,7 @@ namespace asapi
 
 
 	template<class T>
-	class EntityBase: public EntityInterface, public bfu2::SerializableClassBase<T>
+	class EntityBase: public EntityInterface, public bfu::SerializableClassBase<T>
 	{
 	protected:
 		

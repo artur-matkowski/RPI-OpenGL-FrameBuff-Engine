@@ -5,7 +5,7 @@
 
 namespace asapi
 {
-	class UniqueID: public bfu2::SerializableClassBase<UniqueID>
+	class UniqueID: public bfu::SerializableClassBase<UniqueID>
 	{
 		SERIALIZABLE_VAR(UniqueID, uint64_t, m_ID);
 
