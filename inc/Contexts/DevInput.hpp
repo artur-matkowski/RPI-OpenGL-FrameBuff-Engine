@@ -25,9 +25,6 @@ namespace asapi
 		int 				m_mouseXmax = -1;
 		int 				m_mouseYmax = -1;
 
-		asapi::keycodes		m_keyCodeMap[1+(int)asapi::keycodes::unknown] = {asapi::keycodes::unknown};
-		std::map<int, asapi::mousecodes>
-							m_mouseCodeMap;
 
 		bfu::Event* 		p_ev_MouseMoveEvent = nullptr;
 		bfu::Event* 		p_ev_MouseClickEvent = nullptr;
