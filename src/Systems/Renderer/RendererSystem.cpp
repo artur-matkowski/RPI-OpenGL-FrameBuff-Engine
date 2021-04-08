@@ -65,6 +65,6 @@ namespace asapi{
 		ResizeWindowArgs* args = (ResizeWindowArgs*)data;
 
     	_this->m_resolution.x = args->m_width; 
-    	_this->m_resolution.y = args->m_height; 
+    	_this->m_resolution.y = args->m_height;
 	}
 }

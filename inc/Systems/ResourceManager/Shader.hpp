@@ -15,6 +15,8 @@ namespace asapi
 		inline void UseProgram()
 		{
 			glUseProgram(m_programID);
+			// auto e = glGetError();
+			// log::debug << "using program: " << m_programID << " " << e << std::endl;
 		}
 
 		inline uint32_t GetProgramID()

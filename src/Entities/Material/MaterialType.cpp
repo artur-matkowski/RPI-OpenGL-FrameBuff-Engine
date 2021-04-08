@@ -17,6 +17,8 @@ namespace asapi
 		{
 			delete it->second;
 		}
+		log::debug << "MaterialType::~MaterialType() " << std::endl;
+				
 	}
 
 	MaterialType::MaterialType(const char* materialName)
