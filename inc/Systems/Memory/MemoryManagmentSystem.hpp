@@ -13,7 +13,9 @@ namespace asapi
 	
 	class MemoryManagmentSystem
 	{
+	protected:
 		char buff[1024*1024*10];
+
 		StaticAllocatorMemBlock 				SystemsMemoryBlock;
 		//bfu::MallocAllocator					m_operatorNEWstatistics;
 		bfu::StdAllocatorMemBlock				m_StdAllocatorMemBlock;

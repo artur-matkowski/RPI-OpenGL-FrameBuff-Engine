@@ -4,48 +4,80 @@
 
 namespace asapi
 {	
-	struct
-	{
-		const char *vertex_source =
-			"#version 100\n"
-			"precision mediump float;\n"
-			"attribute vec4 position;\n"
-			"attribute vec4 color;\n"
-			"attribute vec2 texCoord;\n"
-			"uniform vec3 offset;\n"
-			"uniform mat4 modelViewMat;\n"
-			"\n"
-			"varying vec4 vcolor;\n"
-			"varying vec2 UV;\n"
-			"\n"
-			"void main()\n"
-			"{\n"
-			"  gl_Position = modelViewMat * position;\n"
-			"  UV = texCoord;\n"
-			"}\n";
+#define VERTEX_SOURCE  \
+			"#version 100\n" \
+			"precision mediump float;\n" \
+			"attribute vec4 position;\n" \
+			"attribute vec4 color;\n" \
+			"attribute vec2 texCoord;\n" \
+			"uniform vec3 offset;\n" \
+			"uniform mat4 modelViewMat;\n" \
+			"\n" \
+			"varying vec4 vcolor;\n" \
+			"varying vec2 UV;\n" \
+			"\n" \
+			"void main()\n" \
+			"{\n" \
+			"  gl_Position = modelViewMat * position;\n" \
+			"  UV = texCoord;\n" \
+			"}\n"
 
-		const char *fragment_source =
-			"#version 100\n"
-			"precision mediump float;\n"
-			"varying vec4 vcolor;\n"
-			"varying vec2 UV;\n"
-			"uniform sampler2D texUnit;\n"
-			"\n"
-			"void main()\n"
-			"{\n"
-			"  gl_FragColor = vec4(1.0);\n"
-			"}\n";
-	}static debugShaderSrc;
+#define FRAGMENT_SOURCE  \
+			"#version 100\n" \
+			"precision mediump float;\n" \
+			"varying vec4 vcolor;\n" \
+			"varying vec2 UV;\n" \
+			"uniform sampler2D texUnit;\n" \
+			"\n" \
+			"void main()\n" \
+			"{\n" \
+			"  gl_FragColor = vec4(1.0);\n" \
+			"}\n"
+
+
+	GLuint LoadSingleShader(const char* source, GLenum shaderType, const char* filename)
+	{
+		char b_source[1024*1024*1];
+		GLint isCompiled = GL_FALSE;
+
+		GLuint shader = glCreateShader(shaderType);
+
+		glShaderSource(shader, 1, &source, NULL);
+		glCompileShader(shader);
+		glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
+		if(isCompiled == GL_FALSE)
+		{
+			GLint maxLength = 0;
+			glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
+
+			// The maxLength includes the NULL character
+			std::vector<GLchar> errorLog(maxLength);
+			glGetShaderInfoLog(shader, maxLength, &maxLength, &errorLog[0]);
+
+			std::string str(&errorLog[0]);
+
+			log::error << "In shader: " << filename << "\n\t" << str << std::endl;
+
+			// Provide the infolog in whatever manor you deem best.
+			// Exit with failure.
+			glDeleteShader(shader); // Don't leak the shader.
+			return 0;
+		}
+
+		return shader;
+	}
 
 	Shader::Shader(uint32_t id)
 		:m_programID(id)
 	{}
 
-	Shader* Shader::LoadShader(const char* filename)
+	Shader* Shader::LoadShaderFromFile(const char* filename)
 	{
-		char buff[1024];
-		char* vertex_source = 0;
-		char* fragment_source = 0;
+		char buff[1024*1];
+		char b_vertex_source[1024*1024*1];
+		char b_fragment_source[1024*1024*1];
+		char* vertex_source = nullptr;
+		char* fragment_source = nullptr;
 		GLuint vertex, fragment;
 		GLint isCompiled = GL_FALSE;
 		uint32_t programID = -1;
@@ -53,35 +85,19 @@ namespace asapi
 		bool isDebug = strcmp(filename, "debug") == 0;
 		
 
-		if( isDebug )
-		{
-			vertex_source = (char*)debugShaderSrc.vertex_source;
-		}
-		else
-		{
-			sprintf(buff, "%s/shaders/%s.vert.glsl", SYSTEMS::GetObject().SCENE.GetProjectPath(), filename);
+		sprintf(buff, "%s/shaders/%s.vert.glsl", SYSTEMS::GetObject().SCENE.GetProjectPath(), filename);
 
-			FILE * pFile = nullptr;
-			uint32_t fileSize = 0;
+		FILE * pFile = nullptr;
+		long int fileSize = 0;
 
-			SYSTEMS::IO::OpenFile(&pFile, &fileSize, buff);
-			vertex_source = new char[fileSize+1];
-			SYSTEMS::IO::ReadFile(pFile, vertex_source, fileSize);
-			vertex_source[fileSize] = '\0';
-			SYSTEMS::IO::CloseFile(pFile);
-
-			// FILE * pFile = fopen (buff,"rb");
-
-			// fseek(pFile, 0L, SEEK_END); 
-			// auto fileSize = ftell(pFile); 
-			// fseek(pFile, 0L, SEEK_SET);
-
-			// vertex_source = new char[fileSize+1];
-			// fread(vertex_source, sizeof(char), fileSize, pFile);
-			// vertex_source[fileSize] = '\0';
-
-			// fclose (pFile);
-		}
+		SYSTEMS::IO::OpenFile(&pFile, &fileSize, buff);
+		if( fileSize==-1 )
+			return nullptr;
+		vertex_source = b_vertex_source;
+		SYSTEMS::IO::ReadFile(pFile, vertex_source, fileSize);
+		vertex_source[fileSize] = '\0';
+		SYSTEMS::IO::CloseFile(pFile);
+		
 
 		vertex = glCreateShader(GL_VERTEX_SHADER);
 
@@ -99,7 +115,7 @@ namespace asapi
 
 			std::string str(&errorLog[0]);
 
-			log::error << str << std::endl;
+			log::error << "In vertex shader: " << buff << "\n\t" << str << std::endl;
 
 			// Provide the infolog in whatever manor you deem best.
 			// Exit with failure.
@@ -110,36 +126,19 @@ namespace asapi
 
 
 
-		if( isDebug )
-		{
-			fragment_source = (char*)debugShaderSrc.fragment_source;
-		}
-		else
-		{
-			sprintf(buff, "%s/shaders/%s.frag.glsl", SYSTEMS::GetObject().SCENE.GetProjectPath(), filename);
+		sprintf(buff, "%s/shaders/%s.frag.glsl", SYSTEMS::GetObject().SCENE.GetProjectPath(), filename);
 
-			FILE * pFile = nullptr;
-			uint32_t fileSize = 0;
+		pFile = nullptr;
+		fileSize = 0;
 
-			SYSTEMS::IO::OpenFile(&pFile, &fileSize, buff);
-			fragment_source = new char[fileSize+1];
-			SYSTEMS::IO::ReadFile(pFile, fragment_source, fileSize);
-			fragment_source[fileSize] = '\0';
-			SYSTEMS::IO::CloseFile(pFile);
-
-
-			// FILE * pFile = fopen (buff,"rb");
-
-			// fseek(pFile, 0L, SEEK_END); 
-			// auto fileSize = ftell(pFile); 
-			// fseek(pFile, 0L, SEEK_SET);
-
-			// fragment_source = new char[fileSize+1];
-			// fread(fragment_source, sizeof(char), fileSize, pFile);
-			// fragment_source[fileSize] = '\0';
-
-			// fclose (pFile);
-		}
+		SYSTEMS::IO::OpenFile(&pFile, &fileSize, buff);
+		if( fileSize==-1 )
+			return nullptr;
+		fragment_source = b_fragment_source;
+		SYSTEMS::IO::ReadFile(pFile, fragment_source, fileSize);
+		fragment_source[fileSize] = '\0';
+		SYSTEMS::IO::CloseFile(pFile);
+	
 
 		fragment = glCreateShader(GL_FRAGMENT_SHADER);
 		glShaderSource(fragment, 1, &fragment_source, NULL);
@@ -157,13 +156,75 @@ namespace asapi
 
 			std::string str(&errorLog[0]);
 
-			log::error << str << std::endl;
+			log::error << "In fragment shader: " << buff << "\n\t" << str << std::endl;
 
 			// Provide the infolog in whatever manor you deem best.
 			// Exit with failure.
 			glDeleteShader(fragment); // Don't leak the shader.
 			return nullptr;
 		}
+
+
+
+		programID = glCreateProgram();
+
+		glAttachShader(programID, vertex);
+		glAttachShader(programID, fragment);
+		
+		glBindAttribLocation(programID, 0, "position");
+		glBindAttribLocation(programID, 1, "color");
+		glBindAttribLocation(programID, 2, "texCoord");
+
+		glLinkProgram(programID);
+
+		glGetProgramiv(programID, GL_LINK_STATUS, &isCompiled);
+		if(isCompiled == GL_FALSE)
+		{
+			GLint maxLength = 0;
+			glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &maxLength);
+
+			// The maxLength includes the NULL character
+			std::vector<GLchar> errorLog(maxLength);
+			glGetProgramInfoLog(programID, maxLength, &maxLength, &errorLog[0]);
+
+			std::string str(&errorLog[0]);
+
+			log::error << "In shader linking: " << buff << "\t\n" << str << std::endl;
+
+			// Provide the infolog in whatever manor you deem best.
+			// Exit with failure.
+			glDeleteProgram(programID); // Don't leak the shader.
+			return nullptr;
+		}
+
+		// Always detach shaders after a successful link.
+		glDetachShader(programID, vertex);
+		glDetachShader(programID, fragment);
+
+		ret = new Shader(programID);
+		
+		glDeleteShader(vertex);
+		glDeleteShader(fragment);
+
+		return ret;
+	}
+
+	Shader* Shader::LoadShaderFromSource(const char* vertex_source, const char* fragment_source, const char* filename)
+	{
+		GLuint vertex, fragment;
+		GLint isCompiled = GL_FALSE;
+		uint32_t programID = -1;
+		Shader* ret = nullptr;
+		
+
+		vertex = LoadSingleShader(vertex_source, GL_VERTEX_SHADER, filename);
+		if(vertex==0)
+			return nullptr;
+
+
+		fragment = LoadSingleShader(fragment_source, GL_FRAGMENT_SHADER, filename);
+		if(fragment==0)
+			return nullptr;
 
 
 
@@ -208,27 +269,11 @@ namespace asapi
 		glDeleteShader(fragment);
 
 		return ret;
-/*
-		glGetProgramiv(programID, GL_VALIDATE_STATUS, &isCompiled);
-		if(isCompiled == GL_FALSE)
-		{
-			GLint maxLength = 0;
-			glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &maxLength);
+	}
 
-			// The maxLength includes the NULL character
-			std::vector<GLchar> errorLog(maxLength);
-			glGetProgramInfoLog(programID, maxLength, &maxLength, &errorLog[0]);
-
-			std::string str(&errorLog[0]);
-
-			log::error << str << std::endl;
-
-			// Provide the infolog in whatever manor you deem best.
-			// Exit with failure.
-			glDeleteProgram(programID); // Don't leak the shader.
-			return;
-		}
-*/
+	Shader* Shader::LoadShaderFailSave()
+	{
+		return LoadShaderFromSource(VERTEX_SOURCE, FRAGMENT_SOURCE, "-failsave shader-");
 	}
 
 	Shader::~Shader()

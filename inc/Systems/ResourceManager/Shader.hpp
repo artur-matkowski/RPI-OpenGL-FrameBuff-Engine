@@ -9,6 +9,8 @@ namespace asapi
 	{
 		uint32_t m_programID = -1;
 		Shader(uint32_t id);
+
+		static Shader* LoadShaderFromSource(const char* vertex_source, const char* fragment_source, const char* filename);
 	public:
 		~Shader();
 
@@ -24,7 +26,8 @@ namespace asapi
 			return m_programID;
 		}
 		
-		static Shader* LoadShader(const char* filename);
+		static Shader* LoadShaderFromFile(const char* filename);
+		static Shader* LoadShaderFailSave();
 	};
 }
 
