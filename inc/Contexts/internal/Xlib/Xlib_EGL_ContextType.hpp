@@ -48,6 +48,7 @@ namespace asapi
 		EGLWindow* 						m_mainEglWindow = 0;
 		Window 							m_focusedWindow;
 		PostRenderCallback 				p_postRenderCallback = nullptr;
+		float deltaTime 				= 0.0f;
 
 
 

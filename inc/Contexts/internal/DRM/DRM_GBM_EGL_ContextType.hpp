@@ -15,6 +15,7 @@ namespace asapi
 		devinput 	m_devinput;
 		glm::ivec2 	resolution;
 
+		float deltaTime 				= 0.0f;
 
 		void RenderGUIAndSwapBuffer();
 	public:

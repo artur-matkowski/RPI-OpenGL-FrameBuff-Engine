@@ -251,6 +251,8 @@ namespace asapi
 		static Uniform<glm::mat4>* uCursorPos = (Uniform<glm::mat4>*)cursorMaterial.GetUniformPtr("modelViewMat");
 		static SYSTEMS& system = SYSTEMS::GetObject();
 
+		io.DeltaTime = deltaTime;
+
 		// glViewport(0, 0, m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y);
 		// glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		// glClear(GL_COLOR_BUFFER_BIT);
@@ -294,13 +296,8 @@ namespace asapi
 		RendererSystem& rendererSystem = system.RENDERER;
 		auto frameEnd =  std::chrono::system_clock::now();
 		auto frameStart = std::chrono::high_resolution_clock::now();
-		bool show_demo_window = true;
-		bool show_another_window = true;
 		std::chrono::duration<double> frameDeltaTime( m_frameDelay );
 
-		#ifdef IS_EDITOR
-     	ImGuiIO& io = ImGui::GetIO(); (void)io;
-		#endif
 
 		std::chrono::duration<double> elapsed;
 
@@ -326,15 +323,11 @@ namespace asapi
 			std::chrono::duration<double> calculationTime = std::chrono::high_resolution_clock::now() - frameStart;
 			std::chrono::duration<double> diffToFrameEnd = m_frameDelay - calculationTime;
 
-
-		    system.EDITOR.SetDeltaTime( (float)frameDeltaTime.count() );
-
-			//log::debug << "frameDeltaTime: "  << (float)frameDeltaTime.count() << "s, Calculation time: " << (float)calculationTime.count() << "s" << std::endl;
-
 			std::this_thread::sleep_for(diffToFrameEnd);
 
 			frameEnd = std::chrono::high_resolution_clock::now();
 			frameDeltaTime = frameEnd - frameStart;
+			deltaTime = (float)frameDeltaTime.count();
 		}
 		
 	}
