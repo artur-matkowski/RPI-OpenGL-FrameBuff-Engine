@@ -10,15 +10,12 @@ namespace asapi
 		uint32_t m_programID = -1;
 		Shader(uint32_t id);
 
-		static Shader* LoadShaderFromSource(const char* vertex_source, const char* fragment_source, const char* filename);
 	public:
 		~Shader();
 
 		inline void UseProgram()
 		{
 			glUseProgram(m_programID);
-			// auto e = glGetError();
-			// log::debug << "using program: " << m_programID << " " << e << std::endl;
 		}
 
 		inline uint32_t GetProgramID()
@@ -26,6 +23,7 @@ namespace asapi
 			return m_programID;
 		}
 		
+		static Shader* LoadShaderFromSource(const char* vertex_source, const char* fragment_source, const char* filename);
 		static Shader* LoadShaderFromFile(const char* filename);
 		static Shader* LoadShaderFailSave();
 	};
