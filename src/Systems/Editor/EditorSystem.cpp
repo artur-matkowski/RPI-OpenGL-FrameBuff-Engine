@@ -3,6 +3,7 @@
 #include "StatsWindow.hpp"
 #include "HierarchyWindow.hpp"
 #include "ComponentEditorWindow.hpp"
+#include "imgui.h"      // IMGUI_IMPL_API
 
 #include "Systems.hpp"
 
@@ -22,8 +23,6 @@ namespace asapi
 	void EditorSystem::Init()
 	{
 		StatsWindow::Init();
-
-		io = &ImGui::GetIO(); (void)*io;
 	}
 
 
