@@ -22,8 +22,6 @@ namespace asapi
 
 		void Init( bfu::MemBlockBase* mBlock, const int argc, const char** argv );
 
-		void OnGUI();
-
 		bfu::JSONSerializer& GetJSONSerializer();
 
 		static bool File2JSON(bfu::JSONSerializer&, const char* path);

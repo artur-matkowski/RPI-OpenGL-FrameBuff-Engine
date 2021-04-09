@@ -10,6 +10,8 @@ namespace asapi
 		EditorSystem();
 		~EditorSystem();
 
+		void Init();
+
 		void OnGUI();
 		
 	};

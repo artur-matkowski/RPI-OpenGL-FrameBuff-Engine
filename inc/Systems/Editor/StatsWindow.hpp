@@ -26,8 +26,9 @@ namespace asapi
 			m_lastOpenProject1 = "...none";
 			m_lastOpenProject0 = "...none";
 
-			SceneSystem::File2JSON(this, ".persistance.json");
 		}
+
+
 
 		~Persistance()
 		{}
@@ -48,7 +49,7 @@ namespace asapi
 	class StatsWindow
 	{
 		static char 	m_openedProjectPath[2048];
-		static Persistance* persistance;
+		static Persistance persistance;
 
 		#ifdef IS_EDITOR
 		static void drawFileGui(const std::string& dummyDlgKey);
@@ -60,8 +61,7 @@ namespace asapi
 
 		static void Init()
 		{
-			persistance = SYSTEMS::ALLOCATE<Persistance>(1);
-			new (persistance) Persistance();
+			SceneSystem::File2JSON(&persistance, ".persistance.json");			
 		}
 
 		static bool OpenProject(const char* path);

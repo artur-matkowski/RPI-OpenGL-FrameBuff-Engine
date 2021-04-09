@@ -40,7 +40,7 @@ namespace asapi
 		void cloaseApp();
 		void mainAppLoop();
 
-		static SYSTEMS& GetObject()
+		inline static SYSTEMS& GetObject()
 		{
 			return _this;
 		}
@@ -51,7 +51,22 @@ namespace asapi
 		void OnGUI();
 		#endif
 
-	
+		struct IO
+		{
+			static void OpenFile(FILE** ret_pFile, uint32_t* ret_filesize, char* filename);
+			static inline void ReadFile(FILE* pFile, char* buff, uint32_t buffsize)
+			{ 
+				fread(buff, sizeof(char), buffsize, pFile); 
+			}
+			static inline void WriteFile(FILE* pFile, char* buff, uint32_t buffsize)
+			{
+				fwrite(buff, 1, buffsize, pFile);
+			}
+			static inline void CloseFile(FILE* pFile)
+			{ 
+				fclose (pFile); 
+			}
+		};
 	};
 
 }

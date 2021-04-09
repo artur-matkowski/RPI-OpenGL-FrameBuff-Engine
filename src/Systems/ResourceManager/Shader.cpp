@@ -60,16 +60,27 @@ namespace asapi
 		else
 		{
 			sprintf(buff, "%s/shaders/%s.vert.glsl", SYSTEMS::GetObject().SCENE.GetProjectPath(), filename);
-			FILE * pFile = fopen (buff,"rb");
 
-			fseek(pFile, 0L, SEEK_END); 
-			auto fileSize = ftell(pFile); 
-			fseek(pFile, 0L, SEEK_SET);
+			FILE * pFile = nullptr;
+			uint32_t fileSize = 0;
 
-			vertex_source = new char[fileSize];
-			fread(vertex_source, sizeof(char), fileSize, pFile);
+			SYSTEMS::IO::OpenFile(&pFile, &fileSize, buff);
+			vertex_source = new char[fileSize+1];
+			SYSTEMS::IO::ReadFile(pFile, vertex_source, fileSize);
+			vertex_source[fileSize] = '\0';
+			SYSTEMS::IO::CloseFile(pFile);
 
-			fclose (pFile);
+			// FILE * pFile = fopen (buff,"rb");
+
+			// fseek(pFile, 0L, SEEK_END); 
+			// auto fileSize = ftell(pFile); 
+			// fseek(pFile, 0L, SEEK_SET);
+
+			// vertex_source = new char[fileSize+1];
+			// fread(vertex_source, sizeof(char), fileSize, pFile);
+			// vertex_source[fileSize] = '\0';
+
+			// fclose (pFile);
 		}
 
 		vertex = glCreateShader(GL_VERTEX_SHADER);
@@ -106,16 +117,28 @@ namespace asapi
 		else
 		{
 			sprintf(buff, "%s/shaders/%s.frag.glsl", SYSTEMS::GetObject().SCENE.GetProjectPath(), filename);
-			FILE * pFile = fopen (buff,"rb");
 
-			fseek(pFile, 0L, SEEK_END); 
-			auto fileSize = ftell(pFile); 
-			fseek(pFile, 0L, SEEK_SET);
+			FILE * pFile = nullptr;
+			uint32_t fileSize = 0;
 
-			fragment_source = new char[fileSize];
-			fread(fragment_source, sizeof(char), fileSize, pFile);
+			SYSTEMS::IO::OpenFile(&pFile, &fileSize, buff);
+			fragment_source = new char[fileSize+1];
+			SYSTEMS::IO::ReadFile(pFile, fragment_source, fileSize);
+			fragment_source[fileSize] = '\0';
+			SYSTEMS::IO::CloseFile(pFile);
 
-			fclose (pFile);
+
+			// FILE * pFile = fopen (buff,"rb");
+
+			// fseek(pFile, 0L, SEEK_END); 
+			// auto fileSize = ftell(pFile); 
+			// fseek(pFile, 0L, SEEK_SET);
+
+			// fragment_source = new char[fileSize+1];
+			// fread(fragment_source, sizeof(char), fileSize, pFile);
+			// fragment_source[fileSize] = '\0';
+
+			// fclose (pFile);
 		}
 
 		fragment = glCreateShader(GL_FRAGMENT_SHADER);

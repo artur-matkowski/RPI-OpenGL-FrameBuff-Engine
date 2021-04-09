@@ -1,8 +1,6 @@
 #include "Systems.hpp"
 #include <stdlib.h>
 #include <time.h>
-#include "ImguiXlib.hpp"
-#include "StatsWindow.hpp"
 
 #define HELP \
 "Parameters accepted by this executable:"\
@@ -78,8 +76,6 @@ namespace asapi
 			log::info << "GL renderer: " << glGetString(GL_RENDERER) << std::endl;
 			log::info << "GL shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 		);
-
-		StatsWindow::Init();
 		#endif
 
 		return true;
@@ -107,12 +103,16 @@ namespace asapi
 	#ifdef IS_EDITOR
 	void SYSTEMS::OnGUI()
 	{
-        ImGui::ShowDemoWindow(0);
-
-	    //MEMORY.OnGUI();		// rendered in EDITOR
-	    SCENE.OnGUI();
-
 	    EDITOR.OnGUI();
 	}
 	#endif
+
+	void SYSTEMS::IO::OpenFile(FILE** ret_pFile, uint32_t* ret_filesize, char* filename)
+	{
+		*ret_pFile = fopen (filename,"rb");
+
+		fseek(*ret_pFile, 0L, SEEK_END); 
+		*ret_filesize = ftell(*ret_pFile); 
+		fseek(*ret_pFile, 0L, SEEK_SET);
+	}
 }

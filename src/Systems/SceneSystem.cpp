@@ -51,11 +51,6 @@ namespace asapi
 		#endif
 	}
 
-	void SceneSystem::OnGUI()
-	{
-		
-	}
-
 
 	bfu::JSONSerializer& SceneSystem::GetJSONSerializer()
 	{
