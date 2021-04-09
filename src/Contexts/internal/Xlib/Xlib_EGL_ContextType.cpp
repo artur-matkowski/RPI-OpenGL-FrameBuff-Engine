@@ -844,6 +844,7 @@ namespace asapi
 
 	void Xlib_EGL_ContextType::RenderGUIAndSwapBuffer()
 	{
+		#ifdef IS_EDITOR
      	static ImGuiIO& io = ImGui::GetIO(); (void)io;
      	static Mesh 			cursorMesh( glm::vec2(m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y) );
 		static MaterialType 	cursorMaterial("debug");
@@ -899,7 +900,8 @@ namespace asapi
 		//auto e = glGetError();
 		//log::debug << "cursorMesh.Render(); "  << mousePos.x << " " << mousePos.y << std::endl;
 
-		SwapBuffer();				
+		SwapBuffer();	
+		#endif			
 	}
 
 	void Xlib_EGL_ContextType::MainLoop()

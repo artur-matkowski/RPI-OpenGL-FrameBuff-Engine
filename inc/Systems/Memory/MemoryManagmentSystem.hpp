@@ -35,7 +35,9 @@ namespace asapi
 			:SystemsMemoryBlock(buff, 1024*1024*10, "Systems Memory Block")
 			,v_memBlocks(bfu::custom_allocator<bfu::MemBlockBase*>(&SystemsMemoryBlock))
 			,m_StdAllocatorMemBlock("Late [operator new()]\nallocator (malloc)")
+			#ifdef IS_EDITOR
 			,m_GUIAllocatorMemBlock("GUI Allocator (malloc)")
+			#endif
 			,m_JSONAllocator("JSON Allocator (malloc)")
 		{
 			v_memBlocks.reserve(16);

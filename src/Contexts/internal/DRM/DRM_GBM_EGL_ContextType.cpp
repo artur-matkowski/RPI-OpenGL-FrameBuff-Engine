@@ -245,6 +245,7 @@ namespace asapi
 
 	void DRM_GBM_EGL_ContextType::RenderGUIAndSwapBuffer()
 	{
+		#ifdef IS_EDITOR
      	static ImGuiIO& io = ImGui::GetIO(); (void)io;
      	static Mesh 			cursorMesh( glm::vec2(resolution.x, resolution.y) );
 		static MaterialType 	cursorMaterial("debug");
@@ -287,6 +288,7 @@ namespace asapi
 		cursorMesh.Render();
 
 		SwapBuffer();
+	    #endif
 	}
 
 	void DRM_GBM_EGL_ContextType::MainLoop()
