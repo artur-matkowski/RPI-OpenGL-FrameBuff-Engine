@@ -37,6 +37,8 @@ namespace asapi
 		};
 	protected:
 
+		typedef void (Xlib_EGL_ContextType::*PostRenderCallback)(void);
+
 		int renderTgt = 0;
 
 
@@ -45,6 +47,7 @@ namespace asapi
 		std::vector<struct EGLWindow> 	m_eglWindows;
 		EGLWindow* 						m_mainEglWindow = 0;
 		Window 							m_focusedWindow;
+		PostRenderCallback 				p_postRenderCallback = nullptr;
 
 
 
@@ -53,11 +56,9 @@ namespace asapi
 		void RenderImGui();
 		#endif
 
-
-		void InitMaps();
-
 		bool DisplayOpen(void);
 
+		void RenderGUIAndSwapBuffer();
 	public:
 
 		Xlib_EGL_ContextType()
@@ -76,6 +77,7 @@ namespace asapi
 		virtual void MainLoop() override;
 		virtual void HandleContextEvents() override;
 		virtual void CleanUp() override;
+		virtual void GetResolution(uint16_t* X, uint16_t* Y) override;
 
 		inline Display* GetDisplay()
 		{

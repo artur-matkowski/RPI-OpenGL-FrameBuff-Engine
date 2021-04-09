@@ -176,6 +176,8 @@ namespace asapi
 	    p_ev_ResizeWindow->Invoke( &resizeWindowArgs );
 
 
+		p_postRenderCallback = &DRM_GBM_EGL_ContextType::SwapBuffer;
+
 		#ifdef IS_EDITOR
 	    // Setup Dear ImGui context
 	    IMGUI_CHECKVERSION();
@@ -203,6 +205,9 @@ namespace asapi
 	    // Setup Platform/Renderer backends
 	    ImGui_ImplDRM_InitForOpenGL(&display, &context, &egl_surface, resolution);
 	    ImGui_ImplOpenGL3_Init();
+
+		p_postRenderCallback = &DRM_GBM_EGL_ContextType::RenderGUIAndSwapBuffer;
+
 	    #endif
 	}
 	
@@ -232,6 +237,55 @@ namespace asapi
 	{
 		m_devinput.poolEvents();
 	}
+	void DRM_GBM_EGL_ContextType::GetResolution(uint16_t* X, uint16_t* Y)
+	{
+		*X = (uint16_t)resolution.x;
+		*Y = (uint16_t)resolution.y;
+	}
+
+	void DRM_GBM_EGL_ContextType::RenderGUIAndSwapBuffer()
+	{
+     	static ImGuiIO& io = ImGui::GetIO(); (void)io;
+     	static Mesh 			cursorMesh( glm::vec2(resolution.x, resolution.y) );
+		static MaterialType 	cursorMaterial("debug");
+		static Uniform<glm::mat4>* uCursorPos = (Uniform<glm::mat4>*)cursorMaterial.GetUniformPtr("modelViewMat");
+		static SYSTEMS& system = SYSTEMS::GetObject();
+
+		// glViewport(0, 0, m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y);
+		// glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		// glClear(GL_COLOR_BUFFER_BIT);
+		
+        // Start the Dear ImGui frame
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplDRM_NewFrame();
+
+
+		system.EDITOR.OnGUI();  
+
+		// Rendering
+        ImGui::Render();
+
+        // If you are using this code with non-legacy OpenGL header/contexts (which you should not, prefer using imgui_impl_opengl3.cpp!!),
+        // you may need to backup/reset/restore current shader using the commented lines below.
+        //GLint last_program;
+        //glGetIntegerv(GL_CURRENT_PROGRAM, &last_program);
+        //glUseProgram(0);
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        //glUseProgram(last_program);		   
+
+		
+		cursorMaterial.BindMaterial();
+		int x,y;
+		m_devinput.GetCursorPos(x, y);
+		glm::mat4 cursorModelView = glm::mat4(1.0);
+		cursorModelView[3] = glm::vec4( x/(float)resolution.x * 2.0f - 1.0f
+										,1.0f - y/(float)resolution.y * 2.0f
+										, 0.0f, 1.0f);
+		uCursorPos->SetUniform(cursorModelView);
+		cursorMesh.Render();
+
+		SwapBuffer();
+	}
 
 	void DRM_GBM_EGL_ContextType::MainLoop()
 	{
@@ -245,9 +299,8 @@ namespace asapi
 		std::chrono::duration<double> frameDeltaTime( m_frameDelay );
 
 		#ifdef IS_EDITOR
-    	//ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
      	ImGuiIO& io = ImGui::GetIO(); (void)io;
-		Mesh 			cursorMesh( glm::vec2(resolution.x, resolution.y) );
+     	Mesh 			cursorMesh( glm::vec2(resolution.x, resolution.y) );
 		MaterialType 	cursorMaterial("debug");
 		Uniform<glm::mat4>* uCursorPos = (Uniform<glm::mat4>*)cursorMaterial.GetUniformPtr("modelViewMat");
 		#endif
@@ -271,47 +324,7 @@ namespace asapi
 
 				rendererSystem.Render();
 
-				#ifdef IS_EDITOR
-
-				// glViewport(0, 0, m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y);
-				// glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-				// glClear(GL_COLOR_BUFFER_BIT);
-				
-		        // Start the Dear ImGui frame
-		        ImGui_ImplOpenGL3_NewFrame();
-		        ImGui_ImplDRM_NewFrame();
-        		ImGui::NewFrame();
-
-        
-
-				system.OnGUI();
-
-		        // Rendering
-		        ImGui::Render();
-
-		        // If you are using this code with non-legacy OpenGL header/contexts (which you should not, prefer using imgui_impl_opengl3.cpp!!),
-		        // you may need to backup/reset/restore current shader using the commented lines below.
-		        //GLint last_program;
-		        //glGetIntegerv(GL_CURRENT_PROGRAM, &last_program);
-		        //glUseProgram(0);
-		        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-		        //glUseProgram(last_program);		   
-
-				
-				cursorMaterial.BindMaterial();
-				int x,y;
-				m_devinput.GetCursorPos(x, y);
-				glm::mat4 cursorModelView = glm::mat4(1.0);
-				cursorModelView[3] = glm::vec4( x/(float)resolution.x * 2.0f - 1.0f
-												,1.0f - y/(float)resolution.y * 2.0f
-												, 0.0f, 1.0f);
-				uCursorPos->SetUniform(cursorModelView);
-				cursorMesh.Render();
-
-     	        
-				#endif
-
-				SwapBuffer();
+				(this->*p_postRenderCallback)();
 			}
 
 

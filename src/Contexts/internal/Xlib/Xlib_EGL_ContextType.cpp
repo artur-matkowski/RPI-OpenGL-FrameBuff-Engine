@@ -531,8 +531,6 @@ namespace asapi
 
 		m_eglWindows.reserve(8);
 
-		InitMaps();
-
 		DisplayOpen();
 		/*
 		if (!display) {
@@ -578,6 +576,8 @@ namespace asapi
 	    });
 */
 
+		p_postRenderCallback = &Xlib_EGL_ContextType::SwapBuffer;
+
 		#ifdef IS_EDITOR
 	    // Setup Dear ImGui context
 	    IMGUI_CHECKVERSION();
@@ -605,6 +605,10 @@ namespace asapi
 	    // Setup Platform/Renderer backends
 	    ImGui_ImplXlib_InitForOpenGL(m_mainEglWindow, this);
 	    ImGui_ImplOpenGL3_Init();
+
+
+		p_postRenderCallback = &Xlib_EGL_ContextType::RenderGUIAndSwapBuffer;
+
 	    #endif
 	}
 	
@@ -632,6 +636,11 @@ namespace asapi
 	void Xlib_EGL_ContextType::CleanUp()
 	{
 		m_isRunning = false;
+	}
+	void Xlib_EGL_ContextType::GetResolution(uint16_t* X, uint16_t* Y)
+	{
+		*X = (uint16_t)m_mainEglWindow->resolution.x;
+		*Y = (uint16_t)m_mainEglWindow->resolution.y;
 	}
 
 
@@ -833,6 +842,65 @@ namespace asapi
 	}
 	#endif
 
+	void Xlib_EGL_ContextType::RenderGUIAndSwapBuffer()
+	{
+
+     	static ImGuiIO& io = ImGui::GetIO(); (void)io;
+     	static Mesh 			cursorMesh( glm::vec2(m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y) );
+		static MaterialType 	cursorMaterial("debug");
+		static Uniform<glm::mat4>* uCursorPos = (Uniform<glm::mat4>*)cursorMaterial.GetUniformPtr("modelViewMat");
+		static SYSTEMS& system = SYSTEMS::GetObject();
+
+		// glViewport(0, 0, m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y);
+		// glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		// glClear(GL_COLOR_BUFFER_BIT);
+
+		// Start the Dear ImGui frame
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplXlib_NewFrame();
+
+
+		system.EDITOR.OnGUI();
+
+		// Rendering
+		ImGui::Render();
+
+		// If you are using this code with non-legacy OpenGL header/contexts (which you should not, prefer using imgui_impl_opengl3.cpp!!),
+		// you may need to backup/reset/restore current shader using the commented lines below.
+		//GLint last_program;
+		//glGetIntegerv(GL_CURRENT_PROGRAM, &last_program);
+		//glUseProgram(0);
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		//glUseProgram(last_program);
+
+		// Update and Render additional Platform Windows
+		// (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
+		//  For this specific demo app we could also call glfwMakeContextCurrent(window) directly)
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+		    //GLFWwindow* backup_current_context = glfwGetCurrentContext();
+		    ImGui::UpdatePlatformWindows();
+		    ImGui::RenderPlatformWindowsDefault();
+		    eglMakeCurrent(m_XDisplay.egl, m_mainEglWindow->surface, m_mainEglWindow->surface, m_mainEglWindow->context);
+		}
+
+
+		glm::vec2 mousePos(m_mainEglWindow->cursorPos.x / (float)m_mainEglWindow->resolution.x*2.0f - 1.0f
+			, 1.0f - m_mainEglWindow->cursorPos.y / (float)m_mainEglWindow->resolution.y*2.0f );
+
+
+
+		cursorMaterial.BindMaterial();
+		glm::mat4 cursorModelView = glm::mat4(1.0);
+		cursorModelView[3] = glm::vec4(mousePos.x, mousePos.y, 0.0f, 1.0f);
+		uCursorPos->SetUniform(cursorModelView);
+		cursorMesh.Render();
+		//auto e = glGetError();
+		//log::debug << "cursorMesh.Render(); "  << mousePos.x << " " << mousePos.y << std::endl;
+
+		SwapBuffer();				
+	}
+
 	void Xlib_EGL_ContextType::MainLoop()
 	{
 		SYSTEMS& system = SYSTEMS::GetObject();
@@ -846,8 +914,7 @@ namespace asapi
 		std::chrono::duration<double> frameDeltaTime( m_frameDelay );
 
 		#ifdef IS_EDITOR
-    	//ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-     	ImGuiIO& io = ImGui::GetIO(); (void)io;    	
+     	ImGuiIO& io = ImGui::GetIO(); (void)io;
      	Mesh 			cursorMesh( glm::vec2(m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y) );
 		MaterialType 	cursorMaterial("debug");
 		Uniform<glm::mat4>* uCursorPos = (Uniform<glm::mat4>*)cursorMaterial.GetUniformPtr("modelViewMat");
@@ -877,60 +944,8 @@ namespace asapi
 
 				rendererSystem.Render();
 
-
-				#ifdef IS_EDITOR
-
-
-				// glViewport(0, 0, m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y);
-				// glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-				// glClear(GL_COLOR_BUFFER_BIT);
 				
-		        // Start the Dear ImGui frame
-		        ImGui_ImplOpenGL3_NewFrame();
-		        ImGui_ImplXlib_NewFrame();
-       			ImGui::NewFrame();
-
-
-				system.OnGUI();
-
-		        // Rendering
-		        ImGui::Render();
-
-		        // If you are using this code with non-legacy OpenGL header/contexts (which you should not, prefer using imgui_impl_opengl3.cpp!!),
-		        // you may need to backup/reset/restore current shader using the commented lines below.
-		        //GLint last_program;
-		        //glGetIntegerv(GL_CURRENT_PROGRAM, &last_program);
-		        //glUseProgram(0);
-		        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-		        //glUseProgram(last_program);
-
-		        // Update and Render additional Platform Windows
-		        // (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
-		        //  For this specific demo app we could also call glfwMakeContextCurrent(window) directly)
-		        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-		        {
-		            //GLFWwindow* backup_current_context = glfwGetCurrentContext();
-		            ImGui::UpdatePlatformWindows();
-		            ImGui::RenderPlatformWindowsDefault();
-		            eglMakeCurrent(m_XDisplay.egl, m_mainEglWindow->surface, m_mainEglWindow->surface, m_mainEglWindow->context);
-		        }
-		        
-
-				glm::vec2 mousePos(m_mainEglWindow->cursorPos.x / (float)m_mainEglWindow->resolution.x*2.0f - 1.0f
-					, 1.0f - m_mainEglWindow->cursorPos.y / (float)m_mainEglWindow->resolution.y*2.0f );
-
-
-
-				cursorMaterial.BindMaterial();
-				glm::mat4 cursorModelView = glm::mat4(1.0);
-				cursorModelView[3] = glm::vec4(mousePos.x, mousePos.y, 0.0f, 1.0f);
-				uCursorPos->SetUniform(cursorModelView);
-				cursorMesh.Render();
-				//auto e = glGetError();
-				//log::debug << "cursorMesh.Render(); "  << mousePos.x << " " << mousePos.y << std::endl;
-				#endif
-				
-				SwapBuffer();
+				(this->*p_postRenderCallback)();
 			}
 
 
@@ -955,13 +970,6 @@ namespace asapi
 			frameEnd = std::chrono::high_resolution_clock::now();
 			frameDeltaTime = frameEnd - frameStart;
 		}		
-	}
-
-
-	void Xlib_EGL_ContextType::InitMaps()
-	{
-
-
 	}
 }
 

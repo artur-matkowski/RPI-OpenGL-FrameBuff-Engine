@@ -62,6 +62,7 @@ namespace asapi
 		virtual void MainLoop() = 0;
 		virtual void HandleContextEvents() = 0;
 		virtual void CleanUp() = 0;
+		virtual void GetResolution(uint16_t* X, uint16_t* Y) = 0;
 		void SetFPS(double FPS);
 
 /*

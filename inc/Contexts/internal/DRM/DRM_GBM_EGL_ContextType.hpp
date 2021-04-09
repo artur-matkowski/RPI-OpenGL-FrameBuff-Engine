@@ -9,8 +9,14 @@ namespace asapi
 
 	class DRM_GBM_EGL_ContextType: public ContextBase
 	{
+		typedef void (DRM_GBM_EGL_ContextType::*PostRenderCallback)(void);
+		PostRenderCallback 				p_postRenderCallback = nullptr;
+
 		devinput 	m_devinput;
 		glm::ivec2 	resolution;
+
+
+		void RenderGUIAndSwapBuffer();
 	public:
 
 		DRM_GBM_EGL_ContextType()
@@ -22,6 +28,7 @@ namespace asapi
 		virtual void MainLoop() override;
 		virtual void HandleContextEvents() override;
 		virtual void CleanUp() override;
+		virtual void GetResolution(uint16_t* X, uint16_t* Y) override;
 	};
 
 }

@@ -70,13 +70,13 @@ namespace asapi
 		PRIFILE( SCENE.Init( SYSTEMS::SYSTEMS_ALLOCATOR, argc, argv ); );
 
 		#ifdef IS_EDITOR
-		PRIFILE (
+			EDITOR.Init();
 			log::info << "GL initialized with version: " << glGetString(GL_VERSION) << std::endl;
 			log::info << "GL vendor: " << glGetString(GL_VENDOR) << std::endl;
 			log::info << "GL renderer: " << glGetString(GL_RENDERER) << std::endl;
 			log::info << "GL shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
-		);
 		#endif
+
 
 		return true;
 
@@ -100,12 +100,6 @@ namespace asapi
 		#endif
 	}
 
-	#ifdef IS_EDITOR
-	void SYSTEMS::OnGUI()
-	{
-	    EDITOR.OnGUI();
-	}
-	#endif
 
 	void SYSTEMS::IO::OpenFile(FILE** ret_pFile, long int* ret_filesize, char* filename)
 	{

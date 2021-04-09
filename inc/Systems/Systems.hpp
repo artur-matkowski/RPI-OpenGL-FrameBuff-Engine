@@ -47,9 +47,6 @@ namespace asapi
 
 
 		
-		#ifdef IS_EDITOR
-		void OnGUI();
-		#endif
 
 		struct IO
 		{

@@ -1,9 +1,10 @@
 #include "EditorSystem.hpp"
 #ifdef IS_EDITOR
-#include "imgui.h"      // IMGUI_IMPL_API
 #include "StatsWindow.hpp"
 #include "HierarchyWindow.hpp"
 #include "ComponentEditorWindow.hpp"
+
+#include "Systems.hpp"
 
 namespace asapi
 {
@@ -26,6 +27,8 @@ namespace asapi
 
 	void EditorSystem::OnGUI()
 	{
+       	ImGui::NewFrame();
+
         ImGui::ShowDemoWindow(0);
 
 		StatsWindow::OnGUI();
