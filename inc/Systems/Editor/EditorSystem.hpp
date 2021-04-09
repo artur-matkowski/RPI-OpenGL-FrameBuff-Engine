@@ -11,6 +11,7 @@ namespace asapi
 {
 	class EditorSystem
 	{
+		ImGuiIO* io = nullptr;
 	public:
 		EditorSystem();
 		~EditorSystem();
@@ -18,6 +19,8 @@ namespace asapi
 		void Init();
 
 		void OnGUI();
+
+		inline void SetDeltaTime(float dt){ io->DeltaTime = dt; }
 		
 	};
 }

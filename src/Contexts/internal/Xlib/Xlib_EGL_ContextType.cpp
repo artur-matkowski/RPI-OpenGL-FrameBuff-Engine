@@ -844,7 +844,6 @@ namespace asapi
 
 	void Xlib_EGL_ContextType::RenderGUIAndSwapBuffer()
 	{
-
      	static ImGuiIO& io = ImGui::GetIO(); (void)io;
      	static Mesh 			cursorMesh( glm::vec2(m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y) );
 		static MaterialType 	cursorMaterial("debug");
@@ -915,14 +914,9 @@ namespace asapi
 
 		#ifdef IS_EDITOR
      	ImGuiIO& io = ImGui::GetIO(); (void)io;
-     	Mesh 			cursorMesh( glm::vec2(m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y) );
-		MaterialType 	cursorMaterial("debug");
-		Uniform<glm::mat4>* uCursorPos = (Uniform<glm::mat4>*)cursorMaterial.GetUniformPtr("modelViewMat");
 		#endif
 
 		std::chrono::duration<double> elapsed;
-
-		GLfloat rotation = 0.0;
 
 
 		while(m_isRunning)
@@ -933,10 +927,6 @@ namespace asapi
 
 			//TODO frame stuff
 			{
-				rotation += frameDeltaTime.count();
-
-				//eglMakeCurrent(m_XDisplay.egl, m_mainEglWindow->surface, m_mainEglWindow->surface, m_mainEglWindow->context);
-
 		        glViewport(0, 0, m_mainEglWindow->resolution.x, m_mainEglWindow->resolution.y);
 				//log::debug << "m_mainEglWindow->resolution; "  << m_mainEglWindow->resolution.x << " " << m_mainEglWindow->resolution.y << std::endl;
 				glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -956,12 +946,7 @@ namespace asapi
 			std::chrono::duration<double> diffToFrameEnd = m_frameDelay - calculationTime;
 
 
-			#ifdef IS_EDITOR
-		    // Setup time step
-		    io.DeltaTime = (float)frameDeltaTime.count();
-			#endif
-
-
+		    system.EDITOR.SetDeltaTime( (float)frameDeltaTime.count() );
 
 			//log::debug << "frameDeltaTime: "  << (float)frameDeltaTime.count() << "s, Calculation time: " << (float)calculationTime.count() << "s" << std::endl;
 

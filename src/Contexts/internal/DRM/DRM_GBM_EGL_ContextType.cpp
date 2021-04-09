@@ -300,14 +300,10 @@ namespace asapi
 
 		#ifdef IS_EDITOR
      	ImGuiIO& io = ImGui::GetIO(); (void)io;
-     	Mesh 			cursorMesh( glm::vec2(resolution.x, resolution.y) );
-		MaterialType 	cursorMaterial("debug");
-		Uniform<glm::mat4>* uCursorPos = (Uniform<glm::mat4>*)cursorMaterial.GetUniformPtr("modelViewMat");
 		#endif
 
 		std::chrono::duration<double> elapsed;
 
-		GLfloat rotation = 0.0;
 		while(m_isRunning)
 		{
 			frameStart = std::chrono::high_resolution_clock::now();
@@ -316,8 +312,6 @@ namespace asapi
 
 			//TODO frame stuff
 			{
-				rotation += frameDeltaTime.count();
-
 				glViewport(0, 0, resolution.x, resolution.y);
 				glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 				glClear(GL_COLOR_BUFFER_BIT);
@@ -333,16 +327,14 @@ namespace asapi
 			std::chrono::duration<double> diffToFrameEnd = m_frameDelay - calculationTime;
 
 
-			#ifdef IS_EDITOR
-		    // Setup time step
-		    io.DeltaTime = (float)frameDeltaTime.count();
-			#endif
+		    system.EDITOR.SetDeltaTime( (float)frameDeltaTime.count() );
 
 			//log::debug << "frameDeltaTime: "  << (float)frameDeltaTime.count() << "s, Calculation time: " << (float)calculationTime.count() << "s" << std::endl;
 
 			std::this_thread::sleep_for(diffToFrameEnd);
 
 			frameEnd = std::chrono::high_resolution_clock::now();
+			frameDeltaTime = frameEnd - frameStart;
 		}
 		
 	}

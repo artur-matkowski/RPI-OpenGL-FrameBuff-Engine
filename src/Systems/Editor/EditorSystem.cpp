@@ -22,6 +22,8 @@ namespace asapi
 	void EditorSystem::Init()
 	{
 		StatsWindow::Init();
+
+		io = &ImGui::GetIO(); (void)*io;
 	}
 
 
