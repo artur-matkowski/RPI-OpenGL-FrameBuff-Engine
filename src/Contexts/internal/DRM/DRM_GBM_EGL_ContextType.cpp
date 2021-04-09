@@ -248,8 +248,8 @@ namespace asapi
     	//ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
      	ImGuiIO& io = ImGui::GetIO(); (void)io;
 		Mesh 			cursorMesh( glm::vec2(resolution.x, resolution.y) );
-		MaterialType 	cursorMaterial("cursor");
-		Uniform<glm::vec3>* uCursorPos = (Uniform<glm::vec3>*)cursorMaterial.GetUniformPtr("offset");
+		MaterialType 	cursorMaterial("debug");
+		Uniform<glm::mat4>* uCursorPos = (Uniform<glm::mat4>*)cursorMaterial.GetUniformPtr("modelViewMat");
 		#endif
 
 		std::chrono::duration<double> elapsed;
@@ -301,9 +301,13 @@ namespace asapi
 				cursorMaterial.BindMaterial();
 				int x,y;
 				m_devinput.GetCursorPos(x, y);
-				uCursorPos->SetUniform(glm::vec3( x/(float)resolution.x * 2.0f - 1.0f,
-												 1.0f - y/(float)resolution.y * 2.0f, 0.0f));
+				glm::mat4 cursorModelView = glm::mat4(1.0);
+				cursorModelView[3] = glm::vec4( x/(float)resolution.x * 2.0f - 1.0f
+												,1.0f - y/(float)resolution.y * 2.0f
+												, 0.0f, 1.0f);
+				uCursorPos->SetUniform(cursorModelView);
 				cursorMesh.Render();
+
      	        
 				#endif
 
