@@ -27,17 +27,13 @@ namespace asapi
 
 	GameObject::GameObject( bfu::MemBlockBase* mBlock )
 		:EntityBase(mBlock)
-		//,m_myName("m_myName", this, mBlock)
-		//,v_componentsInfo("v_componentsInfo", this, SYSTEMS::JSON_ALLOCATOR ) //it is only usefull when de/serializing JSON
+		,m_myName(mBlock)
+		,forwardMemBlock(mBlock)
+		,v_children(&forwardMemBlock)
+		,v_componentsInfo(mBlock)
 		,v_components(mBlock)
 	{
-		// m_myName.resize(GAMEOBJECT_MAX_NAME_LENGTH, '\0');
 		m_myName = "GameObject";
-
-		// v_children = (bfu::SerializableVarVector<GameObject*>*)mBlock->allocate( 1
-		// 								, sizeof(bfu::SerializableVarVector<GameObject*>)
-		// 				 				, alignof(bfu::SerializableVarVector<GameObject*>) );
-		// new (v_children) bfu::SerializableVarVector<GameObject*>("v_children", this, mBlock);
 
 		AddComponent( typeid(asapi::Transform3D).hash_code() );
 	}
@@ -49,16 +45,7 @@ namespace asapi
 	}
 	void GameObject::ClearChildren()
 	{
-		// if(v_children==nullptr)
-		// 	return;
-
-		// for(auto it = v_children->begin(); 
-		// 	it != v_children->end();
-		// 	++it)
-		// {
-		// 	(*it)->DispouseAndDeallocate();
-		// }
-		// v_children->clear();
+		v_children.clear();
 	}
 	void GameObject::ClearComponents()
 	{
@@ -174,8 +161,8 @@ namespace asapi
 	}
 	void GameObject::DeserializeChildren(bfu::JSONSerializer& stream, PrefabMemBlock* prefabMemBlock)
 	{
-		v_children.~SerializableVector<GameObject>();
-		new (&v_children) bfu::SerializableVector<GameObject>( prefabMemBlock );
+		forwardMemBlock = prefabMemBlock;
+
 		stream.Deserialize( (bfu::SerializableVector<SerializableClassInterface>*) &v_children );
 
 		for(int i=0; i<v_children.size(); ++i)

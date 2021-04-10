@@ -53,6 +53,7 @@ namespace asapi
 		SERIALIZABLE_OBJ_VEC(GameObject, GameObject, v_children );
 		// If you change name of v_children you need to change { if( loader!=0 && strcmp(it->first.c_str(), "v_children")==0 ) }
 
+		bfu::ForwardAllocatorMemBlock forwardMemBlock;
 		SERIALIZABLE_OBJ_VEC( GameObject, ComponentInfo, v_componentsInfo );
 
 		std::vector<ComponentTranslatePointers, bfu::custom_allocator<ComponentTranslatePointers>> 

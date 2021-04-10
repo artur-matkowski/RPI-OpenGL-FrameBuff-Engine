@@ -65,6 +65,8 @@ namespace asapi
 		buff.sprintf( "prefab allocator: %lld"
 						, m_prefabID.ID() );
 
+		m_owner->ClearChildren();
+
 		if(m_prefabMemBlock!=0) SYSTEMS::GetObject().MEMORY.ReleasePrefabMemBlock(m_prefabMemBlock);
 
 		m_prefabMemBlock = (asapi::PrefabMemBlock*)SYSTEMS::GetObject().MEMORY.RequestPrefabMemBlock(buff.c_str());
