@@ -99,6 +99,9 @@ namespace asapi
 		{
 			return &m_JSONAllocator;
 		}
+
+		bfu::MemBlockBase* RequestPrefabMemBlock(const char* memblockDesc);
+		void ReleasePrefabMemBlock(bfu::MemBlockBase* memblock);
 	};
 
 
@@ -106,6 +109,7 @@ namespace asapi
 
 #define ALLOCATE 				GetObject().MEMORY.allocateSystemInBlock
 #define DEALLOCATE 				GetObject().MEMORY.deallocateSystemInBlock
+#define DEALLOCATE_GLOBAL(x)	bfu::MemBlockBase::DeallocateUnknown(x)
 #define SYSTEMS_ALLOCATOR 		GetObject().MEMORY.GetSystemsAllocator()
 #define STD_ALLOCATOR 			GetObject().MEMORY.GetStdAllocator()
 #ifdef IS_EDITOR

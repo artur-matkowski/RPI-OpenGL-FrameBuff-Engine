@@ -39,7 +39,7 @@ namespace asapi
 		buff.sprintf( "prefab allocator: %lld"
 						, m_prefabID.ID() );
 
-		m_prefabMemBlock = PrefabMemBlock::InitNoFile( buff.c_str(), m_owner , 0);
+		m_prefabMemBlock = (asapi::PrefabMemBlock*)SYSTEMS::GetObject().MEMORY.RequestPrefabMemBlock(buff.c_str());
 
 		return m_prefabMemBlock;
 	}
@@ -65,9 +65,9 @@ namespace asapi
 		buff.sprintf( "prefab allocator: %lld"
 						, m_prefabID.ID() );
 
-		if(m_prefabMemBlock!=0) m_prefabMemBlock->ForceDispouse();
+		if(m_prefabMemBlock!=0) SYSTEMS::GetObject().MEMORY.ReleasePrefabMemBlock(m_prefabMemBlock);
 
-		m_prefabMemBlock = PrefabMemBlock::InitNoFile( buff.c_str(), m_owner, 1024*1024*1);
+		m_prefabMemBlock = (asapi::PrefabMemBlock*)SYSTEMS::GetObject().MEMORY.RequestPrefabMemBlock(buff.c_str());
 
 		buff.clear();
 		buff.sprintf( "%s/json/%lld.json"

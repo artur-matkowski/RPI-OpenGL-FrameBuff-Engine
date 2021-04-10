@@ -35,6 +35,34 @@ namespace asapi
             }
         }
     }
+    bfu::MemBlockBase* MemoryManagmentSystem::RequestPrefabMemBlock(const char* memblockDesc)
+    {
+        bfu::MemBlockBase* ret = nullptr;
+
+        for(int i=0; i<v_memBlocks.size(); ++i)
+        {
+            if( strcmp(v_memBlocks[i]->GetDescription(), memblockDesc)==0 )
+            {
+                ret = v_memBlocks[i];
+                break;
+            }
+        }
+
+        if(ret == nullptr)
+        {
+            ret = (bfu::MemBlockBase*)SystemsMemoryBlock.allocate(1, sizeof(bfu::StdPreAllocatedMemBlock), alignof(bfu::StdPreAllocatedMemBlock) );
+            new (ret) bfu::StdPreAllocatedMemBlock(1024*1024*10, memblockDesc);
+        }
+
+        RegisterMemBlock(ret);
+
+        return ret;
+    }
+    void MemoryManagmentSystem::ReleasePrefabMemBlock(bfu::MemBlockBase* memBlock)
+    {
+        UnRegisterMemBlock(memBlock);
+        DEALLOCATE_GLOBAL(memBlock);
+    }
 
     #ifdef IS_EDITOR
 	void MemoryManagmentSystem::OnGUI()
