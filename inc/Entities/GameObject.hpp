@@ -42,7 +42,6 @@ namespace asapi
 	class GameObject: public EntityBase<GameObject>
 	{
 		friend bfu::ConditionalBuilder;
-
 		
 
 	protected:
@@ -114,10 +113,10 @@ namespace asapi
 		inline Transform3D* GetTransform3D()			{ return p_myTransform;			}
 		inline GameObject* GetParent()					{ return p_parent; 				}
 
+		inline int GetComponentsCount()					{ return v_components.size(); 	}
+		inline ComponentTranslatePointers* GetComponent(int i)	
+														{ return &v_components[i]; 	}
 
-		#ifdef IS_EDITOR
-		void OnGUI();
-		#endif
 	};
 }
 

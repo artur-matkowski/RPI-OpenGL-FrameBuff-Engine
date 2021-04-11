@@ -7,8 +7,6 @@ namespace asapi
 {
 	TypeInfo 	a_typeInfo[TYPE_INFO_CAPACITY];
 	int 		i_typeInfoCount = 0;
-	ComponentInterface* 
-				p_forRemoval = 0;
 
 
 
@@ -68,36 +66,12 @@ namespace asapi
 	ComponentInterface::ComponentInterface(bfu::MemBlockBase* mBlock)
 	{};
 
+
 	#ifdef IS_EDITOR
-
-	void ComponentInterface::OnGUI_NameAndVirtual()
-	{
-		ImGui::LabelText( "Component", this->TypeName() ); 
-		ImGui::SameLine();
-		ImGui::PushItemWidth(-(ImGui::GetWindowContentRegionWidth() - ImGui::CalcItemWidth()));
-		ImGui::PushID( this );
-		if( ImGui::Button("Remove Component") )
-		{
-			p_forRemoval = this;
-		}
-		ImGui::PopID();
-		ImGui::PopItemWidth();
-
-		OnGUI();
-	}
-
 	void ComponentInterface::OnGUI()
 	{
 
 	}
-
 	#endif
 
-	void ComponentInterface::RemovedMarkedComponent()
-	{
-		if( p_forRemoval!=0 ){
-			p_forRemoval->m_owner->RemoveComponent( p_forRemoval );
-			p_forRemoval = 0;
-		}
-	}
 }

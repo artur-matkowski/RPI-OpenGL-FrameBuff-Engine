@@ -276,19 +276,4 @@ namespace asapi
 	}
 
 
-	#ifdef IS_EDITOR
-	void GameObject::OnGUI()
-	{
-		ImGui::Spacing();
-		ImGui::Text( GetName() );
-
-		for(int i=0; i<v_components.size(); ++i)
-		{
-			ImGui::Spacing();
-			ImGui::Separator();
-			ImGui::Spacing();
-			v_components[i].p_ComponentInterface->OnGUI_NameAndVirtual();
-		}
-	}
-	#endif
 }

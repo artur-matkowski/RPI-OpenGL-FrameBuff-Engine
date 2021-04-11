@@ -48,7 +48,6 @@ namespace asapi
 		}
 
 		#ifdef IS_EDITOR
-		void OnGUI_NameAndVirtual();
 		virtual void OnGUI();
 		#endif
 
@@ -64,7 +63,7 @@ namespace asapi
 			return "ComponentInterface";
 		}
 
-		static void RemovedMarkedComponent();
+		inline GameObject* GetOwner()		{ return m_owner; 		}
 	};
 }
 

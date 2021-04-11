@@ -68,6 +68,38 @@ namespace asapi
 		}
 	}
 
+	ComponentInterface* p_forRemoval = nullptr;
+	void ComponentEditorWindow::OnGUI(ComponentInterface* obj)
+	{
+		ImGui::LabelText( "Component", obj->TypeName() ); 
+		ImGui::SameLine();
+		ImGui::PushItemWidth(-(ImGui::GetWindowContentRegionWidth() - ImGui::CalcItemWidth()));
+		ImGui::PushID( obj );
+		if( ImGui::Button("Remove Component") )
+		{
+			p_forRemoval = obj;
+		}
+		ImGui::PopID();
+		ImGui::PopItemWidth();
+
+		obj->OnGUI();
+	}
+
+	void ComponentEditorWindow::OnGUI(GameObject* obj)
+	{
+		ImGui::Spacing();
+		ImGui::Text( obj->GetName() );
+
+		for(int i=0; i<obj->GetComponentsCount(); ++i)
+		{
+			ImGui::Spacing();
+			ImGui::Separator();
+			ImGui::Spacing();
+			//obj->GetComponent(i)->p_ComponentInterface->OnGUI_NameAndVirtual();
+			OnGUI( obj->GetComponent(i)->p_ComponentInterface );
+		}
+	}
+
 	void ComponentEditorWindow::OnGUI()
 	{
 		static ComponentEditorWindow _this;
@@ -77,7 +109,7 @@ namespace asapi
 
 		if( _selected!=0 )
 		{
-			_selected->OnGUI();
+			OnGUI(_selected);
 
 			ImGui::Spacing();
 			ImGui::Separator();
@@ -95,7 +127,10 @@ namespace asapi
 
 	    ImGui::End();
 
-	    ComponentInterface::RemovedMarkedComponent();
+	    if( p_forRemoval!=0 ){
+			p_forRemoval->GetOwner()->RemoveComponent( p_forRemoval );
+			p_forRemoval = 0;
+		}
 	}
 }
 
