@@ -17,7 +17,8 @@ namespace asapi
 		asapi::keycodes			m_keyCodeMap[1+(int)asapi::keycodes::unknown] = {asapi::keycodes::unknown};
 		const int				m_mouseButtons = std::max({BTN_LEFT, BTN_RIGHT, BTN_MIDDLE, BTN_BACK, BTN_FORWARD});
 		asapi::mousecodes		m_mouseCodeMap[1+std::max({BTN_LEFT, BTN_RIGHT, BTN_MIDDLE, BTN_BACK, BTN_FORWARD})] = {asapi::mousecodes::unknown};
-
+		char keycodes2char[255] = {0};
+		
 		constexpr KeyMapsDRM()
 		{
 		   	m_mouseCodeMap[ BTN_LEFT ]					= asapi::mousecodes::snapi_left;
@@ -275,6 +276,74 @@ namespace asapi
 			m_keyCodeMap[ KEY_WIMAX ]					= asapi::keycodes::snapi_wimax;
 			m_keyCodeMap[ KEY_RFKILL ]					= asapi::keycodes::snapi_rfkill;
 			m_keyCodeMap[ KEY_MICMUTE ]					= asapi::keycodes::snapi_micmute;
+
+
+			keycodes2char[ (int) asapi::keycodes::snapi_esc ]						= (char)27; //escape
+			keycodes2char[ (int) asapi::keycodes::snapi_1 ]						= '1';
+			keycodes2char[ (int) asapi::keycodes::snapi_2 ]						= '2';
+			keycodes2char[ (int) asapi::keycodes::snapi_3 ]						= '3';
+			keycodes2char[ (int) asapi::keycodes::snapi_4 ]						= '4';
+			keycodes2char[ (int) asapi::keycodes::snapi_5 ]						= '5';
+			keycodes2char[ (int) asapi::keycodes::snapi_6 ]						= '6';
+			keycodes2char[ (int) asapi::keycodes::snapi_7 ]						= '7';
+			keycodes2char[ (int) asapi::keycodes::snapi_8 ]						= '8';
+			keycodes2char[ (int) asapi::keycodes::snapi_9 ]						= '9';
+			keycodes2char[ (int) asapi::keycodes::snapi_0 ]						= '0';
+			keycodes2char[ (int) asapi::keycodes::snapi_minus ]					= '-';
+			keycodes2char[ (int) asapi::keycodes::snapi_equal ]					= '=';
+			keycodes2char[ (int) asapi::keycodes::snapi_backspace ]				= (char)8; //backspace
+			keycodes2char[ (int) asapi::keycodes::snapi_q ]						= 'q';
+			keycodes2char[ (int) asapi::keycodes::snapi_w ]						= 'w';
+			keycodes2char[ (int) asapi::keycodes::snapi_e ]						= 'e';
+			keycodes2char[ (int) asapi::keycodes::snapi_r ]						= 'r';
+			keycodes2char[ (int) asapi::keycodes::snapi_t ]						= 't';
+			keycodes2char[ (int) asapi::keycodes::snapi_y ]						= 'y';
+			keycodes2char[ (int) asapi::keycodes::snapi_u ]						= 'u';
+			keycodes2char[ (int) asapi::keycodes::snapi_i ]						= 'i';
+			keycodes2char[ (int) asapi::keycodes::snapi_o ]						= 'o';
+			keycodes2char[ (int) asapi::keycodes::snapi_p ]						= 'p';
+			keycodes2char[ (int) asapi::keycodes::snapi_leftbrace ]				= '{';
+			keycodes2char[ (int) asapi::keycodes::snapi_rightbrace ]				= '}';
+			keycodes2char[ (int) asapi::keycodes::snapi_enter ]					= '\n';
+			keycodes2char[ (int) asapi::keycodes::snapi_a ]						= 'a';
+			keycodes2char[ (int) asapi::keycodes::snapi_s ]						= 's';
+			keycodes2char[ (int) asapi::keycodes::snapi_d ]						= 'd';
+			keycodes2char[ (int) asapi::keycodes::snapi_f ]						= 'f';
+			keycodes2char[ (int) asapi::keycodes::snapi_g ]						= 'g';
+			keycodes2char[ (int) asapi::keycodes::snapi_h ]						= 'h';
+			keycodes2char[ (int) asapi::keycodes::snapi_j ]						= 'j';
+			keycodes2char[ (int) asapi::keycodes::snapi_k ]						= 'k';
+			keycodes2char[ (int) asapi::keycodes::snapi_l ]						= 'l';
+			keycodes2char[ (int) asapi::keycodes::snapi_semicolon ]				= ';';
+			keycodes2char[ (int) asapi::keycodes::snapi_apostrophe ]				= '\'';
+			keycodes2char[ (int) asapi::keycodes::snapi_grave ]					= '`';
+			keycodes2char[ (int) asapi::keycodes::snapi_backslash ]				= '\\';
+			keycodes2char[ (int) asapi::keycodes::snapi_z ]						= 'z';
+			keycodes2char[ (int) asapi::keycodes::snapi_x ]						= 'x';
+			keycodes2char[ (int) asapi::keycodes::snapi_c ]						= 'c';
+			keycodes2char[ (int) asapi::keycodes::snapi_v ]						= 'v';
+			keycodes2char[ (int) asapi::keycodes::snapi_b ]						= 'b';
+			keycodes2char[ (int) asapi::keycodes::snapi_n ]						= 'n';
+			keycodes2char[ (int) asapi::keycodes::snapi_m ]						= 'm';
+			keycodes2char[ (int) asapi::keycodes::snapi_comma ]					= ',';
+			keycodes2char[ (int) asapi::keycodes::snapi_dot ]						= '.';
+			keycodes2char[ (int) asapi::keycodes::snapi_slash ]					= '/';
+			keycodes2char[ (int) asapi::keycodes::snapi_kpasterisk ]				= '*';
+			keycodes2char[ (int) asapi::keycodes::snapi_space ]					= ' ';
+			keycodes2char[ (int) asapi::keycodes::snapi_kp7 ]						= '7';
+			keycodes2char[ (int) asapi::keycodes::snapi_kp8 ]						= '8';
+			keycodes2char[ (int) asapi::keycodes::snapi_kp9 ]						= '9';
+			keycodes2char[ (int) asapi::keycodes::snapi_kpminus ]					= '-';
+			keycodes2char[ (int) asapi::keycodes::snapi_kp4 ]						= '4';
+			keycodes2char[ (int) asapi::keycodes::snapi_kp5 ]						= '5';
+			keycodes2char[ (int) asapi::keycodes::snapi_kp6 ]						= '6';
+			keycodes2char[ (int) asapi::keycodes::snapi_kpplus ]					= '+';
+			keycodes2char[ (int) asapi::keycodes::snapi_kp1 ]						= '1';
+			keycodes2char[ (int) asapi::keycodes::snapi_kp2 ]						= '2';
+			keycodes2char[ (int) asapi::keycodes::snapi_kp3 ]						= '3';
+			keycodes2char[ (int) asapi::keycodes::snapi_kp0 ]						= '0';
+			keycodes2char[ (int) asapi::keycodes::snapi_kpdot ]					= ',';
+
 		}
 	}keyMapsDRM;
 
@@ -327,6 +396,7 @@ namespace asapi
 			        		{
 						    	keyboardEvent.m_key = (int)keyMapsDRM.m_keyCodeMap[evp->code]; 
 						    	keyboardEvent.m_state = (int)state; 
+			    				keyboardEvent.m_char = (char)keyMapsDRM.keycodes2char[ keyboardEvent.m_key ];
 
 						    	p_ev_KeyboardEvent->Invoke( &keyboardEvent );
 			        		}
