@@ -27,7 +27,7 @@ namespace asapi
 	{
 		m_owner->RegisterPrefabLoaderComponent(this);
 	}
-	PrefabMemBlock* PrefabLoaderComponent::RequestPrefabMemBlock()
+	bfu::MemBlockBase* PrefabLoaderComponent::RequestPrefabMemBlock()
 	{
 		if(m_prefabMemBlock!=0) return m_prefabMemBlock;
 
@@ -38,7 +38,7 @@ namespace asapi
 		buff.sprintf( "prefab allocator: %lld"
 						, m_prefabID.ID() );
 
-		m_prefabMemBlock = (asapi::PrefabMemBlock*)SYSTEMS::GetObject().MEMORY.RequestPrefabMemBlock(buff.c_str());
+		m_prefabMemBlock = SYSTEMS::GetObject().MEMORY.RequestPrefabMemBlock(buff.c_str());
 
 		return m_prefabMemBlock;
 	}
@@ -73,7 +73,7 @@ namespace asapi
 
 		if(m_prefabMemBlock!=0) SYSTEMS::GetObject().MEMORY.ReleasePrefabMemBlock(m_prefabMemBlock);
 
-		m_prefabMemBlock = (asapi::PrefabMemBlock*)SYSTEMS::GetObject().MEMORY.RequestPrefabMemBlock(buff.c_str());
+		m_prefabMemBlock = SYSTEMS::GetObject().MEMORY.RequestPrefabMemBlock(buff.c_str());
 
 		buff.clear();
 		buff.sprintf( "%s/json/%lld.json"
@@ -104,7 +104,7 @@ namespace asapi
 	void PrefabLoaderComponent::UnLoad()
 	{
 		m_owner->ClearChildren();
-		m_prefabMemBlock->ForceDispouse();
+		SYSTEMS::GetObject().MEMORY.ReleasePrefabMemBlock( m_prefabMemBlock );
 	}
 
 	void PrefabLoaderComponent::SetPrefabID(uint64_t id)

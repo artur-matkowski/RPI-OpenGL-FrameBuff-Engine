@@ -62,7 +62,7 @@ namespace asapi
 	void GameObject::AddChild()
 	{
 		PrefabLoaderComponent* plc = GetRegionalPrefabLoader();
-		PrefabMemBlock* allocator = plc->RequestPrefabMemBlock();
+		bfu::MemBlockBase* allocator = plc->RequestPrefabMemBlock();
 
 		GameObject *newChild = (GameObject*)allocator->allocate(1, sizeof(GameObject), alignof(GameObject));
 		newChild->Init( this->GetMemBlock() );
@@ -172,7 +172,7 @@ namespace asapi
 	{
 		stream.Serialize( (bfu::SerializableVector<SerializableClassInterface>*) &v_children );
 	}
-	void GameObject::DeserializeChildren(bfu::JSONSerializer& stream, PrefabMemBlock* prefabMemBlock)
+	void GameObject::DeserializeChildren(bfu::JSONSerializer& stream, bfu::MemBlockBase* prefabMemBlock)
 	{
 		forwardMemBlock = prefabMemBlock;
 

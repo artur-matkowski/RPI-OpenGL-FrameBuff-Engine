@@ -90,7 +90,7 @@ namespace asapi
 		virtual void DispouseAndDeallocate();
 
 		void SerializeChildren(bfu::JSONSerializer& stream);
-		void DeserializeChildren(bfu::JSONSerializer& stream, PrefabMemBlock* prefabMemBlock);
+		void DeserializeChildren(bfu::JSONSerializer& stream, bfu::MemBlockBase* prefabMemBlock);
 
 		PROTECTED( void OnAttach(GameObject* newParrent) );
 		void OnDetach();

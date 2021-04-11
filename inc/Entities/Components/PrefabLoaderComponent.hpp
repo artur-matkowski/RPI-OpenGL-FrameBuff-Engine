@@ -1,7 +1,6 @@
 #ifndef H_PrefabLoaderComponent
 #define H_PrefabLoaderComponent
 #include "ComponentBase.hpp"
-#include "PrefabMemBlock.hpp"
 
 namespace asapi
 {
@@ -9,7 +8,7 @@ namespace asapi
 	{
 	protected:	
 		SERIALIZABLE_OBJ( PrefabLoaderComponent, UniqueID, m_prefabID );
-		PrefabMemBlock* 				m_prefabMemBlock = nullptr;
+		bfu::MemBlockBase* 				m_prefabMemBlock = nullptr;
 	public:
 		PrefabLoaderComponent(bfu::MemBlockBase* mBlock)
 			:ComponentBase<PrefabLoaderComponent>(mBlock)
@@ -23,7 +22,7 @@ namespace asapi
 		#endif
 
 		virtual void OnAttach() override;
-		PrefabMemBlock* RequestPrefabMemBlock();
+		bfu::MemBlockBase* RequestPrefabMemBlock();
 
 		void Save_JSON();
 		bool Load_JSON();

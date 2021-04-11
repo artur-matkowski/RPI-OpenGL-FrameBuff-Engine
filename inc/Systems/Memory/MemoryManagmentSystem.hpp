@@ -3,8 +3,6 @@
 #include <bitforge/utils/bfu.hpp>
 #include <vector>
 #include "object.hpp"
-#include "PrefabMemBlock.hpp"
-#include "StaticAllocatorMemBlock.hpp"
 
 
 namespace asapi
@@ -16,7 +14,7 @@ namespace asapi
 	protected:
 		char buff[1024*1024*10];
 
-		StaticAllocatorMemBlock 					SystemsMemoryBlock;
+		bfu::PreAllocatedMemBlock 					SystemsMemoryBlock;
 		bfu::StdAllocatorMemBlock					m_StdAllocatorMemBlock;
 
 		std::vector<bfu::MemBlockBase*, bfu::custom_allocator<bfu::MemBlockBase*>> v_memBlocks;
