@@ -5,6 +5,8 @@
 
 namespace asapi
 {
+	bfu::SerializableVector<GameObject> tmp_childCache;
+
 	bool GameObject::RegisterChild(GameObject* newChild)
 	{
 		v_children.push_back( newChild );
@@ -148,10 +150,20 @@ namespace asapi
 			serializer.Serialize( v_components[i].p_SerializableClassInterface );
 			obj->m_recreationString = std::move( serializer );
 		}
+
+		if( this->GET_COMPONENT(PrefabLoaderComponent)!=nullptr )
+		{
+			tmp_childCache = std::move(v_children);
+		}
 	}
 	void GameObject::PostSerializationCallback()
 	{
 		v_componentsInfo.clear();
+
+		if( this->GET_COMPONENT(PrefabLoaderComponent)!=nullptr )
+		{
+			v_children = std::move(tmp_childCache);
+		}
 	}
 
 
