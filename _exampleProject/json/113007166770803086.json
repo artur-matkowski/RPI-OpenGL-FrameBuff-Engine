@@ -1,0 +1,12 @@
+[{
+"m_myName": "GameObject", 
+"v_children": [], 
+"v_componentsInfo": [{
+"m_componentTypeName": "asapi::Transform3D", 
+"m_recreationString": "{
+\"m_position\": [0.000000, 0.000000, 0.000000], 
+\"m_rotation\": [0.000000, 0.000000, 0.000000], 
+\"m_scale\": [1.000000, 1.000000, 1.000000]
+}"
+}]
+}]

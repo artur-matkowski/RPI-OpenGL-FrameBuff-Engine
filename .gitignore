@@ -4,4 +4,3 @@ Logs/*
 *.gch
 vendor/lib/*
 *.ini
-*.json
