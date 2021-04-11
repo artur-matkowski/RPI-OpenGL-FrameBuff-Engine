@@ -1,12 +1,11 @@
 #include "ImguiDRM.hpp"
+#ifdef IS_EDITOR
 #include "KeyCodes.hpp"
 #include "Systems.hpp"
 #include <ctime>
 #include <ratio>
 #include <EGL/egl.h>
 //#include <GLES2/gl2.h>
-
-#ifdef IS_EDITOR
 
 namespace asapi
 {

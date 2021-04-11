@@ -1,8 +1,8 @@
 #include "HierarchyWindow.hpp"
+#ifdef IS_EDITOR
 #include "imgui.h"
 #include "Systems.hpp"
 #include "ComponentEditorWindow.hpp"
-#ifdef IS_EDITOR
 
 
 namespace asapi

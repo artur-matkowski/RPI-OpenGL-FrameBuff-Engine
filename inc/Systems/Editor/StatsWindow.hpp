@@ -1,6 +1,7 @@
 #ifndef H_StatsWindow
 #define H_StatsWindow
 #include "Systems.hpp"
+#ifdef IS_EDITOR
 
 
 namespace asapi
@@ -68,4 +69,5 @@ namespace asapi
 	};
 }
 
+#endif
 #endif

@@ -1,9 +1,9 @@
 #include "ComponentEditorWindow.hpp"
-#include "GameObject.hpp"
+#ifdef IS_EDITOR
 #include "imgui.h"
+#include "GameObject.hpp"
 #include <cstdio>
 #include <iostream>
-#ifdef IS_EDITOR
 
 namespace asapi
 {

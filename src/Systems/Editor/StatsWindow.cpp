@@ -1,4 +1,5 @@
 #include "StatsWindow.hpp"
+#ifdef IS_EDITOR
 #include "imgui.h"
 #include "ImGuiFileDialog.h"
 #include "PrefabLoaderComponent.hpp"
@@ -128,3 +129,5 @@ namespace asapi
         return true;
 	}
 }
+
+#endif

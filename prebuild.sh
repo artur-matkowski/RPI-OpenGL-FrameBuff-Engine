@@ -22,3 +22,5 @@ mkdir -p build/dbg/player
 mkdir -p build/dbg/player/obj
 mkdir -p build/dbg/player/lib
 mkdir -p vendor/lib
+mkdir -p vendor/lib/editorOnly
+mkdir -p vendor/lib/shared

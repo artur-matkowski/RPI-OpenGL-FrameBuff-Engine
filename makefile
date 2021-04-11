@@ -9,7 +9,9 @@ CPPFLAGS 	= -I/usr/include/freetype2 -I/usr/include/freetype2/freetype -DIMGUI_I
 
 INCDIR	 	= inc/
 OBJDIR	 	= obj/
-VENDOR_DIR  = vendor/lib/
+VENDOR_EDITOR_ONLY_DIR  =  vendor/lib/editorOnly/*
+VENDOR_SHARED_DIR  =  #vendor/lib/shared/*
+VENDOR_DIR = $(VENDOR_SHARED_DIR)
 INSTALLDIR	= /usr/lib/
 HEADERDIR	= /usr/include/
 
@@ -29,8 +31,6 @@ OBJECTS 	= $(OBJECTS2:%.cpp=$(OBJDIR)%.o)
 #INCLUDES += $(SOURCES:%.cpp=$(OBJDIR)%.hpp)
 
 #HEADER_DEPS += 	-I./libs/libjpeg-turbo
-HEADER_DEPS += 	-I./vendor/imgui/
-HEADER_DEPS += 	-I./vendor/ImGuiFileDialog/ImGuiFileDialog/
 HEADER_DEPS += 	-I./vendor/glm/glm/
 #DEPS 		+= 	../02_Common/01_C-Logger
 #DEPS 		+= 	../02_Common/03_UdpSocket
@@ -66,12 +66,18 @@ release-player: BUILDPATH 	= build/rel/player/
 release-player: release
 
 
-debug-editor: DEBUG_CC 	+= -DIS_EDITOR
-debug-editor: BUILDPATH 	= build/dbg/editor/
+debug-editor: DEBUG_CC 		+=  -DIS_EDITOR
+debug-editor: BUILDPATH 	 =  build/dbg/editor/
+debug-editor: HEADER_DEPS 	+= 	-I./vendor/imgui/
+debug-editor: HEADER_DEPS 	+= 	-I./vendor/ImGuiFileDialog/ImGuiFileDialog/
+debug-editor: VENDOR_DIR 	+=  $(VENDOR_EDITOR_ONLY_DIR)
 debug-editor: debug
 
-release-editor: RELEASE_CC 	+= -DIS_EDITOR
-release-editor: BUILDPATH 	= build/rel/editor/
+release-editor: RELEASE_CC 	+=  -DIS_EDITOR
+release-editor: BUILDPATH 	 =  build/rel/editor/
+release-editor: HEADER_DEPS += 	-I./vendor/imgui/
+release-editor: HEADER_DEPS += 	-I./vendor/ImGuiFileDialog/ImGuiFileDialog/
+release-editor: VENDOR_DIR 	+=  $(VENDOR_EDITOR_ONLY_DIR)
 release-editor: release
 
 ifeq ($(ARCHITECTURE),armhf)
@@ -98,9 +104,9 @@ release: $(OUT)
 
 
 $(OUT): $(SOURCES)
-	$(CC) -shared -o $(BUILDPATH)$@.so $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* $(VENDOR_DIR)* $(DEPGL) 
+	$(CC) -shared -o $(BUILDPATH)$@.so $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* $(VENDOR_DIR) $(DEPGL) 
 	@echo 
-	$(CC) -o $(BUILDPATH)$@ $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* $(VENDOR_DIR)* main.cpp  $(DEPGL) 
+	$(CC) -o $(BUILDPATH)$@ $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* $(VENDOR_DIR) main.cpp  $(DEPGL) 
 	@echo 
 
 

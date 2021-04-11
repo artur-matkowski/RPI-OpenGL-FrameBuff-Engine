@@ -1,12 +1,12 @@
 #include "ImguiXlib.hpp"
-#include "KeyCodes.hpp"
-#include "Systems.hpp"
-#include <ctime>
-#include <ratio>
 #ifdef USE_XLIB
 #include <X11/Xlib.h>
 #endif
 #ifdef IS_EDITOR
+#include "KeyCodes.hpp"
+#include "Systems.hpp"
+#include <ctime>
+#include <ratio>
 
 namespace asapi
 {

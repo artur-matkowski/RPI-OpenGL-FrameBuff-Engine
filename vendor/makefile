@@ -1,6 +1,6 @@
-CC 		  		= g++ -std=c++11  -DIMGUI_IMPL_OPENGL_ES2 
+CC 		  		= g++ -std=c++11 -O3 -DIMGUI_IMPL_OPENGL_ES2 
 ARCHITECTURE 	= $(shell dpkg --print-architecture)
-OBJDIR			= ./lib/
+OBJDIR			= ./lib/editorOnly/
 
 
 IMGUI_DIR = ./imgui/

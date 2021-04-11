@@ -1,7 +1,9 @@
 #include "ComponentInterface.hpp"
-#include "imgui.h"
 #include "GameObject.hpp"
 #include "Systems.hpp"
+#ifdef IS_EDITOR
+#include "imgui.h"
+#endif
 
 namespace asapi
 {
