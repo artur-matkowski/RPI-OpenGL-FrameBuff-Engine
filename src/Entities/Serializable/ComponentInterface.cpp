@@ -67,11 +67,7 @@ namespace asapi
 	{};
 
 
-	#ifdef IS_EDITOR
 	void ComponentInterface::OnGUI()
-	{
-
-	}
-	#endif
+	{}
 
 }

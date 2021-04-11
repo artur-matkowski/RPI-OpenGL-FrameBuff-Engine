@@ -141,7 +141,7 @@ namespace asapi
 
 		for(int i=0; i<v_components.size(); ++i)
 		{
-			ComponentInfo* obj = (ComponentInfo*) ComponentInfo::AllocateAndInit( SYSTEMS::JSON_ALLOCATOR );
+			ComponentInfo* obj = (ComponentInfo*) ComponentInfo::AllocateAndInit( bfu::StdAllocatorMemBlock::GetMemBlock() );
 			v_componentsInfo.push_back( obj );
 
 			obj->m_componentTypeName.sprintf( v_components[i].p_ComponentInterface->TypeName() );
@@ -155,6 +155,7 @@ namespace asapi
 		{
 			tmp_childCache = std::move(v_children);
 		}
+
 	}
 	void GameObject::PostSerializationCallback()
 	{

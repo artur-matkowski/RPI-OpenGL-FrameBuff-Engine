@@ -51,7 +51,6 @@ namespace asapi
 		virtual void OnGUI();
 		#endif
 
-
 		virtual void OnAttach(){};
 		virtual void OnDetach(){};
 		virtual void OnIsDirty(){};

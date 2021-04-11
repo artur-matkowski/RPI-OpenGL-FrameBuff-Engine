@@ -16,42 +16,23 @@ namespace asapi
 	protected:
 		char buff[1024*1024*10];
 
-		StaticAllocatorMemBlock 				SystemsMemoryBlock;
-		//bfu::MallocAllocator					m_operatorNEWstatistics;
-		bfu::StdAllocatorMemBlock				m_StdAllocatorMemBlock;
-		#ifdef IS_EDITOR
-		bfu::StdAllocatorMemBlock					m_GUIAllocatorMemBlock;
-		#endif
-		bfu::StdAllocatorMemBlock 					m_JSONAllocator;
+		StaticAllocatorMemBlock 					SystemsMemoryBlock;
+		bfu::StdAllocatorMemBlock					m_StdAllocatorMemBlock;
 
 		std::vector<bfu::MemBlockBase*, bfu::custom_allocator<bfu::MemBlockBase*>> v_memBlocks;
-
-		// MmappedMemBlock* 						p_memBlockCache = 0;
-		// void* 									p_memBlocksEnd = 0;
 
 	public:
 
 		MemoryManagmentSystem()
 			:SystemsMemoryBlock(buff, 1024*1024*10, "Systems Memory Block")
 			,v_memBlocks(bfu::custom_allocator<bfu::MemBlockBase*>(&SystemsMemoryBlock))
-			,m_StdAllocatorMemBlock("Late [operator new()]\nallocator (malloc)")
-			#ifdef IS_EDITOR
-			,m_GUIAllocatorMemBlock("GUI Allocator (malloc)")
-			#endif
-			,m_JSONAllocator("JSON Allocator (malloc)")
+			,m_StdAllocatorMemBlock("std allocator")
 		{
 			v_memBlocks.reserve(16);
 			v_memBlocks.push_back(&SystemsMemoryBlock);
-			//v_memBlocks.push_back(&m_operatorNEWstatistics);
 			v_memBlocks.push_back(&m_StdAllocatorMemBlock);
-			#ifdef IS_EDITOR
-			v_memBlocks.push_back(&m_GUIAllocatorMemBlock);
-			#endif
-			v_memBlocks.push_back(&m_JSONAllocator);
 
-			auto oldEarlyAllocator = SetNewAllocator(&m_StdAllocatorMemBlock);
-
-			v_memBlocks.push_back( oldEarlyAllocator );
+			SetNewAllocator(&m_StdAllocatorMemBlock);
 		}
 
 		~MemoryManagmentSystem()
@@ -84,22 +65,6 @@ namespace asapi
 			return &SystemsMemoryBlock;
 		}
 
-		inline bfu::StdAllocatorMemBlock* GetStdAllocator()
-		{
-			return &m_StdAllocatorMemBlock;
-		}
-		#ifdef IS_EDITOR
-		inline bfu::MemBlockBase* GetGUIAllocator()
-		{
-			return &m_GUIAllocatorMemBlock;
-		}
-		#endif
-
-		inline bfu::MemBlockBase* GetJSONAllocator()
-		{
-			return &m_JSONAllocator;
-		}
-
 		bfu::MemBlockBase* RequestPrefabMemBlock(const char* memblockDesc);
 		void ReleasePrefabMemBlock(bfu::MemBlockBase* memblock);
 	};
@@ -111,11 +76,6 @@ namespace asapi
 #define DEALLOCATE 				GetObject().MEMORY.deallocateSystemInBlock
 #define DEALLOCATE_GLOBAL(x)	bfu::MemBlockBase::DeallocateUnknown(x)
 #define SYSTEMS_ALLOCATOR 		GetObject().MEMORY.GetSystemsAllocator()
-#define STD_ALLOCATOR 			GetObject().MEMORY.GetStdAllocator()
-#ifdef IS_EDITOR
-#define GUI_ALLOCATOR 			GetObject().MEMORY.GetGUIAllocator()
-#endif
-#define JSON_ALLOCATOR 			GetObject().MEMORY.GetJSONAllocator()
 
 
 #endif

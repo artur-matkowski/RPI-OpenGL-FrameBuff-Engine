@@ -6,10 +6,6 @@
 
 namespace asapi
 {
-
-	char _buff[2048];
-	bfu::stream buff(_buff, 2048, SYSTEMS::STD_ALLOCATOR );
-
 	#ifdef IS_EDITOR
 	void PrefabLoaderComponent::OnGUI()
 	{
@@ -35,6 +31,9 @@ namespace asapi
 	{
 		if(m_prefabMemBlock!=0) return m_prefabMemBlock;
 
+		char _buff[256];
+		bfu::stream buff(_buff, 256 );
+
 		buff.clear();
 		buff.sprintf( "prefab allocator: %lld"
 						, m_prefabID.ID() );
@@ -46,6 +45,8 @@ namespace asapi
 
 	void PrefabLoaderComponent::Save_JSON()
 	{
+		char _buff[256];
+		bfu::stream buff(_buff, 256 );
 
 		buff.clear();
 		buff.sprintf( "%s/json/%lld.json"
@@ -61,6 +62,9 @@ namespace asapi
 	}
 	bool PrefabLoaderComponent::Load_JSON()
 	{
+		char _buff[256];
+		bfu::stream buff(_buff, 256 );
+
 		buff.clear();
 		buff.sprintf( "prefab allocator: %lld"
 						, m_prefabID.ID() );

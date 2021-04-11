@@ -51,6 +51,6 @@ namespace asapi
 
 void* operator new(std::size_t size);
 void operator delete(void* p) noexcept;
-bfu::MemBlockBase* SetNewAllocator(bfu::MemBlockBase* allocator);
+void SetNewAllocator(bfu::MemBlockBase* allocator);
 
 #endif
