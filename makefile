@@ -7,7 +7,7 @@ CC 		  	= g++ -std=c++14 -I/usr/include/libdrm -I/usr/include/bitforge/utils
 CPPFLAGS 	= -I/usr/include/freetype2 -I/usr/include/freetype2/freetype -DIMGUI_IMPL_OPENGL_ES2 
 #-DDEBUG_MEMORY_ALLOC
 
-INCDIR	 	= inc/
+INCDIR	 	= src/
 OBJDIR	 	= obj/
 VENDOR_EDITOR_ONLY_DIR  =  vendor/lib/editorOnly/*
 VENDOR_SHARED_DIR  =  #vendor/lib/shared/*
