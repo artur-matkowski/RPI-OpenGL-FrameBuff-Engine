@@ -29,7 +29,7 @@ namespace asapi
 	    EGL_NONE};
 	    
 	const EGLint contextAttribs[] = {
-		EGL_CONTEXT_MAJOR_VERSION, 0,
+		EGL_CONTEXT_MAJOR_VERSION, 2,
 		EGL_CONTEXT_MINOR_VERSION, 0,
 		//EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE, EGL_TRUE,
         EGL_NONE};
