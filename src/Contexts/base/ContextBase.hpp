@@ -24,7 +24,7 @@ namespace asapi
 	    // EGL_STENCIL_SIZE, 1,
 
 	    EGL_RENDERABLE_TYPE, 
-	    EGL_OPENGL_ES_BIT, 
+	    EGL_OPENGL_ES2_BIT, 
 	    //EGL_OPENGL_BIT,
 	    EGL_NONE};
 	    
