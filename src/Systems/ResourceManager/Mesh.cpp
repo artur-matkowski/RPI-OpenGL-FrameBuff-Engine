@@ -7,25 +7,25 @@ namespace asapi
 		static GLfloat vertices[] = {
 			 0.0f,  0.5f, 0.0f,
 			 0.5f, -0.5f, 0.0f,
-			-0.5f, -0.5f, 0.0f,
+			-0.5f, -0.5f, 0.0f
 		};
 
 		static GLfloat texCoords[] = {
 			 0.0f,  0.0f,
 			 0.0f,  1.0f,
-			 1.0f,  1.0f, 
+			 1.0f,  1.0f
 		};
 
 		static GLfloat colors[] = {
 			1.0f, 0.0f, 0.0f, 1.0f,
 			0.0f, 1.0f, 0.0f, 1.0f,
-			0.0f, 0.0f, 1.0f, 1.0f,
+			0.0f, 0.0f, 1.0f, 1.0f
 		};
 
 		static GLfloat vertexbuff[] = {
 			 0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
 			 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-			-0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 
+			-0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f
 		};
 		static GLuint indices[3] = {0,1,2};
 
