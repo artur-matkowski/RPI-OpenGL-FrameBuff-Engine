@@ -15,6 +15,7 @@ namespace asapi
 		GLuint 		vertex_buffer;
 		GLuint 		indice_array;
 
+
 	public:
 		Mesh(glm::vec2 resolution);
 		Mesh(const char*);
@@ -39,34 +40,21 @@ namespace asapi
 			glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indice_array);
 
-			// Step 2
-			// glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			// glEnableClientState(GL_NORMAL_ARRAY);
-			// glEnableClientState(GL_VERTEX_ARRAY);
 
 			// Step 3
-			// glTexCoordPointer(3, GL_FLOAT, sizeof(GLfloat)*8, (float*)(sizeof(GLfloat)*5));
-			// glNormalPointer(GL_FLOAT, sizeof(GLfloat)*8, (float*)(sizeof(GLfloat)*3));
-			// glVertexPointer(3, GL_FLOAT, sizeof(GLfloat)*8, NULL);
+		    glEnableVertexAttribArray(0);
+		    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT)*9, nullptr);
 
+		    glEnableVertexAttribArray(1);
+		    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT)*9, (void*) (sizeof(GL_FLOAT)*5) );
 
-	    glEnableVertexAttribArray(0);
-	    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT)*9, nullptr);
-
-	    glEnableVertexAttribArray(1);
-	    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT)*9, (void*) (sizeof(GL_FLOAT)*5) );
-
-	    glEnableVertexAttribArray(2);
-	    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT)*9, (void*) (sizeof(GL_FLOAT)*3) );
+		    glEnableVertexAttribArray(2);
+		    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT)*9, (void*) (sizeof(GL_FLOAT)*3) );
 
 
 			// Step 4
-			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, NULL);
+			glDrawElements(GL_TRIANGLES, m_size, GL_UNSIGNED_INT, NULL);
 
-			// Step 5
-			// glDisableClientState(GL_VERTEX_ARRAY);
-			// glDisableClientState(GL_NORMAL_ARRAY);
-			// glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		}
 		
 	};
