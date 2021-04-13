@@ -413,7 +413,7 @@ namespace asapi
 	void ImGui_ImplXlib_Shutdown()
 	{
 	    // Cleanup
-	    ImGui_ImplOpenGL3_Shutdown();
+	    ImGui_ImplOpenGL2_Shutdown();
 	    ImGui::DestroyContext();
 	}
 

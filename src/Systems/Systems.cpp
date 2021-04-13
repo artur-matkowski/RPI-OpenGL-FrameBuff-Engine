@@ -37,8 +37,10 @@ namespace asapi
 
 		if(hasDisplay)
 		{
-		    ret = SYSTEMS::ALLOCATE<Xlib_EGL_ContextType>(1);
-		    new (ret) Xlib_EGL_ContextType();
+		    // ret = SYSTEMS::ALLOCATE<Xlib_EGL_ContextType>(1);
+		    // new (ret) Xlib_EGL_ContextType();
+		    ret = SYSTEMS::ALLOCATE<GLFW_egl_Context>(1);
+		    new (ret) GLFW_egl_Context();
 		}
 		else
 		{

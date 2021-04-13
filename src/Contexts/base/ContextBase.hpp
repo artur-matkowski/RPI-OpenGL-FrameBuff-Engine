@@ -53,10 +53,6 @@ namespace asapi
 		ContextBase(bfu::MemBlockBase* memBlock = bfu::StdAllocatorMemBlock::GetMemBlock());
 		~ContextBase(){};
 
-/*
-		virtual void SwapBuffer() = 0;
-		virtual void HandleContextEvents() = 0;
-*/
 
 		virtual void Init(const int argc, const char** argv) = 0;
 		virtual void SwapBuffer() = 0;
@@ -66,11 +62,6 @@ namespace asapi
 		virtual void GetResolution(uint16_t* X, uint16_t* Y) = 0;
 		void SetFPS(double FPS);
 
-/*
-		#ifdef IS_EDITOR
-		virtual void RenderImGui(){};
-		#endif
-*/
 	};
 
 

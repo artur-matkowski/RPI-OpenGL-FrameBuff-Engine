@@ -4,6 +4,7 @@
 #include "DRM_GBM_EGL_ContextType.hpp"
 #ifdef USE_XLIB
 #include "Xlib_EGL_ContextType.hpp"
+#include "GLFW_egl_Context.hpp"
 #endif
 
 
