@@ -3,7 +3,8 @@
 #include <thread>
 #include <bitforge/utils/bfu.hpp>
 #include "Systems.hpp"
-#include "imgui_impl_opengl2.hpp"
+//#include "imgui_impl_opengl2.hpp"
+#include "backends/imgui_impl_opengl3.h"
 
 static void glfw_error_callback(int err, const char* description)
 {
@@ -390,7 +391,7 @@ namespace asapi
 
 	    // Setup Platform/Renderer backends
 	    ImGui_ImplGlfw_InitForOpenGL(window, true);
-	    ImGui_ImplOpenGL2_Init();
+	    ImGui_ImplOpenGL3_Init();
 
 
 		p_postRenderCallback = &GLFW_egl_Context::RenderGUIAndSwapBuffer;
@@ -414,14 +415,13 @@ namespace asapi
 		// glClear(GL_COLOR_BUFFER_BIT);
 
         // Start the Dear ImGui frame
-        ImGui_ImplOpenGL2_NewFrame();
+        ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
 
 		system.EDITOR.OnGUI();
 
 		// Rendering
+        //ImGui::EndFrame();
 		ImGui::Render();
 
 		// If you are using this code with non-legacy OpenGL header/contexts (which you should not, prefer using imgui_impl_opengl3.cpp!!),
@@ -429,7 +429,7 @@ namespace asapi
 		//GLint last_program;
 		//glGetIntegerv(GL_CURRENT_PROGRAM, &last_program);
 		//glUseProgram(0);
-		ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		//glUseProgram(last_program);
 
 		// Update and Render additional Platform Windows
@@ -458,7 +458,7 @@ namespace asapi
 		//auto e = glGetError();
 		//log::debug << "cursorMesh.Render(); "  << mousePos.x << " " << mousePos.y << std::endl;
 
-		SwapBuffer();	
+		glfwSwapBuffers(window);
 		#endif			
 	}
 	void GLFW_egl_Context::SwapBuffer() 
@@ -510,7 +510,7 @@ namespace asapi
 
 	void GLFW_egl_Context::HandleContextEvents() 
 	{
-
+		glfwPollEvents();
 	}
 	void GLFW_egl_Context::CleanUp() 
 	{
@@ -518,6 +518,9 @@ namespace asapi
 	}
 	void GLFW_egl_Context::GetResolution(uint16_t* X, uint16_t* Y) 
 	{
-
+		int x, y;
+		glfwGetWindowSize(window, &x, &y);
+		*X = x;
+		*Y = y;
 	}
 }
