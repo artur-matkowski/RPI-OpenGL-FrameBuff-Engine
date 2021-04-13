@@ -4,23 +4,6 @@ namespace asapi
 {
 	Mesh::Mesh(const char* filename)
 	{
-		static GLfloat vertices[] = {
-			 0.0f,  0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f,
-			-0.5f, -0.5f, 0.0f
-		};
-
-		static GLfloat texCoords[] = {
-			 0.0f,  0.0f,
-			 0.0f,  1.0f,
-			 1.0f,  1.0f
-		};
-
-		static GLfloat colors[] = {
-			1.0f, 0.0f, 0.0f, 1.0f,
-			0.0f, 1.0f, 0.0f, 1.0f,
-			0.0f, 0.0f, 1.0f, 1.0f
-		};
 
 		static GLfloat vertexbuff[] = {
 			 0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
@@ -30,10 +13,6 @@ namespace asapi
 		//	^ verts 			^ UVs 		^ colors
 
 		static GLuint indices[3] = {0, 1, 2};
-
-		m_vertices = vertices;
-		m_texCoords = texCoords;
-		m_colors = colors;
 		m_size = 3;
 
 
@@ -53,43 +32,6 @@ namespace asapi
 
 	Mesh::Mesh(glm::vec2 resolution)
 	{
-		static GLfloat verticesO[] = {
-			 0.5f, -0.1f, 0.0f,
-			 0.1f, -0.5f, 0.0f,
-			 0.0f,  0.0f, 0.0f,
-			 0.0f,  0.0f, 0.0f,
-			 1.0f, -0.9f, 0.0f,
-			 0.9f, -1.0f, 0.0f,
-		};
-		static GLfloat vertices[] = {
-			 0.5f, -0.1f, 0.0f,
-			 0.1f, -0.5f, 0.0f,
-			 0.0f,  0.0f, 0.0f,
-			 0.0f,  0.0f, 0.0f,
-			 1.0f, -0.9f, 0.0f,
-			 0.9f, -1.0f, 0.0f,
-		};
-
-		static GLfloat texCoords[] = {
-			 0.0f,  0.0f,
-			 0.0f,  1.0f,
-			 1.0f,  1.0f, 
-			 0.0f,  1.0f, 
-			 1.0f,  1.0f, 
-			 1.0f,  1.0f, 
-		};
-
-		static GLfloat colors[] = {
-			1.0f, 0.0f, 0.0f, 1.0f,
-			0.0f, 1.0f, 0.0f, 1.0f,
-			0.0f, 0.0f, 1.0f, 1.0f,
-			1.0f, 1.0f, 1.0f, 1.0f,
-			1.0f, 0.0f, 1.0f, 1.0f,
-			1.0f, 0.0f, 1.0f, 1.0f,
-		};
-
-
-
 		static GLfloat vertexbuff[] = {
 			 0.5f, -0.1f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
 			 0.1f, -0.5f, 0.0f, 0.0f,  1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
@@ -110,9 +52,6 @@ namespace asapi
 
 		static GLuint indices[6] = {0, 1, 2, 4, 5, 6};
 
-		m_vertices = vertices;
-		m_texCoords = texCoords;
-		m_colors = colors;
 		m_size = 6;
 
 		for(int i=0; i<9*6; i+=9)
