@@ -18,6 +18,14 @@ namespace asapi{
 		//m_rendererComponent = new RendererComponent( SYSTEMS::SYSTEMS_ALLOCATOR );
 		bfu::EventSystem& es = SYSTEMS::GetObject().EVENTS;
 		es.GetFastEvent("ResizeWindow")->RegisterCallback(this, RendererSystem::ResizeWidowCallback);
+
+
+		GLuint vertex_buffer;
+ 		glGenBuffers(1, &vertex_buffer);
+ 		//glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+        //glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+        //http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-9-vbo-indexing/
 	}
 
 	RendererSystem::RendererSystem()

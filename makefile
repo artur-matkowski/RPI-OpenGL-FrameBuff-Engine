@@ -67,6 +67,7 @@ release-player: release
 
 
 debug-editor: DEBUG_CC 		+=  -DIS_EDITOR
+debug-editor: DEPGL 		+=  -lglfw
 debug-editor: BUILDPATH 	 =  build/dbg/editor/
 debug-editor: HEADER_DEPS 	+= 	-I./vendor/imgui/
 debug-editor: HEADER_DEPS 	+= 	-I./vendor/ImGuiFileDialog/ImGuiFileDialog/
@@ -74,6 +75,7 @@ debug-editor: VENDOR_DIR 	+=  $(VENDOR_EDITOR_ONLY_DIR)
 debug-editor: debug
 
 release-editor: RELEASE_CC 	+=  -DIS_EDITOR
+release-editor: DEPGL 		+=  -lglfw
 release-editor: BUILDPATH 	 =  build/rel/editor/
 release-editor: HEADER_DEPS += 	-I./vendor/imgui/
 release-editor: HEADER_DEPS += 	-I./vendor/ImGuiFileDialog/ImGuiFileDialog/

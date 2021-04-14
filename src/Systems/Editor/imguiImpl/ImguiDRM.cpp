@@ -299,10 +299,10 @@ namespace asapi
 
 	static void ImGui_ImplDRM_RenderWindow(ImGuiViewport* viewport, void*)
 	{
-		Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*) viewport->PlatformUserData;
+		//Xlib_EGL_ContextType::EGLWindow* data = (Xlib_EGL_ContextType::EGLWindow*) viewport->PlatformUserData;
 
-		//eglMakeCurrent(g_Context->GetEGLDisplay(), data->surface, data->surface, data->context);
-		eglMakeCurrent( eglGetCurrentDisplay(), data->surface, data->surface, eglGetCurrentContext() );
+		//eglMakeCurrent( eglGetCurrentDisplay(), data->surface, data->surface, eglGetCurrentContext() );
+		eglMakeCurrent( eglGetCurrentDisplay(), g_Surface, g_Surface, eglGetCurrentContext() );
 	}
 
 	static void ImGui_ImplDRM_SwapBuffers(ImGuiViewport* viewport, void*)

@@ -145,7 +145,7 @@ namespace asapi
 	{
 		static HierarchyWindow _this;
 		static GameObject* go_root = &SYSTEMS::GetObject().SCENE.GetRootNode();
-		auto window_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking;
+		auto window_flags = ImGuiWindowFlags_NoCollapse ;
 		
 		ImGui::Begin("Scene Hierarhy", NULL, window_flags); 
 

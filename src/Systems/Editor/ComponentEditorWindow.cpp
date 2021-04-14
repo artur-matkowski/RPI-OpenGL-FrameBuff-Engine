@@ -103,7 +103,7 @@ namespace asapi
 	void ComponentEditorWindow::OnGUI()
 	{
 		static ComponentEditorWindow _this;
-		auto window_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking;
+		auto window_flags = ImGuiWindowFlags_NoCollapse ;
 
 		ImGui::Begin("GameObject View", NULL, window_flags); 
 
