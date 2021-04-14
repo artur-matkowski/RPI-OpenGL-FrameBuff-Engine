@@ -346,13 +346,71 @@ namespace asapi
 		}
 	}keyMapsDRM;
 
+
+	int m_mouse_posX, m_mouse_posY;
+
+	void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
+	{
+		MouseClickEvent mouseClickEvent;
+		static bfu::Event* p_ev_MouseClickEvent = SYSTEMS::GetObject().EVENTS.GetFastEvent("MouseClickEvent");
+
+		asapi::keystates state = (action != GLFW_PRESS) ? asapi::keystates::snapi_up : asapi::keystates::snapi_down;
+				        		
+		mouseClickEvent.m_Xpos = (int)m_mouse_posX;
+		mouseClickEvent.m_Ypos = (int)m_mouse_posY;
+		mouseClickEvent.m_key = (int)asapi::mousecodes::snapi_wheelY;
+		mouseClickEvent.m_state = (int)state;
+	}
+
+	void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+	{
+		MouseClickEvent mouseClickEvent;
+		static bfu::Event* p_ev_MouseClickEvent = SYSTEMS::GetObject().EVENTS.GetFastEvent("MouseClickEvent");
+				        		
+		mouseClickEvent.m_Xpos = (int)xoffset;
+		mouseClickEvent.m_Ypos = (int)yoffset;
+		mouseClickEvent.m_key = (int)asapi::mousecodes::snapi_wheelY;
+		mouseClickEvent.m_state = (int)0;
+	}
+
+	void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+	{
+		KeyboardEvent keyboardEvent;
+		static bfu::Event* p_ev_KeyboardEvent = SYSTEMS::GetObject().EVENTS.GetFastEvent("KeyboardEvent");
+
+		asapi::keystates state = (action != GLFW_PRESS) ? asapi::keystates::snapi_up : asapi::keystates::snapi_down;
+
+		keyboardEvent.m_key = (int)keyMapsDRM.m_keyCodeMap[key]; 
+		keyboardEvent.m_state = (int)state; 
+		keyboardEvent.m_char = (char)keyMapsDRM.keycodes2char[ keyboardEvent.m_key ];
+
+		p_ev_KeyboardEvent->Invoke( &keyboardEvent );
+		
+	}
+
+	void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
+	{
+		MouseMoveEvent mouseMoveEvent;
+		static bfu::Event* p_ev_MouseMoveEvent = SYSTEMS::GetObject().EVENTS.GetFastEvent("MouseMoveEvent");
+
+		m_mouse_posX = mouseMoveEvent.m_Xpos = (int)xpos;
+		m_mouse_posY = mouseMoveEvent.m_Ypos = (int)ypos;
+
+		p_ev_MouseMoveEvent->Invoke( &mouseMoveEvent );
+	}
+
+	void CharCallback(GLFWwindow* window, unsigned int c)
+	{
+		// emtpy
+	}
+
 	void GLFW_egl_Context::Init(const int argc, const char** argv) 
 	{
 		// Setup window
 		glfwSetErrorCallback(glfw_error_callback);
 		if (!glfwInit())
 			return;
-		
+
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
 		glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_EGL_CONTEXT_API);
 	    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
@@ -367,6 +425,12 @@ namespace asapi
 		
 		glfwGetWindowSize(window, &resolution.x, &resolution.y);
 
+
+		glfwSetMouseButtonCallback(window, MouseButtonCallback);
+		glfwSetScrollCallback(window, ScrollCallback);
+		glfwSetKeyCallback(window, KeyCallback);
+		glfwSetCharCallback(window, CharCallback);
+		glfwSetCursorPosCallback(window, cursor_position_callback);
 
 
 		p_postRenderCallback = &GLFW_egl_Context::SwapBuffer;
