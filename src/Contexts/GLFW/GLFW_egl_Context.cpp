@@ -352,6 +352,12 @@ namespace asapi
 		glfwSetErrorCallback(glfw_error_callback);
 		if (!glfwInit())
 			return;
+		
+		glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
+		glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_EGL_CONTEXT_API);
+	    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+	    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+
 		window = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+OpenGL2 example", NULL, NULL);
 		if (window == NULL)
 			return;
@@ -478,11 +484,11 @@ namespace asapi
 		std::chrono::duration<double> elapsed;
 
 
-		while(m_isRunning)
+		while(m_isRunning && !glfwWindowShouldClose(window))
 		{
 			frameStart = std::chrono::high_resolution_clock::now();
 
-			HandleContextEvents();
+			glfwPollEvents();
 
 			//TODO frame stuff
 			{
@@ -514,7 +520,7 @@ namespace asapi
 	}
 	void GLFW_egl_Context::CleanUp() 
 	{
-
+		m_isRunning = false;
 	}
 	void GLFW_egl_Context::GetResolution(uint16_t* X, uint16_t* Y) 
 	{

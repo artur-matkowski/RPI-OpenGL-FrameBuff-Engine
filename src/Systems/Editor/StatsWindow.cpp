@@ -32,7 +32,7 @@ namespace asapi
 
 	void StatsWindow::OnGUI()
 	{
-		auto window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking;
+		auto window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse ;
 		static bool showFileWindow = false;
 		static std::string dummyDlgKey = "ChooseFileDlgKey";
 		MemoryManagmentSystem& MEMORY = SYSTEMS::GetObject().MEMORY;
