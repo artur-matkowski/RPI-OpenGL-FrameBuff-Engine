@@ -6,6 +6,8 @@
 
 namespace asapi
 {
+	void WindowFocusCallback(GLFWwindow* window, int focused);
+	
 	class GLFW_egl_Context: public ContextBase
 	{
 		typedef void (GLFW_egl_Context::*PostRenderCallback)(void);

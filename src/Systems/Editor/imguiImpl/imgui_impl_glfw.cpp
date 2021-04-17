@@ -72,7 +72,7 @@
 #else
 #define GLFW_HAS_MOUSE_PASSTHROUGH    (0)
 #endif
-
+#include "GLFW_egl_Context.hpp"
 // Data
 enum GlfwClientApi
 {
@@ -591,6 +591,9 @@ static void ImGui_ImplGlfw_CreateWindow(ImGuiViewport* viewport)
     glfwSetWindowCloseCallback(data->Window, ImGui_ImplGlfw_WindowCloseCallback);
     glfwSetWindowPosCallback(data->Window, ImGui_ImplGlfw_WindowPosCallback);
     glfwSetWindowSizeCallback(data->Window, ImGui_ImplGlfw_WindowSizeCallback);
+        //custom callback for window focus
+        glfwSetWindowFocusCallback(data->Window, asapi::WindowFocusCallback);
+
     if (g_ClientApi == GlfwClientApi_OpenGL)
     {
         glfwMakeContextCurrent(data->Window);

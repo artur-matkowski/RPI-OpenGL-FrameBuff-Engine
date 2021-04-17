@@ -45,7 +45,7 @@ namespace asapi{
 
 
 		#ifdef IS_EDITOR
-		RefreshResourcs();
+		RefreshResources();
 		#endif
 	}
 
@@ -89,7 +89,12 @@ namespace asapi{
 		closedir(d_fh);
 	}
 
-	void ResourceSystem::RefreshResourcs()
+	bool IsInternalAssetUpToDate(const char* path)
+	{
+
+	}
+
+	void ResourceSystem::RefreshResources()
 	{
 		v_TexturesPaths.clear();
 		v_ShadersPaths.clear();

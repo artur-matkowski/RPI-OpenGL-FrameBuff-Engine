@@ -34,7 +34,7 @@ namespace asapi
 		const char* GetProjectPath(){ return m_ProjectPath; }
 
 		#ifdef IS_EDITOR
-		void RefreshResourcs();
+		void RefreshResources();
 		#endif
 
 		bool requestResource(ResourcePtr<Texture>* res, const char* str)

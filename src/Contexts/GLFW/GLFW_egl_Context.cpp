@@ -387,6 +387,15 @@ namespace asapi
 		p_ev_KeyboardEvent->Invoke( &keyboardEvent );
 		
 	}
+	void WindowFocusCallback(GLFWwindow* window, int focused)
+	{
+		#ifdef IS_EDITOR
+		if(focused)
+		{
+			SYSTEMS::GetObject().RESOURCES.RefreshResources();
+		}
+		#endif
+	}
 
 	void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 	{
@@ -431,6 +440,7 @@ namespace asapi
 		glfwSetKeyCallback(window, KeyCallback);
 		glfwSetCharCallback(window, CharCallback);
 		glfwSetCursorPosCallback(window, cursor_position_callback);
+		glfwSetWindowFocusCallback(window, WindowFocusCallback);
 
 
 		p_postRenderCallback = &GLFW_egl_Context::SwapBuffer;
