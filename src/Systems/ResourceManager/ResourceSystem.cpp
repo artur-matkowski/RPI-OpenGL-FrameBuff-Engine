@@ -102,11 +102,20 @@ namespace asapi{
 
 		memcpy(substr, "int", 3);
 
-
-    	stat(path, &attribExt);
-    	stat(outPath, &attribInt);
-
-    	return attribExt.st_mtime < attribInt.st_mtime;
+		bool ret = false;
+    	if( stat(path, &attribExt)!=0 )
+    	{
+    		log::error << "Could not find file " << path << std::endl;
+    	}
+    	else if( stat(outPath, &attribInt)!=0 )
+    	{
+    		log::error << "Could not find file " << path << std::endl;
+    	}
+    	else
+    	{
+    		ret = attribExt.st_mtime < attribInt.st_mtime;
+    	}
+    	return ret;
 	}
 
 	void ResourceSystem::RefreshResources()
@@ -134,25 +143,27 @@ namespace asapi{
 		strncat(dir_path, "/assets_ext/meshes", MAX_PATH-1);
 		ScanDirForPaths(v_MeshesPaths, dir_path);
 
-		log::debug << "Scanning for files showed follow files in project folder:" << std::endl;
+		//log::debug << "Scanning for files showed follow files in project folder:" << std::endl;
 		for(int i=0; i<v_TexturesPaths.size(); ++i)
 		{
-			std::cout << v_TexturesPaths[i] 
-						<< (IsInternalAssetUpToDate(v_TexturesPaths[i].c_str(), buff) ? " up to date" : " need to update" )
-						<<  std::endl;
-			Texture::Compile(buff, v_TexturesPaths[i].c_str());
+			if( ! IsInternalAssetUpToDate(v_TexturesPaths[i].c_str(), buff) )
+			{
+				Texture::Compile(buff, v_TexturesPaths[i].c_str());
+			}
 		}
 		for(int i=0; i<v_ShadersPaths.size(); ++i)
 		{
-			std::cout << v_ShadersPaths[i] 
-						<< (IsInternalAssetUpToDate(v_ShadersPaths[i].c_str(), buff) ? " up to date" : " need to update" )
-						<<  std::endl;
+			if( ! IsInternalAssetUpToDate(v_ShadersPaths[i].c_str(), buff) )
+			{
+
+			}
 		}
 		for(int i=0; i<v_MeshesPaths.size(); ++i)
 		{
-			std::cout << v_MeshesPaths[i] 
-						<< (IsInternalAssetUpToDate(v_MeshesPaths[i].c_str(), buff) ? " up to date" : " need to update" )
-						<<  std::endl;
+			if( ! IsInternalAssetUpToDate(v_MeshesPaths[i].c_str(), buff) )
+			{
+
+			}
 		}
 	}
 	#endif
