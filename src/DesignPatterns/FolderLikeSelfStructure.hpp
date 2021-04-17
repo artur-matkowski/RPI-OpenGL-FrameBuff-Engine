@@ -4,7 +4,7 @@
 #include <cstring>
 #include "Systems.hpp"
 
-#define MAX_COMPONENT_PATH_SIZE 1024
+#define MAX_PATH_SIZE 2048
 
 
 
@@ -14,7 +14,7 @@ class Node
 public:
 	InfoBufferType m_infoBuffer;
 protected:
-	char m_name[MAX_COMPONENT_PATH_SIZE] = {'\0'};
+	char m_name[MAX_PATH_SIZE] = {'\0'};
 
 	std::vector<Node, bfu::custom_allocator<Node>> v_children;
 
@@ -54,21 +54,21 @@ public:
 		,v_children(asapi::SYSTEMS::SYSTEMS_ALLOCATOR)
 	{
 		const int in_name_c = strlen(in_name);
-		strncpy(m_name, in_name, in_name_c < MAX_COMPONENT_PATH_SIZE ? in_name_c : MAX_COMPONENT_PATH_SIZE);
+		strncpy(m_name, in_name, in_name_c < MAX_PATH_SIZE ? in_name_c : MAX_PATH_SIZE);
 	}
 
 	Node(const char* in_name, const int in_name_c, const InfoBufferType& in_info)
 		:m_infoBuffer(in_info)
 		,v_children(asapi::SYSTEMS::SYSTEMS_ALLOCATOR)
 	{
-		strncpy(m_name, in_name, in_name_c < MAX_COMPONENT_PATH_SIZE ? in_name_c : MAX_COMPONENT_PATH_SIZE);
+		strncpy(m_name, in_name, in_name_c < MAX_PATH_SIZE ? in_name_c : MAX_PATH_SIZE);
 	}
 
 	Node(const Node& cp)
 		:m_infoBuffer(cp.m_infoBuffer)
 		,v_children(asapi::SYSTEMS::SYSTEMS_ALLOCATOR)
 	{
-		strncpy(m_name, cp.m_name, MAX_COMPONENT_PATH_SIZE );
+		strncpy(m_name, cp.m_name, MAX_PATH_SIZE );
 		v_children = cp.v_children;
 	}
 
@@ -146,7 +146,6 @@ public:
 	{
 		return m_name;
 	}
-
 };
 
 

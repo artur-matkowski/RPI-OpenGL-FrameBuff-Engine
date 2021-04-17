@@ -139,7 +139,7 @@ namespace asapi
 		void *textureImage = 0;
 
 		char buff[1024];
-		sprintf(buff, "%s/images/%s", SYSTEMS::GetObject().SCENE.GetProjectPath(), filename);
+		sprintf(buff, "%s/images/%s", SYSTEMS::GetObject().RESOURCES.GetProjectPath(), filename);
 		textureImage = LoadPNG(buff);
 
 		SendTextureToGPU( textureImage );

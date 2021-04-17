@@ -16,38 +16,6 @@ namespace asapi
 		p_root->SetName("EntryPoint");
 		PrefabLoaderComponent* rootLoader = (PrefabLoaderComponent*) p_root->ADD_COMPONENT( PrefabLoaderComponent );
 		rootLoader->SetPrefabID(0);
-
-		const char* path = "--wrong path--";
-
-		bool startWithJSON = false;
-		for(int i=1; i<argc; ++i)
-		{
-			#ifdef IS_PLAYER
-			if( strcmp(argv[i], "-json") == 0 )
-			{
-				startWithJSON = true;
-			}
-			else
-			#endif
-			if( strcmp(argv[i], "-path") == 0 )
-			{
-				if(argc > i) // if there is next argument
-				{
-					SetProjectPath(argv[i+1]);
-					path = argv[i+1];
-				}
-				else
-				{
-					log::error << "You did not suplied path for project. Run '?' fur help." << std::endl;
-				}
-			}
-		}
-		#ifdef IS_PLAYER
-		if( !(startWithJSON ? OpenProject() : LoadRootMMP() ) )
-		{
-			log::error << "Could not open project at path " << path << std::endl;
-		}
-		#endif
 	}
 
 
@@ -145,13 +113,6 @@ namespace asapi
 		fclose (pFile);
 		return true;
 	}
-
-
-	void SceneSystem::SetProjectPath(const char* path)
-	{
-		strcpy(m_ProjectPath, path );
-	}
-
 
 	bool SceneSystem::OpenProject()
 	{

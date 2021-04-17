@@ -50,7 +50,7 @@ namespace asapi
 
 		buff.clear();
 		buff.sprintf( "%s/json/%lld.json"
-						, SYSTEMS::GetObject().SCENE.GetProjectPath()
+						, SYSTEMS::GetObject().RESOURCES.GetProjectPath()
 						, GetPrefabID() );
 
 		bfu::JSONSerializer &jsonSerializer = SYSTEMS::GetObject().SCENE.GetJSONSerializer();
@@ -77,7 +77,7 @@ namespace asapi
 
 		buff.clear();
 		buff.sprintf( "%s/json/%lld.json"
-						, SYSTEMS::GetObject().SCENE.GetProjectPath()
+						, SYSTEMS::GetObject().RESOURCES.GetProjectPath()
 						, GetPrefabID() );
 
 		

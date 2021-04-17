@@ -85,7 +85,7 @@ namespace asapi
 
 		
 
-		sprintf(buff, "%s/shaders/%s.vert.glsl", SYSTEMS::GetObject().SCENE.GetProjectPath(), filename);
+		sprintf(buff, "%s/shaders/%s.vert.glsl", SYSTEMS::GetObject().RESOURCES.GetProjectPath(), filename);
 
 		SYSTEMS::IO::OpenFile(&pFile, &fileSize, buff);
 		ASSERT( 1024*1024*1<fileSize, "shader file exceeds 1024*1024*1 bytes");
@@ -99,7 +99,7 @@ namespace asapi
 
 
 
-		sprintf(buff, "%s/shaders/%s.frag.glsl", SYSTEMS::GetObject().SCENE.GetProjectPath(), filename);
+		sprintf(buff, "%s/shaders/%s.frag.glsl", SYSTEMS::GetObject().RESOURCES.GetProjectPath(), filename);
 
 		SYSTEMS::IO::OpenFile(&pFile, &fileSize, buff);
 		ASSERT( 1024*1024*1<fileSize, "shader file exceeds 1024*1024*1 bytes");

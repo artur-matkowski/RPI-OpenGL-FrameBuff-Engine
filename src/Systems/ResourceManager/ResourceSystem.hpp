@@ -8,6 +8,8 @@
 #include "MaterialType.hpp"
 #include "Mesh.hpp"
 
+#define MAX_PATH 2048
+
 namespace asapi
 {
 
@@ -18,7 +20,12 @@ namespace asapi
 		std::map<bfu::string, ResourcePtr<MaterialType> > 	m_materials;
 		std::map<bfu::string, ResourcePtr<Mesh> > 			m_meshes;
 
+		char 												m_ProjectPath[MAX_PATH] = ".";
+
 	public:
+		void Init(const int argc, const char** argv);
+		void SetProjectPath(const char* path);
+		const char* GetProjectPath(){ return m_ProjectPath; }
 
 		bool requestResource(ResourcePtr<Texture>* res, const char* str)
 		{

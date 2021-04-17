@@ -10,7 +10,6 @@ namespace asapi
 
 		bfu::JSONSerializer m_jsonSerializer;
 		char 				tmpbuff[2];
-		char 				m_ProjectPath[2048] = ".";
 
 	public:
 		SceneSystem();
@@ -29,8 +28,6 @@ namespace asapi
 		static bool File2JSON(bfu::SerializableClassInterface*, const char* path);
 		static bool JSON2File(bfu::SerializableClassInterface*, const char* path);
 
-		void SetProjectPath(const char* path);
-		const char* GetProjectPath(){ return m_ProjectPath; }
 		bool OpenProject();
 		bool LoadRootMMP();
 	};
