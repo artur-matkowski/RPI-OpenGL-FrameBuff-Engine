@@ -37,6 +37,8 @@ namespace asapi
 		#endif
 		
 		uint32_t GetTextureID() {return m_textureID; }
+
+		static void Compile(const char* dest, const char* source);
 	};
 }
 

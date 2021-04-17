@@ -103,7 +103,7 @@ namespace asapi
 	}
 
 
-	void SYSTEMS::IO::OpenFile(FILE** ret_pFile, long int* ret_filesize, char* filename)
+	void SYSTEMS::IO::OpenFile(FILE** ret_pFile, long int* ret_filesize, const char* filename)
 	{
 		*ret_pFile = fopen (filename,"rb");
 

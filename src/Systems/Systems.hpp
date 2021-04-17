@@ -50,7 +50,7 @@ namespace asapi
 
 		struct IO
 		{
-			static void OpenFile(FILE** ret_pFile, long int* ret_filesize, char* filename);
+			static void OpenFile(FILE** ret_pFile, long int* ret_filesize, const char* filename);
 			static inline void ReadFile(FILE* pFile, char* buff, uint32_t buffsize)
 			{ 
 				fread(buff, sizeof(char), buffsize, pFile); 

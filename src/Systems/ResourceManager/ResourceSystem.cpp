@@ -1,5 +1,6 @@
 #include "ResourceSystem.hpp"
 #include <dirent.h> 
+#include <sys/stat.h>
 
 
 namespace asapi{
@@ -89,13 +90,32 @@ namespace asapi{
 		closedir(d_fh);
 	}
 
-	bool IsInternalAssetUpToDate(const char* path)
+	bool IsInternalAssetUpToDate(const char* path, char* outPath)
 	{
+		struct stat attribInt;
+		struct stat attribExt;
 
+		strncpy(outPath, path, MAX_PATH-1);
+		outPath[MAX_PATH-1] = '\0';
+
+		char* substr = strstr(outPath, "/assets_ext/") + strlen("/assets_");
+
+		memcpy(substr, "int", 3);
+
+
+    	stat(path, &attribExt);
+    	stat(outPath, &attribInt);
+
+    	return attribExt.st_mtime < attribInt.st_mtime;
 	}
 
 	void ResourceSystem::RefreshResources()
 	{
+		char buff[MAX_PATH];
+
+		if(strcmp(m_ProjectPath, ".")==0)
+			return;
+
 		v_TexturesPaths.clear();
 		v_ShadersPaths.clear();
 		v_MeshesPaths.clear();
@@ -117,15 +137,22 @@ namespace asapi{
 		log::debug << "Scanning for files showed follow files in project folder:" << std::endl;
 		for(int i=0; i<v_TexturesPaths.size(); ++i)
 		{
-			std::cout << v_TexturesPaths[i] << std::endl;
+			std::cout << v_TexturesPaths[i] 
+						<< (IsInternalAssetUpToDate(v_TexturesPaths[i].c_str(), buff) ? " up to date" : " need to update" )
+						<<  std::endl;
+			Texture::Compile(buff, v_TexturesPaths[i].c_str());
 		}
 		for(int i=0; i<v_ShadersPaths.size(); ++i)
 		{
-			std::cout << v_ShadersPaths[i] << std::endl;
+			std::cout << v_ShadersPaths[i] 
+						<< (IsInternalAssetUpToDate(v_ShadersPaths[i].c_str(), buff) ? " up to date" : " need to update" )
+						<<  std::endl;
 		}
 		for(int i=0; i<v_MeshesPaths.size(); ++i)
 		{
-			std::cout << v_MeshesPaths[i] << std::endl;
+			std::cout << v_MeshesPaths[i] 
+						<< (IsInternalAssetUpToDate(v_MeshesPaths[i].c_str(), buff) ? " up to date" : " need to update" )
+						<<  std::endl;
 		}
 	}
 	#endif

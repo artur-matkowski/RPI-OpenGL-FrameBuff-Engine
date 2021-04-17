@@ -167,4 +167,27 @@ namespace asapi
 	             m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
 	             textureImage);
 	}
+
+
+	void Texture::Compile(const char* dest, const char* source)
+	{
+		FILE *src, *dst;
+		long int srcSize, dstSize;
+
+		src = fopen (source,"rb");
+		dst = fopen (dest,"wb");
+		fseek(src, 0L, SEEK_END); 
+		srcSize = ftell(src); 
+		fseek(src, 0L, SEEK_SET);
+
+		char* buff = new char[srcSize];
+
+		fread(buff, sizeof(char), srcSize, src);
+		fwrite(buff, 1, srcSize, dst);
+
+		delete buff;
+
+		fclose(src); 
+		fclose(dst); 
+	}
 }
