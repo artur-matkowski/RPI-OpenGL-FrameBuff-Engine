@@ -22,10 +22,20 @@ namespace asapi
 
 		char 												m_ProjectPath[MAX_PATH] = ".";
 
+		#ifdef IS_EDITOR
+		std::vector<std::string>							v_TexturesPaths;
+		std::vector<std::string>							v_ShadersPaths;
+		std::vector<std::string>							v_MeshesPaths;
+		#endif
+
 	public:
 		void Init(const int argc, const char** argv);
 		void SetProjectPath(const char* path);
 		const char* GetProjectPath(){ return m_ProjectPath; }
+
+		#ifdef IS_EDITOR
+		void RefreshResourcs();
+		#endif
 
 		bool requestResource(ResourcePtr<Texture>* res, const char* str)
 		{
