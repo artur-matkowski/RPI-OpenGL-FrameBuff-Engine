@@ -45,7 +45,9 @@ namespace asapi
 
 			if( it==m_textures.end() )
 			{
-				res->Rebuild( new Texture(str) );
+				char buff[MAX_PATH];
+				sprintf(buff, "%s/assets_int/textures/%s", m_ProjectPath, str);
+				res->Rebuild( new Texture(buff) );
 				m_textures[id] = *res;
 			}
 			else
@@ -159,7 +161,9 @@ namespace asapi
 
 			if( it==m_meshes.end() )
 			{
-				res->Rebuild( new Mesh(str) );
+				char buff[MAX_PATH];
+				sprintf(buff, "%s/assets_int/meshes/%s", m_ProjectPath, str);
+				res->Rebuild( new Mesh(buff) );
 				m_meshes[id] = *res;
 			}
 			else

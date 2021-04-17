@@ -1,9 +1,17 @@
 #include "Mesh.hpp"
+#include <cstring>
 
 namespace asapi
 {
-	Mesh::Mesh(const char* filename)
+	Mesh::Mesh(const char* path)
 	{
+		#ifdef IS_EDITOR
+		int size = strlen(path);
+		const char* tmp = &path[size-1];
+		for(; *tmp!='/'; tmp-=1); // < find where file name is starting
+		strncpy(name, tmp+1, 255);
+		name[255] = '\0';
+		#endif
 
 		static GLfloat vertexbuff[] = {
 			 0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
@@ -77,5 +85,10 @@ namespace asapi
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indice_array);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*m_size, NULL, GL_STATIC_DRAW);
 		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLuint)*m_size, indices);
+	}
+
+	void Mesh::Compile(const char* dest, const char* source)
+	{
+		
 	}
 }

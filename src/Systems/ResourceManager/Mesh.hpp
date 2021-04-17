@@ -11,6 +11,9 @@ namespace asapi
 		GLuint 		indice_array;
 		GLint 		m_size = -1;
 
+		#ifdef IS_EDITOR
+		char name[256];
+		#endif
 
 	public:
 		Mesh(glm::vec2 resolution);
@@ -44,6 +47,8 @@ namespace asapi
 			glDisableVertexAttribArray(2);
 
 		}
+
+		static void Compile(const char* dest, const char* source);
 		
 	};
 }

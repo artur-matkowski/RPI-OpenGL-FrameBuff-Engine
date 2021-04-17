@@ -109,7 +109,7 @@ namespace asapi{
     	}
     	else if( stat(outPath, &attribInt)!=0 )
     	{
-    		log::error << "Could not find file " << path << std::endl;
+    		log::error << "Could not find file " << outPath << std::endl;
     	}
     	else
     	{
@@ -155,14 +155,14 @@ namespace asapi{
 		{
 			if( ! IsInternalAssetUpToDate(v_ShadersPaths[i].c_str(), buff) )
 			{
-
+				Shader::Compile(buff, v_ShadersPaths[i].c_str());
 			}
 		}
 		for(int i=0; i<v_MeshesPaths.size(); ++i)
 		{
 			if( ! IsInternalAssetUpToDate(v_MeshesPaths[i].c_str(), buff) )
 			{
-
+				Mesh::Compile(buff, v_MeshesPaths[i].c_str());
 			}
 		}
 	}

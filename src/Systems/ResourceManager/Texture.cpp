@@ -131,16 +131,19 @@ namespace asapi
 	}
 
 
-	Texture::Texture(const char* filename)
+	Texture::Texture(const char* path)
 	{
 		#ifdef IS_EDITOR
-		strcpy(name, filename);
+		int size = strlen(path);
+		const char* tmp = &path[size-1];
+		for(; *tmp!='/'; tmp-=1); // < find where file name is starting
+		strncpy(name, tmp+1, 255);
+		name[255] = '\0';
 		#endif
+
 		void *textureImage = 0;
 
-		char buff[1024];
-		sprintf(buff, "%s/images/%s", SYSTEMS::GetObject().RESOURCES.GetProjectPath(), filename);
-		textureImage = LoadPNG(buff);
+		textureImage = LoadPNG(path);
 
 		SendTextureToGPU( textureImage );
 	}

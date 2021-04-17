@@ -85,7 +85,7 @@ namespace asapi
 
 		
 
-		sprintf(buff, "%s/shaders/%s.vert.glsl", SYSTEMS::GetObject().RESOURCES.GetProjectPath(), filename);
+		sprintf(buff, "%s/assets_int/shaders/%s.vert.glsl", SYSTEMS::GetObject().RESOURCES.GetProjectPath(), filename);
 
 		SYSTEMS::IO::OpenFile(&pFile, &fileSize, buff);
 		ASSERT( 1024*1024*1<fileSize, "shader file exceeds 1024*1024*1 bytes");
@@ -99,7 +99,7 @@ namespace asapi
 
 
 
-		sprintf(buff, "%s/shaders/%s.frag.glsl", SYSTEMS::GetObject().RESOURCES.GetProjectPath(), filename);
+		sprintf(buff, "%s/assets_int/shaders/%s.frag.glsl", SYSTEMS::GetObject().RESOURCES.GetProjectPath(), filename);
 
 		SYSTEMS::IO::OpenFile(&pFile, &fileSize, buff);
 		ASSERT( 1024*1024*1<fileSize, "shader file exceeds 1024*1024*1 bytes");
@@ -234,5 +234,31 @@ namespace asapi
 	Shader::~Shader()
 	{
 		glDeleteProgram(m_programID);
+	}
+
+
+	void Shader::Compile(const char* dest, const char* source)
+	{
+		FILE *src, *dst;
+		long int srcSize, dstSize;
+
+		src = fopen (source,"rb");
+		fseek(src, 0L, SEEK_END); 
+		srcSize = ftell(src); 
+		fseek(src, 0L, SEEK_SET);
+
+		char* buff = new char[srcSize];
+
+		fread(buff, sizeof(char), srcSize, src);
+
+		delete buff;
+
+		fclose(src); 
+
+
+		dst = fopen (dest,"wb");
+		fwrite(buff, 1, srcSize, dst);
+		fwrite(" \n ", 1, 3, dst);
+		fclose(dst); 
 	}
 }
