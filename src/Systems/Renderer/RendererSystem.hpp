@@ -36,8 +36,13 @@ namespace asapi{
 		void Init();
 		void Render();
 
+
 		static bool ProcessMesh(Mesh*);
+		static bool DispouseMesh(Mesh*);
+
 		static bool ProcessShader(Shader*);
+		static bool DispouseShader(Shader*);
+
 
 		void RegisterRenderer(RendererComponent*);
 		void UnRegisterRenderer(RendererComponent*);

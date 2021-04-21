@@ -106,30 +106,21 @@ namespace asapi{
 			"#version 100\n" \
 			"precision mediump float;\n" \
 			"attribute vec4 position;\n" \
-			"attribute vec4 color;\n" \
-			"attribute vec2 texCoord;\n" \
-			"uniform vec3 offset;\n" \
 			"uniform mat4 modelViewMat;\n" \
-			"\n" \
-			"varying vec4 vcolor;\n" \
-			"varying vec2 UV;\n" \
 			"\n" \
 			"void main()\n" \
 			"{\n" \
 			"  gl_Position = modelViewMat * position;\n" \
-			"  UV = texCoord;\n" \
 			"}\n"
 
 #define FRAGMENT_SOURCE  \
 			"#version 100\n" \
 			"precision mediump float;\n" \
 			"varying vec4 vcolor;\n" \
-			"varying vec2 UV;\n" \
-			"uniform sampler2D texUnit;\n" \
 			"\n" \
 			"void main()\n" \
 			"{\n" \
-			"  gl_FragColor = vec4(1.0);\n" \
+			"  gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);\n" \
 			"}\n"
 
 
@@ -232,8 +223,12 @@ namespace asapi{
 		glDeleteShader(fragment);
 		
 
-		shader->m_programID = programID;
+		shader->h_shaderHandle = (tShaderHandle)(size_t)programID;
 
 		return ret;
+	}
+	bool RendererSystem::DispouseShader(Shader* shader)
+	{
+		glDeleteProgram((uint32_t)(size_t)shader->h_shaderHandle);
 	}
 }

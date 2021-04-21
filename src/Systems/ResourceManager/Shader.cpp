@@ -6,7 +6,6 @@ namespace asapi
 {
 
 	Shader::Shader()
-		:m_programID(0)
 	{}
 
 	Shader* Shader::LoadShaderFromFile(const char* filename)
@@ -51,22 +50,10 @@ namespace asapi
 		RendererSystem::ProcessShader(ret);
 		return ret;
 	}
-/*
-	Shader* Shader::LoadShaderFromSource(const char* vertex_source, const char* fragment_source, const char* filename)
-	{
-		Shader* ret = new Shader(0);
-		ret->vertex_source = vertex_source;
-		ret->fragment_source = fragment_source;
-		ret->shaderName = filename;
-
-		RendererSystem::ProcessShader(ret);
-		return ret;
-	}
-*/
 
 	Shader::~Shader()
 	{
-		glDeleteProgram(m_programID);
+		RendererSystem::DispouseShader(this);
 	}
 
 	void Shader::Compile(const char* dest, const char* source)

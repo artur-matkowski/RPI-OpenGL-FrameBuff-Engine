@@ -10,8 +10,6 @@ namespace asapi
 	class Shader
 	{
 		friend RendererSystem;
-		
-		uint32_t m_programID = -1;
 
 		tShaderHandle 			h_shaderHandle = nullptr;
 
@@ -27,12 +25,12 @@ namespace asapi
 
 		inline void UseProgram()
 		{
-			glUseProgram(m_programID);
+			glUseProgram((uint32_t)(size_t)h_shaderHandle);
 		}
 
 		inline uint32_t GetProgramID()
 		{
-			return m_programID;
+			return (uint32_t)(size_t)h_shaderHandle;
 		}
 		
 		//static Shader* LoadShaderFromSource(const char* vertex_source, const char* fragment_source, const char* filename);
