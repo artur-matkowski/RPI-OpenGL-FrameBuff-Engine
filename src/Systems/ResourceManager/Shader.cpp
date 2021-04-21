@@ -95,9 +95,6 @@ namespace asapi
 		vertex_source[fileSize] = '\0';
 		SYSTEMS::IO::CloseFile(pFile);
 
-		
-
-
 
 		sprintf(buff, "%s/assets_int/shaders/%s.frag.glsl", SYSTEMS::GetObject().RESOURCES.GetProjectPath(), filename);
 
@@ -121,47 +118,7 @@ namespace asapi
 			return nullptr;
 
 
-		programID = glCreateProgram();
-
-		glAttachShader(programID, vertex);
-		glAttachShader(programID, fragment);
-		
-		glBindAttribLocation(programID, 0, "position");
-		glBindAttribLocation(programID, 1, "color");
-		glBindAttribLocation(programID, 2, "texCoord");
-
-		glLinkProgram(programID);
-
-		glGetProgramiv(programID, GL_LINK_STATUS, &isCompiled);
-		if(isCompiled == GL_FALSE)
-		{
-			GLint maxLength = 0;
-			glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &maxLength);
-
-			// The maxLength includes the NULL character
-			std::vector<GLchar> errorLog(maxLength);
-			glGetProgramInfoLog(programID, maxLength, &maxLength, &errorLog[0]);
-
-			std::string str(&errorLog[0]);
-
-			log::error << "In shader linking: " << buff << "\t\n" << str << std::endl;
-
-			// Provide the infolog in whatever manor you deem best.
-			// Exit with failure.
-			glDeleteProgram(programID); // Don't leak the shader.
-			return nullptr;
-		}
-
-		// Always detach shaders after a successful link.
-		glDetachShader(programID, vertex);
-		glDetachShader(programID, fragment);
-
-		ret = new Shader(programID);
-		
-		glDeleteShader(vertex);
-		glDeleteShader(fragment);
-
-		return ret;
+		return LinkShader(vertex, fragment);
 	}
 
 	Shader* Shader::LoadShaderFromSource(const char* vertex_source, const char* fragment_source, const char* filename)
@@ -181,6 +138,24 @@ namespace asapi
 		if(fragment==0)
 			return nullptr;
 
+
+		return LinkShader(vertex, fragment);
+	}
+
+	Shader* Shader::LoadShaderFailSave()
+	{
+		return LoadShaderFromSource(VERTEX_SOURCE, FRAGMENT_SOURCE, "-failsave shader-");
+	}
+
+	Shader::~Shader()
+	{
+		glDeleteProgram(m_programID);
+	}
+
+	Shader* Shader::LinkShader(GLuint vertex, GLuint fragment)
+	{
+		GLint isCompiled = GL_FALSE;
+		uint32_t programID = -1;
 
 
 		programID = glCreateProgram();
@@ -218,24 +193,13 @@ namespace asapi
 		glDetachShader(programID, vertex);
 		glDetachShader(programID, fragment);
 
-		ret = new Shader(programID);
+		Shader* ret = new Shader(programID);
 
 		glDeleteShader(vertex);
 		glDeleteShader(fragment);
 
 		return ret;
 	}
-
-	Shader* Shader::LoadShaderFailSave()
-	{
-		return LoadShaderFromSource(VERTEX_SOURCE, FRAGMENT_SOURCE, "-failsave shader-");
-	}
-
-	Shader::~Shader()
-	{
-		glDeleteProgram(m_programID);
-	}
-
 
 	void Shader::Compile(const char* dest, const char* source)
 	{

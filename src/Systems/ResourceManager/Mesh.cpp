@@ -110,8 +110,6 @@ struct Vertex {
 };
 using std::vector;
 
-#define ATTRIBUTE_INDEXES 5
-
     void ProcessMesh(aiMesh *mesh)
     {
         const bool        m_hasPosition   = mesh->HasPositions();
@@ -133,14 +131,10 @@ using std::vector;
 
         float* vertexData = nullptr;
         int* indiciesData = nullptr;
-        int* VBOconfig = nullptr;
 
 
 
         vertexData = STD_NEW(arraySize, float);
-        VBOconfig = STD_NEW( ATTRIBUTE_INDEXES //number of indexes needed to configure single attribute
-                            * ((m_hasPosition ? 1 : 0) + (m_hasNormals ? 1 : 0) + m_numUvChannels )
-                            , int);
 
         ////////////////////////
         //vertecies
@@ -154,17 +148,6 @@ using std::vector;
                 vertexData[index + 2] = mesh->mVertices[i].z;
             }
             vertexInnerDataFieldOffset += 3;
-
-            int index = VBOconfigInnerDataFieldOffset;
-            //glEnableVertexAttribArray(...):
-            VBOconfig[index+0] = 0; //0 for 'attribute vec4 position;'
-            //glVertexAttribPointer(...):
-            VBOconfig[index+1] = 0;             //index
-            VBOconfig[index+2] = 3;             //size
-            VBOconfig[index+3] = vertexfields;  //stride
-            VBOconfig[index+4] = 0;             //pointer
-
-            VBOconfigInnerDataFieldOffset += ATTRIBUTE_INDEXES;
         }
 
         if(m_hasNormals)
@@ -177,17 +160,6 @@ using std::vector;
                 vertexData[index + 2] = mesh->mNormals[i].z;
             }
             vertexInnerDataFieldOffset += 3;
-
-            int index = VBOconfigInnerDataFieldOffset;
-            //glEnableVertexAttribArray(...):
-            VBOconfig[index+0] = 1; //1 for 'attribute vec3 normal;'
-            //glVertexAttribPointer(...):
-            VBOconfig[index+1] = 1;             //index
-            VBOconfig[index+2] = 3;             //size
-            VBOconfig[index+3] = vertexfields;  //stride
-            VBOconfig[index+4] = 0;             //pointer
-
-            VBOconfigInnerDataFieldOffset += ATTRIBUTE_INDEXES;
         }
 
         for(uint32_t UVchannel = 0; UVchannel<m_numUvChannels; ++UVchannel)

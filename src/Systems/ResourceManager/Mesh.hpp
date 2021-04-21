@@ -2,12 +2,17 @@
 #define _H_Mesh
 #include <GLES2/gl2.h>
 #include <vector>
+#include "RendererSystem.hpp"
 #include "glm.hpp"
 
 namespace asapi
 {
+	class RendererSystem;
+
 	class Mesh
 	{
+		friend RendererSystem;
+		
 		GLuint 		vertex_buffer;
 		GLuint 		indice_array;
 		GLint 		m_size = -1;
@@ -17,9 +22,10 @@ namespace asapi
 		uint32_t	m_numUvChannels;
 
 
-		std::vector<uint32_t>	v_VBOconfig;
 		std::vector<uint32_t>	v_VBOindices;
 		std::vector<float> 		v_VBOdata;
+
+		tMeshHandle 			h_meshHandle = nullptr;
 
 
 		#ifdef IS_EDITOR

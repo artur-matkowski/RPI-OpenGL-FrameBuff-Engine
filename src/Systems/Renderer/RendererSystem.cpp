@@ -5,13 +5,19 @@
 #include <GLES2/gl2.h>
 #include <png.h>
 
-#include "RendererSystem.hpp"
-#include "ContextBase.hpp"
 #include "Systems.hpp"
+
+#include "RendererComponent.hpp"
+#include "Texture.hpp"
+#include "Shader.hpp"
+#include "Mesh.hpp"
 
 
 
 namespace asapi{
+
+		std::vector<RendererComponent*> 
+							v_rendererComponents;
 
 	void RendererSystem::Init()
 	{
@@ -74,5 +80,156 @@ namespace asapi{
 
     	_this->m_resolution.x = args->m_width; 
     	_this->m_resolution.y = args->m_height;
+	}
+
+
+	bool RendererSystem::ProcessMesh(Mesh* mesh)
+	{
+
+	}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                            //
+//                                                                                                            //
+//                                                                                                            //
+//                                                                                                            //
+// Shader processing section                                                                                     //
+//                                                                                                            //
+//                                                                                                            //
+//                                                                                                            //
+//                                                                                                            //
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#define VERTEX_SOURCE  \
+			"#version 100\n" \
+			"precision mediump float;\n" \
+			"attribute vec4 position;\n" \
+			"attribute vec4 color;\n" \
+			"attribute vec2 texCoord;\n" \
+			"uniform vec3 offset;\n" \
+			"uniform mat4 modelViewMat;\n" \
+			"\n" \
+			"varying vec4 vcolor;\n" \
+			"varying vec2 UV;\n" \
+			"\n" \
+			"void main()\n" \
+			"{\n" \
+			"  gl_Position = modelViewMat * position;\n" \
+			"  UV = texCoord;\n" \
+			"}\n"
+
+#define FRAGMENT_SOURCE  \
+			"#version 100\n" \
+			"precision mediump float;\n" \
+			"varying vec4 vcolor;\n" \
+			"varying vec2 UV;\n" \
+			"uniform sampler2D texUnit;\n" \
+			"\n" \
+			"void main()\n" \
+			"{\n" \
+			"  gl_FragColor = vec4(1.0);\n" \
+			"}\n"
+
+
+	GLuint LoadSingleShader(const char* source, GLenum shaderType, const char* filename)
+	{
+		char b_source[1024*1024*1];
+		GLint isCompiled = GL_FALSE;
+
+		GLuint shader = glCreateShader(shaderType);
+
+		glShaderSource(shader, 1, &source, NULL);
+		glCompileShader(shader);
+		glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
+		if(isCompiled == GL_FALSE)
+		{
+			GLint maxLength = 0;
+			glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
+
+			// The maxLength includes the NULL character
+			std::vector<GLchar> errorLog(maxLength);
+			glGetShaderInfoLog(shader, maxLength, &maxLength, &errorLog[0]);
+
+			std::string str(&errorLog[0]);
+
+			log::error << "In shader: " << filename << "\n\t" << str << std::endl;
+
+			// Provide the infolog in whatever manor you deem best.
+			// Exit with failure.
+			glDeleteShader(shader); // Don't leak the shader.
+			return 0;
+		}
+
+		return shader;
+	}
+
+	bool RendererSystem::ProcessShader(Shader* shader)
+	{
+		bool ret = true;
+		GLuint vertex, fragment;
+		GLint isCompiled = GL_FALSE;
+		uint32_t programID = -1;
+
+
+		programID = glCreateProgram();
+
+
+		vertex = LoadSingleShader(shader->vertex_source, GL_VERTEX_SHADER, shader->shaderName);
+
+		fragment = LoadSingleShader(shader->fragment_source, GL_FRAGMENT_SHADER, shader->shaderName);
+		
+
+		glAttachShader(programID, vertex);
+		glAttachShader(programID, fragment);
+		
+		glBindAttribLocation(programID, 0, "position");
+		glBindAttribLocation(programID, 1, "color");
+		glBindAttribLocation(programID, 2, "texCoord");
+
+		glLinkProgram(programID);
+
+		glGetProgramiv(programID, GL_LINK_STATUS, &isCompiled);
+		if(isCompiled == GL_FALSE)
+		{
+			GLint maxLength = 0;
+			glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &maxLength);
+
+			// The maxLength includes the NULL character
+			std::vector<GLchar> errorLog(maxLength);
+			glGetProgramInfoLog(programID, maxLength, &maxLength, &errorLog[0]);
+
+			std::string str(&errorLog[0]);
+
+			log::error << str << std::endl;
+
+			// Provide the infolog in whatever manor you deem best.
+			// Exit with failure.
+
+			//link fallback shader
+			glAttachShader(programID, vertex);
+			glAttachShader(programID, fragment);
+			
+			glBindAttribLocation(programID, 0, "position");
+			glBindAttribLocation(programID, 1, "color");
+			glBindAttribLocation(programID, 2, "texCoord");
+
+			glLinkProgram(programID);
+
+			ret = false;
+		}
+
+
+		// Always detach shaders after a successful link.
+		glDetachShader(programID, vertex);
+		glDetachShader(programID, fragment);
+
+		glDeleteShader(vertex);
+		glDeleteShader(fragment);
+		
+
+		shader->m_programID = programID;
+
+		return ret;
 	}
 }
