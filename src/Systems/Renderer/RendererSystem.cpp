@@ -5,6 +5,7 @@
 #include <GLES2/gl2.h>
 #include <png.h>
 
+#include "RendererSystem.hpp"
 #include "Systems.hpp"
 
 #include "RendererComponent.hpp"
@@ -178,7 +179,7 @@ namespace asapi{
 		vertex = LoadSingleShader(shader->vertex_source, GL_VERTEX_SHADER, shader->shaderName);
 
 		fragment = LoadSingleShader(shader->fragment_source, GL_FRAGMENT_SHADER, shader->shaderName);
-		
+
 
 		glAttachShader(programID, vertex);
 		glAttachShader(programID, fragment);

@@ -34,7 +34,7 @@ namespace asapi
 			"  gl_FragColor = vec4(1.0);\n" \
 			"}\n"
 
-
+/*
 	GLuint LoadSingleShader(const char* source, GLenum shaderType, const char* filename)
 	{
 		char b_source[1024*1024*1];
@@ -65,7 +65,7 @@ namespace asapi
 		}
 
 		return shader;
-	}
+	}*/
 
 	Shader::Shader(uint32_t id)
 		:m_programID(id)
@@ -79,7 +79,7 @@ namespace asapi
 		GLuint vertex, fragment;
 		GLint isCompiled = GL_FALSE;
 		uint32_t programID = -1;
-		Shader* ret = nullptr;
+		//Shader* ret = nullptr;
 		FILE * pFile = nullptr;
 		long int fileSize = 0;
 
@@ -107,7 +107,7 @@ namespace asapi
 		SYSTEMS::IO::CloseFile(pFile);
 	
 
-
+/*
 		vertex = LoadSingleShader(vertex_source, GL_VERTEX_SHADER, filename);
 		if(vertex==0)
 			return nullptr;
@@ -116,9 +116,17 @@ namespace asapi
 		fragment = LoadSingleShader(fragment_source, GL_FRAGMENT_SHADER, filename);
 		if(fragment==0)
 			return nullptr;
+*/
 
 
-		return LinkShader(vertex, fragment);
+		Shader* ret = new Shader(0);
+		ret->vertex_source = vertex_source;
+		ret->fragment_source = fragment_source;
+		ret->shaderName = filename;
+
+		RendererSystem::ProcessShader(ret);
+		//return LinkShader(vertex, fragment);
+		return ret;
 	}
 
 	Shader* Shader::LoadShaderFromSource(const char* vertex_source, const char* fragment_source, const char* filename)
@@ -126,9 +134,9 @@ namespace asapi
 		GLuint vertex, fragment;
 		GLint isCompiled = GL_FALSE;
 		uint32_t programID = -1;
-		Shader* ret = nullptr;
+		//Shader* ret = nullptr;
 		
-
+/*
 		vertex = LoadSingleShader(vertex_source, GL_VERTEX_SHADER, filename);
 		if(vertex==0)
 			return nullptr;
@@ -137,9 +145,16 @@ namespace asapi
 		fragment = LoadSingleShader(fragment_source, GL_FRAGMENT_SHADER, filename);
 		if(fragment==0)
 			return nullptr;
+*/
 
+		Shader* ret = new Shader(0);
+		ret->vertex_source = vertex_source;
+		ret->fragment_source = fragment_source;
+		ret->shaderName = filename;
 
-		return LinkShader(vertex, fragment);
+		RendererSystem::ProcessShader(ret);
+		//return LinkShader(vertex, fragment);
+		return ret;
 	}
 
 	Shader* Shader::LoadShaderFailSave()
