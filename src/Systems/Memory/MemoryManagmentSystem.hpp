@@ -65,6 +65,11 @@ namespace asapi
 
 		bfu::MemBlockBase* RequestPrefabMemBlock(const char* memblockDesc);
 		void ReleasePrefabMemBlock(bfu::MemBlockBase* memblock);
+
+		inline bfu::MemBlockBase* GetSTDAllocator()
+		{
+			return &m_StdAllocatorMemBlock;
+		}
 	};
 
 
@@ -75,5 +80,6 @@ namespace asapi
 #define DEALLOCATE_GLOBAL(x)	bfu::MemBlockBase::DeallocateUnknown(x)
 #define SYSTEMS_ALLOCATOR 		GetObject().MEMORY.GetSystemsAllocator()
 
+#define STD_NEW(x,t) 			(t*)SYSTEMS::GetObject().MEMORY.GetSTDAllocator()->allocate(x, sizeof(t), alignof(t))
 
 #endif

@@ -1,6 +1,7 @@
 #ifndef _H_Mesh
 #define _H_Mesh
 #include <GLES2/gl2.h>
+#include <vector>
 #include "glm.hpp"
 
 namespace asapi
@@ -11,6 +12,16 @@ namespace asapi
 		GLuint 		indice_array;
 		GLint 		m_size = -1;
 
+		bool 		m_hasPosition;
+		bool		m_hasNormals;
+		uint32_t	m_numUvChannels;
+
+
+		std::vector<uint32_t>	v_VBOconfig;
+		std::vector<uint32_t>	v_VBOindices;
+		std::vector<float> 		v_VBOdata;
+
+
 		#ifdef IS_EDITOR
 		char name[256];
 		#endif
@@ -18,7 +29,7 @@ namespace asapi
 	public:
 		Mesh(glm::vec2 resolution);
 		Mesh(const char*);
-		~Mesh(){};
+		~Mesh();
 
 		inline void Render()
 		{

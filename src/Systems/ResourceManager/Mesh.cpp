@@ -90,6 +90,11 @@ namespace asapi
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*m_size, NULL, GL_STATIC_DRAW);
 		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLuint)*m_size, indices);
 	}
+	Mesh::~Mesh()
+	{
+		glDeleteBuffers(1, &vertex_buffer);
+		glDeleteBuffers(1, &indice_array);
+	}
 
 struct Vertex {
     // position
@@ -104,6 +109,136 @@ struct Vertex {
     glm::vec3 Bitangent;
 };
 using std::vector;
+
+#define ATTRIBUTE_INDEXES 5
+
+    void ProcessMesh(aiMesh *mesh)
+    {
+        const bool        m_hasPosition   = mesh->HasPositions();
+        const bool        m_hasNormals    = mesh->HasNormals();
+        const uint32_t    m_numUvChannels = mesh->GetNumUVChannels();
+
+        const uint32_t vertexfields = (m_hasPosition ? 3 : 0)
+                                + (m_hasNormals ? 3 : 0)
+                                + m_numUvChannels * 2;
+
+        //const uint32_t vertexMemSize = vertexfields * sizeof(float);
+
+        const uint32_t arraySize = vertexfields * mesh->mNumVertices;
+
+        int vertexInnerDataFieldOffset = 0;
+        int VBOconfigInnerDataFieldOffset = 0;
+
+
+
+        float* vertexData = nullptr;
+        int* indiciesData = nullptr;
+        int* VBOconfig = nullptr;
+
+
+
+        vertexData = STD_NEW(arraySize, float);
+        VBOconfig = STD_NEW( ATTRIBUTE_INDEXES //number of indexes needed to configure single attribute
+                            * ((m_hasPosition ? 1 : 0) + (m_hasNormals ? 1 : 0) + m_numUvChannels )
+                            , int);
+
+        ////////////////////////
+        //vertecies
+        if(m_hasPosition)
+        {
+            for(uint32_t i = 0; i<mesh->mNumVertices; ++i)
+            {
+                int index = i * vertexfields + vertexInnerDataFieldOffset;
+                vertexData[index + 0] = mesh->mVertices[i].x;
+                vertexData[index + 1] = mesh->mVertices[i].y;
+                vertexData[index + 2] = mesh->mVertices[i].z;
+            }
+            vertexInnerDataFieldOffset += 3;
+
+            int index = VBOconfigInnerDataFieldOffset;
+            //glEnableVertexAttribArray(...):
+            VBOconfig[index+0] = 0; //0 for 'attribute vec4 position;'
+            //glVertexAttribPointer(...):
+            VBOconfig[index+1] = 0;             //index
+            VBOconfig[index+2] = 3;             //size
+            VBOconfig[index+3] = vertexfields;  //stride
+            VBOconfig[index+4] = 0;             //pointer
+
+            VBOconfigInnerDataFieldOffset += ATTRIBUTE_INDEXES;
+        }
+
+        if(m_hasNormals)
+        {
+            for(uint32_t i = 0; i<mesh->mNumVertices; ++i)
+            {
+                int index = i * vertexfields + vertexInnerDataFieldOffset;
+                vertexData[index + 0] = mesh->mNormals[i].x;
+                vertexData[index + 1] = mesh->mNormals[i].y;
+                vertexData[index + 2] = mesh->mNormals[i].z;
+            }
+            vertexInnerDataFieldOffset += 3;
+
+            int index = VBOconfigInnerDataFieldOffset;
+            //glEnableVertexAttribArray(...):
+            VBOconfig[index+0] = 1; //1 for 'attribute vec3 normal;'
+            //glVertexAttribPointer(...):
+            VBOconfig[index+1] = 1;             //index
+            VBOconfig[index+2] = 3;             //size
+            VBOconfig[index+3] = vertexfields;  //stride
+            VBOconfig[index+4] = 0;             //pointer
+
+            VBOconfigInnerDataFieldOffset += ATTRIBUTE_INDEXES;
+        }
+
+        for(uint32_t UVchannel = 0; UVchannel<m_numUvChannels; ++UVchannel)
+        {
+            for(uint32_t i = 0; i<mesh->mNumVertices; ++i)
+            {
+                int index = i * vertexfields + vertexInnerDataFieldOffset;
+                vertexData[index + 0] = mesh->mTextureCoords[UVchannel][i].x; 
+                vertexData[index + 1] = mesh->mTextureCoords[UVchannel][i].y; 
+            }
+            vertexInnerDataFieldOffset += 2;
+        }
+
+        log::debug << "Mesh " << mesh->mName.C_Str() << " has " << mesh->mNumVertices << " vertecies" << std::endl;
+        for(int i=0; i<mesh->mNumVertices; ++i)
+        {
+            int index = i * vertexfields;
+            log::debug << "vert[" << i << "] = ("
+                << vertexData[index+0] << ", " << vertexData[index+1] << ", " << vertexData[index+2] << std::endl;
+                //<< vertexData[i] << ", " << vertexData[i] << ")" << std::endl;
+        }
+
+
+
+
+        ///////////////////
+        //indicies
+        uint32_t indiciesCount = 0;
+        for(uint32_t i = 0; i < mesh->mNumFaces; ++i)
+        {
+            aiFace face = mesh->mFaces[i];
+            indiciesCount += face.mNumIndices;      
+        }
+
+        indiciesData = STD_NEW(indiciesCount, int);
+
+        uint32_t i = 0;
+        for(uint32_t f = 0; f < mesh->mNumFaces; ++f)
+        {
+            aiFace face = mesh->mFaces[f];
+            // retrieve all indices of the face and store them in the indices array
+            for(unsigned int j = 0; j < face.mNumIndices; ++j)
+                indiciesData[i] = face.mIndices[j]; 
+        }
+
+        DEALLOCATE_GLOBAL(vertexData);
+        DEALLOCATE_GLOBAL(indiciesData);
+    }
+
+
+
 	void processMesh(aiMesh *mesh, const aiScene *scene)
     {
         // data to fill
@@ -184,12 +319,12 @@ using std::vector;
         std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
         textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 */
-        log::debug << "Mesh " << mesh->mName.C_Str() << " has " << vertices.size() << " vertecies" << std::endl;
+        log::debug << "Mesh " << mesh->mName.C_Str() << " has " << (int)vertices.size() << " vertecies" << std::endl;
         for(int i=0; i<vertices.size(); ++i)
         {
         	log::debug << "vert[" << i << "] = ("
-        		<< vertices[i].Position.x << ", " << vertices[i].Position.y << ", " << vertices[i].Position.z << ", "
-        		<< vertices[i].TexCoords.x << ", " << vertices[i].TexCoords.y << ")" << std::endl;
+        		<< vertices[i].Position.x << ", " << vertices[i].Position.y << ", " << vertices[i].Position.z << std::endl;
+        		//<< vertices[i].TexCoords.x << ", " << vertices[i].TexCoords.y << ")" << std::endl;
         }
         
     }
@@ -203,7 +338,8 @@ using std::vector;
             // the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
             aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
             //meshes.push_back(processMesh(mesh, scene));
-           processMesh(mesh, scene);
+           //processMesh(mesh, scene);
+           ProcessMesh(mesh);
         }
         // after we've processed all of the meshes (if any) we then recursively process each of the children nodes
         for(unsigned int i = 0; i < node->mNumChildren; i++)
@@ -230,6 +366,6 @@ using std::vector;
 
 	void Mesh::Compile(const char* dest, const char* source)
 	{
-		loadModel(std::string(source));
+		//loadModel(std::string(source));
 	}
 }
