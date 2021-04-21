@@ -87,7 +87,7 @@ namespace asapi
 				if( newShader==0 )
 				{
 					log::warning << "Could not load shader '" << str << "' reattemping with 'debug' shader" << std::endl;
-					newShader = Shader::LoadShaderFailSave();
+					//already done in renderer system
 				}
 				res->Rebuild( newShader );
 				m_shaders[id] = *res;

@@ -177,7 +177,6 @@ namespace asapi{
 
 
 		vertex = LoadSingleShader(shader->vertex_source, GL_VERTEX_SHADER, shader->shaderName);
-
 		fragment = LoadSingleShader(shader->fragment_source, GL_FRAGMENT_SHADER, shader->shaderName);
 
 
@@ -191,7 +190,7 @@ namespace asapi{
 		glLinkProgram(programID);
 
 		glGetProgramiv(programID, GL_LINK_STATUS, &isCompiled);
-		if(isCompiled == GL_FALSE)
+		if(isCompiled == GL_FALSE || vertex==0 || fragment==0)
 		{
 			GLint maxLength = 0;
 			glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &maxLength);
@@ -204,10 +203,14 @@ namespace asapi{
 
 			log::error << str << std::endl;
 
-			// Provide the infolog in whatever manor you deem best.
-			// Exit with failure.
 
-			//link fallback shader
+			glDetachShader(programID, vertex);
+			glDetachShader(programID, fragment);
+
+			//linking fallback shader
+			vertex = LoadSingleShader(VERTEX_SOURCE, GL_VERTEX_SHADER, shader->shaderName);
+			fragment = LoadSingleShader(FRAGMENT_SOURCE, GL_FRAGMENT_SHADER, shader->shaderName);
+
 			glAttachShader(programID, vertex);
 			glAttachShader(programID, fragment);
 			

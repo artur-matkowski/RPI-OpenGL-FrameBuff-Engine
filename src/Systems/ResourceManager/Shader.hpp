@@ -19,7 +19,7 @@ namespace asapi
 		const char* fragment_source = nullptr;
 		const char* shaderName = "nullptr";
 
-		Shader(uint32_t id);
+		Shader();
 
 		static Shader* LinkShader(GLuint vertex, GLuint fragment);
 	public:
@@ -35,9 +35,8 @@ namespace asapi
 			return m_programID;
 		}
 		
-		static Shader* LoadShaderFromSource(const char* vertex_source, const char* fragment_source, const char* filename);
+		//static Shader* LoadShaderFromSource(const char* vertex_source, const char* fragment_source, const char* filename);
 		static Shader* LoadShaderFromFile(const char* filename);
-		static Shader* LoadShaderFailSave();
 
 		
 		static void Compile(const char* dest, const char* source);
