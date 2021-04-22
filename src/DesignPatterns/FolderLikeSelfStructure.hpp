@@ -4,8 +4,6 @@
 #include <cstring>
 #include "Systems.hpp"
 
-#define MAX_PATH_SIZE 2048
-
 
 
 template<class InfoBufferType>

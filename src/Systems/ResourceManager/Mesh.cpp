@@ -250,6 +250,21 @@ using std::vector;
             vertexInnerDataFieldOffset += 2;
         }
 
+
+        ///////////////////
+        //indicies
+
+        uint32_t i = 0;
+        for(uint32_t f = 0; f < mesh->mNumFaces; ++f)
+        {
+            aiFace face = mesh->mFaces[f];
+            // retrieve all indices of the face and store them in the indices array
+            for(unsigned int j = 0; j < face.mNumIndices; ++j){
+                indiciesData[i] = face.mIndices[j]; ++i;
+            }
+        }
+
+
         log::debug << "Mesh " << mesh->mName.C_Str() << " has " << *fp_arraySize << " floats:" << std::endl;
         for(int i=0; i<mesh->mNumVertices; ++i)
         {
@@ -273,18 +288,6 @@ using std::vector;
 
 
 
-
-        ///////////////////
-        //indicies
-
-        uint32_t i = 0;
-        for(uint32_t f = 0; f < mesh->mNumFaces; ++f)
-        {
-            aiFace face = mesh->mFaces[f];
-            // retrieve all indices of the face and store them in the indices array
-            for(unsigned int j = 0; j < face.mNumIndices; ++j)
-                indiciesData[i] = face.mIndices[j]; 
-        }
     }
 
 
