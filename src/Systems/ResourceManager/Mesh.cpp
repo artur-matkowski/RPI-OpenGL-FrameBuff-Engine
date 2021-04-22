@@ -39,6 +39,12 @@ namespace asapi
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*m_size, NULL, GL_STATIC_DRAW);
 		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLuint)*m_size, indices);
 
+
+        char buff[1024];
+        sprintf(buff, "%s/assets_int/meshes/%s.mmp"
+            , SYSTEMS::GetObject().RESOURCES.GetProjectPath()
+            , path);
+
 	}
 
 
@@ -145,18 +151,26 @@ using std::vector;
             , SYSTEMS::GetObject().RESOURCES.GetProjectPath()
             , mesh->mName.C_Str());
 
+        //allocte memory maped file to convert the data
         SYSTEMS::IO::MMAP mmap;
         mmap.InitForWrite(buff,
-                sizeof(uint32_t) * 2
+                sizeof(bool) * 2
+                + sizeof(uint32_t) * 3
                 + sizeof(float) * arraySize
                 + sizeof(int) * indiciesCount);
-        int* fp_arraySize = (int*) (size_t)mmap.Data();
-        int* fp_indiciesCount = &fp_arraySize[1];
-        vertexData = (float*)((size_t)mmap.Data() + sizeof(int)*2);
-        indiciesData = (int*)((size_t)mmap.Data() + sizeof(int)*2
-                                        + sizeof(float) * arraySize);
+        
+        bool* fp_hasPosition = (bool*) (size_t)mmap.Data();
+        bool* fp_hasNormals = &fp_hasPosition[1];
+        int* fp_arraySize = (int*) &fp_hasPosition[2];
+        int* fp_numUvChannels = &fp_arraySize[1];
+        int* fp_indiciesCount = &fp_numUvChannels[1];
+        vertexData = (float*) &fp_indiciesCount[1];
+        indiciesData = (int*) &vertexData[arraySize];
 
+        *fp_hasPosition = m_hasPosition;
+        *fp_hasNormals = m_hasNormals;
         *fp_arraySize = arraySize;
+        *fp_numUvChannels = m_numUvChannels;
         *fp_indiciesCount = indiciesCount;
 
 
@@ -208,7 +222,6 @@ using std::vector;
 
 
 
-
         ///////////////////
         //indicies
 
@@ -224,95 +237,6 @@ using std::vector;
 
 
 
-	void processMesh(aiMesh *mesh, const aiScene *scene)
-    {
-        // data to fill
-        vector<Vertex> vertices;
-        vector<unsigned int> indices;
-        //vector<Texture> textures;
-
-        // walk through each of the mesh's vertices
-        for(unsigned int i = 0; i < mesh->mNumVertices; i++)
-        {
-            Vertex vertex;
-            glm::vec3 vector; // we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
-            // positions
-            vector.x = mesh->mVertices[i].x;
-            vector.y = mesh->mVertices[i].y;
-            vector.z = mesh->mVertices[i].z;
-            vertex.Position = vector;
-            // normals
-            if (mesh->HasNormals())
-            {
-                vector.x = mesh->mNormals[i].x;
-                vector.y = mesh->mNormals[i].y;
-                vector.z = mesh->mNormals[i].z;
-                vertex.Normal = vector;
-            }
-            // texture coordinates
-            if(mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
-            {
-                glm::vec2 vec;
-                // a vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't 
-                // use models where a vertex can have multiple texture coordinates so we always take the first set (0).
-                vec.x = mesh->mTextureCoords[0][i].x; 
-                vec.y = mesh->mTextureCoords[0][i].y;
-                vertex.TexCoords = vec;
-                // tangent
-                vector.x = mesh->mTangents[i].x;
-                vector.y = mesh->mTangents[i].y;
-                vector.z = mesh->mTangents[i].z;
-                vertex.Tangent = vector;
-                // bitangent
-                vector.x = mesh->mBitangents[i].x;
-                vector.y = mesh->mBitangents[i].y;
-                vector.z = mesh->mBitangents[i].z;
-                vertex.Bitangent = vector;
-            }
-            else
-                vertex.TexCoords = glm::vec2(0.0f, 0.0f);
-
-            vertices.push_back(vertex);
-        }
-        // now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
-        for(unsigned int i = 0; i < mesh->mNumFaces; i++)
-        {
-            aiFace face = mesh->mFaces[i];
-            // retrieve all indices of the face and store them in the indices vector
-            for(unsigned int j = 0; j < face.mNumIndices; j++)
-                indices.push_back(face.mIndices[j]);        
-        }
-        // process materials
-        aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];    
-        // we assume a convention for sampler names in the shaders. Each diffuse texture should be named
-        // as 'texture_diffuseN' where N is a sequential number ranging from 1 to MAX_SAMPLER_NUMBER. 
-        // Same applies to other texture as the following list summarizes:
-        // diffuse: texture_diffuseN
-        // specular: texture_specularN
-        // normal: texture_normalN
-/*
-        // 1. diffuse maps
-        vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-        textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-        // 2. specular maps
-        vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-        textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-        // 3. normal maps
-        std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
-        textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
-        // 4. height maps
-        std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
-        textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
-*/
-        log::debug << "Mesh " << mesh->mName.C_Str() << " has " << (int)vertices.size() << " vertecies" << std::endl;
-        for(int i=0; i<vertices.size(); ++i)
-        {
-        	log::debug << "vert[" << i << "] = ("
-        		<< vertices[i].Position.x << ", " << vertices[i].Position.y << ", " << vertices[i].Position.z << std::endl;
-        		//<< vertices[i].TexCoords.x << ", " << vertices[i].TexCoords.y << ")" << std::endl;
-        }
-        
-    }
 
     void processNode(aiNode *node, const aiScene *scene)
     {
@@ -322,9 +246,7 @@ using std::vector;
             // the node object only contains indices to index the actual objects in the scene. 
             // the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
             aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-            //meshes.push_back(processMesh(mesh, scene));
-           //processMesh(mesh, scene);
-           ProcessMesh(mesh);
+            ProcessMesh(mesh);
         }
         // after we've processed all of the meshes (if any) we then recursively process each of the children nodes
         for(unsigned int i = 0; i < node->mNumChildren; i++)
