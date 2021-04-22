@@ -1,6 +1,10 @@
 #include "Systems.hpp"
+#include <fcntl.h>
 #include <stdlib.h>
 #include <time.h>
+#include <sys/mman.h>
+#include <stdio.h>
+#include <unistd.h>
 
 #define HELP \
 "Parameters accepted by this executable:"\
@@ -116,5 +120,56 @@ namespace asapi
 		fseek(*ret_pFile, 0L, SEEK_END); 
 		*ret_filesize = ftell(*ret_pFile); 
 		fseek(*ret_pFile, 0L, SEEK_SET);
+	}
+
+
+	void SYSTEMS::IO::MMAP::InitForRead(const char* filename)
+	{
+		fd = open(filename, O_RDONLY );
+		if (fd == -1)
+		{
+			log::error << "Can not open file: " << filename << std::endl;
+			return;
+		}
+
+		if (fstat(fd, &sb) == -1) 
+		{
+			log::error << "Can not fstat file: " << filename << std::endl;
+			return;
+		}
+
+		data = mmap(NULL, sb.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+
+		if (data == MAP_FAILED)
+			log::error << "Failed to mmap file: " << filename << std::endl;		
+	}
+
+	void SYSTEMS::IO::MMAP::InitForWrite(const char* filename, size_t size)
+	{
+		fd = open(filename, O_RDWR | O_CREAT | O_TRUNC | O_SYNC, (mode_t)0666);
+		if (fd == -1)
+		{
+			log::error << "Can not open file: " << filename << std::endl;
+			return;
+		}
+
+		sb.st_size = size;
+
+		data = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);	
+		ftruncate(fd, size);
+
+		if (data == MAP_FAILED)
+			log::error << "Failed to mmap file: " << filename << std::endl;	
+	}
+
+	SYSTEMS::IO::MMAP::~MMAP()
+	{
+		if (msync(data, sb.st_size, MS_SYNC) == -1)
+		{
+			log::error << "Could not sync the file to disk" << std::endl;	
+		}
+
+		munmap(data, sb.st_size);
+		close(fd);
 	}
 }

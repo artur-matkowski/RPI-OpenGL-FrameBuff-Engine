@@ -33,7 +33,6 @@ namespace asapi
 			return (uint32_t)(size_t)h_shaderHandle;
 		}
 		
-		//static Shader* LoadShaderFromSource(const char* vertex_source, const char* fragment_source, const char* filename);
 		static Shader* LoadShaderFromFile(const char* filename);
 
 		

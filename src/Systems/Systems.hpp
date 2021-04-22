@@ -1,7 +1,10 @@
 #ifndef _H_SYSTEMS
 #define _H_SYSTEMS
-#include "object.hpp"
+#include <stdlib.h>
+#include <sys/stat.h>
 #include <bitforge/utils/bfu.hpp>
+
+#include "object.hpp"
 #include "RendererSystem.hpp"
 #include "Context.hpp"
 #include "ResourceSystem.hpp"
@@ -9,7 +12,6 @@
 #include "MemoryManagmentSystem.hpp"
 #include "SceneSystem.hpp"
 #include "EditorSystem.hpp"
-#include <stdlib.h>
 
 namespace asapi
 {
@@ -63,6 +65,25 @@ namespace asapi
 			{ 
 				fclose (pFile); 
 			}
+
+			class MMAP
+			{
+				void* data = nullptr;
+				int fd = -1;
+				struct stat sb;
+
+			public:
+				MMAP(){};
+				~MMAP();
+
+				void InitForRead(const char* filename);
+				void InitForWrite(const char* filename, size_t size);
+
+				bool IsValid(){ return fd!=-1; }
+				void* Data(){ return data; }
+				uint32_t Size(){ return sb.st_size; }
+
+			};
 		};
 	};
 

@@ -133,8 +133,32 @@ using std::vector;
         int* indiciesData = nullptr;
 
 
+        uint32_t indiciesCount = 0;
+        for(uint32_t i = 0; i < mesh->mNumFaces; ++i)
+        {
+            aiFace face = mesh->mFaces[i];
+            indiciesCount += face.mNumIndices;      
+        }
 
-        vertexData = STD_NEW(arraySize, float);
+        char buff[1024];
+        sprintf(buff, "%s/assets_int/meshes/%s.mmp"
+            , SYSTEMS::GetObject().RESOURCES.GetProjectPath()
+            , mesh->mName.C_Str());
+
+        SYSTEMS::IO::MMAP mmap;
+        mmap.InitForWrite(buff,
+                sizeof(uint32_t) * 2
+                + sizeof(float) * arraySize
+                + sizeof(int) * indiciesCount);
+        int* fp_arraySize = (int*) (size_t)mmap.Data();
+        int* fp_indiciesCount = &fp_arraySize[1];
+        vertexData = (float*)((size_t)mmap.Data() + sizeof(int)*2);
+        indiciesData = (int*)((size_t)mmap.Data() + sizeof(int)*2
+                                        + sizeof(float) * arraySize);
+
+        *fp_arraySize = arraySize;
+        *fp_indiciesCount = indiciesCount;
+
 
         ////////////////////////
         //vertecies
@@ -187,14 +211,6 @@ using std::vector;
 
         ///////////////////
         //indicies
-        uint32_t indiciesCount = 0;
-        for(uint32_t i = 0; i < mesh->mNumFaces; ++i)
-        {
-            aiFace face = mesh->mFaces[i];
-            indiciesCount += face.mNumIndices;      
-        }
-
-        indiciesData = STD_NEW(indiciesCount, int);
 
         uint32_t i = 0;
         for(uint32_t f = 0; f < mesh->mNumFaces; ++f)
@@ -204,9 +220,6 @@ using std::vector;
             for(unsigned int j = 0; j < face.mNumIndices; ++j)
                 indiciesData[i] = face.mIndices[j]; 
         }
-
-        DEALLOCATE_GLOBAL(vertexData);
-        DEALLOCATE_GLOBAL(indiciesData);
     }
 
 
@@ -338,6 +351,10 @@ using std::vector;
 
 	void Mesh::Compile(const char* dest, const char* source)
 	{
-		//loadModel(std::string(source));
+		loadModel(std::string(source));
+
+        //mark asset as processed
+        SYSTEMS::IO::MMAP mmap;
+        mmap.InitForWrite(dest, 1);
 	}
 }
