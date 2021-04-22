@@ -168,8 +168,9 @@ namespace asapi
 		// {
 		// 	log::error << "Could not sync the file to disk" << std::endl;	
 		// }
-
-		munmap(data, sb.st_size);
-		close(fd);
+		if(data != MAP_FAILED && data != nullptr)
+			munmap(data, sb.st_size);
+		if(fd!=-1)
+			close(fd);
 	}
 }

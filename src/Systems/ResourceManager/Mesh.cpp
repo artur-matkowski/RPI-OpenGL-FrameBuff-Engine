@@ -40,10 +40,49 @@ namespace asapi
 		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLuint)*m_size, indices);
 
 
-        char buff[1024];
-        sprintf(buff, "%s/assets_int/meshes/%s.mmp"
-            , SYSTEMS::GetObject().RESOURCES.GetProjectPath()
-            , path);
+        char buff[MAX_PATH_SIZE];
+        sprintf(buff, "%s.mmp", path);
+
+        SYSTEMS::IO::MMAP mmap;
+        mmap.InitForRead(buff);
+
+        if( !mmap.IsValid() )
+            return;
+
+        bool* fp_hasPosition = (bool*) (size_t)mmap.Data();
+        bool* fp_hasNormals = &fp_hasPosition[1];
+        int* fp_arraySize = (int*) &fp_hasPosition[2];
+        int* fp_numUvChannels = &fp_arraySize[1];
+        int* fp_indiciesCount = &fp_numUvChannels[1];
+        float* vertexData = (float*) &fp_indiciesCount[1];
+        int* indiciesData = (int*) &vertexData[*fp_arraySize];
+
+        const uint32_t vertexfields = (*fp_hasPosition ? 3 : 0)
+                                + (*fp_hasNormals ? 3 : 0)
+                                + *fp_numUvChannels * 2;
+
+
+        log::debug << "Mesh " << path << " has " << *fp_arraySize << " floats:" << std::endl;
+        for(int i=0; i<(*fp_arraySize/vertexfields); ++i)
+        {
+            int index = i * vertexfields;
+            std::cout << "vert[" << i << "] = ";
+
+            std::cout << "( " <<vertexData[index];
+            for(int j=1; j<vertexfields; ++j)
+                std::cout << ", " << vertexData[index+i];
+            std::cout << ")" << std::endl;
+        }
+        std::cout << "Indicies count: " << *fp_indiciesCount << " : \n";
+        for(int i=0; i<*fp_indiciesCount; i+=3)
+        {
+            std::cout << "( " << indiciesData[i];
+            std::cout << ", " << indiciesData[i+1];
+            std::cout << ", " << indiciesData[i+2];
+            std::cout << ")\n" ;
+        }
+        std::cout << "UVs: " << *fp_numUvChannels << " normals: " << *fp_hasNormals << std::endl;
+
 
 	}
 
@@ -158,7 +197,7 @@ using std::vector;
                 + sizeof(uint32_t) * 3
                 + sizeof(float) * arraySize
                 + sizeof(int) * indiciesCount);
-        
+
         bool* fp_hasPosition = (bool*) (size_t)mmap.Data();
         bool* fp_hasNormals = &fp_hasPosition[1];
         int* fp_arraySize = (int*) &fp_hasPosition[2];
@@ -211,14 +250,27 @@ using std::vector;
             vertexInnerDataFieldOffset += 2;
         }
 
-        log::debug << "Mesh " << mesh->mName.C_Str() << " has " << mesh->mNumVertices << " vertecies" << std::endl;
+        log::debug << "Mesh " << mesh->mName.C_Str() << " has " << *fp_arraySize << " floats:" << std::endl;
         for(int i=0; i<mesh->mNumVertices; ++i)
         {
             int index = i * vertexfields;
-            log::debug << "vert[" << i << "] = ("
-                << vertexData[index+0] << ", " << vertexData[index+1] << ", " << vertexData[index+2] << std::endl;
-                //<< vertexData[i] << ", " << vertexData[i] << ")" << std::endl;
+            std::cout << "vert[" << i << "] = ";
+
+            std::cout << "( " <<vertexData[index];
+            for(int j=1; j<vertexfields; ++j)
+                std::cout << ", " << vertexData[index+i];
+            std::cout << ")" << std::endl;
         }
+        std::cout << "Indicies count: " << *fp_indiciesCount << " : \n";
+        for(int i=0; i<*fp_indiciesCount; i+=3)
+        {
+            std::cout << "( " << indiciesData[i];
+            std::cout << ", " << indiciesData[i+1];
+            std::cout << ", " << indiciesData[i+2];
+            std::cout << ")\n" ;
+        }
+        std::cout << "UVs: " << *fp_numUvChannels << " normals: " << *fp_hasNormals << std::endl;
+
 
 
 

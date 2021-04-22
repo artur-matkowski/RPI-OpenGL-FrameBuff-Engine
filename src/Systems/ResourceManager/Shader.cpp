@@ -10,7 +10,7 @@ namespace asapi
 
 	Shader* Shader::LoadShaderFromFile(const char* filename)
 	{
-		char buff[1024*1];
+		char buff[MAX_PATH_SIZE];
 		char vertex_source[1024*1024*1];
 		char fragment_source[1024*1024*1];
 		FILE * pFile = nullptr;
