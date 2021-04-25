@@ -566,16 +566,8 @@ namespace asapi
 
 			//TODO frame stuff
 			{
-		        glViewport(0, 0, resolution.x, resolution.y);
-				//log::debug << "m_mainEglWindow->resolution; "  << m_mainEglWindow->resolution.x << " " << m_mainEglWindow->resolution.y << std::endl;
-				glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-				glClear(GL_COLOR_BUFFER_BIT);
-
-			
-
 				rendererSystem.Render();
 
-				
 				(this->*p_postRenderCallback)();
 			}
 

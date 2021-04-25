@@ -311,10 +311,6 @@ namespace asapi
 
 			//TODO frame stuff
 			{
-				glViewport(0, 0, resolution.x, resolution.y);
-				glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-				glClear(GL_COLOR_BUFFER_BIT);
-
 				rendererSystem.Render();
 
 				(this->*p_postRenderCallback)();

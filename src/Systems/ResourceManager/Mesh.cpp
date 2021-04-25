@@ -104,7 +104,7 @@ namespace asapi
             config[2]++;
         }
 
-        // if(m_hasNormals)
+        // if(*fp_hasNormals)
         // {
         //     config.reserve(config.size()+5);
         //     config.push_back(0);
@@ -317,6 +317,12 @@ namespace asapi
             for(unsigned int j = 0; j < face.mNumIndices; ++j){
                 indiciesData[i] = face.mIndices[j]; ++i;
             }
+        }
+        for(int j=0; j<i; j+=3)
+        {
+            auto t = indiciesData[i];
+            indiciesData[i] = indiciesData[i+1];
+            indiciesData[i+1] = t;
         }
 
 

@@ -49,7 +49,12 @@ namespace asapi{
 
 	void RendererSystem::Render()
 	{
-		//m_rendererComponent->Render();
+        glViewport(0, 0, m_resolution.x, m_resolution.y);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		glEnable(GL_CULL_FACE);
+		glFrontFace(GL_CW);
 
 		for(auto it = v_rendererComponents.begin(); it!=v_rendererComponents.end(); ++it)
 		{

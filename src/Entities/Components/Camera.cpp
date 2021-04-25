@@ -28,10 +28,12 @@ namespace asapi
 	#ifdef IS_EDITOR
 	void Camera::OnGUI()
 	{
+		const auto flags = ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll;
+		
 		bool updated = false;
-		updated |= ImGui::InputFloat("Near Plane", &m_nearPlane);
-		updated |= ImGui::InputFloat("Far Plane", &m_farPlane);
-		updated |= ImGui::InputFloat("Field of View", &m_FOV);
+		updated |= ImGui::InputFloat("Near Plane", &m_nearPlane, flags);
+		updated |= ImGui::InputFloat("Far Plane", &m_farPlane, flags);
+		updated |= ImGui::InputFloat("Field of View", &m_FOV, flags);
 
 		if(ImGui::Checkbox("Is Main Camera", &m_isMainCamera))
 		{
