@@ -9,18 +9,10 @@ namespace asapi
 {
 	Mesh::Mesh(const char* path)
 	{
-		#ifdef IS_EDITOR
-		int size = strlen(path);
-		const char* tmp = &path[size-1];
-		for(; *tmp!='/'; tmp-=1); // < find where file name is starting
-		strncpy(name, tmp+1, 255);
-		name[255] = '\0';
-		#endif
-
 		static GLfloat vertexbuff[] = {
-			 0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-			 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-			-0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f
+			 0.0f,  0.5f, 0.0f, 0.0f, 0.0f,// 1.0f, 0.0f, 0.0f, 1.0f,
+			 0.5f, -0.5f, 0.0f, 0.0f, 1.0f,// 0.0f, 1.0f, 0.0f, 1.0f,
+			-0.5f, -0.5f, 0.0f, 1.0f, 1.0f//, 0.0f, 0.0f, 1.0f, 1.0f
 		};
 		//	^ verts 			^ UVs 		^ colors
 
@@ -30,8 +22,8 @@ namespace asapi
 
  		glGenBuffers(1, &vertex_buffer);
  		glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * m_size * 9, 0, GL_STATIC_DRAW);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * m_size * 9, vertexbuff);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * m_size * 5, 0, GL_STATIC_DRAW);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * m_size * 5, vertexbuff);
 
 
         glGenBuffers(1, &indice_array);
@@ -39,7 +31,27 @@ namespace asapi
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*m_size, NULL, GL_STATIC_DRAW);
 		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLuint)*m_size, indices);
 
+        config.push_back( vertex_buffer );
+        config.push_back( indice_array );
+        config.push_back( 2 ); //present attributes count
 
+        //positions attribute
+        config.push_back(0);
+        config.push_back(0);
+        config.push_back(3);
+        config.push_back(5);
+        config.push_back(0);
+
+        //uv0 attribute
+        config.push_back(2);
+        config.push_back(2);
+        config.push_back(2);
+        config.push_back(5);
+        config.push_back(3);
+
+        config.push_back( m_size );
+
+/*
         char buff[MAX_PATH_SIZE];
         sprintf(buff, "%s.mmp", path);
 
@@ -49,17 +61,52 @@ namespace asapi
         if( !mmap.IsValid() )
             return;
 
-        bool* fp_hasPosition = (bool*) (size_t)mmap.Data();
-        bool* fp_hasNormals = &fp_hasPosition[1];
-        int* fp_arraySize = (int*) &fp_hasPosition[2];
-        int* fp_numUvChannels = &fp_arraySize[1];
-        int* fp_indiciesCount = &fp_numUvChannels[1];
-        float* vertexData = (float*) &fp_indiciesCount[1];
-        int* indiciesData = (int*) &vertexData[*fp_arraySize];
+        fp_hasPosition = (bool*) (size_t)mmap.Data();
+        fp_hasNormals = &fp_hasPosition[1];
+        fp_arraySize = (uint32_t*) &fp_hasPosition[2];
+        fp_numUvChannels = &fp_arraySize[1];
+        fp_indiciesCount = &fp_numUvChannels[1];
+        fp_vertexData = (float*) &fp_indiciesCount[1];
+        fp_indiciesData = (int*) &fp_vertexData[*fp_arraySize];
 
         const uint32_t vertexfields = (*fp_hasPosition ? 3 : 0)
                                 + (*fp_hasNormals ? 3 : 0)
                                 + *fp_numUvChannels * 2;
+
+
+        if(fp_hasPosition)
+        {
+            config.reserve(config.size()+5);
+            config.push_back(0);
+            config.push_back(0);
+            config.push_back(3);
+            config.push_back(vertexfields);
+            config.push_back(0);
+            //glEnableVertexAttribArray(0);
+            //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT)*9, nullptr);
+        }
+
+        // if(m_hasNormals)
+        // {
+        //     config.reserve(config.size()+5);
+        //     config.push_back(0);
+        //     config.push_back(0);
+        //     config.push_back(3);
+        //     config.push_back(9);
+        //     config.push_back(0);
+        // }
+
+        for(uint32_t UVchannel = 0; UVchannel<*fp_numUvChannels; ++UVchannel)
+        {
+            config.reserve(config.size()+5);
+            config.push_back(2);
+            config.push_back(2);
+            config.push_back(2);
+            config.push_back(vertexfields);
+            config.push_back(3);
+            // glEnableVertexAttribArray(2);
+            // glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT)*9, (void*) (sizeof(GL_FLOAT)*3) );
+        }
 
 
         log::debug << "Mesh " << path << " has " << *fp_arraySize << " floats:" << std::endl;
@@ -68,22 +115,22 @@ namespace asapi
             int index = i * vertexfields;
             std::cout << "vert[" << i << "] = ";
 
-            std::cout << "( " <<vertexData[index];
+            std::cout << "( " <<fp_vertexData[index];
             for(int j=1; j<vertexfields; ++j)
-                std::cout << ", " << vertexData[index+i];
+                std::cout << ", " << fp_vertexData[index+j];
             std::cout << ")" << std::endl;
         }
         std::cout << "Indicies count: " << *fp_indiciesCount << " : \n";
         for(int i=0; i<*fp_indiciesCount; i+=3)
         {
-            std::cout << "( " << indiciesData[i];
-            std::cout << ", " << indiciesData[i+1];
-            std::cout << ", " << indiciesData[i+2];
+            std::cout << "( " << fp_indiciesData[i];
+            std::cout << ", " << fp_indiciesData[i+1];
+            std::cout << ", " << fp_indiciesData[i+2];
             std::cout << ")\n" ;
         }
         std::cout << "UVs: " << *fp_numUvChannels << " normals: " << *fp_hasNormals << std::endl;
 
-
+*/
 	}
 
 
@@ -141,19 +188,7 @@ namespace asapi
 		glDeleteBuffers(1, &indice_array);
 	}
 
-struct Vertex {
-    // position
-    glm::vec3 Position;
-    // normal
-    glm::vec3 Normal;
-    // texCoords
-    glm::vec2 TexCoords;
-    // tangent
-    glm::vec3 Tangent;
-    // bitangent
-    glm::vec3 Bitangent;
-};
-using std::vector;
+
 
     void ProcessMesh(aiMesh *mesh)
     {
@@ -200,9 +235,9 @@ using std::vector;
 
         bool* fp_hasPosition = (bool*) (size_t)mmap.Data();
         bool* fp_hasNormals = &fp_hasPosition[1];
-        int* fp_arraySize = (int*) &fp_hasPosition[2];
-        int* fp_numUvChannels = &fp_arraySize[1];
-        int* fp_indiciesCount = &fp_numUvChannels[1];
+        uint32_t* fp_arraySize = (uint32_t*) &fp_hasPosition[2];
+        uint32_t* fp_numUvChannels = &fp_arraySize[1];
+        uint32_t* fp_indiciesCount = &fp_numUvChannels[1];
         vertexData = (float*) &fp_indiciesCount[1];
         indiciesData = (int*) &vertexData[arraySize];
 
@@ -273,9 +308,30 @@ using std::vector;
 
             std::cout << "( " <<vertexData[index];
             for(int j=1; j<vertexfields; ++j)
-                std::cout << ", " << vertexData[index+i];
+                std::cout << ", " << vertexData[index+j];
             std::cout << ")" << std::endl;
         }
+
+
+        // log::debug << "Mesh " << mesh->mName.C_Str() << " has " << *fp_arraySize << " floats:" << std::endl;
+        // for(int i=0; i<mesh->mNumVertices; ++i)
+        // {
+        //     int index = i * vertexfields;
+        //     std::cout << "vert[" << i << "] = ";
+
+        //     std::cout << "( " << mesh->mVertices[i].x;
+        //     std::cout << ", " << mesh->mVertices[i].y;
+        //     std::cout << ", " << mesh->mVertices[i].z;
+        //     std::cout << ", " << mesh->mNormals[i].x;
+        //     std::cout << ", " << mesh->mNormals[i].y;
+        //     std::cout << ", " << mesh->mNormals[i].z;
+        //     std::cout << ", " << mesh->mTextureCoords[0][i].x;
+        //     std::cout << ", " << mesh->mTextureCoords[0][i].y;
+
+        //     std::cout << ")" << std::endl;
+        // }
+
+
         std::cout << "Indicies count: " << *fp_indiciesCount << " : \n";
         for(int i=0; i<*fp_indiciesCount; i+=3)
         {

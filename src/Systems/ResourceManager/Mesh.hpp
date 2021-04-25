@@ -13,24 +13,27 @@ namespace asapi
 	{
 		friend RendererSystem;
 		
-		GLuint 		vertex_buffer;
-		GLuint 		indice_array;
-		GLint 		m_size = -1;
-
-		bool 		m_hasPosition;
-		bool		m_hasNormals;
-		uint32_t	m_numUvChannels;
-
-
-		std::vector<uint32_t>	v_VBOindices;
-		std::vector<float> 		v_VBOdata;
-
 		tMeshHandle 			h_meshHandle = nullptr;
 
 
-		#ifdef IS_EDITOR
-		char name[256];
-		#endif
+		GLuint 		vertex_buffer;
+		GLuint 		indice_array;
+		GLuint 		m_size = 0;
+
+
+
+		bool* 		fp_hasPosition;
+		bool*		fp_hasNormals;
+		uint32_t* 	fp_arraySize;
+		uint32_t*	fp_numUvChannels;
+		uint32_t* 	fp_indiciesCount;
+        //uint32_t 	m_vertexfields;
+
+        float* 		fp_vertexData = nullptr;
+        int* 		fp_indiciesData = nullptr;
+
+
+        std::vector<uint32_t> config;
 
 	public:
 		Mesh(glm::vec2 resolution);
@@ -39,29 +42,29 @@ namespace asapi
 
 		inline void Render()
 		{
-			//Render
-			// Step 1
-			glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indice_array);
+			// //Render
+			glBindBuffer(GL_ARRAY_BUFFER, config[0]);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, config[1]);
+
+			const uint32_t attributes = config[2];
+			for(uint32_t i = 0; i<attributes; ++i)
+			{
+				const uint32_t index = i*5+3;
+				glEnableVertexAttribArray(config[index+0]);
+				glVertexAttribPointer(config[index+1]
+									, config[index+2]
+									, GL_FLOAT
+									, GL_FALSE
+									, sizeof(GL_FLOAT)*(config[index+3])
+									, (void*) (sizeof(GL_FLOAT)*(config[index+4])) );
+			}
 
 
-			// Step 2
-		    glEnableVertexAttribArray(0);
-		    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT)*9, nullptr);
+			const uint32_t size = config[3+attributes*5];
+			glDrawElements(GL_TRIANGLES, size, GL_UNSIGNED_INT, NULL);
 
-		    glEnableVertexAttribArray(1);
-		    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT)*9, (void*) (sizeof(GL_FLOAT)*5) );
-
-		    glEnableVertexAttribArray(2);
-		    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT)*9, (void*) (sizeof(GL_FLOAT)*3) );
-
-
-			// Step 3
-			glDrawElements(GL_TRIANGLES, m_size, GL_UNSIGNED_INT, NULL);
-
-			glDisableVertexAttribArray(0);
-			glDisableVertexAttribArray(1);
-			glDisableVertexAttribArray(2);
+			// glDisableVertexAttribArray(0);
+			// glDisableVertexAttribArray(2);
 
 		}
 

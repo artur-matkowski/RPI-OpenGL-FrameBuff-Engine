@@ -84,7 +84,25 @@ namespace asapi{
 	}
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                            //
+//                                                                                                            //
+//                                                                                                            //
+//                                                                                                            //
+// Mesh processing section                                                                                    //
+//                                                                                                            //
+//                                                                                                            //
+//                                                                                                            //
+//                                                                                                            //
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	bool RendererSystem::ProcessMesh(Mesh* mesh)
+	{
+		const uint32_t 	vertexfields = (*mesh->fp_hasPosition ? 3 : 0)
+                                + (*mesh->fp_hasNormals ? 3 : 0)
+                                + *mesh->fp_numUvChannels * 2;
+	}
+	bool RendererSystem::DispouseMesh(Mesh* mesh)
 	{
 
 	}
@@ -95,7 +113,7 @@ namespace asapi{
 //                                                                                                            //
 //                                                                                                            //
 //                                                                                                            //
-// Shader processing section                                                                                     //
+// Shader processing section                                                                                  //
 //                                                                                                            //
 //                                                                                                            //
 //                                                                                                            //
