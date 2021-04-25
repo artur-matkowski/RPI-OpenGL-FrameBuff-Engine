@@ -35,7 +35,7 @@ namespace asapi
 		void SetMesh_Blocking(const char*);
 	
 	
-		void Render();
+		void Render(glm::mat4* projectionMatrix);
 		#ifdef IS_EDITOR
 		virtual void OnGUI() override;
 		#endif

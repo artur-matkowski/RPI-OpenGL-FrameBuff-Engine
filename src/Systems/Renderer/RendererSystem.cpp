@@ -22,15 +22,15 @@ namespace asapi{
 
 	void RendererSystem::Init()
 	{
-		//m_rendererComponent = new RendererComponent( SYSTEMS::SYSTEMS_ALLOCATOR );
 		bfu::EventSystem& es = SYSTEMS::GetObject().EVENTS;
 		es.GetFastEvent("ResizeWindow")->RegisterCallback(this, RendererSystem::ResizeWidowCallback);
 
+		uint16_t resX;
+		uint16_t resY;
+		SYSTEMS::GetObject().CONTEXT->GetResolution(&resX, &resY);
+		m_resolution.x = resX;
+		m_resolution.y = resY;
 
-		GLuint vertex_buffer;
- 		glGenBuffers(1, &vertex_buffer);
- 		//glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-        //glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
         //http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-9-vbo-indexing/
 	}
@@ -53,7 +53,7 @@ namespace asapi{
 
 		for(auto it = v_rendererComponents.begin(); it!=v_rendererComponents.end(); ++it)
 		{
-			(*it)->Render();
+			(*it)->Render(&m_projectionMatrix);
 		}
 	}
 			

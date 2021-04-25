@@ -222,8 +222,6 @@ namespace asapi
                                 + (m_hasNormals ? 3 : 0)
                                 + m_numUvChannels * 2;
 
-        //const uint32_t vertexMemSize = vertexfields * sizeof(float);
-
         const uint32_t arraySize = vertexfields * mesh->mNumVertices;
 
         int vertexInnerDataFieldOffset = 0;
@@ -392,7 +390,12 @@ namespace asapi
 	void loadModel(std::string path)
 	{
 		Assimp::Importer import;
-		const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);	
+		const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate 
+                                                    //| aiProcess_FlipUVs 
+                                                    | aiProcess_FlipWindingOrder
+                                                    | aiProcess_FindInvalidData
+                                                    | aiProcess_ImproveCacheLocality
+                                                    | aiProcess_FixInfacingNormals);	
 
 		if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) 
 		{

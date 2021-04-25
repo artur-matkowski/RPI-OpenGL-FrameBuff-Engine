@@ -23,6 +23,7 @@ namespace asapi{
 	class RendererSystem: public object
 	{
 		glm::ivec2			m_resolution;
+		glm::mat4 			m_projectionMatrix;
 
 
 		//RendererComponent* 	m_rendererComponent = 0;
@@ -46,6 +47,9 @@ namespace asapi{
 
 		void RegisterRenderer(RendererComponent*);
 		void UnRegisterRenderer(RendererComponent*);
+
+		void GetResolution(glm::ivec2& out){ out = m_resolution; }
+		void UpdateProjectionMatrix(glm::mat4 projectionMatrix) { m_projectionMatrix = projectionMatrix; }
 	};
 
 }
