@@ -9,49 +9,49 @@ namespace asapi
 {
 	Mesh::Mesh(const char* path)
 	{
-		static GLfloat vertexbuff[] = {
-			 0.0f,  0.5f, 0.0f, 0.0f, 0.0f,// 1.0f, 0.0f, 0.0f, 1.0f,
-			 0.5f, -0.5f, 0.0f, 0.0f, 1.0f,// 0.0f, 1.0f, 0.0f, 1.0f,
-			-0.5f, -0.5f, 0.0f, 1.0f, 1.0f//, 0.0f, 0.0f, 1.0f, 1.0f
-		};
-		//	^ verts 			^ UVs 		^ colors
+		// static GLfloat vertexbuff[] = {
+		// 	 0.0f,  0.5f, 0.0f, 0.0f, 0.0f,// 1.0f, 0.0f, 0.0f, 1.0f,
+		// 	 0.5f, -0.5f, 0.0f, 0.0f, 1.0f,// 0.0f, 1.0f, 0.0f, 1.0f,
+		// 	-0.5f, -0.5f, 0.0f, 1.0f, 1.0f//, 0.0f, 0.0f, 1.0f, 1.0f
+		// };
+		// //	^ verts 			^ UVs 		^ colors
 
-		static GLuint indices[3] = {0, 1, 2};
-		m_size = 3;
-
-
- 		glGenBuffers(1, &vertex_buffer);
- 		glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * m_size * 5, 0, GL_STATIC_DRAW);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * m_size * 5, vertexbuff);
+		// static GLuint indices[3] = {0, 1, 2};
+		// m_size = 3;
 
 
-        glGenBuffers(1, &indice_array);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indice_array);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*m_size, NULL, GL_STATIC_DRAW);
-		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLuint)*m_size, indices);
+ 	// 	glGenBuffers(1, &vertex_buffer);
+ 	// 	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+  //       glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * m_size * 5, 0, GL_STATIC_DRAW);
+  //       glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * m_size * 5, vertexbuff);
 
-        config.push_back( vertex_buffer );
-        config.push_back( indice_array );
-        config.push_back( 2 ); //present attributes count
 
-        //positions attribute
-        config.push_back(0);
-        config.push_back(0);
-        config.push_back(3);
-        config.push_back(5);
-        config.push_back(0);
+  //       glGenBuffers(1, &indice_array);
+		// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indice_array);
+		// glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*m_size, NULL, GL_STATIC_DRAW);
+		// glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLuint)*m_size, indices);
 
-        //uv0 attribute
-        config.push_back(2);
-        config.push_back(2);
-        config.push_back(2);
-        config.push_back(5);
-        config.push_back(3);
+  //       config.push_back( vertex_buffer );
+  //       config.push_back( indice_array );
+  //       config.push_back( 2 ); //present attributes count
 
-        config.push_back( m_size );
+  //       //positions attribute
+  //       config.push_back(0);
+  //       config.push_back(0);
+  //       config.push_back(3);
+  //       config.push_back(5);
+  //       config.push_back(0);
 
-/*
+  //       //uv0 attribute
+  //       config.push_back(2);
+  //       config.push_back(2);
+  //       config.push_back(2);
+  //       config.push_back(5);
+  //       config.push_back(3);
+
+  //       config.push_back( m_size );
+
+
         char buff[MAX_PATH_SIZE];
         sprintf(buff, "%s.mmp", path);
 
@@ -152,7 +152,7 @@ namespace asapi
         }
         std::cout << "UVs: " << *fp_numUvChannels << " normals: " << *fp_hasNormals << std::endl;
 
-*/
+
 	}
 
 
@@ -215,7 +215,7 @@ namespace asapi
     void ProcessMesh(aiMesh *mesh)
     {
         const bool        m_hasPosition   = mesh->HasPositions();
-        const bool        m_hasNormals    = mesh->HasNormals();
+        const bool        m_hasNormals    = false; //mesh->HasNormals();
         const uint32_t    m_numUvChannels = mesh->GetNumUVChannels();
 
         const uint32_t vertexfields = (m_hasPosition ? 3 : 0)
