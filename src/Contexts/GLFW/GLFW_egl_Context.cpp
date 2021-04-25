@@ -1,10 +1,11 @@
 #include "GLFW_egl_Context.hpp"
-#include <GLFW/glfw3.h>
 #include <thread>
 #include <bitforge/utils/bfu.hpp>
 #include "Systems.hpp"
 //#include "imgui_impl_opengl2.hpp"
+#ifdef IS_EDITOR
 #include "backends/imgui_impl_opengl3.h"
+#endif
 
 static void glfw_error_callback(int err, const char* description)
 {

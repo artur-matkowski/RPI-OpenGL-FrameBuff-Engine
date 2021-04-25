@@ -1,7 +1,7 @@
 #include "ResourceSystem.hpp"
 #include <dirent.h> 
 #include <sys/stat.h>
-
+#include "Systems.hpp"
 
 namespace asapi{
 
@@ -33,7 +33,8 @@ namespace asapi{
 			}
 		}
 		#ifdef IS_PLAYER
-		if( !(startWithJSON ? OpenProject() : LoadRootMMP() ) )
+		SceneSystem* sceneSys = &SYSTEMS::GetObject().SCENE;
+		if( !(startWithJSON ? sceneSys->OpenProject() : sceneSys->LoadRootMMP() ) )
 		{
 			log::error << "Could not open project at path " << path << std::endl;
 		}

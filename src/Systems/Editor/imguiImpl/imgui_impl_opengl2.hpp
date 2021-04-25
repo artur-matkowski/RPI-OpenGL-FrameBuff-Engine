@@ -19,9 +19,9 @@
 
 #ifndef H_ImGui_ImplOpenGL2
 #define H_ImGui_ImplOpenGL2
+#ifdef IS_EDITOR
 #include "imgui.h"      // IMGUI_IMPL_API
 
-#ifdef IS_EDITOR
 namespace asapi
 {	
 	IMGUI_IMPL_API bool     ImGui_ImplOpenGL2_Init();
