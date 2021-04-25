@@ -69,10 +69,11 @@ namespace asapi
 		}
 	}
 
+
 	void RendererComponent::Render()
 	{
 		if(p_modelViewMat!=0)
-			p_modelViewMat->SetUniform( m_owner->GetTransform3D()->GetModelMatrix() );
+			p_modelViewMat->SetUniform( glm::perspective(35.0f, 1.0f, 0.1f, 100.0f) * m_owner->GetTransform3D()->GetModelMatrix() );
 		else
 			log::warning << "failing on matrix uniform update" << std::endl;
 

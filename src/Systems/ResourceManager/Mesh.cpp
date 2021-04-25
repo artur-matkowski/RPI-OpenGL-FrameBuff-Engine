@@ -74,6 +74,23 @@ namespace asapi
                                 + *fp_numUvChannels * 2;
 
 
+        glGenBuffers(1, &vertex_buffer);
+        glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * *fp_arraySize * vertexfields, 0, GL_STATIC_DRAW);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * *fp_arraySize * vertexfields, fp_vertexData);
+
+
+        glGenBuffers(1, &indice_array);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indice_array);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)* *fp_indiciesCount, NULL, GL_STATIC_DRAW);
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLuint)* *fp_indiciesCount, fp_indiciesData);
+
+        config.push_back( vertex_buffer );
+        config.push_back( indice_array );
+        config.push_back( 0 ); //present attributes count
+
+
+
         if(fp_hasPosition)
         {
             config.reserve(config.size()+5);
@@ -84,6 +101,7 @@ namespace asapi
             config.push_back(0);
             //glEnableVertexAttribArray(0);
             //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT)*9, nullptr);
+            config[2]++;
         }
 
         // if(m_hasNormals)
@@ -94,6 +112,7 @@ namespace asapi
         //     config.push_back(3);
         //     config.push_back(9);
         //     config.push_back(0);
+        //     config[2]++;
         // }
 
         for(uint32_t UVchannel = 0; UVchannel<*fp_numUvChannels; ++UVchannel)
@@ -106,7 +125,10 @@ namespace asapi
             config.push_back(3);
             // glEnableVertexAttribArray(2);
             // glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT)*9, (void*) (sizeof(GL_FLOAT)*3) );
+            config[2]++;
         }
+
+        config.push_back( *fp_indiciesCount );
 
 
         log::debug << "Mesh " << path << " has " << *fp_arraySize << " floats:" << std::endl;
@@ -184,8 +206,8 @@ namespace asapi
 	}
 	Mesh::~Mesh()
 	{
-		glDeleteBuffers(1, &vertex_buffer);
-		glDeleteBuffers(1, &indice_array);
+		glDeleteBuffers(1, &config[0]);
+		glDeleteBuffers(1, &config[1]);
 	}
 
 
