@@ -3,5 +3,6 @@
 #include "Transform3D.hpp"
 #include "PrefabLoaderComponent.hpp"
 #include "RendererComponent.hpp"
+#include "Camera.hpp"
 
 #endif

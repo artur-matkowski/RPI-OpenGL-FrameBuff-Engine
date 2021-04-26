@@ -60,10 +60,12 @@ namespace asapi
 	#ifdef IS_EDITOR
 	void Transform3D::OnGUI()
 	{
+		const auto flags = ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll;
+
 		bool updated = false;
-		updated |= ImGui::InputFloat3("Position", &m_position[0]);
-		updated |= ImGui::InputFloat3("Rotation", &m_rotation[0]);
-		updated |= ImGui::InputFloat3("Scale", &m_scale[0]);
+		updated |= ImGui::InputFloat3("Position", &m_position[0], "%.2f", flags);
+		updated |= ImGui::InputFloat3("Rotation", &m_rotation[0], "%.2f", flags);
+		updated |= ImGui::InputFloat3("Scale", &m_scale[0], "%.2f", flags);
 
 
 		if(updated)

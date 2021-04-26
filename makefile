@@ -21,7 +21,7 @@ DIRSTRUCTURE = $(shell find $(INCDIR) -type d)
 INCSTRUCTURE = $(patsubst %, -I%, $(DIRSTRUCTURE))
 
 
-DEPGL 		= -lGL -lEGL -lGLESv2  -ldrm -lgbm -lX11 -lXext -lbitforgeutils -lpng
+DEPGL 		= -lGL -lEGL -lGLESv2  -ldrm -lgbm -lX11 -lXext -lbitforgeutils -lpng -lassimp
 #DEPGL 		=  -lpng -lbrcmEGL -lbrcmGLESv2  -L/opt/vc/lib
 
 OBJECTS 	= $(SOURCES:%.cpp=$(OBJDIR)%.o)
@@ -67,7 +67,6 @@ release-player: release
 
 
 debug-editor: DEBUG_CC 		+=  -DIS_EDITOR
-debug-editor: DEPGL 		+=  -lglfw
 debug-editor: BUILDPATH 	 =  build/dbg/editor/
 debug-editor: HEADER_DEPS 	+= 	-I./vendor/imgui/
 debug-editor: HEADER_DEPS 	+= 	-I./vendor/ImGuiFileDialog/ImGuiFileDialog/
@@ -75,7 +74,6 @@ debug-editor: VENDOR_DIR 	+=  $(VENDOR_EDITOR_ONLY_DIR)
 debug-editor: debug
 
 release-editor: RELEASE_CC 	+=  -DIS_EDITOR
-release-editor: DEPGL 		+=  -lglfw
 release-editor: BUILDPATH 	 =  build/rel/editor/
 release-editor: HEADER_DEPS += 	-I./vendor/imgui/
 release-editor: HEADER_DEPS += 	-I./vendor/ImGuiFileDialog/ImGuiFileDialog/
@@ -85,6 +83,8 @@ release-editor: release
 ifeq ($(ARCHITECTURE),armhf)
 	@echo -----Build for target
 debug: DEBUG_CC 	+= -DIS_TARGET
+else
+debug: DEPGL 		+=  -lglfw
 endif
 debug: CC 			+= $(DEBUG_CC)
 debug: OBJDIR 		= $(BUILDPATH)obj/
@@ -96,6 +96,8 @@ debug:  $(OUT)
 ifeq ($(ARCHITECTURE),armhf)
 	@echo -----Build for target
 release: RELEASE_CC 	+= -DIS_TARGET
+else
+release: DEPGL 			+=  -lglfw
 endif
 release: CC 			+= $(RELEASE_CC)
 release: OBJDIR 		= $(BUILDPATH)obj/

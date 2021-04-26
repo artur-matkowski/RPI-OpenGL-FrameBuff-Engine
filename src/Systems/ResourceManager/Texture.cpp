@@ -131,16 +131,19 @@ namespace asapi
 	}
 
 
-	Texture::Texture(const char* filename)
+	Texture::Texture(const char* path)
 	{
 		#ifdef IS_EDITOR
-		strcpy(name, filename);
+		int size = strlen(path);
+		const char* tmp = &path[size-1];
+		for(; *tmp!='/'; tmp-=1); // < find where file name is starting
+		strncpy(name, tmp+1, 255);
+		name[255] = '\0';
 		#endif
+
 		void *textureImage = 0;
 
-		char buff[1024];
-		sprintf(buff, "%s/images/%s", SYSTEMS::GetObject().SCENE.GetProjectPath(), filename);
-		textureImage = LoadPNG(buff);
+		textureImage = LoadPNG(path);
 
 		SendTextureToGPU( textureImage );
 	}
@@ -166,5 +169,28 @@ namespace asapi
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width,
 	             m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
 	             textureImage);
+	}
+
+
+	void Texture::Compile(const char* dest, const char* source)
+	{
+		FILE *src, *dst;
+		long int srcSize, dstSize;
+
+		src = fopen (source,"rb");
+		dst = fopen (dest,"wb");
+		fseek(src, 0L, SEEK_END); 
+		srcSize = ftell(src); 
+		fseek(src, 0L, SEEK_SET);
+
+		char* buff = new char[srcSize];
+
+		fread(buff, sizeof(char), srcSize, src);
+		fwrite(buff, 1, srcSize, dst);
+
+		delete buff;
+
+		fclose(src); 
+		fclose(dst); 
 	}
 }

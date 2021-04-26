@@ -47,10 +47,12 @@ namespace asapi
 	#define ASSERT(b, msg)
 #endif
 
-#define PROTECTED(x) protected: x; public:
 
 void* operator new(std::size_t size);
 void operator delete(void* p) noexcept;
 void SetNewAllocator(bfu::MemBlockBase* allocator);
+
+#define PROTECTED(x) protected: x; public:
+#define MAX_PATH_SIZE 1024
 
 #endif

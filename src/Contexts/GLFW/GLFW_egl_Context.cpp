@@ -1,10 +1,11 @@
 #include "GLFW_egl_Context.hpp"
-#include <GLFW/glfw3.h>
 #include <thread>
 #include <bitforge/utils/bfu.hpp>
 #include "Systems.hpp"
 //#include "imgui_impl_opengl2.hpp"
+#ifdef IS_EDITOR
 #include "backends/imgui_impl_opengl3.h"
+#endif
 
 static void glfw_error_callback(int err, const char* description)
 {
@@ -387,6 +388,15 @@ namespace asapi
 		p_ev_KeyboardEvent->Invoke( &keyboardEvent );
 		
 	}
+	void WindowFocusCallback(GLFWwindow* window, int focused)
+	{
+		#ifdef IS_EDITOR
+		if(focused)
+		{
+			SYSTEMS::GetObject().RESOURCES.RefreshResources();
+		}
+		#endif
+	}
 
 	void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 	{
@@ -431,6 +441,7 @@ namespace asapi
 		glfwSetKeyCallback(window, KeyCallback);
 		glfwSetCharCallback(window, CharCallback);
 		glfwSetCursorPosCallback(window, cursor_position_callback);
+		glfwSetWindowFocusCallback(window, WindowFocusCallback);
 
 
 		p_postRenderCallback = &GLFW_egl_Context::SwapBuffer;
@@ -556,14 +567,8 @@ namespace asapi
 
 			//TODO frame stuff
 			{
-		        glViewport(0, 0, resolution.x, resolution.y);
-				//log::debug << "m_mainEglWindow->resolution; "  << m_mainEglWindow->resolution.x << " " << m_mainEglWindow->resolution.y << std::endl;
-				glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-				glClear(GL_COLOR_BUFFER_BIT);
-
 				rendererSystem.Render();
 
-				
 				(this->*p_postRenderCallback)();
 			}
 

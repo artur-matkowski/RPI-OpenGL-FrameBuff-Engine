@@ -4,8 +4,8 @@
 "v_componentsInfo": [{
 "m_componentTypeName": "asapi::Transform3D", 
 "m_recreationString": "{
-\"m_position\": [0.000000, 0.000000, 0.000000], 
-\"m_rotation\": [0.000000, 0.000000, 0.000000], 
+\"m_position\": [0.000000, 0.000000, -5.000000], 
+\"m_rotation\": [45.000000, 5.000000, 0.000000], 
 \"m_scale\": [1.000000, 1.000000, 1.000000]
 }"
 }, {
@@ -19,7 +19,31 @@
 "m_componentTypeName": "asapi::RendererComponent", 
 "m_recreationString": "{
 \"m_MaterialName\": \"textured\", 
-\"m_meshName\": \"1234\"
+\"m_meshName\": \"Cube\"
+}"
+}]
+}, {
+"m_myName": "Camera", 
+"v_children": [], 
+"v_componentsInfo": [{
+"m_componentTypeName": "asapi::Transform3D", 
+"m_recreationString": "{
+\"m_position\": [0.000000, 0.000000, 0.000000], 
+\"m_rotation\": [0.000000, 0.000000, 0.000000], 
+\"m_scale\": [1.000000, 1.000000, 1.000000]
+}"
+}, {
+"m_componentTypeName": "asapi::Camera", 
+"m_recreationString": "{
+\"m_cameraMode\": 0, 
+\"m_nearPlane\": 0.100000, 
+\"m_farPlane\": 100.000000, 
+\"m_FOV\": 45.000000, 
+\"m_orthoLeft\": 0.000000, 
+\"m_orthoRight\": 0.000000, 
+\"m_orthoBottom\": 0.000000, 
+\"m_orthoTop\": 0.000000, 
+\"m_isMainCamera\": true
 }"
 }]
 }]

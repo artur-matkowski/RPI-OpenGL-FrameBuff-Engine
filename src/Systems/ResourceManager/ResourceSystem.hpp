@@ -8,6 +8,8 @@
 #include "MaterialType.hpp"
 #include "Mesh.hpp"
 
+#define MAX_PATH 2048
+
 namespace asapi
 {
 
@@ -18,7 +20,22 @@ namespace asapi
 		std::map<bfu::string, ResourcePtr<MaterialType> > 	m_materials;
 		std::map<bfu::string, ResourcePtr<Mesh> > 			m_meshes;
 
+		char 												m_ProjectPath[MAX_PATH] = ".";
+
+		#ifdef IS_EDITOR
+		std::vector<std::string>							v_TexturesPaths;
+		std::vector<std::string>							v_ShadersPaths;
+		std::vector<std::string>							v_MeshesPaths;
+		#endif
+
 	public:
+		void Init(const int argc, const char** argv);
+		void SetProjectPath(const char* path);
+		const char* GetProjectPath(){ return m_ProjectPath; }
+
+		#ifdef IS_EDITOR
+		void RefreshResources();
+		#endif
 
 		bool requestResource(ResourcePtr<Texture>* res, const char* str)
 		{
@@ -28,7 +45,9 @@ namespace asapi
 
 			if( it==m_textures.end() )
 			{
-				res->Rebuild( new Texture(str) );
+				char buff[MAX_PATH];
+				sprintf(buff, "%s/assets_int/textures/%s", m_ProjectPath, str);
+				res->Rebuild( new Texture(buff) );
 				m_textures[id] = *res;
 			}
 			else
@@ -68,7 +87,7 @@ namespace asapi
 				if( newShader==0 )
 				{
 					log::warning << "Could not load shader '" << str << "' reattemping with 'debug' shader" << std::endl;
-					newShader = Shader::LoadShaderFailSave();
+					//already done in renderer system
 				}
 				res->Rebuild( newShader );
 				m_shaders[id] = *res;
@@ -142,7 +161,9 @@ namespace asapi
 
 			if( it==m_meshes.end() )
 			{
-				res->Rebuild( new Mesh(str) );
+				char buff[MAX_PATH];
+				sprintf(buff, "%s/assets_int/meshes/%s", m_ProjectPath, str);
+				res->Rebuild( new Mesh(buff) );
 				m_meshes[id] = *res;
 			}
 			else

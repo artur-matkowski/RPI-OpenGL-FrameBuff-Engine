@@ -69,10 +69,11 @@ namespace asapi
 		}
 	}
 
-	void RendererComponent::Render()
+
+	void RendererComponent::Render(glm::mat4* projectionMatrix)
 	{
 		if(p_modelViewMat!=0)
-			p_modelViewMat->SetUniform( m_owner->GetTransform3D()->GetModelMatrix() );
+			p_modelViewMat->SetUniform( *projectionMatrix * m_owner->GetTransform3D()->GetModelMatrix() );
 		else
 			log::warning << "failing on matrix uniform update" << std::endl;
 

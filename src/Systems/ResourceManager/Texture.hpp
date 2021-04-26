@@ -11,7 +11,7 @@ namespace asapi
 		uint32_t m_textureID = -1;
 
 		#ifdef IS_EDITOR
-		char name[255];
+		char name[256];
 		#endif
 
 		void* LoadPNG(const char*);
@@ -37,6 +37,8 @@ namespace asapi
 		#endif
 		
 		uint32_t GetTextureID() {return m_textureID; }
+
+		static void Compile(const char* dest, const char* source);
 	};
 }
 

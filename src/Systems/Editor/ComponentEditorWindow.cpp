@@ -35,7 +35,7 @@ namespace asapi
 			m_rootNode.FeedEntry( it->name, ":", it->id);
 		}
 
-		print(m_rootNode);
+		//print(m_rootNode);
 	};
 	ComponentEditorWindow::~ComponentEditorWindow(){};
 

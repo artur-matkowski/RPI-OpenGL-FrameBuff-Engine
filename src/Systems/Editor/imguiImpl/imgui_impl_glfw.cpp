@@ -42,8 +42,8 @@
 //  2017-08-25: Inputs: MousePos set to -FLT_MAX,-FLT_MAX when mouse is unavailable/missing (instead of -1,-1).
 //  2016-10-15: Misc: Added a void* user_data parameter to Clipboard function handlers.
 
-#include "imgui.h"
 #ifdef IS_EDITOR
+#include "imgui.h"
 #include "imgui_impl_glfw.hpp"
 
 // GLFW
@@ -72,7 +72,7 @@
 #else
 #define GLFW_HAS_MOUSE_PASSTHROUGH    (0)
 #endif
-
+#include "GLFW_egl_Context.hpp"
 // Data
 enum GlfwClientApi
 {
@@ -591,6 +591,9 @@ static void ImGui_ImplGlfw_CreateWindow(ImGuiViewport* viewport)
     glfwSetWindowCloseCallback(data->Window, ImGui_ImplGlfw_WindowCloseCallback);
     glfwSetWindowPosCallback(data->Window, ImGui_ImplGlfw_WindowPosCallback);
     glfwSetWindowSizeCallback(data->Window, ImGui_ImplGlfw_WindowSizeCallback);
+        //custom callback for window focus
+        glfwSetWindowFocusCallback(data->Window, asapi::WindowFocusCallback);
+
     if (g_ClientApi == GlfwClientApi_OpenGL)
     {
         glfwMakeContextCurrent(data->Window);
