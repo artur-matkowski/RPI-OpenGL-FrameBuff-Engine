@@ -33,7 +33,7 @@ namespace asapi
         int* 		fp_indiciesData = nullptr;
 
 
-        std::vector<uint32_t> config;
+        //std::vector<uint32_t> config;
 
 	public:
 		Mesh(glm::vec2 resolution);
@@ -42,6 +42,7 @@ namespace asapi
 
 		inline void Render()
 		{
+        	uint32_t* config = (uint32_t*)h_meshHandle;
 			// //Render
 			glBindBuffer(GL_ARRAY_BUFFER, config[0]);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, config[1]);

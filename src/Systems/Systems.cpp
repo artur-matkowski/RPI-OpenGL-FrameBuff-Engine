@@ -33,10 +33,10 @@ namespace asapi
 		if(ret!=0)
 			return ret;
 
+		#ifndef IS_TARGET
 		char* display = getenv("DISPLAY");
 
 		bool hasDisplay = display != 0;
-
 
 		if(hasDisplay)
 		{
@@ -46,6 +46,7 @@ namespace asapi
 		    new (ret) GLFW_egl_Context();
 		}
 		else
+		#endif
 		{
 		    ret = SYSTEMS::ALLOCATE<DRM_GBM_EGL_ContextType>(1);
 		    new (ret) DRM_GBM_EGL_ContextType();

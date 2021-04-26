@@ -122,11 +122,12 @@ namespace asapi{
                                 + (*fp_hasNormals ? 1 : 0)
                                 + *fp_numUvChannels;
 
-        std::vector<uint32_t> config;
 
-        config.push_back( 0 ); // dommy vertex_buffer value
-        config.push_back( 0 ); // dummy indice_array value
-        config.push_back( atributesInUse ); // present attributes count
+
+       	uint32_t* config = STD_NEW(atributesInUse*5+4, uint32_t);
+       	uint32_t index = 3;
+
+        config[2] = atributesInUse; // present attributes count
 
         glGenBuffers(1, &config[0]);
         glBindBuffer(GL_ARRAY_BUFFER, config[0]);
@@ -144,39 +145,53 @@ namespace asapi{
 
         if(fp_hasPosition)
         {
-            config.reserve(config.size()+5);
-            config.push_back(0);
-            config.push_back(0);
-            config.push_back(3);
-            config.push_back(vertexfields);
-            config.push_back(0);
+            config[index] = 0; 
+            ++index;
+            config[index] = 0; 
+            ++index;
+            config[index] = 3; 
+            ++index;
+            config[index] = vertexfields; 
+            ++index;
+            config[index] = 0; 
+            ++index;
             //glEnableVertexAttribArray(0);
             //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT)*9, nullptr);
         }
 
         if(*fp_hasNormals)
         {
-            config.reserve(config.size()+5);
-            config.push_back(0);
-            config.push_back(0);
-            config.push_back(3);
-            config.push_back(9);
-            config.push_back(0);
+            config[index] = 0;
+            ++index;
+            config[index] = 0;
+            ++index;
+            config[index] = 3;
+            ++index;
+            config[index] = vertexfields;
+            ++index;
+            config[index] = 0;
+            ++index;
         }
 
         for(uint32_t UVchannel = 0; UVchannel<*fp_numUvChannels; ++UVchannel)
         {
-            config.reserve(config.size()+5);
-            config.push_back(2);
-            config.push_back(2);
-            config.push_back(2);
-            config.push_back(vertexfields);
-            config.push_back(3);
+            config[index] = 2;
+            ++index;
+            config[index] = 2;
+            ++index;
+            config[index] = 2;
+            ++index;
+            config[index] = vertexfields;
+            ++index;
+            config[index] = 3;
+            ++index;
             // glEnableVertexAttribArray(2);
             // glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT)*9, (void*) (sizeof(GL_FLOAT)*3) );
         }
 
-        config.push_back( *fp_indiciesCount );
+        config[index] = *fp_indiciesCount;
+
+        mesh->h_meshHandle = (tMeshHandle)config;
 
 
         log::debug << "Mesh has " << *fp_arraySize << " floats:" << std::endl;
@@ -200,9 +215,19 @@ namespace asapi{
         }
         std::cout << "UVs: " << *fp_numUvChannels << " normals: " << *fp_hasNormals << std::endl;
 	}
+
 	bool RendererSystem::DispouseMesh(Mesh* mesh)
 	{
-
+		uint32_t* config = (uint32_t*)mesh->h_meshHandle;
+		bool ret = false;
+		if( config != nullptr)
+		{
+			glDeleteBuffers(1, &config[0]);
+			glDeleteBuffers(1, &config[1]);
+			DEALLOCATE_GLOBAL(config);
+			ret = true;
+		}
+		return ret;
 	}
 
 
@@ -346,5 +371,6 @@ namespace asapi{
 	bool RendererSystem::DispouseShader(Shader* shader)
 	{
 		glDeleteProgram((uint32_t)(size_t)shader->h_shaderHandle);
+		return true;
 	}
 }
