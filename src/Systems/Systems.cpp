@@ -151,10 +151,6 @@ namespace asapi
 
 	SYSTEMS::IO::MMAP::~MMAP()
 	{
-		// if (msync(data, sb.st_size, MS_SYNC) == -1)
-		// {
-		// 	log::error << "Could not sync the file to disk" << std::endl;	
-		// }
 		if(data != MAP_FAILED && data != nullptr)
 			munmap(data, sb.st_size);
 		if(fd!=-1)

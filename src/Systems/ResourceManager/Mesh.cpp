@@ -25,54 +25,91 @@ namespace asapi
         }
 	}
 
+    struct cursorMock
+    {   
+        void* data = nullptr;
+
+        cursorMock()
+        {
+            static char tmp[sizeof(bool) * 2
+                        + sizeof(uint32_t) * 3
+                        + sizeof(float) * 5 * 6
+                        + sizeof(int) * 6] = {'\0'};
+
+            GLfloat vertexbuff[] = {
+                 0.5f, -0.1f, 0.0f, 0.0f,  0.0f, 
+                 0.1f, -0.5f, 0.0f, 0.0f,  1.0f, 
+                 0.0f,  0.0f, 0.0f, 1.0f,  1.0f, 
+                 0.0f,  0.0f, 0.0f, 0.0f,  1.0f, 
+                 1.0f, -0.9f, 0.0f, 1.0f,  1.0f, 
+                 0.9f, -1.0f, 0.0f, 1.0f,  1.0f
+            };
+
+            GLuint indices[6] = {0, 1, 2, 4, 5, 6};
+
+
+            bool* fp_hasPosition = (bool*) tmp;
+            bool* fp_hasNormals = &fp_hasPosition[1];
+            uint32_t* fp_arraySize = (uint32_t*) &fp_hasPosition[2];
+            uint32_t* fp_numUvChannels = &fp_arraySize[1];
+            uint32_t* fp_indiciesCount = &fp_numUvChannels[1];
+            float* vertexData = (float*) &fp_indiciesCount[1];
+            int* indiciesData = (int*) &vertexData[5 * 6];
+
+
+            *fp_hasPosition = true;
+            *fp_hasNormals = false;
+            *fp_arraySize = 5 * 6;
+            *fp_numUvChannels = 0;
+            *fp_indiciesCount = 6;
+
+            memcpy(vertexData, vertexbuff, sizeof(float) * 5 * 6);
+            memcpy(indiciesData, indices, sizeof(GLuint) * 6);
+
+            data = (void*)tmp;
+        }
+    }CursorMock;
+
 
 	Mesh::Mesh(glm::vec2 resolution)
 	{
-		static GLfloat vertexbuff[] = {
-			 0.5f, -0.1f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-			 0.1f, -0.5f, 0.0f, 0.0f,  1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-			 0.0f,  0.0f, 0.0f, 1.0f,  1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-			 0.0f,  0.0f, 0.0f, 0.0f,  1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-			 1.0f, -0.9f, 0.0f, 1.0f,  1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-			 0.9f, -1.0f, 0.0f, 1.0f,  1.0f, 1.0f, 0.0f, 1.0f, 1.0f
-		};
-		static GLfloat vertexbuff0[] = {
-			 0.5f, -0.1f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-			 0.1f, -0.5f, 0.0f, 0.0f,  1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-			 0.0f,  0.0f, 0.0f, 1.0f,  1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-			 0.0f,  0.0f, 0.0f, 0.0f,  1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-			 1.0f, -0.9f, 0.0f, 1.0f,  1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-			 0.9f, -1.0f, 0.0f, 1.0f,  1.0f, 1.0f, 0.0f, 1.0f, 1.0f
-		};
-		//	^ verts 			^ UVs 		^ colors
-
-		static GLuint indices[6] = {0, 1, 2, 4, 5, 6};
-
-		m_size = 6;
-
-		for(int i=0; i<9*6; i+=9)
-		{
-			vertexbuff[i] = vertexbuff0[i] * resolution.y/resolution.x;
-			vertexbuff[i+1] = vertexbuff0[i+1] * resolution.y/resolution.x;
-		}
-
-		for(int i=0; i<9*6; i+=9)
-		{
-			vertexbuff[i] = vertexbuff[i] * 50.f/resolution.x;
-			vertexbuff[i+1] = vertexbuff[i+1] * 50.f/resolution.y;
-		}
+        h_meshHandle = (asapi::tMeshHandle)&CursorMock;
+        RendererSystem::ProcessMesh(this);
 
 
- 		glGenBuffers(1, &vertex_buffer);
- 		glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * m_size * 9, 0, GL_STATIC_DRAW);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * m_size * 9, vertexbuff);
+		// static GLfloat vertexbuff[] = {
+		// 	 0.5f, -0.1f, 0.0f, 0.0f,  0.0f, 
+		// 	 0.1f, -0.5f, 0.0f, 0.0f,  1.0f, 
+		// 	 0.0f,  0.0f, 0.0f, 1.0f,  1.0f, 
+		// 	 0.0f,  0.0f, 0.0f, 0.0f,  1.0f, 
+		// 	 1.0f, -0.9f, 0.0f, 1.0f,  1.0f, 
+		// 	 0.9f, -1.0f, 0.0f, 1.0f,  1.0f
+		// };
+		// static GLfloat vertexbuff0[] = {
+		// 	 0.5f, -0.1f, 0.0f, 0.0f,  0.0f, 
+		// 	 0.1f, -0.5f, 0.0f, 0.0f,  1.0f, 
+		// 	 0.0f,  0.0f, 0.0f, 1.0f,  1.0f, 
+		// 	 0.0f,  0.0f, 0.0f, 0.0f,  1.0f, 
+		// 	 1.0f, -0.9f, 0.0f, 1.0f,  1.0f, 
+		// 	 0.9f, -1.0f, 0.0f, 1.0f,  1.0f
+		// };
+		// //	^ verts 			^ UVs 		^ colors
 
+		// static GLuint indices[6] = {0, 1, 2, 4, 5, 6};
 
-        glGenBuffers(1, &indice_array);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indice_array);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*m_size, NULL, GL_STATIC_DRAW);
-		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLuint)*m_size, indices);
+		// m_size = 6;
+
+		// for(int i=0; i<5*6; i+=5)
+		// {
+		// 	vertexbuff[i] = vertexbuff0[i] * resolution.y/resolution.x;
+		// 	vertexbuff[i+1] = vertexbuff0[i+1] * resolution.y/resolution.x;
+		// }
+
+		// for(int i=0; i<5*6; i+=5)
+		// {
+		// 	vertexbuff[i] = vertexbuff[i] * 50.f/resolution.x;
+		// 	vertexbuff[i+1] = vertexbuff[i+1] * 50.f/resolution.y;
+		// }
 	}
 	Mesh::~Mesh()
 	{

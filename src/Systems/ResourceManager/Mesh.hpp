@@ -16,33 +16,20 @@ namespace asapi
 		tMeshHandle 			h_meshHandle = nullptr;
 
 
-		GLuint 		vertex_buffer;
-		GLuint 		indice_array;
-		GLuint 		m_size = 0;
-
-
-
-		bool* 		fp_hasPosition;
-		bool*		fp_hasNormals;
-		uint32_t* 	fp_arraySize;
-		uint32_t*	fp_numUvChannels;
-		uint32_t* 	fp_indiciesCount;
-        //uint32_t 	m_vertexfields;
-
-        float* 		fp_vertexData = nullptr;
-        int* 		fp_indiciesData = nullptr;
-
-
-        //std::vector<uint32_t> config;
-
 	public:
 		Mesh(glm::vec2 resolution);
 		Mesh(const char*);
 		~Mesh();
 
+		void* GetRawHandle(){ return (void*)h_meshHandle; }
+
 		inline void Render()
 		{
         	uint32_t* config = (uint32_t*)h_meshHandle;
+
+        	if(config==nullptr)
+        		return;
+
 			// //Render
 			glBindBuffer(GL_ARRAY_BUFFER, config[0]);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, config[1]);

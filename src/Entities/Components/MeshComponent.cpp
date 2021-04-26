@@ -36,6 +36,16 @@ namespace asapi
 
 			OnIsDirty();			
 		}
+
+		Mesh* ptr = (Mesh*)m_mesh.GetRawPtr();
+		if( ptr!=nullptr && ptr->GetRawHandle() != nullptr )
+		{
+			ImGui::Text("Mesh is properly loaded to GPU");
+		}
+		else
+		{
+			ImGui::Text("Mesh is invalid");
+		}
 	}
 	#endif
 }
