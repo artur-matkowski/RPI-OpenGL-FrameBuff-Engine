@@ -426,6 +426,7 @@ namespace asapi
 
 	void GLFW_egl_Context::Init(const int argc, const char** argv) 
 	{
+		#ifndef USE_XLIB
 		// Setup window
 		glfwSetErrorCallback(glfw_error_callback);
 		if (!glfwInit())
@@ -489,10 +490,12 @@ namespace asapi
 		p_postRenderCallback = &GLFW_egl_Context::RenderGUIAndSwapBuffer;
 
 	    #endif
+	    #endif
 	}
 
 	void GLFW_egl_Context::RenderGUIAndSwapBuffer()
 	{
+		#ifndef USE_XLIB
 		#ifdef IS_EDITOR
      	static ImGuiIO& io = ImGui::GetIO(); (void)io;
      	static Mesh 			cursorMesh( glm::vec2(resolution.x, resolution.y) );
@@ -552,10 +555,13 @@ namespace asapi
 
 		glfwSwapBuffers(window);
 		#endif			
+		#endif			
 	}
 	void GLFW_egl_Context::SwapBuffer() 
 	{
+		#ifndef USE_XLIB
         glfwSwapBuffers(window);
+		#endif			
 	}
 	void GLFW_egl_Context::MainLoop() 
 	{
@@ -596,7 +602,9 @@ namespace asapi
 
 	void GLFW_egl_Context::HandleContextEvents() 
 	{
+		#ifndef USE_XLIB
 		glfwPollEvents();
+		#endif			
 	}
 	void GLFW_egl_Context::CleanUp() 
 	{
@@ -604,9 +612,11 @@ namespace asapi
 	}
 	void GLFW_egl_Context::GetResolution(uint16_t* X, uint16_t* Y) 
 	{
+		#ifndef USE_XLIB
 		int x, y;
 		glfwGetWindowSize(window, &x, &y);
 		*X = x;
 		*Y = y;
+		#endif			
 	}
 }

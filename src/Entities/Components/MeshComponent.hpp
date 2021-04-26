@@ -1,0 +1,35 @@
+#ifndef H_MeshComponent
+#define H_MeshComponent
+#include "ComponentBase.hpp"
+#include "ResourcePtr.hpp"
+#include "Mesh.hpp"
+#include "glm.hpp"
+
+
+namespace asapi
+{
+	using bfu::stream;
+
+	class MeshComponent: public ComponentBase<MeshComponent>
+	{
+	protected:
+		SERIALIZABLE_VAR(MeshComponent, stream, m_meshName );
+
+		char buffMesh[255];
+		ResourcePtr< Mesh >		 		m_mesh;
+		
+	public:
+		MeshComponent(bfu::MemBlockBase* mBlock);
+		MeshComponent(const MeshComponent&) = delete;
+		~MeshComponent(){};
+
+
+		//virtual void OnAttach() override;
+		virtual void OnIsDirty() override;
+		#ifdef IS_EDITOR
+		virtual void OnGUI() override;
+		#endif
+	};
+}
+
+#endif
