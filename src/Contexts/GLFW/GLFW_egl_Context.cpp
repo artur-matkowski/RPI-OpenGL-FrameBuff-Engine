@@ -6,6 +6,7 @@
 //#include "imgui_impl_opengl2.hpp"
 #ifdef IS_EDITOR
 #include "backends/imgui_impl_opengl3.h"
+#include "imgui_impl_glfw.hpp"
 #endif
 
 static void glfw_error_callback(int err, const char* description)
@@ -458,7 +459,7 @@ namespace asapi
 
 		p_postRenderCallback = &GLFW_egl_Context::SwapBuffer;
 
-		 #ifdef IS_EDITOR
+		#ifdef IS_EDITOR
 	    // Setup Dear ImGui context
 	    IMGUI_CHECKVERSION();
 	    ImGui::CreateContext();

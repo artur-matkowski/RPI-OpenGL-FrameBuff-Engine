@@ -43,6 +43,7 @@
 //  2016-10-15: Misc: Added a void* user_data parameter to Clipboard function handlers.
 
 #ifdef IS_EDITOR
+#ifndef IS_TARGET
 #include "imgui.h"
 #include "imgui_impl_glfw.hpp"
 
@@ -866,4 +867,5 @@ static void ImGui_ImplGlfw_ShutdownPlatformInterface()
 {
 }
 
+#endif
 #endif

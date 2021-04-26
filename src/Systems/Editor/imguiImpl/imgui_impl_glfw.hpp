@@ -22,6 +22,7 @@
 
 #pragma once
 #ifdef IS_EDITOR
+#ifndef IS_TARGET
 #include "imgui.h"      // IMGUI_IMPL_API
 
 struct GLFWwindow;
@@ -42,4 +43,5 @@ IMGUI_IMPL_API void     ImGui_ImplGlfw_KeyCallback(GLFWwindow* window, int key, 
 IMGUI_IMPL_API void     ImGui_ImplGlfw_CharCallback(GLFWwindow* window, unsigned int c);
 IMGUI_IMPL_API void     ImGui_ImplGlfw_MonitorCallback(GLFWmonitor* monitor, int event);
 
+#endif
 #endif

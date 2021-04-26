@@ -78,10 +78,14 @@ namespace asapi
                                 + (*fp_hasNormals ? 3 : 0)
                                 + *fp_numUvChannels * 2;
 
+        const uint32_t atributesInUse = (*fp_hasPosition ? 1 : 0)
+                                + (*fp_hasNormals ? 1 : 0)
+                                + *fp_numUvChannels;
+
 
         config.push_back( 0 ); // dommy vertex_buffer value
         config.push_back( 0 ); // dummy indice_array value
-        config.push_back( 0 ); // present attributes count
+        config.push_back( atributesInUse ); // present attributes count
 
         glGenBuffers(1, &config[0]);
         glBindBuffer(GL_ARRAY_BUFFER, config[0]);
@@ -107,7 +111,6 @@ namespace asapi
             config.push_back(0);
             //glEnableVertexAttribArray(0);
             //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT)*9, nullptr);
-            config[2]++;
         }
 
         if(*fp_hasNormals)
@@ -118,7 +121,6 @@ namespace asapi
             config.push_back(3);
             config.push_back(9);
             config.push_back(0);
-            config[2]++;
         }
 
         for(uint32_t UVchannel = 0; UVchannel<*fp_numUvChannels; ++UVchannel)
@@ -131,7 +133,6 @@ namespace asapi
             config.push_back(3);
             // glEnableVertexAttribArray(2);
             // glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT)*9, (void*) (sizeof(GL_FLOAT)*3) );
-            config[2]++;
         }
 
         config.push_back( *fp_indiciesCount );
