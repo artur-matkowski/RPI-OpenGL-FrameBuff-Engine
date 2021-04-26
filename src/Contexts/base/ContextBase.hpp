@@ -3,9 +3,6 @@
 #include <bitforge/utils/bfu.hpp>
 #include <EGL/egl.h>
 #include <chrono>
-#ifdef USE_XLIB
-#include <X11/Xlib.h>
-#endif
 #include "object.hpp"
 #include "KeyCodes.hpp"
 

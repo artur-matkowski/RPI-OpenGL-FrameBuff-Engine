@@ -24,11 +24,7 @@ namespace asapi
 
 		bfu::EventSystem 		EVENTS;
 		RendererSystem 			RENDERER;
-		#ifdef USE_XLIB
 		ContextBase				*CONTEXT;
-		#else
-		DRM_GBM_EGL_ContextType	CONTEXT;
-		#endif
 		ResourceSystem			RESOURCES;
 		TimeSystem				TIME;
 		SceneSystem				SCENE;

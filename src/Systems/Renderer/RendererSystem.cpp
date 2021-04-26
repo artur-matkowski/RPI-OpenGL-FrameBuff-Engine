@@ -27,11 +27,7 @@ namespace asapi{
 
 		uint16_t resX;
 		uint16_t resY;
-		#ifdef USE_XLIB
 		SYSTEMS::GetObject().CONTEXT->GetResolution(&resX, &resY);
-		#else
-		SYSTEMS::GetObject().CONTEXT.GetResolution(&resX, &resY);
-		#endif
 		m_resolution.x = resX;
 		m_resolution.y = resY;
 
@@ -107,9 +103,101 @@ namespace asapi{
 
 	bool RendererSystem::ProcessMesh(Mesh* mesh)
 	{
-		const uint32_t 	vertexfields = (*mesh->fp_hasPosition ? 3 : 0)
-                                + (*mesh->fp_hasNormals ? 3 : 0)
-                                + *mesh->fp_numUvChannels * 2;
+		SYSTEMS::IO::MMAP* mmap = (SYSTEMS::IO::MMAP*)mesh->h_meshHandle; 
+		mesh->h_meshHandle = nullptr; // set handle to invalid state, as we retrieved what we needed
+		
+        bool*       fp_hasPosition = (bool*) (size_t)mmap->Data();
+        bool*       fp_hasNormals = &fp_hasPosition[1];
+        uint32_t*   fp_arraySize = (uint32_t*) &fp_hasPosition[2];
+        uint32_t*   fp_numUvChannels = &fp_arraySize[1];
+        uint32_t*   fp_indiciesCount = &fp_numUvChannels[1];
+        float*      fp_vertexData = (float*) &fp_indiciesCount[1];
+        int*        fp_indiciesData = (int*) &fp_vertexData[*fp_arraySize];
+
+        const uint32_t vertexfields = (*fp_hasPosition ? 3 : 0)
+                                + (*fp_hasNormals ? 3 : 0)
+                                + *fp_numUvChannels * 2;
+
+        std::vector<uint32_t> config;
+
+        config.push_back( 0 ); // dommy vertex_buffer value
+        config.push_back( 0 ); // dummy indice_array value
+        config.push_back( 0 ); // present attributes count
+
+        glGenBuffers(1, &config[0]);
+        glBindBuffer(GL_ARRAY_BUFFER, config[0]);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * *fp_arraySize * vertexfields, 0, GL_STATIC_DRAW);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * *fp_arraySize * vertexfields, fp_vertexData);
+
+
+        glGenBuffers(1, &config[1]);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, config[1]);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)* *fp_indiciesCount, NULL, GL_STATIC_DRAW);
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLuint)* *fp_indiciesCount, fp_indiciesData);
+
+
+
+
+        if(fp_hasPosition)
+        {
+            config.reserve(config.size()+5);
+            config.push_back(0);
+            config.push_back(0);
+            config.push_back(3);
+            config.push_back(vertexfields);
+            config.push_back(0);
+            //glEnableVertexAttribArray(0);
+            //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT)*9, nullptr);
+            config[2]++;
+        }
+
+        if(*fp_hasNormals)
+        {
+            config.reserve(config.size()+5);
+            config.push_back(0);
+            config.push_back(0);
+            config.push_back(3);
+            config.push_back(9);
+            config.push_back(0);
+            config[2]++;
+        }
+
+        for(uint32_t UVchannel = 0; UVchannel<*fp_numUvChannels; ++UVchannel)
+        {
+            config.reserve(config.size()+5);
+            config.push_back(2);
+            config.push_back(2);
+            config.push_back(2);
+            config.push_back(vertexfields);
+            config.push_back(3);
+            // glEnableVertexAttribArray(2);
+            // glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT)*9, (void*) (sizeof(GL_FLOAT)*3) );
+            config[2]++;
+        }
+
+        config.push_back( *fp_indiciesCount );
+
+
+        log::debug << "Mesh has " << *fp_arraySize << " floats:" << std::endl;
+        for(int i=0; i<(*fp_arraySize/vertexfields); ++i)
+        {
+            int index = i * vertexfields;
+            std::cout << "vert[" << i << "] = ";
+
+            std::cout << "( " <<fp_vertexData[index];
+            for(int j=1; j<vertexfields; ++j)
+                std::cout << ", " << fp_vertexData[index+j];
+            std::cout << ")" << std::endl;
+        }
+        std::cout << "Indicies count: " << *fp_indiciesCount << " : \n";
+        for(int i=0; i<*fp_indiciesCount; i+=3)
+        {
+            std::cout << "( " << fp_indiciesData[i];
+            std::cout << ", " << fp_indiciesData[i+1];
+            std::cout << ", " << fp_indiciesData[i+2];
+            std::cout << ")\n" ;
+        }
+        std::cout << "UVs: " << *fp_numUvChannels << " normals: " << *fp_hasNormals << std::endl;
 	}
 	bool RendererSystem::DispouseMesh(Mesh* mesh)
 	{

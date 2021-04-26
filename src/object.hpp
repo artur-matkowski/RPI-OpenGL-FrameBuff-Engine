@@ -16,13 +16,6 @@
 // 	#define IS_EDITOR
 // #endif
 
-#ifdef IS_TARGET
-	#ifdef IS_EDITOR
-		#define USE_XLIB
-	#endif
-#else
-	#define USE_XLIB
-#endif
 
 #ifdef IS_EDITOR
 	#ifdef IS_PLAYER

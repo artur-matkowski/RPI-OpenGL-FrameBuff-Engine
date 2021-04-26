@@ -26,7 +26,6 @@ namespace asapi
 	}
 
 
-	#ifdef USE_XLIB
 	static ContextBase* ContextInit()
 	{
 		static ContextBase* ret = 0;
@@ -54,7 +53,6 @@ namespace asapi
 
 		return ret;
 	}
-	#endif
 
 
 	bool SYSTEMS::init(const int argc, const char** argv)
@@ -65,12 +63,8 @@ namespace asapi
 		}
 		//srand (time(NULL)); // moved to TIME.RANDOM
 
-		#ifdef USE_XLIB
 		PRIFILE( CONTEXT = ContextInit(); );
 		PRIFILE( CONTEXT->Init(argc, argv); );
-		#else
-		PRIFILE( CONTEXT.Init(argc, argv); );
-		#endif
 		PRIFILE( RENDERER.Init(); );
 
 		PRIFILE( SCENE.Init( SYSTEMS::SYSTEMS_ALLOCATOR, argc, argv ); );
@@ -90,20 +84,12 @@ namespace asapi
 	
 	void SYSTEMS::cloaseApp()
 	{
-		#ifdef USE_XLIB
 		CONTEXT->CleanUp();
-		#else
-		CONTEXT.CleanUp();
-		#endif
 	}
 
 	void SYSTEMS::mainAppLoop()
 	{
-		#ifdef USE_XLIB
 		CONTEXT->MainLoop();
-		#else
-		CONTEXT.MainLoop();
-		#endif
 	}
 
 

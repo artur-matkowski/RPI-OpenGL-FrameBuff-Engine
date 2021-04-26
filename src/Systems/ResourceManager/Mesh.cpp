@@ -58,36 +58,42 @@ namespace asapi
         SYSTEMS::IO::MMAP mmap;
         mmap.InitForRead(buff);
 
+        //quite none standard, but this is void pointer, and we need to suply that to renderer
+        //and we do not want to have garbage in our structure
+        //on top of that moving this as argument can not be becouse of include dependencies
+        h_meshHandle = (asapi::tMeshHandle)&mmap;
+
         if( !mmap.IsValid() )
             return;
 
-        fp_hasPosition = (bool*) (size_t)mmap.Data();
-        fp_hasNormals = &fp_hasPosition[1];
-        fp_arraySize = (uint32_t*) &fp_hasPosition[2];
-        fp_numUvChannels = &fp_arraySize[1];
-        fp_indiciesCount = &fp_numUvChannels[1];
-        fp_vertexData = (float*) &fp_indiciesCount[1];
-        fp_indiciesData = (int*) &fp_vertexData[*fp_arraySize];
+        bool*       fp_hasPosition = (bool*) (size_t)mmap.Data();
+        bool*       fp_hasNormals = &fp_hasPosition[1];
+        uint32_t*   fp_arraySize = (uint32_t*) &fp_hasPosition[2];
+        uint32_t*   fp_numUvChannels = &fp_arraySize[1];
+        uint32_t*   fp_indiciesCount = &fp_numUvChannels[1];
+        float*      fp_vertexData = (float*) &fp_indiciesCount[1];
+        int*        fp_indiciesData = (int*) &fp_vertexData[*fp_arraySize];
 
         const uint32_t vertexfields = (*fp_hasPosition ? 3 : 0)
                                 + (*fp_hasNormals ? 3 : 0)
                                 + *fp_numUvChannels * 2;
 
 
-        glGenBuffers(1, &vertex_buffer);
-        glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+        config.push_back( 0 ); // dommy vertex_buffer value
+        config.push_back( 0 ); // dummy indice_array value
+        config.push_back( 0 ); // present attributes count
+
+        glGenBuffers(1, &config[0]);
+        glBindBuffer(GL_ARRAY_BUFFER, config[0]);
         glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * *fp_arraySize * vertexfields, 0, GL_STATIC_DRAW);
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * *fp_arraySize * vertexfields, fp_vertexData);
 
 
-        glGenBuffers(1, &indice_array);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indice_array);
+        glGenBuffers(1, &config[1]);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, config[1]);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)* *fp_indiciesCount, NULL, GL_STATIC_DRAW);
         glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLuint)* *fp_indiciesCount, fp_indiciesData);
 
-        config.push_back( vertex_buffer );
-        config.push_back( indice_array );
-        config.push_back( 0 ); //present attributes count
 
 
 
@@ -104,16 +110,16 @@ namespace asapi
             config[2]++;
         }
 
-        // if(*fp_hasNormals)
-        // {
-        //     config.reserve(config.size()+5);
-        //     config.push_back(0);
-        //     config.push_back(0);
-        //     config.push_back(3);
-        //     config.push_back(9);
-        //     config.push_back(0);
-        //     config[2]++;
-        // }
+        if(*fp_hasNormals)
+        {
+            config.reserve(config.size()+5);
+            config.push_back(0);
+            config.push_back(0);
+            config.push_back(3);
+            config.push_back(9);
+            config.push_back(0);
+            config[2]++;
+        }
 
         for(uint32_t UVchannel = 0; UVchannel<*fp_numUvChannels; ++UVchannel)
         {
