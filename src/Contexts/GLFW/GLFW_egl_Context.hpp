@@ -4,9 +4,6 @@
 #include "ContextBase.hpp"
 #include "KeyCodes.hpp"
 #include <GLFW/glfw3.h>
-#ifdef IS_EDITOR
-#include "backends/imgui_impl_glfw.h"
-#endif
 
 namespace asapi
 {
