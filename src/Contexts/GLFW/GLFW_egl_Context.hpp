@@ -1,5 +1,6 @@
 #ifndef _H_GLFW_egl_Context
 #define _H_GLFW_egl_Context
+#ifndef IS_TARGET
 #include "ContextBase.hpp"
 #include "KeyCodes.hpp"
 #include <GLFW/glfw3.h>
@@ -39,4 +40,5 @@ namespace asapi
 	};
 }
 
+#endif
 #endif

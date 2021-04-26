@@ -1,6 +1,6 @@
 #ifndef _H_HierarchyWindow
 #define _H_HierarchyWindow
-	#ifdef IS_EDITOR
+#ifdef IS_EDITOR
 #include "GameObject.hpp"
 #include <bitforge/utils/bfu.hpp>	
 

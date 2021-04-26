@@ -11,7 +11,9 @@
 #include "TimeSystem.hpp"
 #include "MemoryManagmentSystem.hpp"
 #include "SceneSystem.hpp"
+#ifdef IS_EDITOR
 #include "EditorSystem.hpp"
+#endif
 
 namespace asapi
 {

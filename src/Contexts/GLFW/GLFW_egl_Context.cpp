@@ -1,4 +1,5 @@
 #include "GLFW_egl_Context.hpp"
+#ifndef IS_TARGET
 #include <thread>
 #include <bitforge/utils/bfu.hpp>
 #include "Systems.hpp"
@@ -610,3 +611,5 @@ namespace asapi
 		*Y = y;	
 	}
 }
+
+#endif
