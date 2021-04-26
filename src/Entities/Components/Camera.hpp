@@ -9,9 +9,18 @@ namespace asapi
 	class Camera: public ComponentBase<Camera>
 	{	
 	protected:
+		SERIALIZABLE_VAR( Camera, uint32_t, m_cameraMode );
+
 		SERIALIZABLE_VAR( Camera, float, m_nearPlane );
 		SERIALIZABLE_VAR( Camera, float, m_farPlane );
 		SERIALIZABLE_VAR( Camera, float, m_FOV );
+
+		SERIALIZABLE_VAR( Camera, float, m_orthoLeft );
+		SERIALIZABLE_VAR( Camera, float, m_orthoRight );
+		SERIALIZABLE_VAR( Camera, float, m_orthoBottom );
+		SERIALIZABLE_VAR( Camera, float, m_orthoTop );
+
+
 		SERIALIZABLE_VAR( Camera, bool, m_isMainCamera );
 
 

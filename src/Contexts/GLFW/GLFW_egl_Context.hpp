@@ -2,10 +2,9 @@
 #define _H_GLFW_egl_Context
 #include "ContextBase.hpp"
 #include "KeyCodes.hpp"
+#include <GLFW/glfw3.h>
 #ifdef IS_EDITOR
 #include "backends/imgui_impl_glfw.h"
-#else
-#include <GLFW/glfw3.h>
 #endif
 
 namespace asapi
