@@ -27,7 +27,11 @@ namespace asapi{
 
 		uint16_t resX;
 		uint16_t resY;
+		#ifdef USE_XLIB
 		SYSTEMS::GetObject().CONTEXT->GetResolution(&resX, &resY);
+		#else
+		SYSTEMS::GetObject().CONTEXT.GetResolution(&resX, &resY);
+		#endif
 		m_resolution.x = resX;
 		m_resolution.y = resY;
 
