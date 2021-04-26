@@ -39,10 +39,10 @@
 \"m_nearPlane\": 0.100000, 
 \"m_farPlane\": 100.000000, 
 \"m_FOV\": 45.000000, 
-\"m_orthoLeft\": 0.000000, 
-\"m_orthoRight\": 0.000000, 
-\"m_orthoBottom\": 0.000000, 
-\"m_orthoTop\": 0.000000, 
+\"m_orthoLeft\": -3.000000, 
+\"m_orthoRight\": 3.000000, 
+\"m_orthoBottom\": -3.000000, 
+\"m_orthoTop\": 3.000000, 
 \"m_isMainCamera\": true
 }"
 }]

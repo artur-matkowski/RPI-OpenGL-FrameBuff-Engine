@@ -397,6 +397,16 @@ namespace asapi
 		}
 		#endif
 	}
+	void WindowSizeCallback(GLFWwindow* window, int width, int height)
+	{
+		ResizeWindowArgs args;
+		args.m_width = width; 
+    	args.m_height = height;
+
+		static bfu::Event* p_ev_WindowSizeEvent = SYSTEMS::GetObject().EVENTS.GetFastEvent("ResizeWindow");
+		p_ev_WindowSizeEvent->Invoke( &args );
+	}
+
 
 	void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 	{
@@ -442,6 +452,7 @@ namespace asapi
 		glfwSetCharCallback(window, CharCallback);
 		glfwSetCursorPosCallback(window, cursor_position_callback);
 		glfwSetWindowFocusCallback(window, WindowFocusCallback);
+		glfwSetWindowSizeCallback(window, WindowSizeCallback);
 
 
 		p_postRenderCallback = &GLFW_egl_Context::SwapBuffer;
