@@ -20,56 +20,10 @@ namespace asapi
             //quite none standard, but this is void pointer, and we need to suply that to renderer
             //and we do not want to have garbage in our structure
             //on top of that moving this as argument can not be becouse of include dependencies
-            h_meshHandle = (asapi::tMeshHandle)&mmap;
+            h_meshHandle = (asapi::tMeshHandle)mmap.Data();
             RendererSystem::ProcessMesh(this);
         }
 	}
-
-    struct cursorMock
-    {   
-        void* data = nullptr;
-
-        cursorMock()
-        {
-            static char tmp[sizeof(bool) * 2
-                        + sizeof(uint32_t) * 3
-                        + sizeof(float) * 5 * 6
-                        + sizeof(int) * 6] = {'\0'};
-
-            GLfloat vertexbuff[] = {
-                 0.5f, -0.1f, 0.0f, 0.0f,  0.0f, 
-                 0.1f, -0.5f, 0.0f, 0.0f,  1.0f, 
-                 0.0f,  0.0f, 0.0f, 1.0f,  1.0f, 
-                 0.0f,  0.0f, 0.0f, 0.0f,  1.0f, 
-                 1.0f, -0.9f, 0.0f, 1.0f,  1.0f, 
-                 0.9f, -1.0f, 0.0f, 1.0f,  1.0f
-            };
-
-            GLuint indices[6] = {0, 1, 2, 4, 5, 6};
-
-
-            bool* fp_hasPosition = (bool*) tmp;
-            bool* fp_hasNormals = &fp_hasPosition[1];
-            uint32_t* fp_arraySize = (uint32_t*) &fp_hasPosition[2];
-            uint32_t* fp_numUvChannels = &fp_arraySize[1];
-            uint32_t* fp_indiciesCount = &fp_numUvChannels[1];
-            float* vertexData = (float*) &fp_indiciesCount[1];
-            int* indiciesData = (int*) &vertexData[5 * 6];
-
-
-            *fp_hasPosition = true;
-            *fp_hasNormals = false;
-            *fp_arraySize = 5 * 6;
-            *fp_numUvChannels = 0;
-            *fp_indiciesCount = 6;
-
-            memcpy(vertexData, vertexbuff, sizeof(float) * 5 * 6);
-            memcpy(indiciesData, indices, sizeof(GLuint) * 6);
-
-            data = (void*)tmp;
-        }
-    }CursorMock;
-
 
 	Mesh::Mesh(glm::vec2 resolution)
 	{
@@ -77,7 +31,6 @@ namespace asapi
                         + sizeof(uint32_t) * 3
                         + sizeof(float) * 5 * 6
                         + sizeof(int) * 6];
-        char* t2 = tmp;
 
         float vertexbuff[] = {
              0.5f, -0.1f, 0.0f, 0.0f,  0.0f, 
@@ -110,7 +63,7 @@ namespace asapi
         memcpy(indiciesData, indices, sizeof(GLuint) * 6);
 
 
-        h_meshHandle = (asapi::tMeshHandle)&t2;
+        h_meshHandle = (asapi::tMeshHandle)tmp;
         RendererSystem::ProcessMesh(this);
 
         delete tmp;

@@ -103,16 +103,16 @@ namespace asapi{
 
 	bool RendererSystem::ProcessMesh(Mesh* mesh)
 	{
-		SYSTEMS::IO::MMAP* mmap = (SYSTEMS::IO::MMAP*)mesh->h_meshHandle; 
-		mesh->h_meshHandle = nullptr; // set handle to invalid state, as we retrieved what we needed
 		
-        bool*       fp_hasPosition = (bool*) (size_t)mmap->Data();
+        bool*       fp_hasPosition = (bool*) mesh->h_meshHandle;
         bool*       fp_hasNormals = &fp_hasPosition[1];
         uint32_t*   fp_arraySize = (uint32_t*) &fp_hasPosition[2];
         uint32_t*   fp_numUvChannels = &fp_arraySize[1];
         uint32_t*   fp_indiciesCount = &fp_numUvChannels[1];
         float*      fp_vertexData = (float*) &fp_indiciesCount[1];
         int*        fp_indiciesData = (int*) &fp_vertexData[*fp_arraySize];
+        
+		mesh->h_meshHandle = nullptr; // set handle to invalid state, as we retrieved what we needed
 
         const uint32_t vertexfields = (*fp_hasPosition ? 3 : 0)
                                 + (*fp_hasNormals ? 3 : 0)
