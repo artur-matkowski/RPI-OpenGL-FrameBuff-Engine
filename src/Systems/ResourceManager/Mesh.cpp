@@ -76,7 +76,7 @@ namespace asapi
         char* tmp = new char[sizeof(bool) * 2
                         + sizeof(uint32_t) * 3
                         + sizeof(float) * 5 * 6
-                        + sizeof(int) * 6] = {'\0'};
+                        + sizeof(int) * 6];
         char* t2 = tmp;
 
         float vertexbuff[] = {
