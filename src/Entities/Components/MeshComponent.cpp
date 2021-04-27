@@ -21,21 +21,33 @@ namespace asapi
 	#ifdef IS_EDITOR
 	void MeshComponent::OnGUI()
 	{
-		char buff[255];
-		strncpy(buff, m_meshName.c_str(), 255 );
+		std::vector<std::string>* items = SYSTEMS::GetObject().RESOURCES.GetMeshesPaths();
 
-		if( ImGui::InputText("MeshComponent##Mesh name",     buff, 255, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue) )
-		{
-			if( m_meshName.c_str() != buff )
-			{
-				m_meshName.clear();
-				m_meshName.sprintf(buff);
-			}
+		if (ImGui::BeginCombo("Mesh resource", m_meshName.c_str()))
+        {
+            for (int n = 0; n < items->size(); n++)
+            {
+            	const char* displayName = strstr( (*items)[n].c_str(), "/meshes/") + strlen("/meshes/");
+                const bool is_selected = strcmp( m_meshName.c_str(), (*items)[n].c_str() ) == 0;
+                if (ImGui::Selectable(displayName, is_selected))
+                {
+                	if( m_meshName.c_str() != displayName )
+					{
+						m_meshName.clear();
+						m_meshName.sprintf(displayName);
+					}
 
-			log::debug << "updated mesh name " << buff << std::endl;
+					log::debug << "updated mesh name " << displayName << std::endl;
 
-			OnIsDirty();			
-		}
+					OnIsDirty();	
+                }
+
+                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
 
 		Mesh* ptr = (Mesh*)m_mesh.GetRawPtr();
 		if( ptr!=nullptr && ptr->GetRawHandle() != nullptr )

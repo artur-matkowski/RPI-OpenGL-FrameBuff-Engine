@@ -10,7 +10,7 @@ namespace asapi
 	Mesh::Mesh(const char* path)
 	{
         char buff[MAX_PATH_SIZE];
-        sprintf(buff, "%s.mmp", path);
+        sprintf(buff, "%s", path);
 
         SYSTEMS::IO::MMAP mmap;
         mmap.InitForRead(buff);

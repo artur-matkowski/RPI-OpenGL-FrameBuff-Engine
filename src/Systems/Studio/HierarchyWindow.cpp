@@ -147,7 +147,7 @@ namespace asapi
 		static GameObject* go_root = &SYSTEMS::GetObject().SCENE.GetRootNode();
 		auto window_flags = ImGuiWindowFlags_NoCollapse ;
 		
-		ImGui::Begin("Scene Hierarhy", NULL, window_flags); 
+		ImGui::Begin("Hierarhy", NULL, window_flags); 
 
 
 		is_GOContextMenuOpen = false;

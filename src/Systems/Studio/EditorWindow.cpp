@@ -105,7 +105,7 @@ namespace asapi
 		static EditorWindow _this;
 		auto window_flags = ImGuiWindowFlags_NoCollapse ;
 
-		ImGui::Begin("GameObject View", NULL, window_flags); 
+		ImGui::Begin("Editor", NULL, window_flags); 
 
 		if( _selected!=0 )
 		{

@@ -38,7 +38,7 @@ namespace asapi
 		MemoryManagmentSystem& MEMORY = SYSTEMS::GetObject().MEMORY;
 		SceneSystem& SCENE = SYSTEMS::GetObject().SCENE;
 
-		ImGui::Begin("Editor System", NULL, window_flags ); 
+		ImGui::Begin("Asapi Studio", NULL, window_flags ); 
 
 
 

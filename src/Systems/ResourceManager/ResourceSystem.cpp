@@ -53,7 +53,7 @@ namespace asapi{
 
 	#ifdef IS_EDITOR
 
-	void ScanDirForPaths(std::vector<std::string>& out, const char* dirname)
+	void ScanDirForPaths(std::vector<std::string>& out, const char* dirname, const char* fileExtensionFilter = 0)
 	{
 		int i;
 		DIR* d_fh;
@@ -69,7 +69,9 @@ namespace asapi{
 		{
 			/* Don't descend up the tree or include the current directory */
 			if(strncmp(entry->d_name, "..", 2) != 0 &&
-			strncmp(entry->d_name, ".", 1) != 0)
+			strncmp(entry->d_name, ".", 1) != 0 &&
+			fileExtensionFilter != 0 &&
+			strstr(entry->d_name, fileExtensionFilter) != 0)
 			{
 				/* Prepend the current directory and recurse */
 				strncpy(longest_name, dirname, MAX_PATH-1);
@@ -126,46 +128,61 @@ namespace asapi{
 		if(strcmp(m_ProjectPath, ".")==0)
 			return;
 
-		v_TexturesPaths.clear();
-		v_ShadersPaths.clear();
-		v_MeshesPaths.clear();
+		std::vector<std::string> TexturesPaths;
+		std::vector<std::string> ShadersPaths;
+		std::vector<std::string> MeshesPaths;
 
 		char dir_path[MAX_PATH];
 
 		strncpy(dir_path, m_ProjectPath, MAX_PATH-1);
 		strncat(dir_path, "/assets_ext/textures", MAX_PATH-1);
-		ScanDirForPaths(v_TexturesPaths, dir_path);
+		ScanDirForPaths(TexturesPaths, dir_path);
 
 		strncpy(dir_path, m_ProjectPath, MAX_PATH-1);
 		strncat(dir_path, "/assets_ext/shaders", MAX_PATH-1);
-		ScanDirForPaths(v_ShadersPaths, dir_path);
+		ScanDirForPaths(ShadersPaths, dir_path);
 
 		strncpy(dir_path, m_ProjectPath, MAX_PATH-1);
 		strncat(dir_path, "/assets_ext/meshes", MAX_PATH-1);
-		ScanDirForPaths(v_MeshesPaths, dir_path);
+		ScanDirForPaths(MeshesPaths, dir_path);
 
 		//log::debug << "Scanning for files showed follow files in project folder:" << std::endl;
-		for(int i=0; i<v_TexturesPaths.size(); ++i)
+		for(int i=0; i<TexturesPaths.size(); ++i)
 		{
-			if( ! IsInternalAssetUpToDate(v_TexturesPaths[i].c_str(), buff) )
+			if( ! IsInternalAssetUpToDate(TexturesPaths[i].c_str(), buff) )
 			{
-				Texture::Compile(buff, v_TexturesPaths[i].c_str());
+				Texture::Compile(buff, TexturesPaths[i].c_str());
 			}
 		}
-		for(int i=0; i<v_ShadersPaths.size(); ++i)
+		for(int i=0; i<ShadersPaths.size(); ++i)
 		{
-			if( ! IsInternalAssetUpToDate(v_ShadersPaths[i].c_str(), buff) )
+			if( ! IsInternalAssetUpToDate(ShadersPaths[i].c_str(), buff) )
 			{
-				Shader::Compile(buff, v_ShadersPaths[i].c_str());
+				Shader::Compile(buff, ShadersPaths[i].c_str());
 			}
 		}
-		for(int i=0; i<v_MeshesPaths.size(); ++i)
+		for(int i=0; i<MeshesPaths.size(); ++i)
 		{
-			if( ! IsInternalAssetUpToDate(v_MeshesPaths[i].c_str(), buff) )
+			if( ! IsInternalAssetUpToDate(MeshesPaths[i].c_str(), buff) )
 			{
-				Mesh::Compile(buff, v_MeshesPaths[i].c_str());
+				Mesh::Compile(buff, MeshesPaths[i].c_str());
 			}
 		}
+
+		v_TexturesPaths.clear();
+		strncpy(dir_path, m_ProjectPath, MAX_PATH-1);
+		strncat(dir_path, "/assets_int/textures", MAX_PATH-1);
+		ScanDirForPaths(v_TexturesPaths, dir_path);
+
+		v_ShadersPaths.clear();
+		strncpy(dir_path, m_ProjectPath, MAX_PATH-1);
+		strncat(dir_path, "/assets_int/shaders", MAX_PATH-1);
+		ScanDirForPaths(v_ShadersPaths, dir_path, "vert.glsl");
+
+		v_MeshesPaths.clear();
+		strncpy(dir_path, m_ProjectPath, MAX_PATH-1);
+		strncat(dir_path, "/assets_int/meshes", MAX_PATH-1);
+		ScanDirForPaths(v_MeshesPaths, dir_path, ".mmp");
 	}
 	#endif
 
