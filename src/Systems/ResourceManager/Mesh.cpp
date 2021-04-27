@@ -73,7 +73,7 @@ namespace asapi
 
 	Mesh::Mesh(glm::vec2 resolution)
 	{
-        char tmp[sizeof(bool) * 2
+        char* tmp = new char[sizeof(bool) * 2
                         + sizeof(uint32_t) * 3
                         + sizeof(float) * 5 * 6
                         + sizeof(int) * 6] = {'\0'};
@@ -112,6 +112,8 @@ namespace asapi
 
         h_meshHandle = (asapi::tMeshHandle)&t2;
         RendererSystem::ProcessMesh(this);
+
+        delete tmp;
 
 
 		// static GLfloat vertexbuff[] = {
