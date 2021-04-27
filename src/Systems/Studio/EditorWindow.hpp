@@ -1,5 +1,5 @@
-#ifndef H_ComponentEditorWindow
-#define H_ComponentEditorWindow
+#ifndef H_EditorWindow
+#define H_EditorWindow
 #ifdef IS_EDITOR
 
 #include <vector>
@@ -12,15 +12,15 @@ namespace asapi
 {
 	class GameObject;
 	
-	class ComponentEditorWindow
+	class EditorWindow
 	{
 
 		Node<size_t> m_rootNode;
 
 
 
-		ComponentEditorWindow();
-		~ComponentEditorWindow();
+		EditorWindow();
+		~EditorWindow();
 
 		static void OnGUI(ComponentInterface* obj);
 		static void OnGUI(GameObject* obj);

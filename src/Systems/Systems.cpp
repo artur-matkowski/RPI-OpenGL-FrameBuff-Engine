@@ -71,7 +71,7 @@ namespace asapi
 		PRIFILE( SCENE.Init( SYSTEMS::SYSTEMS_ALLOCATOR, argc, argv ); );
 
 		#ifdef IS_EDITOR
-			EDITOR.Init();
+			STUDIO.Init();
 			log::info << "GL initialized with version: " << glGetString(GL_VERSION) << std::endl;
 			log::info << "GL vendor: " << glGetString(GL_VENDOR) << std::endl;
 			log::info << "GL renderer: " << glGetString(GL_RENDERER) << std::endl;

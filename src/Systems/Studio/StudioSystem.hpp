@@ -8,11 +8,11 @@
 
 namespace asapi
 {
-	class EditorSystem
+	class StudioSystem
 	{
 	public:
-		EditorSystem();
-		~EditorSystem();
+		StudioSystem();
+		~StudioSystem();
 
 		void Init();
 

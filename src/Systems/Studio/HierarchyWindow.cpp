@@ -2,7 +2,7 @@
 #ifdef IS_EDITOR
 #include "imgui.h"
 #include "Systems.hpp"
-#include "ComponentEditorWindow.hpp"
+#include "EditorWindow.hpp"
 
 
 namespace asapi
@@ -164,11 +164,11 @@ namespace asapi
 
         if( _this.v_SelectedGameObjects.size() > 0)
         {
-        	ComponentEditorWindow::SetSelectedGameObject( _this.v_SelectedGameObjects[0] );
+        	EditorWindow::SetSelectedGameObject( _this.v_SelectedGameObjects[0] );
         }
         else
         {
-        	ComponentEditorWindow::SetSelectedGameObject( nullptr );
+        	EditorWindow::SetSelectedGameObject( nullptr );
         }
 
 	}

@@ -12,7 +12,7 @@
 #include "MemoryManagmentSystem.hpp"
 #include "SceneSystem.hpp"
 #ifdef IS_EDITOR
-#include "EditorSystem.hpp"
+#include "StudioSystem.hpp"
 #endif
 
 namespace asapi
@@ -33,7 +33,7 @@ namespace asapi
 
 
 		#ifdef IS_EDITOR
-		EditorSystem			EDITOR;
+		StudioSystem			STUDIO;
 		#endif
 
 		bool init(const int argc, const char** argv);

@@ -1,8 +1,8 @@
-#include "EditorSystem.hpp"
+#include "StudioSystem.hpp"
 #ifdef IS_EDITOR
 #include "StatsWindow.hpp"
 #include "HierarchyWindow.hpp"
-#include "ComponentEditorWindow.hpp"
+#include "EditorWindow.hpp"
 #include "imgui.h"      // IMGUI_IMPL_API
 
 #include "Systems.hpp"
@@ -10,23 +10,23 @@
 namespace asapi
 {
 
-	EditorSystem::EditorSystem()
+	StudioSystem::StudioSystem()
 	{
 
 	}
 
-	EditorSystem::~EditorSystem()
+	StudioSystem::~StudioSystem()
 	{
 
 	}
 
-	void EditorSystem::Init()
+	void StudioSystem::Init()
 	{
 		StatsWindow::Init();
 	}
 
 
-	void EditorSystem::OnGUI()
+	void StudioSystem::OnGUI()
 	{
        	ImGui::NewFrame();
 
@@ -36,7 +36,7 @@ namespace asapi
 
 		HierarchyWindow::OnGUI();
 
-		ComponentEditorWindow::OnGUI();
+		EditorWindow::OnGUI();
 	}	
 }
 

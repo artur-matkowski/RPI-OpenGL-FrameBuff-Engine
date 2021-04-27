@@ -260,7 +260,7 @@ namespace asapi
         ImGui_ImplDRM_NewFrame();
 
 
-		system.EDITOR.OnGUI();  
+		system.STUDIO.OnGUI();  
 
 		// Rendering
         ImGui::Render();

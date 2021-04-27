@@ -509,7 +509,7 @@ namespace asapi
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
 
-		system.EDITOR.OnGUI();
+		system.STUDIO.OnGUI();
 
 		// Rendering
         //ImGui::EndFrame();

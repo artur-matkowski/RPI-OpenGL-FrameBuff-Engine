@@ -1,4 +1,4 @@
-#include "ComponentEditorWindow.hpp"
+#include "EditorWindow.hpp"
 #ifdef IS_EDITOR
 #include "imgui.h"
 #include "GameObject.hpp"
@@ -22,9 +22,9 @@ namespace asapi
 		}
 	}
 
-	ComponentEditorWindow::ComponentEditorWindow()
+	EditorWindow::EditorWindow()
 	{
-		//log::error << "ComponentEditorWindow::ComponentEditorWindow()" << std::endl;
+		//log::error << "EditorWindow::EditorWindow()" << std::endl;
 
 		TypeInfo* types = TypeInfo::GetTypeInfo();
 		int typesC = TypeInfo::GetTypeInfoSize();
@@ -37,11 +37,11 @@ namespace asapi
 
 		//print(m_rootNode);
 	};
-	ComponentEditorWindow::~ComponentEditorWindow(){};
+	EditorWindow::~EditorWindow(){};
 
 	GameObject* _selected = 0;
 
-	void ComponentEditorWindow::SetSelectedGameObject( GameObject* ptr )
+	void EditorWindow::SetSelectedGameObject( GameObject* ptr )
 	{
 		_selected = ptr;
 	}
@@ -69,7 +69,7 @@ namespace asapi
 	}
 
 	ComponentInterface* p_forRemoval = nullptr;
-	void ComponentEditorWindow::OnGUI(ComponentInterface* obj)
+	void EditorWindow::OnGUI(ComponentInterface* obj)
 	{
 		ImGui::LabelText( "Component", obj->TypeName() ); 
 		ImGui::SameLine();
@@ -85,7 +85,7 @@ namespace asapi
 		obj->OnGUI();
 	}
 
-	void ComponentEditorWindow::OnGUI(GameObject* obj)
+	void EditorWindow::OnGUI(GameObject* obj)
 	{
 		ImGui::Spacing();
 		ImGui::Text( obj->GetName() );
@@ -100,9 +100,9 @@ namespace asapi
 		}
 	}
 
-	void ComponentEditorWindow::OnGUI()
+	void EditorWindow::OnGUI()
 	{
-		static ComponentEditorWindow _this;
+		static EditorWindow _this;
 		auto window_flags = ImGuiWindowFlags_NoCollapse ;
 
 		ImGui::Begin("GameObject View", NULL, window_flags); 
