@@ -73,7 +73,44 @@ namespace asapi
 
 	Mesh::Mesh(glm::vec2 resolution)
 	{
-        h_meshHandle = (asapi::tMeshHandle)&CursorMock;
+        char tmp[sizeof(bool) * 2
+                        + sizeof(uint32_t) * 3
+                        + sizeof(float) * 5 * 6
+                        + sizeof(int) * 6] = {'\0'};
+        char* t2 = tmp;
+
+        GLfloat vertexbuff[] = {
+             0.5f, -0.1f, 0.0f, 0.0f,  0.0f, 
+             0.1f, -0.5f, 0.0f, 0.0f,  1.0f, 
+             0.0f,  0.0f, 0.0f, 1.0f,  1.0f, 
+             0.0f,  0.0f, 0.0f, 0.0f,  1.0f, 
+             1.0f, -0.9f, 0.0f, 1.0f,  1.0f, 
+             0.9f, -1.0f, 0.0f, 1.0f,  1.0f
+        };
+
+        GLuint indices[6] = {0, 1, 2, 4, 5, 6};
+
+
+        bool* fp_hasPosition = (bool*) tmp;
+        bool* fp_hasNormals = &fp_hasPosition[1];
+        uint32_t* fp_arraySize = (uint32_t*) &fp_hasPosition[2];
+        uint32_t* fp_numUvChannels = &fp_arraySize[1];
+        uint32_t* fp_indiciesCount = &fp_numUvChannels[1];
+        float* vertexData = (float*) &fp_indiciesCount[1];
+        int* indiciesData = (int*) &vertexData[5 * 6];
+
+
+        *fp_hasPosition = true;
+        *fp_hasNormals = false;
+        *fp_arraySize = 5 * 6;
+        *fp_numUvChannels = 0;
+        *fp_indiciesCount = 6;
+
+        memcpy(vertexData, vertexbuff, sizeof(float) * 5 * 6);
+        memcpy(indiciesData, indices, sizeof(GLuint) * 6);
+
+
+        h_meshHandle = (asapi::tMeshHandle)&t2;
         RendererSystem::ProcessMesh(this);
 
 

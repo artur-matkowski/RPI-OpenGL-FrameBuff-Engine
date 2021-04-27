@@ -497,9 +497,6 @@ namespace asapi
 	{
 		#ifdef IS_EDITOR
      	static ImGuiIO& io = ImGui::GetIO(); (void)io;
-     	static Mesh 			cursorMesh( glm::vec2(resolution.x, resolution.y) );
-		static MaterialType 	cursorMaterial("debug");
-		static Uniform<glm::mat4>* uCursorPos = (Uniform<glm::mat4>*)cursorMaterial.GetUniformPtr("modelViewMat");
 		static SYSTEMS& system = SYSTEMS::GetObject();
 
 		io.DeltaTime = deltaTime;
@@ -538,17 +535,6 @@ namespace asapi
 		}
 
 
-		// glm::vec2 mousePos(m_mainEglWindow->cursorPos.x / (float)m_mainEglWindow->resolution.x*2.0f - 1.0f
-		// 	, 1.0f - m_mainEglWindow->cursorPos.y / (float)m_mainEglWindow->resolution.y*2.0f );
-
-
-
-		// cursorMaterial.BindMaterial();
-		// glm::mat4 cursorModelView = glm::mat4(1.0);
-		// cursorModelView[3] = glm::vec4(mousePos.x, mousePos.y, 0.0f, 1.0f);
-		// uCursorPos->SetUniform(cursorModelView);
-		// cursorMesh.Render();
-		
 		//auto e = glGetError();
 		//log::debug << "cursorMesh.Render(); "  << mousePos.x << " " << mousePos.y << std::endl;
 
