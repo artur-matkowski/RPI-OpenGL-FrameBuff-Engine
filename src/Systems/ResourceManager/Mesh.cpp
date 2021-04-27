@@ -79,7 +79,7 @@ namespace asapi
                         + sizeof(int) * 6] = {'\0'};
         char* t2 = tmp;
 
-        GLfloat vertexbuff[] = {
+        float vertexbuff[] = {
              0.5f, -0.1f, 0.0f, 0.0f,  0.0f, 
              0.1f, -0.5f, 0.0f, 0.0f,  1.0f, 
              0.0f,  0.0f, 0.0f, 1.0f,  1.0f, 
@@ -88,7 +88,7 @@ namespace asapi
              0.9f, -1.0f, 0.0f, 1.0f,  1.0f
         };
 
-        GLuint indices[6] = {0, 1, 2, 4, 5, 6};
+        uint32_t indices[6] = {0, 1, 2, 4, 5, 6};
 
 
         bool* fp_hasPosition = (bool*) tmp;
