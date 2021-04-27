@@ -17,7 +17,6 @@ namespace asapi
 
 
 	public:
-		Mesh(glm::vec2 resolution);
 		Mesh(const char*);
 		~Mesh();
 
