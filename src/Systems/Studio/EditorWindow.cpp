@@ -66,7 +66,11 @@ namespace asapi
 				if( obj->m_infoBuffer == typeid(RendererComponent).hash_code() )
 				{
 					_selected->AddComponent( typeid(MeshComponent).hash_code() );
-				}				
+				}	
+				else if( obj->m_infoBuffer == typeid(PointerColider).hash_code() )
+				{
+					_selected->AddComponent( typeid(MeshComponent).hash_code() );
+				}			
 				_selected->AddComponent( obj->m_infoBuffer );
 			}
 		}

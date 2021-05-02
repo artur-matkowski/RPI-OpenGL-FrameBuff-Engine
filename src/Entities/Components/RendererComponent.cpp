@@ -1,7 +1,6 @@
 #include "Systems.hpp"
 #include "RendererComponent.hpp"
 #include "GameObject.hpp"
-#include "glm.hpp"
 #include "ext.hpp"
 #ifdef IS_EDITOR
 #include "imgui.h"
@@ -12,14 +11,11 @@ namespace asapi
 	RendererComponent::RendererComponent(bfu::MemBlockBase* mBlock)
 		:ComponentBase<RendererComponent>(mBlock)
 		,m_MaterialName(buffMat, 255, mBlock)
-		,m_meshName(buffMesh, 255, mBlock)
 	{
 	};
 
 	void RendererComponent::OnAttach()
 	{
-		//m_owner->RegisterRendererComponent(this);
-
 		p_modelViewMat = ((Transform3D*)m_owner->GET_COMPONENT(Transform3D))->GetModelMatrix();		
 	}
 	void RendererComponent::OnDetach()

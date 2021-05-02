@@ -11,8 +11,6 @@ namespace asapi
 
 	class RendererComponent: public ComponentBase<RendererComponent>
 	{
-		bool 										m_isAttached = false;
-
 		ResourcePtr< MaterialType > 				m_material;
 
 		MeshComponent*								p_meshComponent;
@@ -20,9 +18,7 @@ namespace asapi
 		glm::mat4* 									p_modelViewMat;
 
 		char buffMat[255];
-		char buffMesh[255];
 		SERIALIZABLE_VAR(RendererComponent, stream, m_MaterialName );
-		SERIALIZABLE_VAR(RendererComponent, stream, m_meshName );
 
 	public:
 		RendererComponent(bfu::MemBlockBase* mBlock);

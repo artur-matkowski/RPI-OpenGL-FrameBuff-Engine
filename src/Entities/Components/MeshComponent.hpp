@@ -10,7 +10,7 @@ namespace asapi
 {
 	using bfu::stream;
 
-	//this component MUST be added BEFORE  RendererComponent, therefore it is done autmaticly
+	//this component MUST be added BEFORE  RendererComponent or PointerColider, therefore it is done autmaticly
 	class MeshComponent: public ComponentBase<MeshComponent>
 	{
 	protected:

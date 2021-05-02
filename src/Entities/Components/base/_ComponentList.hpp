@@ -5,5 +5,6 @@
 #include "RendererComponent.hpp"
 #include "Camera.hpp"
 #include "MeshComponent.hpp"
+#include "PointerColider.hpp"
 
 #endif

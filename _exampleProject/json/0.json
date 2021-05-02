@@ -23,8 +23,7 @@
 }, {
 "m_componentTypeName": "asapi::RendererComponent", 
 "m_recreationString": "{
-\"m_MaterialName\": \"textured\", 
-\"m_meshName\": \"\"
+\"m_MaterialName\": \"textured\"
 }"
 }]
 }, {
