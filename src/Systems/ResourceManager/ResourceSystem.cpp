@@ -60,18 +60,27 @@ namespace asapi{
 		struct dirent* entry;
 		char longest_name[MAX_PATH_SIZE];
 
-		while( (d_fh = opendir(dirname)) == NULL) {
-			log::error << "Couldn't open directory: " << dirname << std::endl;
+		mkdir(dirname, 755);
+
+		if( (d_fh = opendir(dirname)) == NULL) 
+		{
+			log::error << "Couldn't open directory, errno: " << errno << "\n\tDirname: " << dirname << " " << std::endl;
 			return;
 		}
 
-		while((entry=readdir(d_fh)) != NULL) 
+		// if( (entry=readdir(d_fh)) == NULL )
+		// {
+		// 	log::error << "readdir error: " << errno << std::endl;
+		// 	return;
+		// }
+		
+		
+		while( (entry=readdir(d_fh)) != NULL )
 		{
 			/* Don't descend up the tree or include the current directory */
-			if(strncmp(entry->d_name, "..", 2) != 0 &&
-			strncmp(entry->d_name, ".", 1) != 0 &&
-			fileExtensionFilter != 0 &&
-			strstr(entry->d_name, fileExtensionFilter) != 0)
+			if( (strncmp(entry->d_name, "..", 2) != 0) &&
+				(strncmp(entry->d_name, ".", 1) != 0) &&
+				((fileExtensionFilter != 0) ? (strstr(entry->d_name, fileExtensionFilter) != 0) : true) ) 
 			{
 				/* Prepend the current directory and recurse */
 				strncpy(longest_name, dirname, MAX_PATH_SIZE-1);
@@ -89,6 +98,9 @@ namespace asapi{
 				}
 			}
 		}
+		
+		
+		
 
 		closedir(d_fh);
 	}
@@ -98,12 +110,14 @@ namespace asapi{
 		struct stat attribInt;
 		struct stat attribExt;
 
+
 		strncpy(outPath, path, MAX_PATH_SIZE-1);
 		outPath[MAX_PATH_SIZE-1] = '\0';
 
 		char* substr = strstr(outPath, "/assets_ext/") + strlen("/assets_");
 
 		memcpy(substr, "int", 3);
+
 
 		bool ret = false;
     	if( stat(path, &attribExt)!=0 )
