@@ -93,23 +93,6 @@ namespace asapi
 		CONTEXT->MainLoop();
 	}
 
-
-	void SYSTEMS::IO::OpenFile(FILE** ret_pFile, long int* ret_filesize, const char* filename)
-	{
-		*ret_pFile = fopen (filename,"rb");
-
-		if(*ret_pFile == 0)
-		{
-			*ret_filesize = -1;
-			return;
-		}
-
-		fseek(*ret_pFile, 0L, SEEK_END); 
-		*ret_filesize = ftell(*ret_pFile); 
-		fseek(*ret_pFile, 0L, SEEK_SET);
-	}
-
-
 	void SYSTEMS::IO::MMAP::InitForRead(const char* filename)
 	{
 		fd = open(filename, O_RDONLY );

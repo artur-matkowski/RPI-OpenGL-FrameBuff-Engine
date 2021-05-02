@@ -50,20 +50,6 @@ namespace asapi
 
 		struct IO
 		{
-			static void OpenFile(FILE** ret_pFile, long int* ret_filesize, const char* filename);
-			static inline void ReadFile(FILE* pFile, char* buff, uint32_t buffsize)
-			{ 
-				fread(buff, sizeof(char), buffsize, pFile); 
-			}
-			static inline void WriteFile(FILE* pFile, char* buff, uint32_t buffsize)
-			{
-				fwrite(buff, 1, buffsize, pFile);
-			}
-			static inline void CloseFile(FILE* pFile)
-			{ 
-				fclose (pFile); 
-			}
-
 			class MMAP
 			{
 				void* data = nullptr;
