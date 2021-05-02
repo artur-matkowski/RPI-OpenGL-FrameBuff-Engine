@@ -63,6 +63,10 @@ namespace asapi
 		{
 			if( ImGui::MenuItem( obj->name() ) )
 			{
+				if( obj->m_infoBuffer == typeid(RendererComponent).hash_code() )
+				{
+					_selected->AddComponent( typeid(MeshComponent).hash_code() );
+				}				
 				_selected->AddComponent( obj->m_infoBuffer );
 			}
 		}
