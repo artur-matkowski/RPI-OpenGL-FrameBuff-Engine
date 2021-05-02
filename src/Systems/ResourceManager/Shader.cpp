@@ -11,43 +11,24 @@ namespace asapi
 	Shader* Shader::LoadShaderFromFile(const char* filename)
 	{
 		char buff[MAX_PATH_SIZE];
-		char vertex_source[1024*1024*1];
-		char fragment_source[1024*1024*1];
-		FILE * pFile = nullptr;
-		long int fileSize = 0;
+		SYSTEMS::IO::MMAP vert, frag;
 
-		
+		snprintf(buff, MAX_PATH_SIZE, "%s/assets_int/shaders/%s.vert.glsl", SYSTEMS::GetObject().RESOURCES.GetProjectPath(), filename);
+		vert.InitForRead(buff);
 
-		sprintf(buff, "%s/assets_int/shaders/%s.vert.glsl", SYSTEMS::GetObject().RESOURCES.GetProjectPath(), filename);
-
-		SYSTEMS::IO::OpenFile(&pFile, &fileSize, buff);
-		ASSERT( 1024*1024*1<fileSize, "shader file exceeds 1024*1024*1 bytes");
-		if( fileSize!=-1 )
-		{
-			SYSTEMS::IO::ReadFile(pFile, vertex_source, fileSize);
-			vertex_source[fileSize] = '\0';
-			SYSTEMS::IO::CloseFile(pFile);
-		}
-
-
-		sprintf(buff, "%s/assets_int/shaders/%s.frag.glsl", SYSTEMS::GetObject().RESOURCES.GetProjectPath(), filename);
-
-		SYSTEMS::IO::OpenFile(&pFile, &fileSize, buff);
-		ASSERT( 1024*1024*1<fileSize, "shader file exceeds 1024*1024*1 bytes");
-		if( fileSize!=-1 )
-		{
-			SYSTEMS::IO::ReadFile(pFile, fragment_source, fileSize);
-			fragment_source[fileSize] = '\0';
-			SYSTEMS::IO::CloseFile(pFile);
-		}
-
+		snprintf(buff, MAX_PATH_SIZE, "%s/assets_int/shaders/%s.frag.glsl", SYSTEMS::GetObject().RESOURCES.GetProjectPath(), filename);
+		frag.InitForRead(buff);
 
 		Shader* ret = new Shader();
-		ret->vertex_source = vertex_source;
-		ret->fragment_source = fragment_source;
+		ret->vertex_source = (char*)vert.Data();
+		ret->fragment_source = (char*)frag.Data();
 		ret->shaderName = filename;
 
 		RendererSystem::ProcessShader(ret);
+
+		ret->vertex_source = nullptr;
+		ret->fragment_source = nullptr;
+
 		return ret;
 	}
 

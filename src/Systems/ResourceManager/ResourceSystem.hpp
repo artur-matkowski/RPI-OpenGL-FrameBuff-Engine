@@ -8,7 +8,6 @@
 #include "MaterialType.hpp"
 #include "Mesh.hpp"
 
-#define MAX_PATH 2048
 
 namespace asapi
 {
@@ -20,7 +19,7 @@ namespace asapi
 		std::map<bfu::string, ResourcePtr<MaterialType> > 	m_materials;
 		std::map<bfu::string, ResourcePtr<Mesh> > 			m_meshes;
 
-		char 												m_ProjectPath[MAX_PATH] = ".";
+		char 												m_ProjectPath[MAX_PATH_SIZE] = ".";
 
 		#ifdef IS_EDITOR
 		std::vector<std::string>							v_TexturesPaths;
@@ -48,8 +47,8 @@ namespace asapi
 
 			if( it==m_textures.end() )
 			{
-				char buff[MAX_PATH];
-				sprintf(buff, "%s/assets_int/textures/%s", m_ProjectPath, str);
+				char buff[MAX_PATH_SIZE];
+				snprintf(buff, MAX_PATH_SIZE, "%s/assets_int/textures/%s", m_ProjectPath, str);
 				res->Rebuild( new Texture(buff) );
 				m_textures[id] = *res;
 			}
@@ -164,8 +163,8 @@ namespace asapi
 
 			if( it==m_meshes.end() )
 			{
-				char buff[MAX_PATH];
-				sprintf(buff, "%s/assets_int/meshes/%s", m_ProjectPath, str);
+				char buff[MAX_PATH_SIZE];
+				snprintf(buff, MAX_PATH_SIZE, "%s/assets_int/meshes/%s", m_ProjectPath, str);
 				res->Rebuild( new Mesh(buff) );
 				m_meshes[id] = *res;
 			}

@@ -42,8 +42,8 @@ namespace asapi{
 	}
 	void ResourceSystem::SetProjectPath(const char* path)
 	{
-		strncpy(m_ProjectPath, path, MAX_PATH );
-		m_ProjectPath[MAX_PATH-1] = '\0';
+		strncpy(m_ProjectPath, path, MAX_PATH_SIZE );
+		m_ProjectPath[MAX_PATH_SIZE-1] = '\0';
 
 
 		#ifdef IS_EDITOR
@@ -58,7 +58,7 @@ namespace asapi{
 		int i;
 		DIR* d_fh;
 		struct dirent* entry;
-		char longest_name[MAX_PATH];
+		char longest_name[MAX_PATH_SIZE];
 
 		while( (d_fh = opendir(dirname)) == NULL) {
 			log::error << "Couldn't open directory: " << dirname << std::endl;
@@ -74,9 +74,9 @@ namespace asapi{
 			strstr(entry->d_name, fileExtensionFilter) != 0)
 			{
 				/* Prepend the current directory and recurse */
-				strncpy(longest_name, dirname, MAX_PATH-1);
-				strncat(longest_name, "/", MAX_PATH-1);
-				strncat(longest_name, entry->d_name, MAX_PATH-1);
+				strncpy(longest_name, dirname, MAX_PATH_SIZE-1);
+				strncat(longest_name, "/", MAX_PATH_SIZE-1);
+				strncat(longest_name, entry->d_name, MAX_PATH_SIZE-1);
 
 				/* If it's a directory print it's name and recurse into it */
 				if (entry->d_type == DT_DIR) 
@@ -98,8 +98,8 @@ namespace asapi{
 		struct stat attribInt;
 		struct stat attribExt;
 
-		strncpy(outPath, path, MAX_PATH-1);
-		outPath[MAX_PATH-1] = '\0';
+		strncpy(outPath, path, MAX_PATH_SIZE-1);
+		outPath[MAX_PATH_SIZE-1] = '\0';
 
 		char* substr = strstr(outPath, "/assets_ext/") + strlen("/assets_");
 
@@ -123,7 +123,7 @@ namespace asapi{
 
 	void ResourceSystem::RefreshResources()
 	{
-		char buff[MAX_PATH];
+		char buff[MAX_PATH_SIZE];
 
 		if(strcmp(m_ProjectPath, ".")==0)
 			return;
@@ -132,18 +132,18 @@ namespace asapi{
 		std::vector<std::string> ShadersPaths;
 		std::vector<std::string> MeshesPaths;
 
-		char dir_path[MAX_PATH];
+		char dir_path[MAX_PATH_SIZE];
 
-		strncpy(dir_path, m_ProjectPath, MAX_PATH-1);
-		strncat(dir_path, "/assets_ext/textures", MAX_PATH-1);
+		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
+		strncat(dir_path, "/assets_ext/textures", MAX_PATH_SIZE-1);
 		ScanDirForPaths(TexturesPaths, dir_path);
 
-		strncpy(dir_path, m_ProjectPath, MAX_PATH-1);
-		strncat(dir_path, "/assets_ext/shaders", MAX_PATH-1);
+		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
+		strncat(dir_path, "/assets_ext/shaders", MAX_PATH_SIZE-1);
 		ScanDirForPaths(ShadersPaths, dir_path);
 
-		strncpy(dir_path, m_ProjectPath, MAX_PATH-1);
-		strncat(dir_path, "/assets_ext/meshes", MAX_PATH-1);
+		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
+		strncat(dir_path, "/assets_ext/meshes", MAX_PATH_SIZE-1);
 		ScanDirForPaths(MeshesPaths, dir_path);
 
 		//log::debug << "Scanning for files showed follow files in project folder:" << std::endl;
@@ -170,18 +170,18 @@ namespace asapi{
 		}
 
 		v_TexturesPaths.clear();
-		strncpy(dir_path, m_ProjectPath, MAX_PATH-1);
-		strncat(dir_path, "/assets_int/textures", MAX_PATH-1);
+		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
+		strncat(dir_path, "/assets_int/textures", MAX_PATH_SIZE-1);
 		ScanDirForPaths(v_TexturesPaths, dir_path);
 
 		v_ShadersPaths.clear();
-		strncpy(dir_path, m_ProjectPath, MAX_PATH-1);
-		strncat(dir_path, "/assets_int/shaders", MAX_PATH-1);
+		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
+		strncat(dir_path, "/assets_int/shaders", MAX_PATH_SIZE-1);
 		ScanDirForPaths(v_ShadersPaths, dir_path, "vert.glsl");
 
 		v_MeshesPaths.clear();
-		strncpy(dir_path, m_ProjectPath, MAX_PATH-1);
-		strncat(dir_path, "/assets_int/meshes", MAX_PATH-1);
+		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
+		strncat(dir_path, "/assets_int/meshes", MAX_PATH_SIZE-1);
 		ScanDirForPaths(v_MeshesPaths, dir_path, ".mmp");
 	}
 	#endif
