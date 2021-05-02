@@ -59,11 +59,13 @@ namespace asapi
 														v_components;
 
 		Transform3D										*p_myTransform = nullptr;
-		RendererComponent								*p_myRenderer = nullptr;
-		PrefabLoaderComponent							*p_myPrefabLoader = nullptr;
 
 		bool RegisterChild(GameObject* newChild);
 		void UnRegisterChild(GameObject* deleteChild);
+
+
+		void OnAttach(GameObject* newParrent);
+		void OnDetach();
 
 	public:
 		GameObject( bfu::MemBlockBase* mBlock );
@@ -73,28 +75,22 @@ namespace asapi
 		void ClearComponents(); 
 		void AddChild();
 
-		void RegisterTransform3D(Transform3D*);
-		void RegisterRendererComponent(RendererComponent*);
-		void RegisterPrefabLoaderComponent(PrefabLoaderComponent*);
+		void RegisterTransform3D(Transform3D* p)		{ p_myTransform = p; }
 
-		//TODO
-		//GameObject& operator=(const GameObject& cp);
 
-		virtual void PreDeserializationCallback()	override;
-		virtual void PostDeserializationCallback()	override;
-		virtual void PreSerializationCallback()		override;
-		virtual void PostSerializationCallback()	override;
+		virtual void PreDeserializationCallback()		override;
+		virtual void PostDeserializationCallback()		override;
+		virtual void PreSerializationCallback()			override;
+		virtual void PostSerializationCallback()		override;
 
 		void Init( bfu::MemBlockBase* mBlock );
+		void Detach() { OnDetach(); }
 		virtual void Dispouse();
 		virtual void DispouseAndDeallocate();
 
 		void SerializeChildren(bfu::JSONSerializer& stream);
 		void DeserializeChildren(bfu::JSONSerializer& stream, bfu::MemBlockBase* prefabMemBlock);
 
-		PROTECTED( void OnAttach(GameObject* newParrent) );
-		void OnDetach();
-		void ReAttach(GameObject* newParrent);
 
 		ComponentInterface* AddComponent(size_t typeHash);
 		ComponentInterface* AddComponent(const char* componentName);

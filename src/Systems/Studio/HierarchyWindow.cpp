@@ -52,9 +52,8 @@ namespace asapi
 	}
 	void RemoveGameObject(GameObject* obj)
 	{
-		obj->OnDetach();
-		obj->Dispouse();
-		SYSTEMS::DEALLOCATE<GameObject>(obj, 1);
+		obj->Detach();
+		obj->DispouseAndDeallocate();
 	}
 
 	void RenameGameObject(GameObject* obj)

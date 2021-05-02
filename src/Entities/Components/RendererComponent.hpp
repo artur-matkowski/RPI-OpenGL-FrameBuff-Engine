@@ -2,7 +2,7 @@
 #define _H_MaterialComponent
 #include "ComponentBase.hpp"
 #include "MaterialType.hpp"
-#include "Mesh.hpp"
+#include "MeshComponent.hpp"
 #include "ResourcePtr.hpp"
 
 namespace asapi
@@ -14,9 +14,10 @@ namespace asapi
 		bool 										m_isAttached = false;
 
 		ResourcePtr< MaterialType > 				m_material;
-		ResourcePtr< Mesh >		 					m_mesh;
 
-		Uniform<glm::mat4>*							p_modelViewMat;
+		MeshComponent*								p_meshComponent;
+		Uniform<glm::mat4>*							p_modelViewUniform;
+		glm::mat4* 									p_modelViewMat;
 
 		char buffMat[255];
 		char buffMesh[255];
@@ -30,9 +31,6 @@ namespace asapi
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;
 		virtual void OnIsDirty() override;
-
-		void SetMaterial_Blocking(const char*);
-		void SetMesh_Blocking(const char*);
 	
 	
 		void Render(glm::mat4* projectionMatrix);

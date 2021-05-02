@@ -41,22 +41,28 @@ namespace asapi
 
 	GameObject::~GameObject()
 	{
-		ClearComponents();
 		ClearChildren();
+		ClearComponents();
 	}
 	void GameObject::ClearChildren()
 	{
+		for( auto it = v_children.begin(); it!=v_children.end(); ++it )
+		{
+			GameObject* go = (GameObject*)*it;
+			go->OnDetach();
+			go->Dispouse();
+		}
 		v_children.clear();
 	}
 	void GameObject::ClearComponents()
 	{
-		while( v_components.size() != 0 )
+		for( auto it = v_components.begin(); it!=v_components.end(); ++it )
 		{
-			ComponentInterface* ptr = v_components.begin()->p_ComponentInterface;
-			v_components.erase( v_components.begin() );
+			ComponentInterface* ptr = it->p_ComponentInterface;
 			ptr->Detached();
 			ptr->Dispouse();
 		}
+		v_components.clear();
 	}
 	void GameObject::AddChild()
 	{
@@ -68,30 +74,6 @@ namespace asapi
 		newChild->OnAttach(this);
 	}
 
-
-	void GameObject::RegisterTransform3D(Transform3D* ptr)
-	{
-		p_myTransform = ptr;
-	}
-	void GameObject::RegisterRendererComponent(RendererComponent* ptr)
-	{
-		p_myRenderer = ptr;
-	}
-	void GameObject::RegisterPrefabLoaderComponent(PrefabLoaderComponent* ptr)
-	{
-		p_myPrefabLoader = ptr;
-	}
-
-	//TODO copy all children, and all components
-	// GameObject& GameObject::operator=(const GameObject& cp)
-	// {
-	// 	Dispouse();
-	// 	Init(cp.m_mBlock);
-	// 	m_myName = "Copy of " + cp.m_myName;
-	// 	OnAttach(cp.p_parent);
-
-	// 	return *this;
-	// }
 
 	void GameObject::Init( bfu::MemBlockBase* mBlock )
 	{
@@ -109,7 +91,8 @@ namespace asapi
 
 	void GameObject::PreDeserializationCallback()
 	{
-		v_componentsInfo.clear();
+		ClearChildren();
+		ClearComponents();
 	}
 	void GameObject::PostDeserializationCallback()
 	{
@@ -124,6 +107,7 @@ namespace asapi
 				serializer.Deserialize( v_components[i].p_SerializableClassInterface );
 				v_componentsInfo[i].m_recreationString = std::move( serializer );
 
+				v_components.back().p_ComponentInterface->Attached( this );
 				v_components.back().p_ComponentInterface->OnIsDirty();
 			}
 		}
@@ -131,7 +115,7 @@ namespace asapi
 
 		for(int i=0; i<v_children.size(); ++i)
 		{
-			v_children[i].p_parent = this;
+			v_children[i].OnAttach( this );
 		}
 	}
 	void GameObject::PreSerializationCallback()
@@ -194,12 +178,7 @@ namespace asapi
 		p_parent->UnRegisterChild( this );
 		p_parent = 0;
 	}
-	void GameObject::ReAttach(GameObject* newParent)
-	{
-		p_parent->UnRegisterChild( this );
-		p_parent = newParent;
-		newParent->RegisterChild( this );
-	}
+
 
 
 	ComponentInterface* GameObject::AddComponent(const char* componentName)

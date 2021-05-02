@@ -25,8 +25,8 @@ namespace asapi
 
 	void PrefabLoaderComponent::OnAttach()
 	{
-		m_owner->RegisterPrefabLoaderComponent(this);
 	}
+
 	bfu::MemBlockBase* PrefabLoaderComponent::RequestPrefabMemBlock()
 	{
 		if(m_prefabMemBlock!=0) return m_prefabMemBlock;

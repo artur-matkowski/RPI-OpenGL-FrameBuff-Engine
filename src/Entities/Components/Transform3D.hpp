@@ -13,13 +13,14 @@ namespace asapi
 		SERIALIZABLE_VAR_VEC( Transform3D, float, m_scale );
 
 		glm::mat4 					m_modelMatix;
+		Transform3D*				p_parrentTransform;
 		
 	public:
 		Transform3D(bfu::MemBlockBase* mBlock);
 		Transform3D(const Transform3D&) = delete;
 		~Transform3D(){};
 
-		glm::mat4& GetModelMatrix() 		{ return m_modelMatix; } 
+		glm::mat4* GetModelMatrix() 		{ return &m_modelMatix; } 
 
 		virtual void OnAttach() override;
 		virtual void OnIsDirty() override;

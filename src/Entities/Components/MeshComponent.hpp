@@ -23,6 +23,8 @@ namespace asapi
 		MeshComponent(const MeshComponent&) = delete;
 		~MeshComponent(){};
 
+		Mesh* GetMeshResource(){ return (Mesh*)m_mesh.GetRawPtr(); }
+
 
 		//virtual void OnAttach() override;
 		virtual void OnIsDirty() override;

@@ -18,12 +18,9 @@ namespace asapi
 
 	void RendererComponent::OnAttach()
 	{
-		m_owner->RegisterRendererComponent(this);
-		
-		if( m_material.GetRawPtr() != nullptr && m_mesh.GetRawPtr() != nullptr && m_owner != nullptr)
-		{
-			SYSTEMS::GetObject().RENDERER.RegisterRenderer( this );
-		}
+		//m_owner->RegisterRendererComponent(this);
+
+		p_modelViewMat = ((Transform3D*)m_owner->GET_COMPONENT(Transform3D))->GetModelMatrix();		
 	}
 	void RendererComponent::OnDetach()
 	{
@@ -31,55 +28,31 @@ namespace asapi
 	}
 	void RendererComponent::OnIsDirty()
 	{
-		SetMaterial_Blocking( m_MaterialName.c_str() );
-		SetMesh_Blocking( m_meshName.c_str() );
-	}
-
-	void RendererComponent::SetMaterial_Blocking(const char* name)
-	{
 		SYSTEMS& systems = SYSTEMS::GetObject();
-		systems.RESOURCES.requestResource( &m_material, name );
-		p_modelViewMat = (Uniform<glm::mat4>*) m_material->GetUniformPtr("modelViewMat");
+		
+		systems.RESOURCES.requestResource( &m_material, m_MaterialName.c_str() );
+		p_modelViewUniform = (Uniform<glm::mat4>*) m_material->GetUniformPtr("modelViewMat");
 
-		if( m_material.GetRawPtr() != nullptr && m_mesh.GetRawPtr() != nullptr && m_owner != nullptr)
+		p_meshComponent = (MeshComponent*)m_owner->GET_COMPONENT(MeshComponent);
+
+		if( m_material.GetRawPtr() != nullptr && p_meshComponent != nullptr)
 		{
 			SYSTEMS::GetObject().RENDERER.RegisterRenderer( this );
 		}
-
-		if( m_MaterialName.c_str() != name )
-		{
-			m_MaterialName.clear();
-			m_MaterialName.sprintf(name);
-		}
 	}
-	void RendererComponent::SetMesh_Blocking(const char* name)
-	{
-		SYSTEMS& systems = SYSTEMS::GetObject();
-		systems.RESOURCES.requestResource( &m_mesh, name );
-
-		if( m_material.GetRawPtr() != nullptr && m_mesh.GetRawPtr() != nullptr && m_owner != nullptr)
-		{
-			SYSTEMS::GetObject().RENDERER.RegisterRenderer( this );
-		}
-
-		if( m_meshName.c_str() != name )
-		{
-			m_meshName.clear();
-			m_meshName.sprintf(name);
-		}
-	}
-
 
 	void RendererComponent::Render(glm::mat4* projectionMatrix)
 	{
-		if(p_modelViewMat!=0)
-			p_modelViewMat->SetUniform( *projectionMatrix * m_owner->GetTransform3D()->GetModelMatrix() );
+		if(p_modelViewUniform!=0)
+			p_modelViewUniform->SetUniform( *projectionMatrix * *p_modelViewMat );
 		else
 			log::warning << "failing on matrix uniform update" << std::endl;
 
 
 		m_material->BindMaterial();
-		m_mesh->Render();
+
+		p_meshComponent->GetMeshResource()->Render();
+		//m_mesh->Render();
 	}
 	
 	#ifdef IS_EDITOR
@@ -94,26 +67,15 @@ namespace asapi
 			{
 				log::debug << "updated material name " << buff1 << std::endl;
 
-				SetMaterial_Blocking(buff1);
+				m_MaterialName.clear();
+				m_MaterialName.sprintf(buff1);
+
+				OnIsDirty();
 			}
 
 		}
 		if(m_material.GetRawPtr()!=nullptr)
 			m_material->OnGUI();
-
-		ImGui::Spacing();
-		{
-			char buff2[255];
-			strncpy(buff2, m_meshName.c_str(), 255 );
-
-			if( ImGui::InputText("Mesh name",     buff2, 255, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue) )
-			{
-				log::debug << "updated mesh name " << buff2 << std::endl;
-
-				SetMesh_Blocking(buff2);				
-			}
-		}
-
 	}
 	#endif
 
