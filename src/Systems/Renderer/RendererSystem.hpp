@@ -42,7 +42,7 @@ namespace asapi{
 		static bool ProcessMesh(Mesh*);
 		static bool DispouseMesh(Mesh*);
 
-		static bool ProcessShader(Shader*);
+		static Shader* ProcessShader(const char* vertex_source, const char* gragment_source, const char* shader_name);
 		static bool DispouseShader(Shader*);
 
 

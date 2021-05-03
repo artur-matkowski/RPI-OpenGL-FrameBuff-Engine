@@ -19,17 +19,7 @@ namespace asapi
 		snprintf(buff, MAX_PATH_SIZE, "%s/assets_int/shaders/%s.frag.glsl", SYSTEMS::GetObject().RESOURCES.GetProjectPath(), filename);
 		frag.InitForRead(buff);
 
-		Shader* ret = new Shader();
-		ret->vertex_source = (char*)vert.Data();
-		ret->fragment_source = (char*)frag.Data();
-		ret->shaderName = filename;
-
-		RendererSystem::ProcessShader(ret);
-
-		ret->vertex_source = nullptr;
-		ret->fragment_source = nullptr;
-
-		return ret;
+		return RendererSystem::ProcessShader((char*)vert.Data(), (char*)frag.Data(), filename);
 	}
 
 	Shader::~Shader()

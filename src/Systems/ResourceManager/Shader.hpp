@@ -13,10 +13,6 @@ namespace asapi
 
 		tShaderHandle 			h_shaderHandle = nullptr;
 
-		const char* vertex_source = nullptr;
-		const char* fragment_source = nullptr;
-		const char* shaderName = "nullptr";
-
 		Shader();
 
 		static Shader* LinkShader(GLuint vertex, GLuint fragment);

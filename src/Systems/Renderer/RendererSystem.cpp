@@ -281,9 +281,8 @@ namespace asapi{
 		return shader;
 	}
 
-	bool RendererSystem::ProcessShader(Shader* shader)
+	Shader* RendererSystem::ProcessShader(const char* vertex_source, const char* fragment_source, const char* shaderName)
 	{
-		bool ret = true;
 		GLuint vertex, fragment;
 		GLint isCompiled = GL_FALSE;
 		uint32_t programID = -1;
@@ -292,8 +291,8 @@ namespace asapi{
 		programID = glCreateProgram();
 
 
-		vertex = LoadSingleShader(shader->vertex_source, GL_VERTEX_SHADER, shader->shaderName);
-		fragment = LoadSingleShader(shader->fragment_source, GL_FRAGMENT_SHADER, shader->shaderName);
+		vertex = LoadSingleShader(vertex_source, GL_VERTEX_SHADER, shaderName);
+		fragment = LoadSingleShader(fragment_source, GL_FRAGMENT_SHADER, shaderName);
 
 
 		glAttachShader(programID, vertex);
@@ -324,8 +323,8 @@ namespace asapi{
 			glDetachShader(programID, fragment);
 
 			//linking fallback shader
-			vertex = LoadSingleShader(VERTEX_SOURCE, GL_VERTEX_SHADER, shader->shaderName);
-			fragment = LoadSingleShader(FRAGMENT_SOURCE, GL_FRAGMENT_SHADER, shader->shaderName);
+			vertex = LoadSingleShader(VERTEX_SOURCE, GL_VERTEX_SHADER, shaderName);
+			fragment = LoadSingleShader(FRAGMENT_SOURCE, GL_FRAGMENT_SHADER, shaderName);
 
 			glAttachShader(programID, vertex);
 			glAttachShader(programID, fragment);
@@ -335,8 +334,6 @@ namespace asapi{
 			glBindAttribLocation(programID, 2, "texCoord");
 
 			glLinkProgram(programID);
-
-			ret = false;
 		}
 
 
@@ -346,9 +343,10 @@ namespace asapi{
 
 		glDeleteShader(vertex);
 		glDeleteShader(fragment);
-		
+			
+		Shader* ret = new Shader();
+		ret->h_shaderHandle = (tShaderHandle)(size_t)programID;
 
-		shader->h_shaderHandle = (tShaderHandle)(size_t)programID;
 
 		return ret;
 	}
