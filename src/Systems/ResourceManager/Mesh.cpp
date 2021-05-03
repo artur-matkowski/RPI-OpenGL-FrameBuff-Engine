@@ -139,6 +139,9 @@ namespace asapi
             }
         }
 
+
+        #ifndef IS_TARGET
+
         log::debug << "Mesh " << mesh->mName.C_Str() << " has " << *fp_arraySize << " floats:" << std::endl;
         for(int i=0; i<mesh->mNumVertices; ++i)
         {
@@ -152,25 +155,6 @@ namespace asapi
         }
 
 
-        // log::debug << "Mesh " << mesh->mName.C_Str() << " has " << *fp_arraySize << " floats:" << std::endl;
-        // for(int i=0; i<mesh->mNumVertices; ++i)
-        // {
-        //     int index = i * vertexfields;
-        //     std::cout << "vert[" << i << "] = ";
-
-        //     std::cout << "( " << mesh->mVertices[i].x;
-        //     std::cout << ", " << mesh->mVertices[i].y;
-        //     std::cout << ", " << mesh->mVertices[i].z;
-        //     std::cout << ", " << mesh->mNormals[i].x;
-        //     std::cout << ", " << mesh->mNormals[i].y;
-        //     std::cout << ", " << mesh->mNormals[i].z;
-        //     std::cout << ", " << mesh->mTextureCoords[0][i].x;
-        //     std::cout << ", " << mesh->mTextureCoords[0][i].y;
-
-        //     std::cout << ")" << std::endl;
-        // }
-
-
         std::cout << "Indicies count: " << *fp_indiciesCount << " : \n";
         for(int i=0; i<*fp_indiciesCount; i+=3)
         {
@@ -181,12 +165,9 @@ namespace asapi
         }
         std::cout << "UVs: " << *fp_numUvChannels << " normals: " << *fp_hasNormals << std::endl;
 
-
+        #endif
 
     }
-
-
-
 
     void processNode(aiNode *node, const aiScene *scene)
     {
