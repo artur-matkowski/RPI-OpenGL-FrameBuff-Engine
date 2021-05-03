@@ -9,7 +9,8 @@
 #define HELP \
 "Parameters accepted by this executable:"\
 "\n\t?              <- prints this help message"\
-"\n\t-json          <- [player-only] start player using json files instaed of mmp"\
+"\n\t-help          <- prints this help message"\
+"\n\t-compile (...) <- [editor-only] refresh resources on start, and close immediately"\
 "\n\t-path (...)    <- select path for project to read (default path is: './'"
 
 
@@ -58,7 +59,7 @@ namespace asapi
 
 	bool SYSTEMS::init(const int argc, const char** argv)
 	{
-		if( argc>1 && argv[1][0]=='?'){
+		if( argc>1 && ((argv[1][0]=='?') || strcmp((argv[1], "-help")==0) ){
 			log::info << HELP << std::endl;
 			exit(0);
 		}
@@ -70,8 +71,10 @@ namespace asapi
 
 		PRIFILE( SCENE.Init( SYSTEMS::SYSTEMS_ALLOCATOR, argc, argv ); );
 
+		RESOURCES.Init(argc, argv);
+
 		#ifdef IS_EDITOR
-			STUDIO.Init();
+			STUDIO.Init(argc, argv);
 			log::info << "GL initialized with version: " << glGetString(GL_VERSION) << std::endl;
 			log::info << "GL vendor: " << glGetString(GL_VENDOR) << std::endl;
 			log::info << "GL renderer: " << glGetString(GL_RENDERER) << std::endl;

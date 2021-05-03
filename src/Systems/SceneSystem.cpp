@@ -16,15 +16,6 @@ namespace asapi
 		p_root->SetName("EntryPoint");
 		PrefabLoaderComponent* rootLoader = (PrefabLoaderComponent*) p_root->ADD_COMPONENT( PrefabLoaderComponent );
 		rootLoader->SetPrefabID(0);
-
-		for(int i=1; i<argc; ++i)
-		{
-			if( strcmp(argv[i], "-path")==0 )
-			{
-				SYSTEMS::GetObject().RESOURCES.SetProjectPath( argv[i+1] );
-				OpenProject();
-			}
-		}
 	}
 
 

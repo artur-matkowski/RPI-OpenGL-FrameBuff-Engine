@@ -20,9 +20,19 @@ namespace asapi
 
 	}
 
-	void StudioSystem::Init()
+	void StudioSystem::Init(const int argc, const char** argv)
 	{
 		StatsWindow::Init();
+
+		for(int i=1; i<argc; ++i)
+		{
+			if( (strcmp(argv[i], "-compile") == 0) && argc>i )
+			{
+				SYSTEMS::GetObject().RESOURCES.SetProjectPath(argv[i+1]);
+				SYSTEMS::GetObject().RESOURCES.RefreshResources();
+				exit(0);
+			}
+		}
 	}
 
 

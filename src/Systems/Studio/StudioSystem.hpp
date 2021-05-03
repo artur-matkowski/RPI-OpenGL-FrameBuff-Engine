@@ -14,7 +14,7 @@ namespace asapi
 		StudioSystem();
 		~StudioSystem();
 
-		void Init();
+		void Init(const int argc, const char** argv);
 
 		void OnGUI();
 		
