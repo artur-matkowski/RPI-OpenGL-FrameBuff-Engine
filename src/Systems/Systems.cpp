@@ -59,7 +59,7 @@ namespace asapi
 
 	bool SYSTEMS::init(const int argc, const char** argv)
 	{
-		if( argc>1 && ((argv[1][0]=='?') || strcmp((argv[1], "-help")==0) ){
+		if( argc>1 && ((argv[1][0]=='?') || (strcmp(argv[1], "-help")==0)) ){
 			log::info << HELP << std::endl;
 			exit(0);
 		}
