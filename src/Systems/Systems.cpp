@@ -126,7 +126,8 @@ namespace asapi
 			return;
 		}
 
-		sb.st_size = size;
+		const int pageSize = getpagesize();
+		sb.st_size = size / pageSize + pageSize;
 
 		data = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);	
 		ftruncate(fd, size);
