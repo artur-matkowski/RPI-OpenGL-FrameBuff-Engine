@@ -192,28 +192,6 @@ namespace asapi{
         config[index] = *fp_indiciesCount;
 
         mesh->h_meshHandle = (tMeshHandle)config;
-
-
-        log::debug << "Mesh has " << *fp_arraySize << " floats:" << std::endl;
-        for(int i=0; i<(*fp_arraySize/vertexfields); ++i)
-        {
-            int index = i * vertexfields;
-            std::cout << "vert[" << i << "] = ";
-
-            std::cout << "( " <<fp_vertexData[index];
-            for(int j=1; j<vertexfields; ++j)
-                std::cout << ", " << fp_vertexData[index+j];
-            std::cout << ")" << std::endl;
-        }
-        std::cout << "Indicies count: " << *fp_indiciesCount << " : \n";
-        for(int i=0; i<*fp_indiciesCount; i+=3)
-        {
-            std::cout << "( " << fp_indiciesData[i];
-            std::cout << ", " << fp_indiciesData[i+1];
-            std::cout << ", " << fp_indiciesData[i+2];
-            std::cout << ")\n" ;
-        }
-        std::cout << "UVs: " << *fp_numUvChannels << " normals: " << *fp_hasNormals << std::endl;
 	}
 
 	bool RendererSystem::DispouseMesh(Mesh* mesh)
