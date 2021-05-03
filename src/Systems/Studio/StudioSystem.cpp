@@ -31,9 +31,9 @@ namespace asapi
 			{
 				if(argv[i+1][0]!='/')
 				{
-					strncpy(buff, get_current_dir_name(), MAX_PATH_SIZE);
-					strncat(buff, "/", MAX_PATH_SIZE);
-					strncat(buff, argv[i+1], MAX_PATH_SIZE);
+					strncpy(buff, get_current_dir_name(), MAX_PATH_SIZE-1);
+					strncat(buff, "/", MAX_PATH_SIZE-1);
+					strncat(buff, argv[i+1], MAX_PATH_SIZE-1);
 				}
 				else
 				{

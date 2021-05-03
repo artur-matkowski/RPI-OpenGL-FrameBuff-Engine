@@ -25,11 +25,12 @@ namespace asapi
 
 
 		glm::mat4 					m_projectionMatrix;
+		glm::mat4* 					m_cameraModelMatrix;
 	public:
 		Camera(bfu::MemBlockBase* mBlock);
 
 
-		// virtual void OnAttach() override;
+		virtual void OnAttach() override;
 		virtual void OnIsDirty() override;
 
 		#ifdef IS_EDITOR

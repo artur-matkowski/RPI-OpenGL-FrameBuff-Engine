@@ -56,10 +56,16 @@ namespace asapi{
 		glEnable(GL_CULL_FACE);
 		glFrontFace(GL_CW);
 
-		for(auto it = v_rendererComponents.begin(); it!=v_rendererComponents.end(); ++it)
+		if(m_viewMatrix!=nullptr)
 		{
-			(*it)->Render(&m_projectionMatrix);
+			glm::mat4 viewMatrix = glm::inverse(*m_viewMatrix);
+
+			for(auto it = v_rendererComponents.begin(); it!=v_rendererComponents.end(); ++it)
+			{
+				(*it)->Render(&m_projectionMatrix, &viewMatrix);
+			}
 		}
+
 	}
 			
 	

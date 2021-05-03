@@ -24,6 +24,7 @@ namespace asapi{
 	{
 		glm::ivec2			m_resolution;
 		glm::mat4 			m_projectionMatrix;
+		glm::mat4* 			m_viewMatrix = nullptr;
 
 
 		//RendererComponent* 	m_rendererComponent = 0;
@@ -50,6 +51,7 @@ namespace asapi{
 
 		void GetResolution(glm::ivec2& out){ out = m_resolution; }
 		void UpdateProjectionMatrix(glm::mat4 projectionMatrix) { m_projectionMatrix = projectionMatrix; }
+		void UpdateViewMatrix(glm::mat4* viewMatrix) { m_viewMatrix = viewMatrix; }
 	};
 
 }

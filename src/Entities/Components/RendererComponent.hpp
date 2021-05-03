@@ -29,7 +29,7 @@ namespace asapi
 		virtual void OnIsDirty() override;
 	
 	
-		void Render(glm::mat4* projectionMatrix);
+		void Render(glm::mat4* projectionMatrix, glm::mat4* viewMatrix);
 		#ifdef IS_EDITOR
 		virtual void OnGUI() override;
 		#endif

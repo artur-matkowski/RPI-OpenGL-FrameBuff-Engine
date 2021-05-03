@@ -16,6 +16,11 @@ namespace asapi
 		m_cameraMode = 0;
 	};
 
+	void Camera::OnAttach()
+	{
+		m_cameraModelMatrix = ( (Transform3D*)m_owner->GET_COMPONENT(Transform3D) )->GetModelMatrix();
+	}
+
 	void Camera::OnIsDirty()
 	{
 		glm::ivec2 res;
@@ -26,7 +31,11 @@ namespace asapi
 			m_projectionMatrix = glm::ortho( m_orthoLeft, m_orthoRight, m_orthoBottom, m_orthoTop, m_nearPlane, m_farPlane );
 
 		if(m_isMainCamera)
+		{
+			log::debug << " Camera::OnIsDirty() "<< std::endl;
 			SYSTEMS::GetObject().RENDERER.UpdateProjectionMatrix(m_projectionMatrix);
+			SYSTEMS::GetObject().RENDERER.UpdateViewMatrix(m_cameraModelMatrix);
+		}
 	}
 
 	#ifdef IS_EDITOR
@@ -73,13 +82,8 @@ namespace asapi
 
 		if(ImGui::Checkbox("Is Main Camera", &m_isMainCamera))
 		{
-			if(m_isMainCamera)
-				SYSTEMS::GetObject().RENDERER.UpdateProjectionMatrix(m_projectionMatrix);
-		}
-
-
-		if(updated)
 			OnIsDirty();
+		}
 
 
 		if (ImGui::TreeNode("Preview current projection matrix"))
