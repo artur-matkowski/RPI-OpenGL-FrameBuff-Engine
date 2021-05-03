@@ -126,7 +126,7 @@ namespace asapi{
     	}
     	else if( stat(outPath, &attribInt)!=0 )
     	{
-    		log::error << "Could not find file " << outPath << std::endl;
+    		log::info << "Could not find file " << outPath << " it will be recompile from assets_ext" << std::endl;
     	}
     	else
     	{

@@ -23,12 +23,23 @@ namespace asapi
 	void StudioSystem::Init(const int argc, const char** argv)
 	{
 		StatsWindow::Init();
+		char buff[MAX_PATH_SIZE];
 
 		for(int i=1; i<argc; ++i)
 		{
 			if( (strcmp(argv[i], "-compile") == 0) && argc>i )
 			{
-				SYSTEMS::GetObject().RESOURCES.SetProjectPath(argv[i+1]);
+				if(argv[i+1][0]!='/')
+				{
+					strncpy(buff, get_current_dir_name(), MAX_PATH_SIZE);
+					strncat(buff, "/", MAX_PATH_SIZE);
+					strncat(buff, argv[i+1], MAX_PATH_SIZE);
+				}
+				else
+				{
+					strncpy(buff, argv[i+1], MAX_PATH_SIZE);
+				}
+				SYSTEMS::GetObject().RESOURCES.SetProjectPath(buff);
 				SYSTEMS::GetObject().RESOURCES.RefreshResources();
 				exit(0);
 			}
