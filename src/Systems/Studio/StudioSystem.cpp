@@ -41,7 +41,7 @@ namespace asapi
 				}
 				SYSTEMS::GetObject().RESOURCES.SetProjectPath(buff);
 				SYSTEMS::GetObject().RESOURCES.RefreshResources();
-				exit(0);
+				SYSTEMS::GetObject().cloaseApp();
 			}
 		}
 	}
