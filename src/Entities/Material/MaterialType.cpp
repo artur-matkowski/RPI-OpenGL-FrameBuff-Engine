@@ -94,10 +94,10 @@ namespace asapi
 		    		new (p_uniforms[i]) UniformFloat4x4(location, name, metadataMemBlock);
 		    		break;
 		    	case GL_SAMPLER_2D:
-		    		p_uniforms[i] = (UniformBase*)materialsMemBlock->allocate(1, sizeof(Uniform<ResourcePtr<Texture>>), alignof(Uniform<ResourcePtr<Texture>>));
-		    		new (p_uniforms[i]) Uniform<ResourcePtr<Texture>>(location, name, metadataMemBlock);
+		    		p_uniforms[i] = (UniformBase*)materialsMemBlock->allocate(1, sizeof(UniformTexture), alignof(UniformTexture));
+		    		new (p_uniforms[i]) UniformTexture(location, name, metadataMemBlock);
 					systems.RESOURCES.requestResource( &texturePtr, "debug.png" );
-		    		((Uniform<ResourcePtr<Texture>>*)p_uniforms[i])->SetUniform(texturePtr);
+		    		((UniformTexture*)p_uniforms[i])->SetUniform(texturePtr);
 		    		break;		    		
 		    	default:
 		    		char buff[128];

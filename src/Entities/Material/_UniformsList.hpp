@@ -5,5 +5,6 @@
 #include "UniformInt.hpp"
 #include "UniformFloat3.hpp"
 #include "UniformFloat4x4.hpp"
+#include "UniformTexture.hpp"
 
 #endif
