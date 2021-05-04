@@ -14,6 +14,17 @@
 #include "Mesh.hpp"
 
 
+#define ATTR_LOC_position 	0
+#define ATTR_LOC_normal 	1
+#define ATTR_LOC_uv0 		2
+#define ATTR_LOC_uv1 		3
+#define ATTR_LOC_uv2 		4
+#define ATTR_LOC_uv3 		5
+#define ATTR_LOC_color0		6
+#define ATTR_LOC_color1		7
+#define ATTR_LOC_color2		8
+#define ATTR_LOC_color3		9
+
 
 namespace asapi{
 
@@ -159,7 +170,7 @@ namespace asapi{
 
         if(fp_hasPosition)
         {
-            config[index] = 0; 
+            config[index] = ATTR_LOC_position; 
             ++index;
             config[index] = 0; 
             ++index;
@@ -175,7 +186,7 @@ namespace asapi{
 
         if(*fp_hasNormals)
         {
-            config[index] = 0;
+            config[index] = ATTR_LOC_normal;
             ++index;
             config[index] = 0;
             ++index;
@@ -189,7 +200,7 @@ namespace asapi{
 
         for(uint32_t UVchannel = 0; UVchannel<*fp_numUvChannels; ++UVchannel)
         {
-            config[index] = 2;
+            config[index] = ATTR_LOC_uv0 + UVchannel;
             ++index;
             config[index] = 2;
             ++index;
@@ -306,9 +317,16 @@ namespace asapi{
 		glAttachShader(programID, vertex);
 		glAttachShader(programID, fragment);
 		
-		glBindAttribLocation(programID, 0, "position");
-		glBindAttribLocation(programID, 1, "color");
-		glBindAttribLocation(programID, 2, "texCoord");
+		glBindAttribLocation(programID, ATTR_LOC_position, "position");
+		glBindAttribLocation(programID, ATTR_LOC_normal, "normal");
+		glBindAttribLocation(programID, ATTR_LOC_uv0, "uv0");
+		glBindAttribLocation(programID, ATTR_LOC_uv1, "uv1");
+		glBindAttribLocation(programID, ATTR_LOC_uv2, "uv2");
+		glBindAttribLocation(programID, ATTR_LOC_uv3, "uv3");
+		glBindAttribLocation(programID, ATTR_LOC_color0, "color0");
+		glBindAttribLocation(programID, ATTR_LOC_color1, "color1");
+		glBindAttribLocation(programID, ATTR_LOC_color2, "color2");
+		glBindAttribLocation(programID, ATTR_LOC_color3, "color3");
 
 		glLinkProgram(programID);
 
@@ -337,9 +355,16 @@ namespace asapi{
 			glAttachShader(programID, vertex);
 			glAttachShader(programID, fragment);
 			
-			glBindAttribLocation(programID, 0, "position");
-			glBindAttribLocation(programID, 1, "color");
-			glBindAttribLocation(programID, 2, "texCoord");
+			glBindAttribLocation(programID, ATTR_LOC_position, "position");
+			glBindAttribLocation(programID, ATTR_LOC_normal, "normal");
+			glBindAttribLocation(programID, ATTR_LOC_uv0, "uv0");
+			glBindAttribLocation(programID, ATTR_LOC_uv1, "uv1");
+			glBindAttribLocation(programID, ATTR_LOC_uv2, "uv2");
+			glBindAttribLocation(programID, ATTR_LOC_uv3, "uv3");
+			glBindAttribLocation(programID, ATTR_LOC_color0, "color0");
+			glBindAttribLocation(programID, ATTR_LOC_color1, "color1");
+			glBindAttribLocation(programID, ATTR_LOC_color2, "color2");
+			glBindAttribLocation(programID, ATTR_LOC_color3, "color3");
 
 			glLinkProgram(programID);
 		}

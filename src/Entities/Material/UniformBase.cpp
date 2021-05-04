@@ -17,9 +17,9 @@ namespace asapi
 
 
 	#ifdef IS_EDITOR
-	void UniformBase::OnGUI(const char* UniformName)
+	void UniformBase::OnGUI()
 	{
-		ImGui::LabelText("Unsuported Uniform of: ", UniformName);
+		ImGui::LabelText("Unsuported Uniform of: ", m_name);
 	}
 	#endif
 
@@ -48,9 +48,9 @@ namespace asapi
 	}
 	#ifdef IS_EDITOR
 	template<>
-	void Uniform<int>::OnGUI(const char* UniformName)
+	void Uniform<int>::OnGUI()
 	{
-		ImGui::InputInt(UniformName, &m_data );
+		ImGui::InputInt(m_name, &m_data );
 	}
 	#endif
 
@@ -73,9 +73,9 @@ namespace asapi
 	}
 	#ifdef IS_EDITOR
 	template<>
-	void Uniform<float>::OnGUI(const char* UniformName)
+	void Uniform<float>::OnGUI()
 	{
-		ImGui::InputFloat(UniformName, &m_data );
+		ImGui::InputFloat(m_name, &m_data );
 	}
 	#endif
 
@@ -97,9 +97,9 @@ namespace asapi
 	}
 	#ifdef IS_EDITOR
 	template<>
-	void Uniform<glm::vec3>::OnGUI(const char* UniformName)
+	void Uniform<glm::vec3>::OnGUI()
 	{
-		ImGui::InputFloat3(UniformName, glm::value_ptr(m_data) );
+		ImGui::InputFloat3(m_name, glm::value_ptr(m_data) );
 	}
 	#endif
 
@@ -121,14 +121,14 @@ namespace asapi
 	}
 	#ifdef IS_EDITOR
 	template<>
-	void Uniform<glm::mat4>::OnGUI(const char* UniformName)
+	void Uniform<glm::mat4>::OnGUI()
 	{ 
 		if (ImGui::TreeNode("Used model matrix"))
 		{
 			const float* data = glm::value_ptr(m_data);
 
 
-			ImGui::LabelText(UniformName, "%.3f    %.3f    %.3f    %.3f"		
+			ImGui::LabelText(m_name, "%.3f    %.3f    %.3f    %.3f"		
 															, data[0]
 															, data[4] 
 															, data[8] 
@@ -165,9 +165,9 @@ namespace asapi
 	}
 	#ifdef IS_EDITOR
 	template<>
-	void Uniform<ResourcePtr<Texture>>::OnGUI(const char* UniformName)
+	void Uniform<ResourcePtr<Texture>>::OnGUI()
 	{
-		ImGui::LabelText(UniformName, m_data->GetName());
+		ImGui::LabelText(m_name, m_data->GetName());
 		void* my_void_ptr = (void*)(intptr_t)m_data->GetTextureID();
 		ImGui::Image(my_void_ptr, ImVec2(100.0f, 100.0f));
 	}

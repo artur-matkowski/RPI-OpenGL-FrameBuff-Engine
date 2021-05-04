@@ -25,7 +25,7 @@ namespace asapi
 
 		virtual void SendUniform() = 0;
 		#ifdef IS_EDITOR
-		virtual void OnGUI(const char* UniformName);
+		virtual void OnGUI();
 		#endif
 
 		inline void SetUniformLocation(const uint32_t& location)
@@ -52,7 +52,7 @@ namespace asapi
 
 		void SetUniform(const T& in);
 		#ifdef IS_EDITOR
-		virtual void OnGUI(const char* UniformName);
+		virtual void OnGUI();
 		#endif
 		
 		virtual void GetUniform(T& out)

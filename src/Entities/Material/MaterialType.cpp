@@ -41,24 +41,24 @@ namespace asapi
 
 
 
-		glGetProgramiv(m_shader->GetProgramID(), GL_ACTIVE_ATTRIBUTES, &count);
-		printf("Active Attributes: %d\n", count);
+		// glGetProgramiv(m_shader->GetProgramID(), GL_ACTIVE_ATTRIBUTES, &count);
+		// printf("Active Attributes: %d\n", count);
 
-		for (i = 0; i < count; i++)
-		{
-		    glGetActiveAttrib(m_shader->GetProgramID(), (GLuint)i, bufSize, &length, &size, &type, name);
+		// for (i = 0; i < count; i++)
+		// {
+		//     glGetActiveAttrib(m_shader->GetProgramID(), (GLuint)i, bufSize, &length, &size, &type, name);
 
-		    printf("Attribute #%d Type: %u Name: %s\n", i, type, name);
+		//     printf("Attribute #%d Type: %u Name: %s\n", i, type, name);
 
-		    switch(type)
-		    {
-		    	default:
-		    		char buff[128];
-		    		sprintf(buff, "%#04X", type);
-		    		log::warning << "Unsuported attribute type found in " << materialName << ": " << name << " type: " << buff << std::endl;
-		    		break;
-		    }
-		}
+		//     switch(type)
+		//     {
+		//     	default:
+		//     		char buff[128];
+		//     		sprintf(buff, "%#04X", type);
+		//     		log::warning << "Unsuported attribute type found in " << materialName << ": " << name << " type: " << buff << std::endl;
+		//     		break;
+		//     }
+		// }
 
 
 
@@ -111,10 +111,10 @@ namespace asapi
 	#ifdef IS_EDITOR
 	void MaterialType::OnGUI()
 	{
-		for(auto it = m_uniformMap.begin(); it!=m_uniformMap.end(); ++it)
-		{	
+		for(int i=0; i<m_uniformsCount; ++i)
+		{
 			ImGui::Spacing();
-			it->second->OnGUI( it->first.c_str() );
+			p_uniforms[i]->OnGUI();
 		}
 	}
 	#endif
