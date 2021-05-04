@@ -126,10 +126,10 @@ namespace asapi{
 //                                                                                                            //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	bool RendererSystem::ProcessMesh(Mesh* mesh)
+	void RendererSystem::ProcessMesh(Mesh* mesh, void* data)
 	{
 		
-        bool*       fp_hasPosition = (bool*) mesh->h_meshHandle;
+        bool*       fp_hasPosition = (bool*) data;
         bool*       fp_hasNormals = &fp_hasPosition[1];
         uint32_t*   fp_arraySize = (uint32_t*) &fp_hasPosition[2];
         uint32_t*   fp_numUvChannels = &fp_arraySize[1];
@@ -137,8 +137,6 @@ namespace asapi{
         float*      fp_vertexData = (float*) &fp_indiciesCount[1];
         int*        fp_indiciesData = (int*) &fp_vertexData[*fp_arraySize];
         
-		mesh->h_meshHandle = nullptr; // set handle to invalid state, as we retrieved what we needed
-
         const uint32_t vertexfields = (*fp_hasPosition ? 3 : 0)
                                 + (*fp_hasNormals ? 3 : 0)
                                 + *fp_numUvChannels * 2;
@@ -222,18 +220,15 @@ namespace asapi{
         mesh->h_meshHandle = (tMeshHandle)config;
 	}
 
-	bool RendererSystem::DispouseMesh(Mesh* mesh)
+	void RendererSystem::DispouseMesh(Mesh* mesh)
 	{
 		uint32_t* config = (uint32_t*)mesh->h_meshHandle;
-		bool ret = false;
 		if( config != nullptr)
 		{
 			glDeleteBuffers(1, &config[0]);
 			glDeleteBuffers(1, &config[1]);
 			DELETE(config);
-			ret = true;
 		}
-		return ret;
 	}
 
 
@@ -386,9 +381,8 @@ namespace asapi{
 
 		return ret;
 	}
-	bool RendererSystem::DispouseShader(Shader* shader)
+	void RendererSystem::DispouseShader(Shader* shader)
 	{
 		glDeleteProgram((uint32_t)(size_t)shader->h_shaderHandle);
-		return true;
 	}
 }

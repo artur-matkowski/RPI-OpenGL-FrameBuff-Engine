@@ -17,11 +17,7 @@ namespace asapi
 
         if( mmap.IsValid() )
         {
-            //quite none standard, but this is void pointer, and we need to suply that to renderer
-            //and we do not want to have garbage in our structure
-            //on top of that moving this as argument can not be becouse of include dependencies
-            h_meshHandle = (asapi::tMeshHandle)mmap.Data();
-            RendererSystem::ProcessMesh(this);
+            RendererSystem::ProcessMesh( this, mmap.Data() );
         }
 	}
 

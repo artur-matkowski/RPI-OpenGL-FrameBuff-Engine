@@ -40,11 +40,11 @@ namespace asapi{
 		void Render();
 
 
-		static bool ProcessMesh(Mesh*);
-		static bool DispouseMesh(Mesh*);
+		static void ProcessMesh(Mesh*, void*);
+		static void DispouseMesh(Mesh*);
 
 		static Shader* ProcessShader(const char* vertex_source, const char* gragment_source, const char* shader_name);
-		static bool DispouseShader(Shader*);
+		static void DispouseShader(Shader*);
 
 
 		void RegisterRenderer(RendererComponent*);

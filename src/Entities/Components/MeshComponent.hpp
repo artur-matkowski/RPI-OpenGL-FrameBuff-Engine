@@ -15,9 +15,8 @@ namespace asapi
 	{
 	protected:
 		SERIALIZABLE_VAR(MeshComponent, stream, m_meshName );
-
-		char buffMesh[255];
 		ResourcePtr< Mesh >		 		m_mesh;
+		char buffMesh[255];
 		
 	public:
 		MeshComponent(bfu::MemBlockBase* mBlock);

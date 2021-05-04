@@ -51,8 +51,7 @@ public:
 		:m_infoBuffer(in_info)
 		,v_children(asapi::SYSTEMS::SYSTEMS_ALLOCATOR)
 	{
-		const int in_name_c = strlen(in_name);
-		strncpy(m_name, in_name, in_name_c < MAX_PATH_SIZE ? in_name_c : MAX_PATH_SIZE);
+		strncpy(m_name, in_name, MAX_PATH_SIZE);
 	}
 
 	Node(const char* in_name, const int in_name_c, const InfoBufferType& in_info)

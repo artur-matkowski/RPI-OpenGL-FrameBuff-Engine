@@ -9,6 +9,7 @@ namespace asapi
 	MeshComponent::MeshComponent(bfu::MemBlockBase* mBlock)
 		:ComponentBase<MeshComponent>(mBlock)
 		,m_meshName(buffMesh, 255, mBlock)
+		,m_mesh()
 	{
 	};
 
