@@ -166,7 +166,7 @@ namespace asapi{
         glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLuint)* *fp_indiciesCount, fp_indiciesData);
 
 
-
+       int attrPtrOffset = 0;
 
         if(fp_hasPosition)
         {
@@ -178,7 +178,8 @@ namespace asapi{
             ++index;
             config[index] = vertexfields; 
             ++index;
-            config[index] = 0; 
+            config[index] = attrPtrOffset;
+            attrPtrOffset += 3;
             ++index;
             //glEnableVertexAttribArray(0);
             //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT)*9, nullptr);
@@ -194,7 +195,8 @@ namespace asapi{
             ++index;
             config[index] = vertexfields;
             ++index;
-            config[index] = 0;
+            config[index] = attrPtrOffset;
+            attrPtrOffset += 3;
             ++index;
         }
 
@@ -208,7 +210,8 @@ namespace asapi{
             ++index;
             config[index] = vertexfields;
             ++index;
-            config[index] = 3;
+            config[index] = attrPtrOffset;
+            attrPtrOffset += 2;
             ++index;
             // glEnableVertexAttribArray(2);
             // glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT)*9, (void*) (sizeof(GL_FLOAT)*3) );
@@ -227,7 +230,7 @@ namespace asapi{
 		{
 			glDeleteBuffers(1, &config[0]);
 			glDeleteBuffers(1, &config[1]);
-			DEALLOCATE_GLOBAL(config);
+			DELETE(config);
 			ret = true;
 		}
 		return ret;
