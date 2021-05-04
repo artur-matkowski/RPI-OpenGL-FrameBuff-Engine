@@ -22,6 +22,14 @@ namespace asapi{
 
 	void RendererSystem::Init()
 	{
+        p_metadataMemBlock = SYSTEMS::GetObject().MEMORY.GetSystemsAllocator();
+
+		p_materialsMemBlock = (bfu::MemBlockBase*)p_metadataMemBlock->allocate(1, sizeof(bfu::StdPreAllocatedMemBlock), alignof(bfu::StdPreAllocatedMemBlock) );
+        new (p_materialsMemBlock) bfu::StdPreAllocatedMemBlock(1024*1024, "Renderer-materials");
+        SYSTEMS::GetObject().MEMORY.RegisterMemBlock(p_materialsMemBlock);
+
+        p_metadataMemBlock = SYSTEMS::GetObject().MEMORY.GetSystemsAllocator();
+
 		bfu::EventSystem& es = SYSTEMS::GetObject().EVENTS;
 		es.GetFastEvent("ResizeWindow")->RegisterCallback(this, RendererSystem::ResizeWidowCallback);
 

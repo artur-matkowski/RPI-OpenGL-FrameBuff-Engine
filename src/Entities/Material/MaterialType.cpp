@@ -21,9 +21,7 @@ namespace asapi
 				
 	}
 
-	MaterialType::MaterialType(const char* materialName)
-		//:SERIALIZABLE_VAR_CONSTRUCTOR(m_usedShader, this)
-		//,SERIALIZABLE_VAR_VEC_CONSTRUCTOR(m_usedTextures, this)
+	MaterialType::MaterialType(const char* materialName, bfu::MemBlockBase* materialsMemBlock, bfu::MemBlockBase* metadataMemBlock)
 	{
 		static SYSTEMS& systems = SYSTEMS::GetObject();
 
@@ -69,6 +67,8 @@ namespace asapi
 		glGetProgramiv(m_shader->GetProgramID(), GL_ACTIVE_UNIFORMS, &count);
 		printf("Active Uniforms: %d\n", count);
 
+		//p_uniforms = materialsMemBlock
+
 		for (i = 0; i < count; i++)
 		{
 		    glGetActiveUniform(m_shader->GetProgramID(), (GLuint)i, bufSize, &length, &size, &type, name);
@@ -84,17 +84,17 @@ namespace asapi
 		    switch(type)
 		    {
 		    	case GL_FLOAT:
-		    		m_uniformMap[s_name] = new Uniform<float>(location, this);
+		    		m_uniformMap[s_name] = new Uniform<float>(location, name, metadataMemBlock);
 		    		break;
 		    	case GL_FLOAT_VEC3:
-		    		m_uniformMap[s_name] = new Uniform<glm::vec3>(location, this);
+		    		m_uniformMap[s_name] = new Uniform<glm::vec3>(location, name, metadataMemBlock);
 		    		break;
 		    	case GL_FLOAT_MAT4:
-		    		m_uniformMap[s_name] = new Uniform<glm::mat4>(location, this);
+		    		m_uniformMap[s_name] = new Uniform<glm::mat4>(location, name, metadataMemBlock);
 		    		break;
 		    	case GL_SAMPLER_2D:
 					systems.RESOURCES.requestResource( &texturePtr, "debug.png" );
-					textureUniform = new Uniform<ResourcePtr<Texture>>(location, this);
+					textureUniform = new Uniform<ResourcePtr<Texture>>(location, name, metadataMemBlock);
 		    		textureUniform->SetUniform(texturePtr);
 		    		m_uniformMap[s_name] = textureUniform;
 		    		break;		    		

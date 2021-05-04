@@ -7,6 +7,10 @@ namespace asapi{
 
 	void ResourceSystem::Init(const int argc, const char** argv)
 	{
+		p_materialsMemBlock = SYSTEMS::GetObject().RENDERER.GetMetadataMemBlock();
+		p_metadataMemBlock = SYSTEMS::GetObject().RENDERER.GetMetadataMemBlock();
+
+
 		const char* path = "--wrong path--";
 
 		bool startWithJSON = false;

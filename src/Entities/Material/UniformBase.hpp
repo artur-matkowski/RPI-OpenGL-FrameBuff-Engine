@@ -12,13 +12,16 @@ namespace asapi
 	{
 	protected:
 		uint32_t 				m_location = -1;
-		MaterialType* 			m_owner;	
+		bool 					m_isDirty = false;
+		char* 					m_name = nullptr;
 	public:
-		UniformBase(uint32_t location, MaterialType* owner)
+		UniformBase(uint32_t location, const char* uniformName, bfu::MemBlockBase* metadataMemBlock)
 			:m_location(location)
-			,m_owner(owner)
-		{};
-		~UniformBase(){};
+		{
+			m_name = (char*)metadataMemBlock->allocate(strlen(uniformName)+1, sizeof(char), alignof(char));
+			strcpy(m_name, uniformName);
+		};
+		~UniformBase();
 
 		virtual void SendUniform() = 0;
 		#ifdef IS_EDITOR
@@ -37,8 +40,8 @@ namespace asapi
 		//bfu::SerializableVar<T>	m_data;
 		T	m_data;
 	public:
-		Uniform(uint32_t location, MaterialType* owner)
-			:UniformBase(location, owner)
+		Uniform(uint32_t location, const char* uniformName, bfu::MemBlockBase* metadataMemBlock)
+			:UniformBase(location, uniformName, metadataMemBlock)
 			//,m_data("m_data", this)
 		{};
 		~Uniform(){};

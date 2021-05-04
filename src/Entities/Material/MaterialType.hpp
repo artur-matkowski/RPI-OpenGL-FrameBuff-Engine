@@ -19,18 +19,11 @@ namespace asapi
 
 		std::map<std::string, UniformBase*>			m_uniformMap;
 
-		std::vector< UniformBase* >					m_dirtyUniforms;
-		bool 										m_isDirty = false;
+		UniformBase*								p_uniforms = nullptr;
 
 	public:
-		MaterialType(const char*);
-		~MaterialType();		
-
-		inline void SetUniformDirty(UniformBase* dirty)
-		{
-			m_dirtyUniforms.push_back( dirty );
-			m_isDirty = true;
-		}
+		MaterialType(const char*, bfu::MemBlockBase* materialsMemBlock, bfu::MemBlockBase* metadataMemBlock);
+		~MaterialType();
 
 		inline UniformBase* GetUniformPtr(const std::string& uniformName)
 		{
@@ -51,16 +44,12 @@ namespace asapi
 		{
 			m_shader->UseProgram();
 
-			if(m_isDirty)
+			std::map<std::string, UniformBase*>::iterator it( m_uniformMap.begin() );
+			for(; it != m_uniformMap.end(); ++it)
 			{
-				const int size = m_dirtyUniforms.size();
-				for(int i=0; i < size; ++i)
-				{
-					m_dirtyUniforms[i]->SendUniform();
-				}
-				m_dirtyUniforms.clear();
-				m_isDirty = false;
+				it->second->SendUniform();
 			}
+			
 		}
 
 		#ifdef IS_EDITOR
