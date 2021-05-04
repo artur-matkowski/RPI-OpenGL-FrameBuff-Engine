@@ -19,7 +19,7 @@ namespace asapi
 
 		std::map<std::string, UniformBase*>			m_uniformMap;
 
-		UniformBase*								p_uniforms = nullptr;
+		UniformBase**								p_uniforms = nullptr;
 
 	public:
 		MaterialType(const char*, bfu::MemBlockBase* materialsMemBlock, bfu::MemBlockBase* metadataMemBlock);

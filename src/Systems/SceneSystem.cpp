@@ -122,9 +122,4 @@ namespace asapi
     	PrefabLoaderComponent* cmp = (PrefabLoaderComponent*) GetRootNode().GET_COMPONENT(PrefabLoaderComponent);
     	return cmp->Load_JSON(); 
 	}
-
-	bool SceneSystem::LoadRootMMP()
-	{
-		return false;
-	}
 }

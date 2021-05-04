@@ -13,16 +13,8 @@ namespace asapi{
 
 		const char* path = "--wrong path--";
 
-		bool startWithJSON = false;
 		for(int i=1; i<argc; ++i)
 		{
-			#ifdef IS_PLAYER
-			if( strcmp(argv[i], "-json") == 0 )
-			{
-				startWithJSON = true;
-			}
-			else
-			#endif
 			if( strcmp(argv[i], "-path") == 0 )
 			{
 				if(argc > i) // if there is next argument
@@ -38,7 +30,7 @@ namespace asapi{
 		}
 		#ifdef IS_PLAYER
 		SceneSystem* sceneSys = &SYSTEMS::GetObject().SCENE;
-		if( !(startWithJSON ? sceneSys->OpenProject() : sceneSys->LoadRootMMP() ) )
+		if( !sceneSys->OpenProject() )
 		{
 			log::error << "Could not open project at path " << path << std::endl;
 		}

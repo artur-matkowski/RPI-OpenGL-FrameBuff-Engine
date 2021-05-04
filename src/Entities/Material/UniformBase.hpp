@@ -49,7 +49,7 @@ namespace asapi
 		virtual void SendUniform();
 		virtual void SendUniform(const T& override) const;
 
-		virtual void SetUniform(const T& in);
+		void SetUniform(const T& in);
 		#ifdef IS_EDITOR
 		virtual void OnGUI(const char* UniformName);
 		#endif

@@ -67,9 +67,10 @@ namespace asapi
 		glGetProgramiv(m_shader->GetProgramID(), GL_ACTIVE_UNIFORMS, &count);
 		printf("Active Uniforms: %d\n", count);
 
-		//p_uniforms = materialsMemBlock
+		p_uniforms = (UniformBase**)materialsMemBlock->allocate(count, sizeof(UniformBase*), alignof(UniformBase*));
 
-		for (i = 0; i < count; i++)
+
+		for (i = 0; i < count; ++i)
 		{
 		    glGetActiveUniform(m_shader->GetProgramID(), (GLuint)i, bufSize, &length, &size, &type, name);
 
@@ -78,25 +79,31 @@ namespace asapi
 
 		    std::string s_name(name);
 			ResourcePtr< Texture > texturePtr;
-			Uniform<ResourcePtr<Texture>>* textureUniform;
 
 		    //TODO custom_allocator instead of operator new
 		    switch(type)
 		    {
 		    	case GL_FLOAT:
-		    		m_uniformMap[s_name] = new Uniform<float>(location, name, metadataMemBlock);
+		    		p_uniforms[i] = (UniformBase*)materialsMemBlock->allocate(count, sizeof(Uniform<float>), alignof(Uniform<float>));
+		    		new (p_uniforms[i]) Uniform<float>(location, name, metadataMemBlock);
+		    		m_uniformMap[s_name] = p_uniforms[i];
 		    		break;
 		    	case GL_FLOAT_VEC3:
-		    		m_uniformMap[s_name] = new Uniform<glm::vec3>(location, name, metadataMemBlock);
+		    		p_uniforms[i] = (UniformBase*)materialsMemBlock->allocate(count, sizeof(Uniform<glm::vec3>), alignof(Uniform<glm::vec3>));
+		    		new (p_uniforms[i]) Uniform<glm::vec3>(location, name, metadataMemBlock);
+		    		m_uniformMap[s_name] = p_uniforms[i];
 		    		break;
 		    	case GL_FLOAT_MAT4:
-		    		m_uniformMap[s_name] = new Uniform<glm::mat4>(location, name, metadataMemBlock);
+		    		p_uniforms[i] = (UniformBase*)materialsMemBlock->allocate(count, sizeof(Uniform<glm::vec4>), alignof(Uniform<glm::vec4>));
+		    		new (p_uniforms[i]) Uniform<glm::mat4>(location, name, metadataMemBlock);
+		    		m_uniformMap[s_name] = p_uniforms[i];
 		    		break;
 		    	case GL_SAMPLER_2D:
+		    		p_uniforms[i] = (UniformBase*)materialsMemBlock->allocate(count, sizeof(Uniform<ResourcePtr<Texture>>), alignof(Uniform<ResourcePtr<Texture>>));
+		    		new (p_uniforms[i]) Uniform<ResourcePtr<Texture>>(location, name, metadataMemBlock);
 					systems.RESOURCES.requestResource( &texturePtr, "debug.png" );
-					textureUniform = new Uniform<ResourcePtr<Texture>>(location, name, metadataMemBlock);
-		    		textureUniform->SetUniform(texturePtr);
-		    		m_uniformMap[s_name] = textureUniform;
+		    		((Uniform<ResourcePtr<Texture>>*)p_uniforms[i])->SetUniform(texturePtr);
+		    		m_uniformMap[s_name] = p_uniforms[i];
 		    		break;		    		
 		    	default:
 		    		char buff[128];
