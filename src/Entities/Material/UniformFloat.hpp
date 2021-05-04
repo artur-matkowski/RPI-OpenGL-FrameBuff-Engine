@@ -5,13 +5,13 @@
 
 namespace asapi
 {
-	class UniformFloat: public UniformBase
+	class UniformFloat: public UniformInterface
 	{
 		float		m_data;
 		stream		m_name;
 	public:
 		UniformFloat(uint32_t location, const char* uniformName, bfu::MemBlockBase* metadataMemBlock)
-			:UniformBase(location, metadataMemBlock)
+			:UniformInterface(location, metadataMemBlock)
 			,m_name(metadataMemBlock)
 		{
 			m_name.sprintf(uniformName);

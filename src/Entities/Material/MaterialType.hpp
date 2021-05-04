@@ -18,15 +18,15 @@ namespace asapi
 		ResourcePtr< Shader > 						m_shader;
 
 		int32_t										m_uniformsCount;											
-		UniformBase**								p_uniforms = nullptr;
+		UniformInterface**								p_uniforms = nullptr;
 
 	public:
 		MaterialType(const char*, bfu::MemBlockBase* materialsMemBlock, bfu::MemBlockBase* metadataMemBlock);
 		~MaterialType();
 
-		inline UniformBase* GetUniformPtr(const char* uniformName)
+		inline UniformInterface* GetUniformPtr(const char* uniformName)
 		{
-			UniformBase* ret = nullptr;
+			UniformInterface* ret = nullptr;
 
 			for(int i=0; i<m_uniformsCount; ++i)
 			{

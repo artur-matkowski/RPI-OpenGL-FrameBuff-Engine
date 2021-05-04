@@ -10,17 +10,17 @@ namespace asapi
 
 	using bfu::stream;
 
-	class UniformBase: public object
+	class UniformInterface: public object
 	{
 	protected:
 		uint32_t 				m_location = -1;
 		bool 					m_isDirty = false;
 	public:
-		UniformBase(uint32_t location, bfu::MemBlockBase* metadataMemBlock)
+		UniformInterface(uint32_t location, bfu::MemBlockBase* metadataMemBlock)
 			:m_location(location)
 		{
 		};
-		~UniformBase();
+		~UniformInterface();
 
 		virtual void SendUniform() = 0;
 		#ifdef IS_EDITOR

@@ -5,13 +5,13 @@
 
 namespace asapi
 {
-	class UniformInt: public UniformBase
+	class UniformInt: public UniformInterface
 	{
 		int32_t		m_data;
 		stream		m_name;
 	public:
 		UniformInt(uint32_t location, const char* uniformName, bfu::MemBlockBase* metadataMemBlock)
-			:UniformBase(location, metadataMemBlock)
+			:UniformInterface(location, metadataMemBlock)
 			,m_name(metadataMemBlock)
 		{
 			m_name.sprintf(uniformName);

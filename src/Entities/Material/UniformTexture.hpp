@@ -6,13 +6,13 @@
 
 namespace asapi
 {
-	class UniformTexture: public UniformBase
+	class UniformTexture: public UniformInterface
 	{
 		ResourcePtr<Texture>		m_data;
 		stream						m_name;
 	public:
 		UniformTexture(uint32_t location, const char* uniformName, bfu::MemBlockBase* metadataMemBlock)
-			:UniformBase(location, metadataMemBlock)
+			:UniformInterface(location, metadataMemBlock)
 			,m_name(metadataMemBlock)
 		{
 			m_name.sprintf(uniformName);

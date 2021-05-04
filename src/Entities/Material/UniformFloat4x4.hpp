@@ -5,13 +5,13 @@
 
 namespace asapi
 {
-	class UniformFloat4x4: public UniformBase
+	class UniformFloat4x4: public UniformInterface
 	{
 		glm::mat4	m_data;
 		stream		m_name;
 	public:
 		UniformFloat4x4(uint32_t location, const char* uniformName, bfu::MemBlockBase* metadataMemBlock)
-			:UniformBase(location, metadataMemBlock)
+			:UniformInterface(location, metadataMemBlock)
 			,m_name(metadataMemBlock)
 		{
 			m_name.sprintf(uniformName);

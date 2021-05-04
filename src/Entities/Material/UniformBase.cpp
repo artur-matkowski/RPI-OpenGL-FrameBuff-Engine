@@ -10,12 +10,12 @@
 namespace asapi
 {
 
-	UniformBase::~UniformBase()
+	UniformInterface::~UniformInterface()
 	{}
 
 
 	#ifdef IS_EDITOR
-	void UniformBase::OnGUI()
+	void UniformInterface::OnGUI()
 	{
 		ImGui::LabelText("Unsuported Uniform %s", "---");
 	}

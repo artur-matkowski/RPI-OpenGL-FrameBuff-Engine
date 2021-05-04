@@ -5,13 +5,13 @@
 
 namespace asapi
 {
-	class UniformFloat3: public UniformBase
+	class UniformFloat3: public UniformInterface
 	{
 		glm::vec3	m_data;
 		stream		m_name;
 	public:
 		UniformFloat3(uint32_t location, const char* uniformName, bfu::MemBlockBase* metadataMemBlock)
-			:UniformBase(location, metadataMemBlock)
+			:UniformInterface(location, metadataMemBlock)
 			,m_name(metadataMemBlock)
 		{
 			m_name.sprintf(uniformName);

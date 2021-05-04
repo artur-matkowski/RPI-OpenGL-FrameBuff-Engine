@@ -13,7 +13,7 @@ namespace asapi
 	{
 		for(int i=0; i<m_uniformsCount; ++i)
 		{
-			p_uniforms[i]->~UniformBase();
+			p_uniforms[i]->~UniformInterface();
 			DELETE(p_uniforms[i]);
 		}
 		log::debug << "MaterialType::~MaterialType() " << std::endl;
@@ -65,7 +65,7 @@ namespace asapi
 		glGetProgramiv(m_shader->GetProgramID(), GL_ACTIVE_UNIFORMS, &m_uniformsCount);
 		printf("Active Uniforms: %d\n", m_uniformsCount);
 
-		p_uniforms = (UniformBase**)materialsMemBlock->allocate(m_uniformsCount, sizeof(UniformBase*), alignof(UniformBase*));
+		p_uniforms = (UniformInterface**)materialsMemBlock->allocate(m_uniformsCount, sizeof(UniformInterface*), alignof(UniformInterface*));
 
 
 		for (i = 0; i < m_uniformsCount; ++i)
@@ -82,19 +82,19 @@ namespace asapi
 		    switch(type)
 		    {
 		    	case GL_FLOAT:
-		    		p_uniforms[i] = (UniformBase*)materialsMemBlock->allocate(1, sizeof(UniformFloat), alignof(UniformFloat));
+		    		p_uniforms[i] = (UniformInterface*)materialsMemBlock->allocate(1, sizeof(UniformFloat), alignof(UniformFloat));
 		    		new (p_uniforms[i]) UniformFloat(location, name, metadataMemBlock);
 		    		break;
 		    	case GL_FLOAT_VEC3:
-		    		p_uniforms[i] = (UniformBase*)materialsMemBlock->allocate(1, sizeof(UniformFloat3), alignof(UniformFloat3));
+		    		p_uniforms[i] = (UniformInterface*)materialsMemBlock->allocate(1, sizeof(UniformFloat3), alignof(UniformFloat3));
 		    		new (p_uniforms[i]) UniformFloat3(location, name, metadataMemBlock);
 		    		break;
 		    	case GL_FLOAT_MAT4:
-		    		p_uniforms[i] = (UniformBase*)materialsMemBlock->allocate(1, sizeof(UniformFloat4x4), alignof(UniformFloat4x4));
+		    		p_uniforms[i] = (UniformInterface*)materialsMemBlock->allocate(1, sizeof(UniformFloat4x4), alignof(UniformFloat4x4));
 		    		new (p_uniforms[i]) UniformFloat4x4(location, name, metadataMemBlock);
 		    		break;
 		    	case GL_SAMPLER_2D:
-		    		p_uniforms[i] = (UniformBase*)materialsMemBlock->allocate(1, sizeof(UniformTexture), alignof(UniformTexture));
+		    		p_uniforms[i] = (UniformInterface*)materialsMemBlock->allocate(1, sizeof(UniformTexture), alignof(UniformTexture));
 		    		new (p_uniforms[i]) UniformTexture(location, name, metadataMemBlock);
 					systems.RESOURCES.requestResource( &texturePtr, "debug.png" );
 		    		((UniformTexture*)p_uniforms[i])->SetUniform(texturePtr);
