@@ -32,7 +32,7 @@ namespace asapi
 
 		if(m_isMainCamera)
 		{
-			log::debug << " Camera::OnIsDirty() "<< std::endl;
+			//log::debug << " Camera::OnIsDirty() "<< std::endl;
 			SYSTEMS::GetObject().RENDERER.UpdateProjectionMatrix(m_projectionMatrix);
 			SYSTEMS::GetObject().RENDERER.UpdateViewMatrix(m_cameraModelMatrix);
 		}
@@ -80,7 +80,9 @@ namespace asapi
 			updated |= ImGui::InputFloat("Top", &m_orthoTop);
 		}
 
-		if(ImGui::Checkbox("Is Main Camera", &m_isMainCamera))
+		ImGui::Checkbox("Is Main Camera", &m_isMainCamera);
+
+		if( updated && m_isMainCamera )
 		{
 			OnIsDirty();
 		}

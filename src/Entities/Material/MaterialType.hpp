@@ -3,7 +3,7 @@
 #include "ResourcePtr.hpp"
 #include "Shader.hpp"
 #include "Texture.hpp"
-#include "UniformBase.hpp"
+#include "_UniformsList.hpp"
 #include "object.hpp"
 #include <map>
 

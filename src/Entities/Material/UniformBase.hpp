@@ -34,6 +34,8 @@ namespace asapi
 		virtual bool Is(const char* name) = 0;
 	};
 
+
+
 	template<typename T>
 	class Uniform: public UniformBase
 	{
@@ -50,7 +52,7 @@ namespace asapi
 		~Uniform(){};
 
 		virtual void SendUniform();
-		virtual void SendUniform(const T& override) const;
+		void SendUniform(const T& override) const;
 
 		virtual bool Is(const char* name) override { return (strcmp(name, m_name.c_str())==0); }
 
@@ -59,11 +61,10 @@ namespace asapi
 		virtual void OnGUI();
 		#endif
 		
-		virtual void GetUniform(T& out)
-		{
-			out = m_data;
-		}
+		void GetUniform(T& out) { out = m_data; }
 	};
+
+	
 }
 
 #endif
