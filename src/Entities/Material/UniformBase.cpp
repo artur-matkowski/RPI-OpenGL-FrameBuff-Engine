@@ -11,15 +11,13 @@ namespace asapi
 {
 
 	UniformBase::~UniformBase()
-	{
-		DELETE(m_name);
-	}
+	{}
 
 
 	#ifdef IS_EDITOR
 	void UniformBase::OnGUI()
 	{
-		ImGui::LabelText("Unsuported Uniform of: ", m_name);
+		ImGui::LabelText("Unsuported Uniform %s", "---");
 	}
 	#endif
 
@@ -50,7 +48,7 @@ namespace asapi
 	template<>
 	void Uniform<int>::OnGUI()
 	{
-		ImGui::InputInt(m_name, &m_data );
+		ImGui::InputInt(m_name.c_str(), &m_data );
 	}
 	#endif
 
@@ -75,7 +73,7 @@ namespace asapi
 	template<>
 	void Uniform<float>::OnGUI()
 	{
-		ImGui::InputFloat(m_name, &m_data );
+		ImGui::InputFloat(m_name.c_str(), &m_data );
 	}
 	#endif
 
@@ -99,7 +97,7 @@ namespace asapi
 	template<>
 	void Uniform<glm::vec3>::OnGUI()
 	{
-		ImGui::InputFloat3(m_name, glm::value_ptr(m_data) );
+		ImGui::InputFloat3(m_name.c_str(), glm::value_ptr(m_data) );
 	}
 	#endif
 
@@ -128,7 +126,7 @@ namespace asapi
 			const float* data = glm::value_ptr(m_data);
 
 
-			ImGui::LabelText(m_name, "%.3f    %.3f    %.3f    %.3f"		
+			ImGui::LabelText(m_name.c_str(), "%.3f    %.3f    %.3f    %.3f"		
 															, data[0]
 															, data[4] 
 															, data[8] 
@@ -167,7 +165,7 @@ namespace asapi
 	template<>
 	void Uniform<ResourcePtr<Texture>>::OnGUI()
 	{
-		ImGui::LabelText(m_name, m_data->GetName());
+		ImGui::LabelText(m_name.c_str(), m_data->GetName());
 		void* my_void_ptr = (void*)(intptr_t)m_data->GetTextureID();
 		ImGui::Image(my_void_ptr, ImVec2(100.0f, 100.0f));
 	}

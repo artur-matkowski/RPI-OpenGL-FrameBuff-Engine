@@ -8,18 +8,17 @@ namespace asapi
 	class MaterialType;
 	class MaterialInstance;
 
-	class UniformBase: public object//, public bfu::SerializableClassBase
+	using bfu::stream;
+
+	class UniformBase: public object
 	{
 	protected:
 		uint32_t 				m_location = -1;
 		bool 					m_isDirty = false;
-		char* 					m_name = nullptr;
 	public:
-		UniformBase(uint32_t location, const char* uniformName, bfu::MemBlockBase* metadataMemBlock)
+		UniformBase(uint32_t location, bfu::MemBlockBase* metadataMemBlock)
 			:m_location(location)
 		{
-			m_name = (char*)metadataMemBlock->allocate(strlen(uniformName)+1, sizeof(char), alignof(char));
-			strcpy(m_name, uniformName);
 		};
 		~UniformBase();
 
@@ -32,23 +31,28 @@ namespace asapi
 		{
 			m_location = location;
 		}
-		inline bool Is(const char* name){ return (strcmp(name, m_name)==0); }
+		virtual bool Is(const char* name) = 0;
 	};
 
 	template<typename T>
 	class Uniform: public UniformBase
 	{
-		//bfu::SerializableVar<T>	m_data;
-		T	m_data;
+		T			m_data;
+		stream		m_name;
 	public:
 		Uniform(uint32_t location, const char* uniformName, bfu::MemBlockBase* metadataMemBlock)
-			:UniformBase(location, uniformName, metadataMemBlock)
-			//,m_data("m_data", this)
-		{};
+			:UniformBase(location, metadataMemBlock)
+			,m_name(metadataMemBlock)
+		{
+			m_name.sprintf(uniformName);
+		};
+		Uniform(const Uniform<T>& cp) = delete;
 		~Uniform(){};
 
 		virtual void SendUniform();
 		virtual void SendUniform(const T& override) const;
+
+		virtual bool Is(const char* name) override { return (strcmp(name, m_name.c_str())==0); }
 
 		void SetUniform(const T& in);
 		#ifdef IS_EDITOR

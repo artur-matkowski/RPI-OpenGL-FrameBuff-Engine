@@ -90,7 +90,7 @@ namespace asapi
 		    		new (p_uniforms[i]) Uniform<glm::vec3>(location, name, metadataMemBlock);
 		    		break;
 		    	case GL_FLOAT_MAT4:
-		    		p_uniforms[i] = (UniformBase*)materialsMemBlock->allocate(1, sizeof(Uniform<glm::vec4>), alignof(Uniform<glm::vec4>));
+		    		p_uniforms[i] = (UniformBase*)materialsMemBlock->allocate(1, sizeof(Uniform<glm::mat4>), alignof(Uniform<glm::mat4>));
 		    		new (p_uniforms[i]) Uniform<glm::mat4>(location, name, metadataMemBlock);
 		    		break;
 		    	case GL_SAMPLER_2D:
