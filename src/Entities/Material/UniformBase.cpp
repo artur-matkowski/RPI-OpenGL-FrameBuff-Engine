@@ -12,7 +12,7 @@ namespace asapi
 
 	UniformBase::~UniformBase()
 	{
-		DEALLOCATE_GLOBAL(m_name);
+		DELETE(m_name);
 	}
 
 

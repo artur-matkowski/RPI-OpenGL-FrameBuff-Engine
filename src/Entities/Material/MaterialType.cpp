@@ -11,14 +11,12 @@ namespace asapi
 
 	MaterialType::~MaterialType()
 	{
-		for( std::map<std::string, UniformBase*>::iterator it = m_uniformMap.begin();
-			 it != m_uniformMap.end();
-			 ++it)
+		for(int i=0; i<m_uniformsCount; ++i)
 		{
-			delete it->second;
+			p_uniforms[i]->~UniformBase();
+			DELETE(p_uniforms[i]);
 		}
 		log::debug << "MaterialType::~MaterialType() " << std::endl;
-				
 	}
 
 	MaterialType::MaterialType(const char* materialName, bfu::MemBlockBase* materialsMemBlock, bfu::MemBlockBase* metadataMemBlock)
@@ -64,13 +62,13 @@ namespace asapi
 
 
 
-		glGetProgramiv(m_shader->GetProgramID(), GL_ACTIVE_UNIFORMS, &count);
-		printf("Active Uniforms: %d\n", count);
+		glGetProgramiv(m_shader->GetProgramID(), GL_ACTIVE_UNIFORMS, &m_uniformsCount);
+		printf("Active Uniforms: %d\n", m_uniformsCount);
 
-		p_uniforms = (UniformBase**)materialsMemBlock->allocate(count, sizeof(UniformBase*), alignof(UniformBase*));
+		p_uniforms = (UniformBase**)materialsMemBlock->allocate(m_uniformsCount, sizeof(UniformBase*), alignof(UniformBase*));
 
 
-		for (i = 0; i < count; ++i)
+		for (i = 0; i < m_uniformsCount; ++i)
 		{
 		    glGetActiveUniform(m_shader->GetProgramID(), (GLuint)i, bufSize, &length, &size, &type, name);
 
@@ -84,26 +82,22 @@ namespace asapi
 		    switch(type)
 		    {
 		    	case GL_FLOAT:
-		    		p_uniforms[i] = (UniformBase*)materialsMemBlock->allocate(count, sizeof(Uniform<float>), alignof(Uniform<float>));
+		    		p_uniforms[i] = (UniformBase*)materialsMemBlock->allocate(1, sizeof(Uniform<float>), alignof(Uniform<float>));
 		    		new (p_uniforms[i]) Uniform<float>(location, name, metadataMemBlock);
-		    		m_uniformMap[s_name] = p_uniforms[i];
 		    		break;
 		    	case GL_FLOAT_VEC3:
-		    		p_uniforms[i] = (UniformBase*)materialsMemBlock->allocate(count, sizeof(Uniform<glm::vec3>), alignof(Uniform<glm::vec3>));
+		    		p_uniforms[i] = (UniformBase*)materialsMemBlock->allocate(1, sizeof(Uniform<glm::vec3>), alignof(Uniform<glm::vec3>));
 		    		new (p_uniforms[i]) Uniform<glm::vec3>(location, name, metadataMemBlock);
-		    		m_uniformMap[s_name] = p_uniforms[i];
 		    		break;
 		    	case GL_FLOAT_MAT4:
-		    		p_uniforms[i] = (UniformBase*)materialsMemBlock->allocate(count, sizeof(Uniform<glm::vec4>), alignof(Uniform<glm::vec4>));
+		    		p_uniforms[i] = (UniformBase*)materialsMemBlock->allocate(1, sizeof(Uniform<glm::vec4>), alignof(Uniform<glm::vec4>));
 		    		new (p_uniforms[i]) Uniform<glm::mat4>(location, name, metadataMemBlock);
-		    		m_uniformMap[s_name] = p_uniforms[i];
 		    		break;
 		    	case GL_SAMPLER_2D:
-		    		p_uniforms[i] = (UniformBase*)materialsMemBlock->allocate(count, sizeof(Uniform<ResourcePtr<Texture>>), alignof(Uniform<ResourcePtr<Texture>>));
+		    		p_uniforms[i] = (UniformBase*)materialsMemBlock->allocate(1, sizeof(Uniform<ResourcePtr<Texture>>), alignof(Uniform<ResourcePtr<Texture>>));
 		    		new (p_uniforms[i]) Uniform<ResourcePtr<Texture>>(location, name, metadataMemBlock);
 					systems.RESOURCES.requestResource( &texturePtr, "debug.png" );
 		    		((Uniform<ResourcePtr<Texture>>*)p_uniforms[i])->SetUniform(texturePtr);
-		    		m_uniformMap[s_name] = p_uniforms[i];
 		    		break;		    		
 		    	default:
 		    		char buff[128];

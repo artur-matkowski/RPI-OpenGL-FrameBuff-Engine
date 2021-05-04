@@ -32,6 +32,7 @@ namespace asapi
 		{
 			m_location = location;
 		}
+		inline bool Is(const char* name){ return (strcmp(name, m_name)==0); }
 	};
 
 	template<typename T>

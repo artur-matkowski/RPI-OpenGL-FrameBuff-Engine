@@ -78,6 +78,7 @@ namespace asapi
 #define ALLOCATE 				GetObject().MEMORY.allocateSystemInBlock
 #define DEALLOCATE 				GetObject().MEMORY.deallocateSystemInBlock
 #define DEALLOCATE_GLOBAL(x)	bfu::MemBlockBase::DeallocateUnknown(x)
+#define DELETE(x)				bfu::MemBlockBase::DeallocateUnknown(x)
 #define SYSTEMS_ALLOCATOR 		GetObject().MEMORY.GetSystemsAllocator()
 
 #define STD_NEW(x,t) 			(t*)SYSTEMS::GetObject().MEMORY.GetSTDAllocator()->allocate(x, sizeof(t), alignof(t))

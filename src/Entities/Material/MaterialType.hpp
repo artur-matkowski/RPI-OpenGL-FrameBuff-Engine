@@ -17,26 +17,34 @@ namespace asapi
 
 		ResourcePtr< Shader > 						m_shader;
 
-		std::map<std::string, UniformBase*>			m_uniformMap;
-
+		int32_t										m_uniformsCount;											
 		UniformBase**								p_uniforms = nullptr;
 
 	public:
 		MaterialType(const char*, bfu::MemBlockBase* materialsMemBlock, bfu::MemBlockBase* metadataMemBlock);
 		~MaterialType();
 
-		inline UniformBase* GetUniformPtr(const std::string& uniformName)
+		inline UniformBase* GetUniformPtr(const char* uniformName)
 		{
-			std::map<std::string, UniformBase*>::iterator it( m_uniformMap.find(uniformName) );
-			if( it != m_uniformMap.end() )
+			UniformBase* ret = nullptr;
+
+			for(int i=0; i<m_uniformsCount; ++i)
 			{
-				return it->second;
+				if( p_uniforms[i]->Is(uniformName))
+				{
+					ret = p_uniforms[i];
+					break;
+				}
 			}
-			else
+
+			#ifdef IS_EDITOR
+			if(ret==nullptr)
 			{
 				log::warning << "Could not find uniform " << uniformName << std::endl;
-				return 0;
 			}
+			#endif
+
+			return ret;
 		}
 
 
@@ -44,12 +52,10 @@ namespace asapi
 		{
 			m_shader->UseProgram();
 
-			std::map<std::string, UniformBase*>::iterator it( m_uniformMap.begin() );
-			for(; it != m_uniformMap.end(); ++it)
+			for(int i=0; i<m_uniformsCount; ++i)
 			{
-				it->second->SendUniform();
+				p_uniforms[i]->SendUniform();
 			}
-			
 		}
 
 		#ifdef IS_EDITOR
