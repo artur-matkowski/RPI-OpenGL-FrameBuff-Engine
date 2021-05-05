@@ -16,11 +16,11 @@ namespace asapi
 		uint32_t 				m_location = -1;
 		bool 					m_isDirty = false;
 	public:
-		UniformInterface(uint32_t location, bfu::MemBlockBase* metadataMemBlock)
+		UniformInterface(uint32_t location)
 			:m_location(location)
 		{
 		};
-		~UniformInterface();
+		virtual ~UniformInterface();
 
 		virtual void SendUniform() = 0;
 		#ifdef IS_EDITOR
@@ -32,6 +32,16 @@ namespace asapi
 			m_location = location;
 		}
 		virtual bool Is(const char* name) = 0;
+	};
+
+	template<class T>
+	class UniformBase: public UniformInterface
+	{
+	public:
+		UniformBase(uint32_t location, bfu::MemBlockBase* metadataMemBlock)
+			:UniformInterface(location)
+		{
+		};
 	};
 	
 }
