@@ -37,8 +37,8 @@ namespace asapi
 			m_location = location;
 		}
 		bool Is(const char* name) { return (strcmp(name, m_name.c_str())==0); }
-		//virtual void sscanf(const char*) = 0;
-		//virtual int sprintf(char*) = 0;
+		virtual void sscanf(const char*) = 0;
+		virtual int sprintf(char*) = 0;
 	};
 
 
@@ -66,8 +66,8 @@ namespace asapi
 		
 		inline void GetUniform(T& out) { out = m_data; }
 		
-		//virtual void sscanf(const char*) override;
-		//virtual int sprintf(char*) override;
+		virtual void sscanf(const char*) override;
+		virtual int sprintf(char*) override;
 	};
 
 }
