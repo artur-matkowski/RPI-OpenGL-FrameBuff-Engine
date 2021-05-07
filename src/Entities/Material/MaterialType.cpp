@@ -82,22 +82,22 @@ namespace asapi
 		    switch(type)
 		    {
 		    	case GL_FLOAT:
-		    		p_uniforms[i] = (UniformInterface*)materialsMemBlock->allocate(1, sizeof(UniformFloat), alignof(UniformFloat));
-		    		new (p_uniforms[i]) UniformFloat(location, name, metadataMemBlock);
+		    		p_uniforms[i] = (UniformInterface*)materialsMemBlock->allocate(1, sizeof(Uniform<float>), alignof(Uniform<float>));
+		    		new (p_uniforms[i]) Uniform<float>(location, name, metadataMemBlock);
 		    		break;
 		    	case GL_FLOAT_VEC3:
-		    		p_uniforms[i] = (UniformInterface*)materialsMemBlock->allocate(1, sizeof(UniformFloat3), alignof(UniformFloat3));
-		    		new (p_uniforms[i]) UniformFloat3(location, name, metadataMemBlock);
+		    		p_uniforms[i] = (UniformInterface*)materialsMemBlock->allocate(1, sizeof(Uniform<glm::vec3>), alignof(Uniform<glm::vec3>));
+		    		new (p_uniforms[i]) Uniform<glm::vec3>(location, name, metadataMemBlock);
 		    		break;
 		    	case GL_FLOAT_MAT4:
-		    		p_uniforms[i] = (UniformInterface*)materialsMemBlock->allocate(1, sizeof(UniformFloat4x4), alignof(UniformFloat4x4));
-		    		new (p_uniforms[i]) UniformFloat4x4(location, name, metadataMemBlock);
+		    		p_uniforms[i] = (UniformInterface*)materialsMemBlock->allocate(1, sizeof(Uniform<glm::mat4>), alignof(Uniform<glm::mat4>));
+		    		new (p_uniforms[i]) Uniform<glm::mat4>(location, name, metadataMemBlock);
 		    		break;
 		    	case GL_SAMPLER_2D:
-		    		p_uniforms[i] = (UniformInterface*)materialsMemBlock->allocate(1, sizeof(UniformTexture), alignof(UniformTexture));
-		    		new (p_uniforms[i]) UniformTexture(location, name, metadataMemBlock);
+		    		p_uniforms[i] = (UniformInterface*)materialsMemBlock->allocate(1, sizeof(Uniform<ResourcePtr<Texture>>), alignof(Uniform<ResourcePtr<Texture>>));
+		    		new (p_uniforms[i]) Uniform<ResourcePtr<Texture>>(location, name, metadataMemBlock);
 					systems.RESOURCES.requestResource( &texturePtr, "debug.png" );
-		    		((UniformTexture*)p_uniforms[i])->SetUniform(texturePtr);
+		    		((Uniform<ResourcePtr<Texture>>*)p_uniforms[i])->SetUniform(texturePtr);
 		    		break;		    		
 		    	default:
 		    		char buff[128];

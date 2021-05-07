@@ -28,7 +28,7 @@ namespace asapi
 		SYSTEMS& systems = SYSTEMS::GetObject();
 		
 		systems.RESOURCES.requestResource( &m_material, m_MaterialName.c_str() );
-		p_modelViewUniform = (UniformFloat4x4*) m_material->GetUniformPtr("modelViewMat");
+		p_modelViewUniform = (Uniform<glm::mat4>*) m_material->GetUniformPtr("modelViewMat");
 
 		p_meshComponent = (MeshComponent*)m_owner->GET_COMPONENT(MeshComponent);
 
