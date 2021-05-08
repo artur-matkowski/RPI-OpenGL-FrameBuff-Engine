@@ -14,8 +14,7 @@ namespace asapi
 
 	class ResourceSystem
 	{
-		bfu::MemBlockBase* p_materialsMemBlock;
-		bfu::MemBlockBase* p_metadataMemBlock;
+		bfu::MemBlockBase* 									p_materialsMemBlock;
 
 		std::map<bfu::string, ResourcePtr<Texture> > 		m_textures;
 		std::map<bfu::string, ResourcePtr<Shader> > 		m_shaders;
@@ -131,7 +130,7 @@ namespace asapi
 			if( it==m_materials.end() )
 			{
 				MaterialType* mat = (MaterialType*)p_materialsMemBlock->allocate(1, sizeof(MaterialType), alignof(MaterialType));
-				new (mat) MaterialType(str, p_materialsMemBlock, p_metadataMemBlock);
+				new (mat) MaterialType(str);
 				res->Rebuild( mat );
 				m_materials[id] = *res;
 			}

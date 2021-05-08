@@ -7,8 +7,7 @@ namespace asapi{
 
 	void ResourceSystem::Init(const int argc, const char** argv)
 	{
-		p_materialsMemBlock = SYSTEMS::GetObject().RENDERER.GetMetadataMemBlock();
-		p_metadataMemBlock = SYSTEMS::GetObject().RENDERER.GetMetadataMemBlock();
+		p_materialsMemBlock = SYSTEMS::GetObject().RENDERER.GetMaterialsMemBlock();
 
 
 		const char* path = "--wrong path--";

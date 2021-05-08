@@ -17,12 +17,17 @@ namespace asapi
 
 		ResourcePtr< Shader > 						m_shader;
 
-		int32_t										m_uniformsCount;											
-		UniformInterface**								p_uniforms = nullptr;
+		int32_t										m_uniformsCount = 0;											
+		UniformInterface**							p_uniforms = nullptr;
+
+		#ifdef IS_EDITOR	
+		char										m_shaderName[255];
+		#endif
 
 	public:
-		MaterialType(const char*, bfu::MemBlockBase* materialsMemBlock, bfu::MemBlockBase* metadataMemBlock);
+		MaterialType(const char*);
 		~MaterialType();
+		void OnIsDirty(const char*);
 
 		inline UniformInterface* GetUniformPtr(const char* uniformName)
 		{

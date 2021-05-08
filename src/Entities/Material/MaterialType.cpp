@@ -14,16 +14,24 @@ namespace asapi
 		for(int i=0; i<m_uniformsCount; ++i)
 		{
 			p_uniforms[i]->~UniformInterface();
-			DELETE(p_uniforms[i]);
+			DEALLOCATE_GLOBAL(p_uniforms[i]);
 		}
+		DEALLOCATE_GLOBAL(p_uniforms);
 		log::debug << "MaterialType::~MaterialType() " << std::endl;
 	}
 
-	MaterialType::MaterialType(const char* materialName, bfu::MemBlockBase* materialsMemBlock, bfu::MemBlockBase* metadataMemBlock)
+	MaterialType::MaterialType(const char* materialName)
 	{
-		static SYSTEMS& systems = SYSTEMS::GetObject();
+		OnIsDirty(materialName);
+	}
+	void MaterialType::OnIsDirty(const char* shaderName)
+	{
+		SYSTEMS& systems = SYSTEMS::GetObject();
 
-		systems.RESOURCES.requestResource( &m_shader, materialName );
+		bfu::MemBlockBase* materialsMemBlock = systems.RENDERER.GetMaterialsMemBlock();
+		bfu::MemBlockBase* metadataMemBlock = systems.MEMORY.GetSystemsAllocator();
+
+		systems.RESOURCES.requestResource( &m_shader, shaderName );
 
 		m_shader->UseProgram();
 
@@ -38,32 +46,22 @@ namespace asapi
 		const GLsizei bufSize = 128; // maximum name length
 		GLchar name[bufSize] = {0}; // variable name in GLSL
 		GLsizei length; // name length	
+		int32_t newUniformsCount = 0;
 
 
+		glGetProgramiv(m_shader->GetProgramID(), GL_ACTIVE_UNIFORMS, &newUniformsCount);
+		printf("Active Uniforms: %d\n", newUniformsCount);
 
-		// glGetProgramiv(m_shader->GetProgramID(), GL_ACTIVE_ATTRIBUTES, &count);
-		// printf("Active Attributes: %d\n", count);
-
-		// for (i = 0; i < count; i++)
-		// {
-		//     glGetActiveAttrib(m_shader->GetProgramID(), (GLuint)i, bufSize, &length, &size, &type, name);
-
-		//     printf("Attribute #%d Type: %u Name: %s\n", i, type, name);
-
-		//     switch(type)
-		//     {
-		//     	default:
-		//     		char buff[128];
-		//     		sprintf(buff, "%#04X", type);
-		//     		log::warning << "Unsuported attribute type found in " << materialName << ": " << name << " type: " << buff << std::endl;
-		//     		break;
-		//     }
-		// }
-
-
-
-		glGetProgramiv(m_shader->GetProgramID(), GL_ACTIVE_UNIFORMS, &m_uniformsCount);
-		printf("Active Uniforms: %d\n", m_uniformsCount);
+		if( newUniformsCount > m_uniformsCount && m_uniformsCount!=0)
+		{
+			for(int i=0; i<m_uniformsCount; ++i)
+			{
+				p_uniforms[i]->~UniformInterface();
+				DEALLOCATE_GLOBAL(p_uniforms[i]);
+			}
+			DEALLOCATE_GLOBAL(p_uniforms);
+		}
+		m_uniformsCount = newUniformsCount;
 
 		p_uniforms = (UniformInterface**)materialsMemBlock->allocate(m_uniformsCount, sizeof(UniformInterface*), alignof(UniformInterface*));
 
@@ -102,7 +100,7 @@ namespace asapi
 		    	default:
 		    		char buff[128];
 		    		sprintf(buff, "%#04X", type);
-		    		log::warning << "Unsuported uniform type found in " << materialName << ": " << name << " type: " << buff << std::endl;
+		    		log::warning << "Unsuported uniform type found in " << shaderName << ": " << name << " type: " << buff << std::endl;
 		    		break;
 		    }
 		}
@@ -111,6 +109,32 @@ namespace asapi
 	#ifdef IS_EDITOR
 	void MaterialType::OnGUI()
 	{
+		std::vector<std::string>* items = SYSTEMS::GetObject().RESOURCES.GetShadersPaths();
+
+		if (ImGui::BeginCombo("Shader resource", m_shaderName))
+        {
+            for (int n = 0; n < items->size(); n++)
+            {
+            	const char* displayName = strstr( (*items)[n].c_str(), "/meshes/") + strlen("/meshes/");
+                const bool is_selected = strcmp( m_shaderName, (*items)[n].c_str() ) == 0;
+                if (ImGui::Selectable(displayName, is_selected))
+                {
+					strncpy(m_shaderName, displayName, 254);
+
+					log::debug << "updated mesh name " << displayName << std::endl;
+
+					OnIsDirty(m_shaderName);	
+                }
+
+                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
+
+
+
 		for(int i=0; i<m_uniformsCount; ++i)
 		{
 			ImGui::Spacing();

@@ -26,8 +26,6 @@ namespace asapi{
 		glm::mat4 			m_projectionMatrix;
 		glm::mat4* 			m_viewMatrix = nullptr;
 
-
-		bfu::MemBlockBase*	p_metadataMemBlock;
 		bfu::MemBlockBase*	p_materialsMemBlock;
 
 	static void ResizeWidowCallback(void* _this, void* data);
@@ -50,7 +48,6 @@ namespace asapi{
 		void RegisterRenderer(RendererComponent*);
 		void UnRegisterRenderer(RendererComponent*);
 
-		inline bfu::MemBlockBase* GetMetadataMemBlock(){ return p_metadataMemBlock; }
 		inline bfu::MemBlockBase* GetMaterialsMemBlock(){ return p_materialsMemBlock; }
 
 		void GetResolution(glm::ivec2& out){ out = m_resolution; }
