@@ -27,7 +27,7 @@ namespace asapi
 	public:
 		MaterialType(const char*);
 		~MaterialType();
-		void OnIsDirty(const char*);
+		void LoadShader(const char*);
 
 		inline UniformInterface* GetUniformPtr(const char* uniformName)
 		{

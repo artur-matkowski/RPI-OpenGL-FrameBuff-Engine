@@ -22,9 +22,9 @@ namespace asapi
 
 	MaterialType::MaterialType(const char* materialName)
 	{
-		OnIsDirty(materialName);
+		LoadShader(materialName);
 	}
-	void MaterialType::OnIsDirty(const char* shaderName)
+	void MaterialType::LoadShader(const char* shaderName)
 	{
 		SYSTEMS& systems = SYSTEMS::GetObject();
 
@@ -52,19 +52,23 @@ namespace asapi
 		glGetProgramiv(m_shader->GetProgramID(), GL_ACTIVE_UNIFORMS, &newUniformsCount);
 		printf("Active Uniforms: %d\n", newUniformsCount);
 
-		if( newUniformsCount > m_uniformsCount && m_uniformsCount!=0)
+
+		for(int i=0; i<m_uniformsCount; ++i)
 		{
-			for(int i=0; i<m_uniformsCount; ++i)
-			{
-				p_uniforms[i]->~UniformInterface();
-				DEALLOCATE_GLOBAL(p_uniforms[i]);
-			}
-			DEALLOCATE_GLOBAL(p_uniforms);
+			p_uniforms[i]->~UniformInterface();
+			DEALLOCATE_GLOBAL(p_uniforms[i]);
+		}
+
+		if( newUniformsCount > m_uniformsCount )
+		{
+			if( p_uniforms!=nullptr )
+				DEALLOCATE_GLOBAL(p_uniforms);
+
+			p_uniforms = (UniformInterface**)materialsMemBlock->allocate(newUniformsCount, sizeof(UniformInterface*), alignof(UniformInterface*));
 		}
 		m_uniformsCount = newUniformsCount;
 
-		p_uniforms = (UniformInterface**)materialsMemBlock->allocate(m_uniformsCount, sizeof(UniformInterface*), alignof(UniformInterface*));
-
+		
 
 		for (i = 0; i < m_uniformsCount; ++i)
 		{
@@ -115,7 +119,7 @@ namespace asapi
         {
             for (int n = 0; n < items->size(); n++)
             {
-            	const char* displayName = strstr( (*items)[n].c_str(), "/meshes/") + strlen("/meshes/");
+            	const char* displayName = strstr( (*items)[n].c_str(), "/shaders/") + strlen("/shaders/");
                 const bool is_selected = strcmp( m_shaderName, (*items)[n].c_str() ) == 0;
                 if (ImGui::Selectable(displayName, is_selected))
                 {
@@ -123,7 +127,7 @@ namespace asapi
 
 					log::debug << "updated mesh name " << displayName << std::endl;
 
-					OnIsDirty(m_shaderName);	
+					LoadShader(m_shaderName);	
                 }
 
                 // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
