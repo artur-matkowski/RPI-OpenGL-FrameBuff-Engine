@@ -125,11 +125,14 @@ namespace asapi
                 const bool is_selected = strcmp( m_shaderName, (*items)[n].c_str() ) == 0;
                 if (ImGui::Selectable(displayName, is_selected))
                 {
-					strncpy(m_shaderName, displayName, 254);
+                	if( strcmp(m_shaderName, displayName)!=0 )
+                	{
+						strncpy(m_shaderName, displayName, 254);
 
-					log::debug << "updated shader name: " << displayName << std::endl;
+						log::debug << "updated shader name: " << displayName << std::endl;
 
-					LoadShader(m_shaderName);	
+						LoadShader(m_shaderName);	
+                	}
                 }
 
                 // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
