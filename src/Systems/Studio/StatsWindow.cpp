@@ -95,6 +95,11 @@ namespace asapi
                 ImGui::LabelText("Currently opened project", SYSTEMS::GetObject().RESOURCES.GetProjectPath());
                 ImGui::EndTabItem();
             }
+            if (ImGui::BeginTabItem("Resources in use"))
+            {
+                SYSTEMS::GetObject().RESOURCES.OnGUI();
+                ImGui::EndTabItem();
+            }
             ImGui::EndTabBar();
         }
 

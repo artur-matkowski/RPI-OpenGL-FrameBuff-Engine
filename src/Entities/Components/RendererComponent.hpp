@@ -14,7 +14,6 @@ namespace asapi
 		ResourcePtr< MaterialType > 				m_material;
 
 		MeshComponent*								p_meshComponent;
-		Uniform<glm::mat4>*							p_modelViewUniform;
 		glm::mat4* 									p_modelViewMat;
 
 		char buffMat[255];

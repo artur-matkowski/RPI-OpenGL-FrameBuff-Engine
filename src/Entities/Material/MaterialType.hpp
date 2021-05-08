@@ -19,6 +19,7 @@ namespace asapi
 
 		int32_t										m_uniformsCount = 0;											
 		UniformInterface**							p_uniforms = nullptr;
+		Uniform<glm::mat4>*							p_modelViewUniform = nullptr;
 
 		#ifdef IS_EDITOR	
 		char										m_shaderName[255];
@@ -28,6 +29,7 @@ namespace asapi
 		MaterialType(const char*);
 		~MaterialType();
 		void LoadShader(const char*);
+		Uniform<glm::mat4>* GetModelViewMatrix(){ return p_modelViewUniform; }
 
 		inline UniformInterface* GetUniformPtr(const char* uniformName)
 		{
@@ -65,7 +67,10 @@ namespace asapi
 
 		#ifdef IS_EDITOR
 		void OnGUI();
+		const char* GetShaderName(){ return m_shaderName; }
 		#endif
+
+		static void Compile(const char* dest, const char* source);
 	};
 }
 

@@ -28,7 +28,6 @@ namespace asapi
 		SYSTEMS& systems = SYSTEMS::GetObject();
 		
 		systems.RESOURCES.requestResource( &m_material, m_MaterialName.c_str() );
-		p_modelViewUniform = (Uniform<glm::mat4>*) m_material->GetUniformPtr("modelViewMat");
 
 		p_meshComponent = (MeshComponent*)m_owner->GET_COMPONENT(MeshComponent);
 
@@ -42,12 +41,7 @@ namespace asapi
 
 	void RendererComponent::Render(glm::mat4* projectionMatrix, glm::mat4* viewMatrix)
 	{
-		if(p_modelViewUniform!=0)
-			p_modelViewUniform->SetUniform( *projectionMatrix * *viewMatrix * *p_modelViewMat );
-		else
-			log::warning << "failing on matrix uniform update" << std::endl;
-
-
+		m_material->GetModelViewMatrix()->SetUniform( *projectionMatrix * *viewMatrix * *p_modelViewMat );
 		m_material->BindMaterial();
 
 		uint32_t* config = (uint32_t*)p_meshComponent->GetMeshResource()->GetRawHandle();

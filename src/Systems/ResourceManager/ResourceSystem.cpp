@@ -2,6 +2,9 @@
 #include <dirent.h> 
 #include <sys/stat.h>
 #include "Systems.hpp"
+#ifdef IS_EDITOR
+#include "imgui.h"
+#endif
 
 namespace asapi{
 
@@ -100,6 +103,20 @@ namespace asapi{
 		closedir(d_fh);
 	}
 
+	void RemoveExtensions(std::vector<std::string>& in)
+	{
+		for(int i=0; i<in.size(); ++i)
+		{
+			for(int j=in[i].size()-1; j>0; --j)
+			{
+				if(in[i][j]=='.')
+					in[i][j] = '\0';
+				else if(in[i][j]=='/')
+					break;
+			}
+		}
+	}
+
 	bool IsInternalAssetUpToDate(const char* path, char* outPath)
 	{
 		struct stat attribInt;
@@ -138,6 +155,7 @@ namespace asapi{
 			return;
 
 		std::vector<std::string> TexturesPaths;
+		std::vector<std::string> MaterialsPaths;
 		std::vector<std::string> ShadersPaths;
 		std::vector<std::string> MeshesPaths;
 
@@ -146,6 +164,10 @@ namespace asapi{
 		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
 		strncat(dir_path, "/assets_ext/textures", MAX_PATH_SIZE-1);
 		ScanDirForPaths(TexturesPaths, dir_path);
+
+		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
+		strncat(dir_path, "/assets_ext/materials", MAX_PATH_SIZE-1);
+		ScanDirForPaths(MaterialsPaths, dir_path);
 
 		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
 		strncat(dir_path, "/assets_ext/shaders", MAX_PATH_SIZE-1);
@@ -161,6 +183,13 @@ namespace asapi{
 			if( ! IsInternalAssetUpToDate(TexturesPaths[i].c_str(), buff) )
 			{
 				Texture::Compile(buff, TexturesPaths[i].c_str());
+			}
+		}
+		for(int i=0; i<MaterialsPaths.size(); ++i)
+		{
+			if( ! IsInternalAssetUpToDate(MaterialsPaths[i].c_str(), buff) )
+			{
+				MaterialType::Compile(buff, MaterialsPaths[i].c_str());
 			}
 		}
 		for(int i=0; i<ShadersPaths.size(); ++i)
@@ -183,15 +212,30 @@ namespace asapi{
 		strncat(dir_path, "/assets_int/textures", MAX_PATH_SIZE-1);
 		ScanDirForPaths(v_TexturesPaths, dir_path);
 
+		v_MaterialsPaths.clear();
+		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
+		strncat(dir_path, "/assets_int/materials", MAX_PATH_SIZE-1);
+		ScanDirForPaths(v_MaterialsPaths, dir_path);
+
 		v_ShadersPaths.clear();
 		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
 		strncat(dir_path, "/assets_int/shaders", MAX_PATH_SIZE-1);
 		ScanDirForPaths(v_ShadersPaths, dir_path, "vert.glsl");
+		RemoveExtensions(v_ShadersPaths);
 
 		v_MeshesPaths.clear();
 		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
 		strncat(dir_path, "/assets_int/meshes", MAX_PATH_SIZE-1);
 		ScanDirForPaths(v_MeshesPaths, dir_path, ".mmp");
+	}
+	void ResourceSystem::OnGUI()
+	{
+		for(auto it=m_materials.begin(); it!=m_materials.end(); ++it)
+		{
+			ImGui::LabelText("Material", it->first.c_str() );
+			ImGui::LabelText("Shader", it->second->GetShaderName() );
+			ImGui::Spacing();
+		}
 	}
 	#endif
 

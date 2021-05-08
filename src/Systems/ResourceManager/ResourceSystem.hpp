@@ -25,6 +25,7 @@ namespace asapi
 
 		#ifdef IS_EDITOR
 		std::vector<std::string>							v_TexturesPaths;
+		std::vector<std::string>							v_MaterialsPaths;
 		std::vector<std::string>							v_ShadersPaths;
 		std::vector<std::string>							v_MeshesPaths;
 		#endif
@@ -37,8 +38,10 @@ namespace asapi
 		#ifdef IS_EDITOR
 		void RefreshResources();
 		std::vector<std::string>* GetTexturesPaths(){ return &v_TexturesPaths; }
+		std::vector<std::string>* GetMaterialsPaths(){ return &v_MaterialsPaths; }
 		std::vector<std::string>* GetShadersPaths(){ return &v_ShadersPaths; }
 		std::vector<std::string>* GetMeshesPaths(){ return &v_MeshesPaths; }
+		void OnGUI();
 		#endif
 
 		bool requestResource(ResourcePtr<Texture>* res, const char* str)

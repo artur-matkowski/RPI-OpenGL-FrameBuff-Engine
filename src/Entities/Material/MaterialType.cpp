@@ -108,6 +108,8 @@ namespace asapi
 		    		break;
 		    }
 		}
+
+		p_modelViewUniform = (Uniform<glm::mat4>*) GetUniformPtr("modelViewMat");
 	}
 
 	#ifdef IS_EDITOR
@@ -125,7 +127,7 @@ namespace asapi
                 {
 					strncpy(m_shaderName, displayName, 254);
 
-					log::debug << "updated mesh name " << displayName << std::endl;
+					log::debug << "updated shader name: " << displayName << std::endl;
 
 					LoadShader(m_shaderName);	
                 }
@@ -137,8 +139,6 @@ namespace asapi
             ImGui::EndCombo();
         }
 
-
-
 		for(int i=0; i<m_uniformsCount; ++i)
 		{
 			ImGui::Spacing();
@@ -146,4 +146,9 @@ namespace asapi
 		}
 	}
 	#endif
+
+	void MaterialType::Compile(const char* dest, const char* source)
+	{
+
+	}
 }
