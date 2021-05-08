@@ -22,7 +22,23 @@ namespace asapi
 
 	MaterialType::MaterialType(const char* materialName)
 	{
-		LoadShader(materialName);
+		char path[MAX_PATH_SIZE];
+
+		#ifdef IS_EDITOR	
+		strncpy(m_MaterialName, materialName, 254);
+		#endif
+		snprintf(path, MAX_PATH_SIZE-1, "%s/assets_ext/materials/%s.mat", SYSTEMS::GetObject().RESOURCES.GetProjectPath(), materialName);
+
+
+		SYSTEMS::IO::MMAP mat;
+
+		mat.InitForRead(path);
+		
+		#ifdef IS_EDITOR
+		strncpy(m_shaderName, (char*)mat.Data(), 254);
+		#endif
+
+		LoadShader( (char*)mat.Data() );
 	}
 	void MaterialType::LoadShader(const char* shaderName)
 	{
@@ -116,6 +132,7 @@ namespace asapi
 	void MaterialType::OnGUI()
 	{
 		std::vector<std::string>* items = SYSTEMS::GetObject().RESOURCES.GetShadersPaths();
+        bool isAltered = false;
 
 		if (ImGui::BeginCombo("Shader resource", m_shaderName))
         {
@@ -131,7 +148,8 @@ namespace asapi
 
 						log::debug << "updated shader name: " << displayName << std::endl;
 
-						LoadShader(m_shaderName);	
+						LoadShader(m_shaderName);
+						isAltered = true;
                 	}
                 }
 
@@ -145,7 +163,30 @@ namespace asapi
 		for(int i=0; i<m_uniformsCount; ++i)
 		{
 			ImGui::Spacing();
-			p_uniforms[i]->OnGUI();
+			isAltered |= p_uniforms[i]->OnGUI();
+		}
+
+		if(isAltered)
+		{
+			SaveInExt();
+			//Compile(...);
+		}
+	}
+	void MaterialType::SaveInExt()
+	{
+		char path[MAX_PATH_SIZE];
+		snprintf(path, MAX_PATH_SIZE-1, "%s/assets_ext/materials/%s.mat", SYSTEMS::GetObject().RESOURCES.GetProjectPath(), m_MaterialName);
+
+		SYSTEMS::IO::MMAP mat;
+
+		mat.InitForWrite(path, 4096);
+		char* data = (char*)mat.Data();
+
+		data += snprintf(data, 254, m_shaderName) + 1;
+
+		for(int i=0; i<m_uniformsCount; ++i)
+		{
+			data += p_uniforms[i]->sprintf(data) + 1;
 		}
 	}
 	#endif

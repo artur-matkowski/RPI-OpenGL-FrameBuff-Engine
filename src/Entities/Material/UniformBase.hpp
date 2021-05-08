@@ -29,7 +29,7 @@ namespace asapi
 
 		virtual void SendUniform() = 0;
 		#ifdef IS_EDITOR
-		virtual void OnGUI();
+		virtual bool OnGUI();
 		#endif
 
 		inline void SetUniformLocation(const uint32_t& location)
@@ -61,7 +61,7 @@ namespace asapi
 
 		void SetUniform(const T& in) { m_data = in; m_isDirty = true; }
 		#ifdef IS_EDITOR
-		virtual void OnGUI();
+		virtual bool OnGUI();
 		#endif
 		
 		inline void GetUniform(T& out) { out = m_data; }

@@ -23,6 +23,8 @@ namespace asapi
 
 		#ifdef IS_EDITOR	
 		char										m_shaderName[255];
+		char										m_MaterialName[255];
+		void SaveInExt();
 		#endif
 
 	public:

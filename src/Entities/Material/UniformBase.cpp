@@ -16,9 +16,10 @@ namespace asapi
 
 
 	#ifdef IS_EDITOR
-	void UniformInterface::OnGUI()
+	bool UniformInterface::OnGUI()
 	{
 		ImGui::LabelText("Unsuported Uniform %s", m_name.c_str());
+		return false;
 	}
 	#endif
 
@@ -40,9 +41,9 @@ namespace asapi
 	}
 	#ifdef IS_EDITOR
 	template<>
-	void Uniform<float>::OnGUI()
+	bool Uniform<float>::OnGUI()
 	{
-		ImGui::InputFloat(m_name.c_str(), &m_data );
+		return ImGui::InputFloat(m_name.c_str(), &m_data );
 	}
 	#endif
 	template<>
@@ -76,9 +77,9 @@ namespace asapi
 	}
 	#ifdef IS_EDITOR
 	template<>
-	void Uniform<glm::vec3>::OnGUI()
+	bool Uniform<glm::vec3>::OnGUI()
 	{
-		ImGui::InputFloat3(m_name.c_str(), glm::value_ptr(m_data) );
+		return ImGui::InputFloat3(m_name.c_str(), glm::value_ptr(m_data) );
 	}
 	#endif
 	template<>
@@ -111,7 +112,7 @@ namespace asapi
 	}
 	#ifdef IS_EDITOR
 	template<>
-	void Uniform<glm::mat4>::OnGUI()
+	bool Uniform<glm::mat4>::OnGUI()
 	{
 		if (ImGui::TreeNode("Used model matrix"))
 		{
@@ -138,6 +139,7 @@ namespace asapi
 
 	        ImGui::TreePop();
 	    }
+	    return false;
 	}
 	#endif
 	template<>
@@ -179,9 +181,9 @@ namespace asapi
 	}
 	#ifdef IS_EDITOR
 	template<>
-	void Uniform<int32_t>::OnGUI()
+	bool Uniform<int32_t>::OnGUI()
 	{
-		ImGui::InputInt(m_name.c_str(), &m_data );
+		return ImGui::InputInt(m_name.c_str(), &m_data );
 	}
 	#endif
 	template<>
@@ -213,11 +215,12 @@ namespace asapi
 	}
 	#ifdef IS_EDITOR
 	template<>
-	void Uniform<ResourcePtr<Texture>>::OnGUI()
+	bool Uniform<ResourcePtr<Texture>>::OnGUI()
 	{
 		ImGui::LabelText(m_name.c_str(), m_data->GetName());
 		void* my_void_ptr = (void*)(intptr_t)m_data->GetTextureID();
 		ImGui::Image(my_void_ptr, ImVec2(100.0f, 100.0f));
+		return false;
 	}
 	#endif
 	template<>
