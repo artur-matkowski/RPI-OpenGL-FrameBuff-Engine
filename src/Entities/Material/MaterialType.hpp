@@ -33,6 +33,8 @@ namespace asapi
 		void LoadShader(const char*);
 		Uniform<glm::mat4>* GetModelViewMatrix(){ return p_modelViewUniform; }
 
+		inline bool IsValid(){ return p_modelViewUniform != nullptr; }
+
 		inline UniformInterface* GetUniformPtr(const char* uniformName)
 		{
 			UniformInterface* ret = nullptr;

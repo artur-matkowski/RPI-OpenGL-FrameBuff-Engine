@@ -32,8 +32,11 @@ namespace asapi
 
 		SYSTEMS::IO::MMAP mat;
 
+		if( !mat.IsValid() )
+			return;
+
 		mat.InitForRead(path);
-		
+
 		#ifdef IS_EDITOR
 		strncpy(m_shaderName, (char*)mat.Data(), 254);
 		#endif
@@ -168,8 +171,16 @@ namespace asapi
 
 		if(isAltered)
 		{
+			char extPath[MAX_PATH_SIZE];
+			char intPath[MAX_PATH_SIZE];
+
 			SaveInExt();
-			//Compile(...);
+
+
+			snprintf(extPath, MAX_PATH_SIZE-1, "%s/assets_ext/materials/%s.mat", SYSTEMS::GetObject().RESOURCES.GetProjectPath(), m_MaterialName);
+			snprintf(intPath, MAX_PATH_SIZE-1, "%s/assets_int/materials/%s.mat", SYSTEMS::GetObject().RESOURCES.GetProjectPath(), m_MaterialName);
+
+			Compile(extPath, intPath);
 		}
 	}
 	void MaterialType::SaveInExt()
@@ -193,6 +204,26 @@ namespace asapi
 
 	void MaterialType::Compile(const char* dest, const char* source)
 	{
+		FILE *src, *dst;
+		long int srcSize, dstSize;
 
+		src = fopen (source,"rb");
+		fseek(src, 0L, SEEK_END); 
+		srcSize = ftell(src); 
+		fseek(src, 0L, SEEK_SET);
+
+		char* buff = new char[srcSize];
+
+		fread(buff, sizeof(char), srcSize, src);
+
+		delete buff;
+
+		fclose(src); 
+
+
+		dst = fopen (dest,"wb");
+		fwrite(buff, 1, srcSize, dst);
+		fwrite(" \n ", 1, 3, dst);
+		fclose(dst); 
 	}
 }

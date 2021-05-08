@@ -31,7 +31,7 @@ namespace asapi
 
 		p_meshComponent = (MeshComponent*)m_owner->GET_COMPONENT(MeshComponent);
 
-		if( m_material.GetRawPtr() != nullptr && p_meshComponent != nullptr)
+		if( m_material.GetRawPtr() != nullptr && m_material->IsValid() && p_meshComponent != nullptr)
 		{
 			//if you would ever try to update renderer component on the fly, you need to first unregister it from 
 			//renderer system, to unbound mesh from material render queue.
@@ -74,22 +74,54 @@ namespace asapi
 	#ifdef IS_EDITOR
 	void RendererComponent::OnGUI()
 	{
+		std::vector<std::string>* items = SYSTEMS::GetObject().RESOURCES.GetMaterialsPaths();
+        bool isAltered = false;
 
-		{
-			char buff1[255];
-			strncpy(buff1, m_MaterialName.c_str(), 255 );
+		if (ImGui::BeginCombo("Material resource", m_MaterialName.c_str() ))
+        {
+            for (int n = 0; n < items->size(); n++)
+            {
+            	const char* displayName = strstr( (*items)[n].c_str(), "/materials/") + strlen("/materials/");
+                const bool is_selected = strcmp( m_MaterialName.c_str(), (*items)[n].c_str() ) == 0;
+                if (ImGui::Selectable(displayName, is_selected))
+                {
+                	if( strcmp(buffMat, displayName)!=0 )
+                	{
+						m_MaterialName.clear();
+						m_MaterialName.sprintf(displayName);
 
-			if( ImGui::InputText("Material name",     buff1, 255, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue) )
-			{
-				log::debug << "updated material name " << buff1 << std::endl;
+						log::debug << "updated material name: " << displayName << std::endl;
 
-				m_MaterialName.clear();
-				m_MaterialName.sprintf(buff1);
+						OnIsDirty();
 
-				OnIsDirty();
-			}
+						isAltered = true;
+                	}
+                }
 
-		}
+                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
+
+
+
+		// {
+		// 	char buff1[255];
+		// 	strncpy(buff1, m_MaterialName.c_str(), 255 );
+
+		// 	if( ImGui::InputText("Material name",     buff1, 255, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue) )
+		// 	{
+		// 		log::debug << "updated material name " << buff1 << std::endl;
+
+		// 		m_MaterialName.clear();
+		// 		m_MaterialName.sprintf(buff1);
+
+		// 		OnIsDirty();
+		// 	}
+
+		// }
 		if(m_material.GetRawPtr()!=nullptr)
 			m_material->OnGUI();
 	}

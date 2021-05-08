@@ -142,7 +142,7 @@ namespace asapi
 				*res = m_materials[id];
 			}
 			
-			return true;
+			return (*res)->IsValid();
 		}
 
 		void dispouseResource(ResourcePtr<MaterialType>* res)

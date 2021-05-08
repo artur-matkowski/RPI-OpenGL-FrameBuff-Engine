@@ -305,9 +305,16 @@ namespace asapi{
 
 		programID = glCreateProgram();
 
-
-		vertex = LoadSingleShader(vertex_source, GL_VERTEX_SHADER, shaderName);
-		fragment = LoadSingleShader(fragment_source, GL_FRAGMENT_SHADER, shaderName);
+		if( vertex_source!=nullptr && fragment_source!=nullptr)
+		{
+			vertex = LoadSingleShader(vertex_source, GL_VERTEX_SHADER, shaderName);
+			fragment = LoadSingleShader(fragment_source, GL_FRAGMENT_SHADER, shaderName);
+		}
+		else
+		{
+			vertex = LoadSingleShader(VERTEX_SOURCE, GL_VERTEX_SHADER, shaderName);
+			fragment = LoadSingleShader(FRAGMENT_SOURCE, GL_FRAGMENT_SHADER, shaderName);
+		}
 
 
 		glAttachShader(programID, vertex);

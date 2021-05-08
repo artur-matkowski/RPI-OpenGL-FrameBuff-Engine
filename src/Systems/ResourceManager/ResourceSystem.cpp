@@ -216,6 +216,7 @@ namespace asapi{
 		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
 		strncat(dir_path, "/assets_int/materials", MAX_PATH_SIZE-1);
 		ScanDirForPaths(v_MaterialsPaths, dir_path);
+		RemoveExtensions(v_MaterialsPaths);
 
 		v_ShadersPaths.clear();
 		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
@@ -230,11 +231,19 @@ namespace asapi{
 	}
 	void ResourceSystem::OnGUI()
 	{
+		if (!ImGui::CollapsingHeader("Materials"))
+        	return;
+
 		for(auto it=m_materials.begin(); it!=m_materials.end(); ++it)
 		{
-			ImGui::LabelText("Material", it->first.c_str() );
-			ImGui::LabelText("Shader", it->second->GetShaderName() );
-			ImGui::Spacing();
+			if (ImGui::TreeNode( it->first.c_str() ))
+		    {
+				it->second->OnGUI();
+		        ImGui::TreePop();
+		    }
+
+			//ImGui::Spacing();
+        	ImGui::Separator();
 		}
 	}
 	#endif
