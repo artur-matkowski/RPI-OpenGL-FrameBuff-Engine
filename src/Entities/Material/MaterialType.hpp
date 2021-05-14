@@ -10,11 +10,10 @@
 
 namespace asapi
 {
+	#define MATERIAL_MAX_NAME_LENGTH 255
+
 	class MaterialType: public object
 	{
-		//SERIALIZABLE_VAR( std::string ) 			m_usedShader;
-		//SERIALIZABLE_VAR_VEC( std::string )		 	m_usedTextures;
-
 		ResourcePtr< Shader > 						m_shader;
 
 		int32_t										m_uniformsCount = 0;											
@@ -22,9 +21,8 @@ namespace asapi
 		Uniform<glm::mat4>*							p_modelViewUniform = nullptr;
 
 		#ifdef IS_EDITOR	
-		char										m_shaderName[255];
-		char										m_MaterialName[255];
-		void SaveInExt();
+		char										m_shaderName[MATERIAL_MAX_NAME_LENGTH] = {'\0'};
+		char										m_MaterialName[MATERIAL_MAX_NAME_LENGTH] = {'\0'};
 		#endif
 
 	public:
@@ -71,7 +69,9 @@ namespace asapi
 
 		#ifdef IS_EDITOR
 		void OnGUI();
+		void OnIsDirty();
 		const char* GetShaderName(){ return m_shaderName; }
+		const char* GetMaterialName(){ return m_MaterialName; }
 		#endif
 
 		static void Compile(const char* dest, const char* source);

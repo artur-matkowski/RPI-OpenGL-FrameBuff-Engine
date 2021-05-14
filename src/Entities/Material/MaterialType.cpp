@@ -16,7 +16,8 @@ namespace asapi
 			p_uniforms[i]->~UniformInterface();
 			DEALLOCATE_GLOBAL(p_uniforms[i]);
 		}
-		DEALLOCATE_GLOBAL(p_uniforms);
+		if(p_uniforms!=nullptr)
+			DEALLOCATE_GLOBAL(p_uniforms);
 		log::debug << "MaterialType::~MaterialType() " << std::endl;
 	}
 
@@ -24,20 +25,21 @@ namespace asapi
 	{
 		char path[MAX_PATH_SIZE];
 
-		#ifdef IS_EDITOR	
-		strncpy(m_MaterialName, materialName, 254);
-		#endif
 		snprintf(path, MAX_PATH_SIZE-1, "%s/assets_ext/materials/%s.mat", SYSTEMS::GetObject().RESOURCES.GetProjectPath(), materialName);
 
 
 		SYSTEMS::IO::MMAP mat;
 
 		if( !mat.IsValid() )
+		{
+			log::warning << "Could not find material: " << materialName << std::endl;
 			return;
-
+		}
+		
 		mat.InitForRead(path);
 
 		#ifdef IS_EDITOR
+		strncpy(m_MaterialName, materialName, 254);
 		strncpy(m_shaderName, (char*)mat.Data(), 254);
 		#endif
 
@@ -147,7 +149,7 @@ namespace asapi
                 {
                 	if( strcmp(m_shaderName, displayName)!=0 )
                 	{
-						strncpy(m_shaderName, displayName, 254);
+						strncpy(m_shaderName, displayName, MATERIAL_MAX_NAME_LENGTH-1);
 
 						log::debug << "updated shader name: " << displayName << std::endl;
 
@@ -171,33 +173,32 @@ namespace asapi
 
 		if(isAltered)
 		{
-			char extPath[MAX_PATH_SIZE];
-			char intPath[MAX_PATH_SIZE];
-
-			SaveInExt();
-
-
-			snprintf(extPath, MAX_PATH_SIZE-1, "%s/assets_ext/materials/%s.mat", SYSTEMS::GetObject().RESOURCES.GetProjectPath(), m_MaterialName);
-			snprintf(intPath, MAX_PATH_SIZE-1, "%s/assets_int/materials/%s.mat", SYSTEMS::GetObject().RESOURCES.GetProjectPath(), m_MaterialName);
-
-			Compile(extPath, intPath);
+			OnIsDirty();
 		}
 	}
-	void MaterialType::SaveInExt()
+	void MaterialType::OnIsDirty()
 	{
-		char path[MAX_PATH_SIZE];
-		snprintf(path, MAX_PATH_SIZE-1, "%s/assets_ext/materials/%s.mat", SYSTEMS::GetObject().RESOURCES.GetProjectPath(), m_MaterialName);
+		char extPath[MAX_PATH_SIZE];
 
-		SYSTEMS::IO::MMAP mat;
-
-		mat.InitForWrite(path, 4096);
-		char* data = (char*)mat.Data();
-
-		data += snprintf(data, 254, m_shaderName) + 1;
-
-		for(int i=0; i<m_uniformsCount; ++i)
+		if( strlen(m_MaterialName)!=0  )
 		{
-			data += p_uniforms[i]->sprintf(data) + 1;
+			snprintf(extPath, MAX_PATH_SIZE-1, "%s/assets_ext/materials/%s.mat", SYSTEMS::GetObject().RESOURCES.GetProjectPath(), m_MaterialName);
+
+			SYSTEMS::IO::MMAP mat;
+
+			mat.InitForWrite(extPath, 4096);
+			char* data = (char*)mat.Data();
+
+			data += snprintf(data, MATERIAL_MAX_NAME_LENGTH, m_shaderName) + 1;
+
+			// for(int i=0; i<m_uniformsCount; ++i)
+			// {
+			// 	data += p_uniforms[i]->sprintf(data) + 1;
+			// }
+		}
+		else
+		{
+			log::warning << "Could not save material as name length is 0 " << std::endl;
 		}
 	}
 	#endif

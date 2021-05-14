@@ -63,6 +63,8 @@ namespace asapi
 				void InitForRead(const char* filename);
 				void InitForWrite(const char* filename, size_t size);
 
+				void Close();
+
 				bool IsValid(){ return fd!=-1; }
 				void* Data(){ return data; }
 				uint32_t Size(){ return sb.st_size; }

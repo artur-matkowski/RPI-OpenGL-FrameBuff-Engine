@@ -229,15 +229,33 @@ namespace asapi{
 		strncat(dir_path, "/assets_int/meshes", MAX_PATH_SIZE-1);
 		ScanDirForPaths(v_MeshesPaths, dir_path, ".mmp");
 	}
+
 	void ResourceSystem::OnGUI()
 	{
+		static char  namebuff[MATERIAL_MAX_NAME_LENGTH] = {'\0'};
+		bool doRefreshResources = false;
+
 		if (!ImGui::CollapsingHeader("Materials"))
         	return;
 
 		for(auto it=m_materials.begin(); it!=m_materials.end(); ++it)
 		{
-			if (ImGui::TreeNode( it->first.c_str() ))
+			if (ImGui::TreeNode( it->second->GetMaterialName() ))
 		    {
+		    	if (ImGui::TreeNode( "Rename Material" ))
+		    	{
+		    		if(namebuff[0]=='\0')
+		    			strncpy(namebuff, it->second->GetMaterialName(), MATERIAL_MAX_NAME_LENGTH-1);
+
+	    			if( ImGui::InputText( "Material name", namebuff, MATERIAL_MAX_NAME_LENGTH-1, ImGuiInputTextFlags_EnterReturnsTrue) )
+	    			{
+	    				unlink( it->second->GetMaterialName() );
+		    			strncpy((char*)it->second->GetMaterialName(), namebuff, MATERIAL_MAX_NAME_LENGTH-1);
+		    			it->second->OnIsDirty();
+		    			doRefreshResources = true;
+	    			}
+		        	ImGui::TreePop();		    		
+		    	}
 				it->second->OnGUI();
 		        ImGui::TreePop();
 		    }
@@ -245,6 +263,9 @@ namespace asapi{
 			//ImGui::Spacing();
         	ImGui::Separator();
 		}
+
+		// if(doRefreshResources)
+		//     RefreshResources();
 	}
 	#endif
 

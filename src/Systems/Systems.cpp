@@ -119,6 +119,7 @@ namespace asapi
 
 	void SYSTEMS::IO::MMAP::InitForWrite(const char* filename, size_t size)
 	{
+		unlink(filename);
 		fd = open(filename, O_RDWR | O_CREAT | O_TRUNC | O_SYNC, (mode_t)0666);
 		if (fd == -1)
 		{
@@ -129,8 +130,9 @@ namespace asapi
 		const int pageSize = getpagesize();
 		sb.st_size = size / pageSize + pageSize;
 
-		data = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);	
+		data = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
 		ftruncate(fd, size);
+		bzero(data, size);
 
 		if (data == MAP_FAILED)
 			log::error << "Failed to mmap file: " << filename << std::endl;	
@@ -139,8 +141,25 @@ namespace asapi
 	SYSTEMS::IO::MMAP::~MMAP()
 	{
 		if(data != MAP_FAILED && data != nullptr)
+		{
+			msync(data, sb.st_size, MS_SYNC);
 			munmap(data, sb.st_size);
+		}
 		if(fd!=-1)
 			close(fd);
+	}
+
+	void SYSTEMS::IO::MMAP::Close()
+	{
+		if(data != MAP_FAILED && data != nullptr)
+		{
+			msync(data, sb.st_size, MS_SYNC);
+			munmap(data, sb.st_size);
+		}
+		if(fd!=-1)
+			close(fd);
+
+		data = nullptr;
+		fd = -1;
 	}
 }
