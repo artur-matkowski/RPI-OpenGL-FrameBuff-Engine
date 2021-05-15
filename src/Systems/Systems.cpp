@@ -130,9 +130,9 @@ namespace asapi
 		const int pageSize = getpagesize();
 		sb.st_size = size / pageSize + pageSize;
 
-		data = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-		ftruncate(fd, size);
-		bzero(data, size);
+		data = mmap(NULL, sb.st_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+		ftruncate(fd, sb.st_size);
+		bzero(data, sb.st_size);
 
 		if (data == MAP_FAILED)
 			log::error << "Failed to mmap file: " << filename << std::endl;	
