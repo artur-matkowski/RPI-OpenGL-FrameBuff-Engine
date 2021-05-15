@@ -26,6 +26,8 @@ namespace asapi
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;
 		virtual void OnIsDirty() override;
+
+		virtual void PreSerializationCallback() override;
 	
 	
 		void Render(glm::mat4* projectionMatrix, glm::mat4* viewMatrix);

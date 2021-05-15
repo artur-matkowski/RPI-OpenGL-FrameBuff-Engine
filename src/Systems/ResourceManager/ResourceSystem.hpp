@@ -28,6 +28,8 @@ namespace asapi
 		std::vector<std::string>							v_MaterialsPaths;
 		std::vector<std::string>							v_ShadersPaths;
 		std::vector<std::string>							v_MeshesPaths;
+
+		std::vector<RendererComponent*>						v_rendererComponentsOnScene;
 		#endif
 
 	public:
@@ -42,6 +44,9 @@ namespace asapi
 		std::vector<std::string>* GetShadersPaths(){ return &v_ShadersPaths; }
 		std::vector<std::string>* GetMeshesPaths(){ return &v_MeshesPaths; }
 		void OnGUI();
+		void RegisterRendererComponent(RendererComponent*);
+		void UnRegisterRendererComponent(RendererComponent*);
+		void OnRenderersDirty();
 		#endif
 
 		bool requestResource(ResourcePtr<Texture>* res, const char* str)

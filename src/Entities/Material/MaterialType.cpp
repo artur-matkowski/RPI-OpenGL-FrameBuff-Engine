@@ -30,13 +30,14 @@ namespace asapi
 
 		SYSTEMS::IO::MMAP mat;
 
+		mat.InitForRead(path);
+		
 		if( !mat.IsValid() )
 		{
-			log::warning << "Could not find material: " << materialName << std::endl;
+			log::warning << "Could not find material: " << path << std::endl;
 			return;
 		}
 		
-		mat.InitForRead(path);
 
 		#ifdef IS_EDITOR
 		strncpy(m_MaterialName, materialName, 254);
@@ -200,6 +201,7 @@ namespace asapi
 		{
 			log::warning << "Could not save material as name length is 0 " << std::endl;
 		}
+		SYSTEMS::GetObject().RESOURCES.OnRenderersDirty();
 	}
 	#endif
 

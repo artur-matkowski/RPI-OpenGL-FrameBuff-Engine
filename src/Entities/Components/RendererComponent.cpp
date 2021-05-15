@@ -17,11 +17,14 @@ namespace asapi
 
 	void RendererComponent::OnAttach()
 	{
-		p_modelViewMat = ((Transform3D*)m_owner->GET_COMPONENT(Transform3D))->GetModelMatrix();		
+		p_modelViewMat = ((Transform3D*)m_owner->GET_COMPONENT(Transform3D))->GetModelMatrix();
+		SYSTEMS::GetObject().RESOURCES.RegisterRendererComponent( this );
+
 	}
 	void RendererComponent::OnDetach()
 	{
 		SYSTEMS::GetObject().RENDERER.UnRegisterRenderer( this );
+		SYSTEMS::GetObject().RESOURCES.UnRegisterRendererComponent( this );
 	}
 	void RendererComponent::OnIsDirty()
 	{
@@ -71,11 +74,24 @@ namespace asapi
 		// glDisableVertexAttribArray(2);
 	}
 	
+	void RendererComponent::PreSerializationCallback()
+	{
+		m_MaterialName.clear();
+		m_MaterialName.sprintf(m_material->GetMaterialName());
+	}
+
 	#ifdef IS_EDITOR
 	void RendererComponent::OnGUI()
 	{
 		std::vector<std::string>* items = SYSTEMS::GetObject().RESOURCES.GetMaterialsPaths();
         bool isAltered = false;
+
+
+        if( strcmp(m_MaterialName.c_str(), m_material->GetMaterialName())!=0 )
+        {
+			m_MaterialName.clear();
+			m_MaterialName.sprintf(m_material->GetMaterialName());
+        }
 
 		if (ImGui::BeginCombo("Material resource", m_MaterialName.c_str() ))
         {
@@ -85,12 +101,13 @@ namespace asapi
                 const bool is_selected = strcmp( m_MaterialName.c_str(), (*items)[n].c_str() ) == 0;
                 if (ImGui::Selectable(displayName, is_selected))
                 {
-                	if( strcmp(buffMat, displayName)!=0 )
+                	if( strcmp(m_MaterialName.c_str(), displayName)!=0 )
                 	{
+						log::debug << "updating material name from: " << m_MaterialName.c_str() << " to: " << displayName << std::endl;
+
 						m_MaterialName.clear();
 						m_MaterialName.sprintf(displayName);
 
-						log::debug << "updated material name: " << displayName << std::endl;
 
 						OnIsDirty();
 

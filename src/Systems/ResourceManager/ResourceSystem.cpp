@@ -253,6 +253,7 @@ namespace asapi{
 		    			strncpy((char*)it->second->GetMaterialName(), namebuff, MATERIAL_MAX_NAME_LENGTH-1);
 		    			it->second->OnIsDirty();
 		    			doRefreshResources = true;
+						SYSTEMS::GetObject().RESOURCES.OnRenderersDirty();
 	    			}
 		        	ImGui::TreePop();		    		
 		    	}
@@ -266,6 +267,28 @@ namespace asapi{
 
 		// if(doRefreshResources)
 		//     RefreshResources();
+	}
+	void ResourceSystem::RegisterRendererComponent(RendererComponent* obj)
+	{
+		v_rendererComponentsOnScene.push_back(obj);
+	}
+	void ResourceSystem::UnRegisterRendererComponent(RendererComponent* obj)
+	{
+		for(auto it = v_rendererComponentsOnScene.begin(); it!=v_rendererComponentsOnScene.end(); ++it)
+		{
+			if( *it==obj )
+			{
+				v_rendererComponentsOnScene.erase(it);
+				break;
+			}
+		}
+	}
+	void ResourceSystem::OnRenderersDirty()
+	{
+		for(int i=0; i<v_rendererComponentsOnScene.size(); ++i)
+		{
+			v_rendererComponentsOnScene[i]->OnIsDirty();
+		}
 	}
 	#endif
 
