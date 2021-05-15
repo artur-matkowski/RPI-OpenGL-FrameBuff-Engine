@@ -192,10 +192,10 @@ namespace asapi
 
 			data += snprintf(data, MATERIAL_MAX_NAME_LENGTH, m_shaderName) + 1;
 
-			// for(int i=0; i<m_uniformsCount; ++i)
-			// {
-			// 	data += p_uniforms[i]->sprintf(data) + 1;
-			// }
+			for(int i=0; i<m_uniformsCount; ++i)
+			{
+				data += p_uniforms[i]->sprintf(data) + 1;
+			}
 		}
 		else
 		{
