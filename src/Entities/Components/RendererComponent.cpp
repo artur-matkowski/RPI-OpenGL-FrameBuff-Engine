@@ -18,13 +18,17 @@ namespace asapi
 	void RendererComponent::OnAttach()
 	{
 		p_modelViewMat = ((Transform3D*)m_owner->GET_COMPONENT(Transform3D))->GetModelMatrix();
+		#ifdef IS_EDITOR
 		SYSTEMS::GetObject().RESOURCES.RegisterRendererComponent( this );
+		#endif
 
 	}
 	void RendererComponent::OnDetach()
 	{
 		SYSTEMS::GetObject().RENDERER.UnRegisterRenderer( this );
+		#ifdef IS_EDITOR
 		SYSTEMS::GetObject().RESOURCES.UnRegisterRendererComponent( this );
+		#endif
 	}
 	void RendererComponent::OnIsDirty()
 	{
@@ -77,7 +81,9 @@ namespace asapi
 	void RendererComponent::PreSerializationCallback()
 	{
 		m_MaterialName.clear();
+		#ifdef IS_EDITOR
 		m_MaterialName.sprintf(m_material->GetMaterialName());
+		#endif
 	}
 
 	#ifdef IS_EDITOR
