@@ -206,7 +206,10 @@ namespace asapi
 	template<>
 	void Uniform<ResourcePtr<Texture>>::SendUniform()
 	{
-		m_data->BindTexture();
+		if(m_isDirty)
+		{
+			m_data->BindTexture();
+		}
 	}
 	template<>
 	void Uniform<ResourcePtr<Texture>>::SendUniform(const ResourcePtr<Texture>& override) const
@@ -217,10 +220,44 @@ namespace asapi
 	template<>
 	bool Uniform<ResourcePtr<Texture>>::OnGUI()
 	{
-		ImGui::LabelText(m_name.c_str(), m_data->GetName());
-		void* my_void_ptr = (void*)(intptr_t)m_data->GetTextureID();
-		ImGui::Image(my_void_ptr, ImVec2(100.0f, 100.0f));
-		return false;
+        bool ret = false;
+
+		if (ImGui::BeginCombo("Texture resource", m_data->GetName() ))
+        {
+			std::vector<std::string>* items = SYSTEMS::GetObject().RESOURCES.GetTexturesPaths();
+
+            for (int n = 0; n < items->size(); n++)
+            {
+            	const char* displayName = strstr( (*items)[n].c_str(), "/textures/") + strlen("/textures/");
+                const bool is_selected = strcmp( m_data->GetName(), (*items)[n].c_str() ) == 0;
+                if (ImGui::Selectable(displayName, is_selected))
+                {
+                	if( strcmp(m_data->GetName(), displayName)!=0 )
+                	{
+						log::debug << "updating texture name from: " << m_data->GetName() << " to: " << displayName << std::endl;
+
+						SYSTEMS::GetObject().RESOURCES.requestResource( &m_data, displayName );
+			    		m_isDirty = true;
+			    		ret = true;
+                	}
+                }
+
+                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
+
+
+		if( m_data.GetRawPtr()!=nullptr )
+		{
+			//ImGui::LabelText(m_name.c_str(), m_data->GetName());
+			void* my_void_ptr = (void*)(intptr_t)m_data->GetTextureID();
+			ImGui::Image(my_void_ptr, ImVec2(100.0f, 100.0f));
+
+		}
+		return ret;
 	}
 	#endif
 	template<>
@@ -232,12 +269,17 @@ namespace asapi
 	template<>
 	int Uniform<ResourcePtr<Texture>>::sprintf(char* str)
 	{
+		int ret = -1;
+
 		#ifdef IS_EDITOR
-		return ::sprintf(str, "%s", m_data->GetName());
+		if( m_data.GetRawPtr()!=nullptr )
+		{
+			ret = ::sprintf(str, "%s", m_data->GetName());
+		}
 		#else
 		log::error << "can not save material in player" << std::endl;
-		exit(0);
-		return -1;
 		#endif
+
+		return ret;
 	}
 }

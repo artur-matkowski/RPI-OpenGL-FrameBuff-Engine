@@ -31,7 +31,7 @@ namespace asapi
 		SYSTEMS::IO::MMAP mat;
 
 		mat.InitForRead(path);
-		
+
 		if( !mat.IsValid() )
 		{
 			log::warning << "Could not find material: " << path << std::endl;
@@ -45,6 +45,20 @@ namespace asapi
 		#endif
 
 		LoadShader( (char*)mat.Data() );
+
+		char* data = (char*)mat.Data();
+		for(; *data!='\0'; ++data );
+		++data;
+
+		for(int i=0; i<m_uniformsCount; ++i)
+		{
+			p_uniforms[i]->sscanf(data);
+			
+			for(; *data!='\0'; ++data );
+			++data;
+		}
+
+
 	}
 	void MaterialType::LoadShader(const char* shaderName)
 	{
@@ -120,8 +134,8 @@ namespace asapi
 		    	case GL_SAMPLER_2D:
 		    		p_uniforms[i] = (UniformInterface*)materialsMemBlock->allocate(1, sizeof(Uniform<ResourcePtr<Texture>>), alignof(Uniform<ResourcePtr<Texture>>));
 		    		new (p_uniforms[i]) Uniform<ResourcePtr<Texture>>(location, name, metadataMemBlock);
-					systems.RESOURCES.requestResource( &texturePtr, "debug.png" );
-		    		((Uniform<ResourcePtr<Texture>>*)p_uniforms[i])->SetUniform(texturePtr);
+					// systems.RESOURCES.requestResource( &texturePtr, "debug.png" );
+		   //  		((Uniform<ResourcePtr<Texture>>*)p_uniforms[i])->SetUniform(texturePtr);
 		    		break;		    		
 		    	default:
 		    		char buff[128];

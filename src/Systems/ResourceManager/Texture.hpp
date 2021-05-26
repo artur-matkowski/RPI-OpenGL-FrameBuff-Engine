@@ -1,6 +1,9 @@
 #ifndef _H_Texture
 #define _H_Texture
 #include <GLES2/gl2.h>
+#ifdef IS_EDITOR
+#include <cstring>
+#endif
 
 namespace asapi
 {
@@ -24,16 +27,17 @@ namespace asapi
 
 		inline const void BindTexture() const
 		{
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, m_textureID);
+			glActiveTexture( GL_TEXTURE0 );
+			glBindTexture( GL_TEXTURE_2D, m_textureID );
 
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+			glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 		}
 
 
 		#ifdef IS_EDITOR
 		const char* GetName(){ return name; }
+		inline void SetName(const char* in){ strncpy(name, in, 256); }
 		#endif
 		
 		uint32_t GetTextureID() {return m_textureID; }
