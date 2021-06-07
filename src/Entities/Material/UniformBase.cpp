@@ -95,6 +95,41 @@ namespace asapi
 	}
 
 
+	template class Uniform<glm::vec4>;
+	template<>
+	void Uniform<glm::vec4>::SendUniform()
+	{
+		if(m_isDirty)
+		{
+			glUniform4fv(m_location, 1, glm::value_ptr(m_data) );
+			m_isDirty = false;
+		}
+	}
+	template<>
+	void Uniform<glm::vec4>::SendUniform(const glm::vec4& override) const
+	{
+		glUniform4fv(m_location, 1, glm::value_ptr(override) );
+	}
+	#ifdef IS_EDITOR
+	template<>
+	bool Uniform<glm::vec4>::OnGUI()
+	{
+		return ImGui::InputFloat4(m_name.c_str(), glm::value_ptr(m_data) );
+	}
+	#endif
+	template<>
+	void Uniform<glm::vec4>::sscanf(const char* str )
+	{
+		::sscanf(str, "%f:%f:%f:%f", &m_data.r, &m_data.g, &m_data.b, &m_data.a);
+		m_isDirty = true;
+	}
+	template<>
+	int Uniform<glm::vec4>::sprintf(char* str)
+	{
+		return ::sprintf(str, "%f:%f:%f:%f", m_data.r, m_data.g, m_data.b, m_data.a);
+	}
+
+
 	template class Uniform<glm::mat4>;
 	template<>
 	void Uniform<glm::mat4>::SendUniform()
