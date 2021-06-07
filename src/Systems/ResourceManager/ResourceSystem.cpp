@@ -147,6 +147,31 @@ namespace asapi{
     	return ret;
 	}
 
+	void ResourceSystem::BuildDirectoryStructure()
+	{
+		char dir_path[MAX_PATH_SIZE];
+		
+		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
+		strncat(dir_path, "/assets_int", MAX_PATH_SIZE-1);
+		mkdir(dir_path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
+		strncat(dir_path, "/assets_int/textures", MAX_PATH_SIZE-1);
+		mkdir(dir_path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
+		strncat(dir_path, "/assets_int/materials", MAX_PATH_SIZE-1);
+		mkdir(dir_path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
+		strncat(dir_path, "/assets_int/shaders", MAX_PATH_SIZE-1);
+		mkdir(dir_path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
+		strncat(dir_path, "/assets_int/meshes", MAX_PATH_SIZE-1);
+		mkdir(dir_path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+	}
+
 	void ResourceSystem::RefreshResources()
 	{
 		char buff[MAX_PATH_SIZE];
@@ -154,12 +179,14 @@ namespace asapi{
 		if(strcmp(m_ProjectPath, ".")==0)
 			return;
 
+
 		std::vector<std::string> TexturesPaths;
 		std::vector<std::string> MaterialsPaths;
 		std::vector<std::string> ShadersPaths;
 		std::vector<std::string> MeshesPaths;
 
 		char dir_path[MAX_PATH_SIZE];
+
 
 		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
 		strncat(dir_path, "/assets_ext/textures", MAX_PATH_SIZE-1);
@@ -176,6 +203,8 @@ namespace asapi{
 		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
 		strncat(dir_path, "/assets_ext/meshes", MAX_PATH_SIZE-1);
 		ScanDirForPaths(MeshesPaths, dir_path);
+
+		BuildDirectoryStructure();
 
 		//log::debug << "Scanning for files showed follow files in project folder:" << std::endl;
 		for(int i=0; i<TexturesPaths.size(); ++i)
@@ -206,6 +235,7 @@ namespace asapi{
 				Mesh::Compile(buff, MeshesPaths[i].c_str());
 			}
 		}
+
 
 		v_TexturesPaths.clear();
 		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);

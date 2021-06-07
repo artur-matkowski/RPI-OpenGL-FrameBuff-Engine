@@ -30,6 +30,8 @@ namespace asapi
 		std::vector<std::string>							v_MeshesPaths;
 
 		std::vector<RendererComponent*>						v_rendererComponentsOnScene;
+
+		void BuildDirectoryStructure();
 		#endif
 
 	public:
