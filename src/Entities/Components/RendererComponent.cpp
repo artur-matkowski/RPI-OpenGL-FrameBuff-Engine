@@ -34,7 +34,17 @@ namespace asapi
 	{
 		SYSTEMS& systems = SYSTEMS::GetObject();
 		
-		systems.RESOURCES.requestResource( &m_material, m_MaterialName.c_str() );
+		if( m_material.IsValid() )
+		{
+			if( strcmp( m_material->GetMaterialName(), m_MaterialName.c_str() )!=0 )
+			{
+				systems.RESOURCES.requestResource( &m_material, m_MaterialName.c_str() );
+			}
+		}
+		else
+		{
+			systems.RESOURCES.requestResource( &m_material, m_MaterialName.c_str() );			
+		}
 
 		p_meshComponent = (MeshComponent*)m_owner->GET_COMPONENT(MeshComponent);
 

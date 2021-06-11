@@ -45,6 +45,8 @@ public:
 		return (void*)pData;
 	}
 
+	inline bool IsValid() { return pData!=nullptr; }
+
     
     ResourcePtr<T>& operator = (const ResourcePtr<T>& sp);
 

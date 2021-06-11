@@ -257,14 +257,16 @@ namespace asapi
 	{
         bool ret = false;
 
-		if (ImGui::BeginCombo("Texture resource", m_data->GetName() ))
+        const bool hasSelectedTexture = m_data.GetRawPtr()!=nullptr;
+
+		if (ImGui::BeginCombo("Texture resource", hasSelectedTexture ? m_data->GetName() : " " ))
         {
 			std::vector<std::string>* items = SYSTEMS::GetObject().RESOURCES.GetTexturesPaths();
 
             for (int n = 0; n < items->size(); n++)
             {
             	const char* displayName = strstr( (*items)[n].c_str(), "/textures/") + strlen("/textures/");
-                const bool is_selected = strcmp( m_data->GetName(), (*items)[n].c_str() ) == 0;
+                const bool is_selected = hasSelectedTexture && (strcmp( m_data->GetName(), (*items)[n].c_str() ) == 0);
                 if (ImGui::Selectable(displayName, is_selected))
                 {
                 	if( strcmp(m_data->GetName(), displayName)!=0 )
