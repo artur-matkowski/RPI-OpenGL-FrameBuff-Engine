@@ -259,7 +259,7 @@ namespace asapi
 
         const bool hasSelectedTexture = m_data.GetRawPtr()!=nullptr;
 
-		if (ImGui::BeginCombo("Texture resource", hasSelectedTexture ? m_data->GetName() : " " ))
+		if (ImGui::BeginCombo("Texture resource", m_data->GetName()))
         {
 			std::vector<std::string>* items = SYSTEMS::GetObject().RESOURCES.GetTexturesPaths();
 

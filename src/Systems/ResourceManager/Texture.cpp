@@ -105,6 +105,7 @@ namespace asapi
 	                 &interlace_type, NULL, NULL);
 	 
 	    unsigned int row_bytes = png_get_rowbytes(png_ptr, info_ptr);
+	    log::debug << "====" << bit_depth << std::endl;
 	    GLubyte* textureImage = (unsigned char*) malloc(row_bytes * height);
 	 
 	    png_bytepp row_pointers = png_get_rows(png_ptr, info_ptr);

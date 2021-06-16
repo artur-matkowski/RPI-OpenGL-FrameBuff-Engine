@@ -20,7 +20,8 @@ ResourcePtr<T>::~ResourcePtr()
 	    }
 	    else if( *reference == 0 )
 	    {
-	    	delete reference;  	
+	    	delete reference;
+	    	reference = 0;
 	    }
 	    
 	}	    
@@ -41,7 +42,8 @@ void ResourcePtr<T>::Rebuild(T* pValue)
 	    }
 	    else if( *reference == 0 )
 	    {
-	    	delete reference;  	 	
+	    	delete reference;
+	    	reference = 0;
 	    }
 	}
 
@@ -66,6 +68,7 @@ ResourcePtr<T>& ResourcePtr<T>::operator = (const ResourcePtr<T>& sp)
 		    else if( *reference == 0 )
 		    {
 	    		delete reference; 
+	    		reference = 0;
 		    }
     	}
 

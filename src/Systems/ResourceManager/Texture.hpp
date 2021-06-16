@@ -36,11 +36,11 @@ namespace asapi
 
 
 		#ifdef IS_EDITOR
-		const char* GetName(){ return name; }
+		const char* GetName(){ return this!=nullptr ? name : "nullptr"; }
 		inline void SetName(const char* in){ strncpy(name, in, 256); }
 		#endif
 		
-		uint32_t GetTextureID() {return m_textureID; }
+		uint32_t GetTextureID() {return m_textureID; } 
 
 		static void Compile(const char* dest, const char* source);
 	};
