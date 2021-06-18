@@ -10,7 +10,7 @@ namespace asapi
 		png_structp png_ptr;
 	    png_infop info_ptr;
 	    unsigned int sig_read = 0;
-	    int color_type, interlace_type;
+	    int interlace_type;
 	    FILE *fp;
 	 
 	    if ((fp = fopen(filename, "rb")) == NULL)
@@ -100,12 +100,14 @@ namespace asapi
 	    png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_STRIP_16 | PNG_TRANSFORM_PACKING | PNG_TRANSFORM_EXPAND, NULL);
 	 
 	    png_uint_32 width, height;
-	    int bit_depth;
 	    png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type,
 	                 &interlace_type, NULL, NULL);
 	 
 	    unsigned int row_bytes = png_get_rowbytes(png_ptr, info_ptr);
-	    log::debug << "====" << bit_depth << std::endl;
+	    m_encoding = (uint8_t) png_get_channels(png_ptr, info_ptr);
+
+
+
 	    GLubyte* textureImage = (unsigned char*) malloc(row_bytes * height);
 	 
 	    png_bytepp row_pointers = png_get_rows(png_ptr, info_ptr);
@@ -114,7 +116,7 @@ namespace asapi
 	        // note that png is ordered top to
 	        // bottom, but OpenGL expect it bottom to top
 	        // so the order or swapped
-	        memcpy(textureImage+(row_bytes * (height-1-i)), row_pointers[i], row_bytes);
+	        memcpy(textureImage+(row_bytes * (i)), row_pointers[i], row_bytes);
 	    }
 	 
 	    /* Clean up after the read,
@@ -162,14 +164,27 @@ namespace asapi
 		
 		glBindTexture(GL_TEXTURE_2D, m_textureID);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width,
-	             m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-	             textureImage);
+	    if(m_encoding == 3)
+	    {
+	    	//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width,
+		             m_height, 0, GL_RGB, GL_UNSIGNED_BYTE,
+		             textureImage);
+			log::debug << "founded encodeing is 3 " << bit_depth << std::endl; 
+	    }
+	    else
+	    {
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width,
+		             m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+		             textureImage);
+			log::debug << "founded encodeing is: " << m_encoding << std::endl;
+	    }
+
 	}
 
 

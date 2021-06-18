@@ -18,7 +18,7 @@
 }, {
 "m_componentTypeName": "asapi::MeshComponent", 
 "m_recreationString": "{
-\"m_meshName\": \"Cube.mmp\"
+\"m_meshName\": \"Plane.mmp\"
 }"
 }, {
 "m_componentTypeName": "asapi::RendererComponent", 

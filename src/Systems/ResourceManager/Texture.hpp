@@ -10,6 +10,9 @@ namespace asapi
 	class Texture
 	{
 		int m_width, m_height;
+		uint8_t m_encoding = 0; //channels count
+	    int bit_depth;
+	    int color_type;
 
 		uint32_t m_textureID = -1;
 
@@ -30,8 +33,8 @@ namespace asapi
 			glActiveTexture( GL_TEXTURE0 );
 			glBindTexture( GL_TEXTURE_2D, m_textureID );
 
-			glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-			glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+			glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+			glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 		}
 
 
@@ -41,6 +44,7 @@ namespace asapi
 		#endif
 		
 		uint32_t GetTextureID() {return m_textureID; } 
+		uint8_t GetTextureEncoding() { return m_encoding; }
 
 		static void Compile(const char* dest, const char* source);
 	};
