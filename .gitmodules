@@ -7,3 +7,9 @@
 [submodule "vendor/ImGuiFileDialog"]
 	path = vendor/ImGuiFileDialog
 	url = https://github.com/aiekick/ImGuiFileDialog.git
+[submodule "vendor/hash-library"]
+	path = vendor/hash-library
+	url = https://github.com/stbrumme/hash-library.git
+[submodule "vendor/bitforgeutils"]
+	path = vendor/bitforgeutils
+	url = git@gitlab.com:artur.matkowski/bitforgeutils.git
