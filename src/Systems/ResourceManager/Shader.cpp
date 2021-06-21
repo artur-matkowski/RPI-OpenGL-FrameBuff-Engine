@@ -1,6 +1,6 @@
 #include "Shader.hpp"
 #include "Systems.hpp"
-#include <bitforge/utils/bfu.hpp>
+#include "bfu.hpp"
 
 namespace asapi
 {

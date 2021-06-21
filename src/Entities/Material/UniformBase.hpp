@@ -1,7 +1,7 @@
 #ifndef _H_UniformBase
 #define _H_UniformBase
 #include "object.hpp"
-#include <bitforge/utils/bfu.hpp>
+#include "bfu.hpp"
 
 namespace asapi
 {

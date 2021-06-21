@@ -11,7 +11,7 @@
 #include <fcntl.h>    /* For O_RDWR */
 #include <unistd.h>   /* For open(), creat() */
 
-#include <bitforge/utils/bfu.hpp>
+#include "bfu.hpp"
 
 #include "DRM_GBM_EGL_ContextType.hpp"
 #include "Systems.hpp"

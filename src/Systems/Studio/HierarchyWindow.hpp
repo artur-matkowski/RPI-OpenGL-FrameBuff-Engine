@@ -2,7 +2,7 @@
 #define _H_HierarchyWindow
 #ifdef IS_EDITOR
 #include "GameObject.hpp"
-#include <bitforge/utils/bfu.hpp>	
+#include "bfu.hpp"	
 
 namespace asapi
 {

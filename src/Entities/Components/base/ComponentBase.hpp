@@ -3,7 +3,7 @@
 #include "ComponentInterface.hpp"
 #include <cxxabi.h>
 #include <vector>
-#include <bitforge/utils/bfu.hpp>
+#include "bfu.hpp"
 
 namespace asapi
 {

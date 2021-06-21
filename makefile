@@ -2,7 +2,7 @@ OUT		  	= asapi
 VERSION	 	= .1.0.0
 ARCHITECTURE = $(shell dpkg --print-architecture)
 
-CC 		  	= g++ -std=c++14 -I/usr/include/libdrm -I/usr/include/bitforge/utils
+CC 		  	= g++ -std=c++14 -I/usr/include/libdrm -Ivendor/bitforgeutils/inc
 
 CPPFLAGS 	= -I/usr/include/freetype2 -I/usr/include/freetype2/freetype -DIMGUI_IMPL_OPENGL_ES2 
 #-DDEBUG_MEMORY_ALLOC
@@ -21,7 +21,7 @@ DIRSTRUCTURE = $(shell find $(INCDIR) -type d)
 INCSTRUCTURE = $(patsubst %, -I%, $(DIRSTRUCTURE))
 
 
-DEPGL 		= -lGL -lEGL -lGLESv2  -ldrm -lgbm -lX11 -lXext -lbitforgeutils -lpng -lassimp
+DEPGL 		= -lGL -lEGL -lGLESv2  -ldrm -lgbm -lX11 -lXext -lpng -lassimp -Lvendor/bitforgeutils/build/amd64/rel/ -lbitforgeutils
 #DEPGL 		=  -lpng -lbrcmEGL -lbrcmGLESv2  -L/opt/vc/lib
 
 OBJECTS 	= $(SOURCES:%.cpp=$(OBJDIR)%.o)

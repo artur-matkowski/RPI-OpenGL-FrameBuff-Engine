@@ -22,11 +22,14 @@ OBJECTS 	= $(OBJECTS2:%.cpp=$(OBJDIR)%.o)
 DEPGL 		= -lGL -lEGL -lGLESv2
 
 
-lib: $(SOURCES)
+lib: $(SOURCES) bfu
 
 $(SOURCES):
 	$(CC) -c $(HEADER_DEPS) $(@).cpp -o $(OBJDIR)$(notdir $@).o -fPIC
 	@echo 
+
+bfu:
+	$(MAKE) -C bitforgeutils
 
 clean:
 	rm lib/*

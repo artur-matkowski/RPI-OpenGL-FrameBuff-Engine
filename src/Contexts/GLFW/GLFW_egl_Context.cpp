@@ -1,7 +1,7 @@
 #include "GLFW_egl_Context.hpp"
 #ifndef IS_TARGET
 #include <thread>
-#include <bitforge/utils/bfu.hpp>
+#include "bfu.hpp"
 #include "Systems.hpp"
 //#include "imgui_impl_opengl2.hpp"
 #ifdef IS_EDITOR

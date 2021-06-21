@@ -1,6 +1,6 @@
 #ifndef _H_CONTEXTBASE
 #define _H_CONTEXTBASE
-#include <bitforge/utils/bfu.hpp>
+#include "bfu.hpp"
 #include <EGL/egl.h>
 #include <chrono>
 #include "object.hpp"

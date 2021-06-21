@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <dirent.h>
-#include <bitforge/utils/bfu.hpp>
+#include "bfu.hpp"
 #include "Systems.hpp"
 
 namespace asapi

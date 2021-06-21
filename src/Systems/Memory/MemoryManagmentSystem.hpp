@@ -1,6 +1,6 @@
 #ifndef _H_MemoryManagmentSystem
 #define _H_MemoryManagmentSystem
-#include <bitforge/utils/bfu.hpp>
+#include "bfu.hpp"
 #include <vector>
 #include "object.hpp"
 

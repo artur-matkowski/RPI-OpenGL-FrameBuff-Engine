@@ -2,7 +2,7 @@
 #define _H_SYSTEMS
 #include <stdlib.h>
 #include <sys/stat.h>
-#include <bitforge/utils/bfu.hpp>
+#include "bfu.hpp"
 
 #include "object.hpp"
 #include "RendererSystem.hpp"

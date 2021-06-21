@@ -1,7 +1,7 @@
 #ifndef _H_UniqueID
 #define _H_UniqueID
 #include <cstdint>
-#include <bitforge/utils/bfu.hpp>
+#include "bfu.hpp"
 
 namespace asapi
 {

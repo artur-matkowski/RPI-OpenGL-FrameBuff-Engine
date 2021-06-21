@@ -1,6 +1,6 @@
 #ifndef _H_OBJECT
 #define _H_OBJECT
-#include <bitforge/utils/bfu.hpp>
+#include "bfu.hpp"
 #include "SharedPtr.hpp"
 #include "glm.hpp"
 #include "Profiler.hpp"

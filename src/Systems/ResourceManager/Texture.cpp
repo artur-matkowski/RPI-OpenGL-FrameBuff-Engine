@@ -1,7 +1,7 @@
 #include "Texture.hpp"
 #include "Systems.hpp"
 #include <png.h>
-#include <bitforge/utils/bfu.hpp>
+#include "bfu.hpp"
 
 namespace asapi
 {

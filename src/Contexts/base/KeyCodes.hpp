@@ -1,6 +1,6 @@
 #ifndef _h_snapicodes
 #define _h_snapicodes
-#include <bitforge/utils/bfu.hpp>
+#include "bfu.hpp"
 #ifdef IS_EDITOR
 #include <X11/Xlib.h>
 #endif
