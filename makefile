@@ -21,7 +21,7 @@ DIRSTRUCTURE = $(shell find $(INCDIR) -type d)
 INCSTRUCTURE = $(patsubst %, -I%, $(DIRSTRUCTURE))
 
 
-DEPGL 		= -lGL -lEGL -lGLESv2  -ldrm -lgbm -lX11 -lXext -lpng -lassimp -Lvendor/bitforgeutils/build/amd64/rel/ -lbitforgeutils
+DEPGL 		= -lGL -lEGL -lGLESv2  -ldrm -lgbm -lX11 -lXext -lpng -lassimp -Lvendor/bitforgeutils/build/amd64/rel/ -Bstatic -lbitforgeutils
 #DEPGL 		=  -lpng -lbrcmEGL -lbrcmGLESv2  -L/opt/vc/lib
 
 OBJECTS 	= $(SOURCES:%.cpp=$(OBJDIR)%.o)
@@ -108,6 +108,7 @@ release: $(OUT)
 
 
 $(OUT): $(SOURCES)
+	cp vendor/bitforgeutils/build/$(ARCHITECTURE)/rel/libbitforgeutils.so $(BUILDPATH)/libbitforgeutils.a
 	$(CC) -shared -o $(BUILDPATH)$@.so $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* $(VENDOR_DIR) $(DEPGL) 
 	@echo 
 	$(CC) -o $(BUILDPATH)$@ $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* $(VENDOR_DIR) main.cpp  $(DEPGL) 
