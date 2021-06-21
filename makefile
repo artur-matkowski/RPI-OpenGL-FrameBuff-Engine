@@ -4,7 +4,7 @@ ARCHITECTURE = $(shell dpkg --print-architecture)
 
 CC 		  	= g++ -std=c++14 -I/usr/include/libdrm -Ivendor/bitforgeutils/inc
 
-CPPFLAGS 	= -I/usr/include/freetype2 -I/usr/include/freetype2/freetype -DIMGUI_IMPL_OPENGL_ES2 
+CPPFLAGS 	= -I/usr/include/freetype2 -I/usr/include/freetype2/freetype -DIMGUI_IMPL_OPENGL_ES2
 #-DDEBUG_MEMORY_ALLOC
 
 INCDIR	 	= src/
@@ -21,7 +21,7 @@ DIRSTRUCTURE = $(shell find $(INCDIR) -type d)
 INCSTRUCTURE = $(patsubst %, -I%, $(DIRSTRUCTURE))
 
 
-DEPGL 		= -lGL -lEGL -lGLESv2  -ldrm -lgbm -lX11 -lXext -lpng -lassimp -Lvendor/bitforgeutils/build/amd64/rel/ -Bstatic -lbitforgeutils
+DEPGL 		= -lGL -lEGL -lGLESv2  -ldrm -lgbm -lX11 -lXext -lpng -lassimp 
 #DEPGL 		=  -lpng -lbrcmEGL -lbrcmGLESv2  -L/opt/vc/lib
 
 OBJECTS 	= $(SOURCES:%.cpp=$(OBJDIR)%.o)
@@ -108,10 +108,10 @@ release: $(OUT)
 
 
 $(OUT): $(SOURCES)
-	cp vendor/bitforgeutils/build/$(ARCHITECTURE)/rel/libbitforgeutils.so $(BUILDPATH)/libbitforgeutils.a
-	$(CC) -shared -o $(BUILDPATH)$@.so $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* $(VENDOR_DIR) $(DEPGL) 
+	cp vendor/bitforgeutils/build/$(ARCHITECTURE)/rel/libbitforgeutils.a $(BUILDPATH)libbitforgeutils.a
+	$(CC) -shared -o $(BUILDPATH)$@.so $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* $(VENDOR_DIR) $(DEPGL) vendor/bitforgeutils/build/$(ARCHITECTURE)/rel/libbitforgeutils.a
 	@echo 
-	$(CC) -o $(BUILDPATH)$@ $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* $(VENDOR_DIR) main.cpp  $(DEPGL) 
+	$(CC) -o $(BUILDPATH)$@ $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* $(VENDOR_DIR) main.cpp  $(DEPGL) vendor/bitforgeutils/build/$(ARCHITECTURE)/rel/libbitforgeutils.a
 	@echo 
 
 
