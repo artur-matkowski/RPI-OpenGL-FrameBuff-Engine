@@ -47,5 +47,6 @@ void SetNewAllocator(bfu::MemBlockBase* allocator);
 
 #define PROTECTED(x) protected: x; public:
 #define MAX_PATH_SIZE 1024
+#define MAX_FILENAME_SIZE 256
 
 #endif

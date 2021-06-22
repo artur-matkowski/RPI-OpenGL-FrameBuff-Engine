@@ -7,7 +7,7 @@
 #include "Shader.hpp"
 #include "MaterialType.hpp"
 #include "Mesh.hpp"
-
+#include "AssetMetaDataSocket.hpp"
 
 namespace asapi
 {
@@ -24,6 +24,8 @@ namespace asapi
 		char 												m_ProjectPath[MAX_PATH_SIZE] = ".";
 
 		#ifdef IS_EDITOR
+		std::map<UniqueID, AssetMetaDataSocket>				m_assetsMap;
+
 		std::vector<std::string>							v_TexturesPaths;
 		std::vector<std::string>							v_MaterialsPaths;
 		std::vector<std::string>							v_ShadersPaths;
@@ -40,6 +42,9 @@ namespace asapi
 		const char* GetProjectPath(){ return m_ProjectPath; }
 
 		#ifdef IS_EDITOR
+		void RefreshAssets();
+
+
 		void RefreshResources();
 		std::vector<std::string>* GetTexturesPaths(){ return &v_TexturesPaths; }
 		std::vector<std::string>* GetMaterialsPaths(){ return &v_MaterialsPaths; }

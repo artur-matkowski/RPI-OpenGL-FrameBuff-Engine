@@ -2,6 +2,7 @@
 #include <dirent.h> 
 #include <sys/stat.h>
 #include "Systems.hpp"
+
 #ifdef IS_EDITOR
 #include "imgui.h"
 #endif
@@ -103,6 +104,58 @@ namespace asapi{
 		closedir(d_fh);
 	}
 
+	void ListFiles(std::vector<std::string>& out, const char* dirname, const char* fileExtensionFilter = 0)
+	{
+		int i;
+		DIR* d_fh;
+		struct dirent* entry;
+		char longest_name[MAX_PATH_SIZE];
+
+		mkdir(dirname, 755);
+
+		if( (d_fh = opendir(dirname)) == NULL) 
+		{
+			log::error << "Couldn't open directory, errno: " << errno << "\n\tDirname: " << dirname << " " << std::endl;
+			return;
+		}
+
+		// if( (entry=readdir(d_fh)) == NULL )
+		// {
+		// 	log::error << "readdir error: " << errno << std::endl;
+		// 	return;
+		// }
+		
+		
+		while( (entry=readdir(d_fh)) != NULL )
+		{
+			/* Don't descend up the tree or include the current directory */
+			if( (strncmp(entry->d_name, "..", 2) != 0) &&
+				(strncmp(entry->d_name, ".", 1) != 0) &&
+				(strstr(entry->d_name, fileExtensionFilter) == 0) ) 
+			{
+				/* Prepend the current directory and recurse */
+				strncpy(longest_name, dirname, MAX_PATH_SIZE-1);
+				strncat(longest_name, "/", MAX_PATH_SIZE-1);
+				strncat(longest_name, entry->d_name, MAX_PATH_SIZE-1);
+
+				/* If it's a directory print it's name and recurse into it */
+				if (entry->d_type == DT_DIR) 
+				{
+					ScanDirForPaths(out, longest_name);
+				}
+				else //if not dir
+				{
+					out.emplace_back(longest_name);
+				}
+			}
+		}
+		
+		
+		
+
+		closedir(d_fh);
+	}
+
 	void RemoveExtensions(std::vector<std::string>& in)
 	{
 		for(int i=0; i<in.size(); ++i)
@@ -172,8 +225,27 @@ namespace asapi{
 		mkdir(dir_path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 	}
 
+	void ResourceSystem::RefreshAssets()
+	{
+		char dir_path[MAX_PATH_SIZE];
+
+		std::vector<std::string> assetsPaths;
+		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
+		strncat(dir_path, "/assets", MAX_PATH_SIZE-1);
+		ListFiles(assetsPaths, dir_path, ".asset.json");
+		for(int i=0; i<assetsPaths.size(); ++i)
+		{
+			log::debug << assetsPaths[i] << std::endl;
+			AssetMetaDataSocket::IsDirty(assetsPaths[i].c_str());
+			AssetMetaDataSocket::GetHash(assetsPaths[i].c_str());
+		}
+
+	}
+
 	void ResourceSystem::RefreshResources()
 	{
+		RefreshAssets();
+
 		char buff[MAX_PATH_SIZE];
 
 		if(strcmp(m_ProjectPath, ".")==0)

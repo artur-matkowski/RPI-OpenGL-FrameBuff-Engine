@@ -22,7 +22,7 @@ OBJECTS 	= $(OBJECTS2:%.cpp=$(OBJDIR)%.o)
 DEPGL 		= -lGL -lEGL -lGLESv2
 
 
-lib: $(SOURCES) bfu
+lib: $(SOURCES) bfu hash
 
 $(SOURCES):
 	$(CC) -c $(HEADER_DEPS) $(@).cpp -o $(OBJDIR)$(notdir $@).o -fPIC
@@ -30,6 +30,9 @@ $(SOURCES):
 
 bfu:
 	$(MAKE) -C bitforgeutils
+
+hash:
+	$(CC) -c -Ihash-library hash-library/sha256.cpp -o lib/editorOnly/hash.o
 
 clean:
 	rm lib/*

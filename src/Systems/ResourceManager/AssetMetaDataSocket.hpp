@@ -10,9 +10,15 @@ namespace asapi
 
 	class AssetMetaDataSocket: public bfu::SerializableClassBase<AssetMetaDataSocket>
 	{
-		//SERIALIZABLE_VAR( AssetMetaDataSocket, UniqueID, m_id );
-		//SERIALIZABLE_VAR( AssetMetaDataSocket, stream, m_assetFileName );
-	protected:
+		SERIALIZABLE_OBJ( AssetMetaDataSocket, UniqueID, m_id );
+		SERIALIZABLE_VAR( AssetMetaDataSocket, stream, m_assetFileName );
+		char m_fileNameBuff[MAX_FILENAME_SIZE];
+	public:
+
+		AssetMetaDataSocket(bfu::MemBlockBase* mBlock);
+
+		static bool IsDirty(const char* path);
+		static std::string GetHash(const char* path);
 	};
 }
 

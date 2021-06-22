@@ -32,9 +32,6 @@ OBJECTS 	= $(OBJECTS2:%.cpp=$(OBJDIR)%.o)
 
 #HEADER_DEPS += 	-I./libs/libjpeg-turbo
 HEADER_DEPS += 	-I./vendor/glm/glm/
-#DEPS 		+= 	../02_Common/01_C-Logger
-#DEPS 		+= 	../02_Common/03_UdpSocket
-#DEPS 		+=	../02_Common/05_EventSystem
 
 #STATIC_LINK	= ./libs/libjpeg-turbo/build/libturbojpeg.a
 
@@ -70,6 +67,7 @@ debug-editor: DEBUG_CC 		+=  -DIS_EDITOR
 debug-editor: BUILDPATH 	 =  build/dbg/editor/
 debug-editor: HEADER_DEPS 	+= 	-I./vendor/imgui/
 debug-editor: HEADER_DEPS 	+= 	-I./vendor/ImGuiFileDialog/ImGuiFileDialog/
+debug-editor: HEADER_DEPS 	+= 	-I./vendor/hash-library/
 debug-editor: VENDOR_DIR 	+=  $(VENDOR_EDITOR_ONLY_DIR)
 debug-editor: debug
 
@@ -77,6 +75,7 @@ release-editor: RELEASE_CC 	+=  -DIS_EDITOR
 release-editor: BUILDPATH 	 =  build/rel/editor/
 release-editor: HEADER_DEPS += 	-I./vendor/imgui/
 release-editor: HEADER_DEPS += 	-I./vendor/ImGuiFileDialog/ImGuiFileDialog/
+debug-editor: HEADER_DEPS 	+= 	-I./vendor/hash-library/
 release-editor: VENDOR_DIR 	+=  $(VENDOR_EDITOR_ONLY_DIR)
 release-editor: release
 
