@@ -5,8 +5,7 @@
 
 namespace asapi
 {
-	AssetMetaDataSocket::AssetMetaDataSocket(bfu::MemBlockBase* mBlock)
-		:m_assetFileName(m_fileNameBuff, MAX_FILENAME_SIZE, mBlock)
+	AssetMetaDataSocket::AssetMetaDataSocket()
 	{
 
 	}
@@ -60,7 +59,7 @@ namespace asapi
     	}
     	return ret;
 	}
-	std::string AssetMetaDataSocket::GetHash(const char* path)
+	string AssetMetaDataSocket::GetHash(const char* path)
 	{
 		struct stat attrib;
 
@@ -76,8 +75,20 @@ namespace asapi
 		sha256(mmap.Data(), mmap.Size());
 
 
-		log::debug << "has of file: " << path << " : " << sha256.getHash() << std::endl; 
+		log::debug << "hash of file: " << path << " : " << sha256.getHash() << std::endl; 
 
 		return sha256.getHash();
+	}
+
+
+	void AssetMetaDataSocket::OnAssetMoved(const char* newPath, AssetMetaDataSocket * asset)
+	{
+		log::debug << "OnAssetMoved: " << newPath << std::endl; 
+	}
+	AssetMetaDataSocket AssetMetaDataSocket::OnAssetAdded(const char* path, const string & hash)
+	{
+		log::debug << "OnAssetAdded: " << path << std::endl;
+
+		return AssetMetaDataSocket();
 	}
 }

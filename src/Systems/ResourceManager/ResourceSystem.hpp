@@ -24,7 +24,7 @@ namespace asapi
 		char 												m_ProjectPath[MAX_PATH_SIZE] = ".";
 
 		#ifdef IS_EDITOR
-		std::map<UniqueID, AssetMetaDataSocket>				m_assetsMap;
+		std::map<std::string, AssetMetaDataSocket>			m_assetsMap;
 
 		std::vector<std::string>							v_TexturesPaths;
 		std::vector<std::string>							v_MaterialsPaths;

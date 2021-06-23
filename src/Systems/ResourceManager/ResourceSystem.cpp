@@ -233,13 +233,27 @@ namespace asapi{
 		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
 		strncat(dir_path, "/assets", MAX_PATH_SIZE-1);
 		ListFiles(assetsPaths, dir_path, ".asset.json");
+
 		for(int i=0; i<assetsPaths.size(); ++i)
 		{
 			log::debug << assetsPaths[i] << std::endl;
-			AssetMetaDataSocket::IsDirty(assetsPaths[i].c_str());
-			AssetMetaDataSocket::GetHash(assetsPaths[i].c_str());
-		}
+			if( AssetMetaDataSocket::IsDirty(assetsPaths[i].c_str()) )
+			{
+				std::string hash = AssetMetaDataSocket::GetHash( assetsPaths[i].c_str() );
 
+				auto resoult = m_assetsMap.find( hash );
+
+				if( resoult == m_assetsMap.end() ) //did not found element
+				{
+					AssetMetaDataSocket asset = AssetMetaDataSocket::OnAssetAdded( assetsPaths[i].c_str(), hash );
+					m_assetsMap[hash] = asset;
+				}
+				else
+				{
+					AssetMetaDataSocket::OnAssetMoved( assetsPaths[i].c_str(), &resoult->second );
+				}
+			}
+		}
 	}
 
 	void ResourceSystem::RefreshResources()
