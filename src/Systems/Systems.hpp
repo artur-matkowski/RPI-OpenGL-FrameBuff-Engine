@@ -70,6 +70,20 @@ namespace asapi
 				uint32_t Size(){ return sb.st_size; }
 
 			};
+
+			class STREAM
+			{
+				int fd = -1;
+
+			public:
+				STREAM(){};
+				~STREAM();
+
+				void Close();
+
+				void InitForWrite(const char* filename);
+				void Write(const char* buff, const int size);
+			};
 		};
 	};
 

@@ -162,4 +162,36 @@ namespace asapi
 		data = nullptr;
 		fd = -1;
 	}
+
+
+	SYSTEMS::IO::STREAM::~STREAM()
+	{
+		Close();
+	}
+
+	void SYSTEMS::IO::STREAM::Close()
+	{
+		if(fd!=-1)
+			close(fd);
+		
+		fd = -1;
+	}
+
+
+	void SYSTEMS::IO::STREAM::InitForWrite(const char* filename)
+	{
+		unlink(filename);
+		fd = open(filename, O_RDWR | O_CREAT | O_TRUNC | O_SYNC, (mode_t)0666);
+		if (fd == -1)
+		{
+			log::error << "Can not open file: " << filename << std::endl;
+			return;
+		}
+	}
+
+
+	void SYSTEMS::IO::STREAM::Write(const char* buff, const int size)
+	{
+		write(fd, buff, size);
+	}
 }

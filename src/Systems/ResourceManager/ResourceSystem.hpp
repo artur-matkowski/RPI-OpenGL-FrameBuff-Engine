@@ -43,6 +43,7 @@ namespace asapi
 
 		#ifdef IS_EDITOR
 		void RefreshAssets();
+		AssetMetaDataSocket* GetAssetMetaDataSocketByHash(const std::string& hash);
 
 
 		void RefreshResources();

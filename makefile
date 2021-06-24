@@ -83,7 +83,7 @@ ifeq ($(ARCHITECTURE),armhf)
 	@echo -----Build for target
 debug: DEBUG_CC 	+= -DIS_TARGET
 else
-debug: DEPGL 		+=  -lglfw
+debug: DEPGL 		+=  -lglfw vendor/bitforgeutils/build/$(ARCHITECTURE)/dbg/libbitforgeutils.a
 endif
 debug: CC 			+= $(DEBUG_CC)
 debug: OBJDIR 		= $(BUILDPATH)obj/
@@ -96,7 +96,7 @@ ifeq ($(ARCHITECTURE),armhf)
 	@echo -----Build for target
 release: RELEASE_CC 	+= -DIS_TARGET
 else
-release: DEPGL 			+=  -lglfw
+release: DEPGL 			+=  -lglfw vendor/bitforgeutils/build/$(ARCHITECTURE)/rel/libbitforgeutils.a
 endif
 release: CC 			+= $(RELEASE_CC)
 release: OBJDIR 		= $(BUILDPATH)obj/
@@ -108,9 +108,9 @@ release: $(OUT)
 
 $(OUT): $(SOURCES)
 	cp vendor/bitforgeutils/build/$(ARCHITECTURE)/rel/libbitforgeutils.a $(BUILDPATH)libbitforgeutils.a
-	$(CC) -shared -o $(BUILDPATH)$@.so $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* $(VENDOR_DIR) $(DEPGL) vendor/bitforgeutils/build/$(ARCHITECTURE)/rel/libbitforgeutils.a
+	$(CC) -shared -o $(BUILDPATH)$@.so $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* $(VENDOR_DIR) $(DEPGL)
 	@echo 
-	$(CC) -o $(BUILDPATH)$@ $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* $(VENDOR_DIR) main.cpp  $(DEPGL) vendor/bitforgeutils/build/$(ARCHITECTURE)/rel/libbitforgeutils.a
+	$(CC) -o $(BUILDPATH)$@ $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* $(VENDOR_DIR) main.cpp  $(DEPGL)
 	@echo 
 
 

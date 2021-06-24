@@ -131,7 +131,8 @@ namespace asapi{
 			/* Don't descend up the tree or include the current directory */
 			if( (strncmp(entry->d_name, "..", 2) != 0) &&
 				(strncmp(entry->d_name, ".", 1) != 0) &&
-				(strstr(entry->d_name, fileExtensionFilter) == 0) ) 
+				(strstr(entry->d_name, ".asset.json") == 0) &&
+				(strstr(entry->d_name, ".asset.bin") == 0) )
 			{
 				/* Prepend the current directory and recurse */
 				strncpy(longest_name, dirname, MAX_PATH_SIZE-1);
@@ -232,28 +233,45 @@ namespace asapi{
 		std::vector<std::string> assetsPaths;
 		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
 		strncat(dir_path, "/assets", MAX_PATH_SIZE-1);
-		ListFiles(assetsPaths, dir_path, ".asset.json");
+		ListFiles(assetsPaths, dir_path);
 
 		for(int i=0; i<assetsPaths.size(); ++i)
 		{
 			log::debug << assetsPaths[i] << std::endl;
-			if( AssetMetaDataSocket::IsDirty(assetsPaths[i].c_str()) )
+
+			eAssetImportType importState = AssetMetaDataSocket::AssetImportState(assetsPaths[i].c_str());
+			std::string hash = AssetMetaDataSocket::GetHash( assetsPaths[i].c_str() );
+
+			switch(importState)
 			{
-				std::string hash = AssetMetaDataSocket::GetHash( assetsPaths[i].c_str() );
-
-				auto resoult = m_assetsMap.find( hash );
-
-				if( resoult == m_assetsMap.end() ) //did not found element
-				{
-					AssetMetaDataSocket asset = AssetMetaDataSocket::OnAssetAdded( assetsPaths[i].c_str(), hash );
-					m_assetsMap[hash] = asset;
-				}
-				else
-				{
-					AssetMetaDataSocket::OnAssetMoved( assetsPaths[i].c_str(), &resoult->second );
-				}
+				case BrandNew:
+					{
+						AssetMetaDataSocket asset = AssetMetaDataSocket::OnAssetAdded( assetsPaths[i].c_str(), hash );
+						m_assetsMap[hash] = asset;
+					}
+					break;
+				case Moved:
+					{
+						auto resoult = m_assetsMap.find( hash );
+						AssetMetaDataSocket::OnAssetMoved( assetsPaths[i].c_str(), &resoult->second );
+					}
+					break;
 			}
 		}
+	}
+
+	AssetMetaDataSocket* ResourceSystem::GetAssetMetaDataSocketByHash(const std::string& hash)
+	{
+		AssetMetaDataSocket* ret = nullptr;
+
+		auto it = m_assetsMap.find(hash);
+
+		if( it!=m_assetsMap.end() )
+		{
+			ret = &it->second;
+		}
+
+		return ret;
 	}
 
 	void ResourceSystem::RefreshResources()

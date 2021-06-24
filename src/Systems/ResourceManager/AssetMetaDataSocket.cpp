@@ -27,7 +27,7 @@ namespace asapi
 	}
 
 
-	bool AssetMetaDataSocket::IsDirty(const char* path)
+	eAssetImportType AssetMetaDataSocket::AssetImportState(const char* path)
 	{
 		struct stat attribInt;
 		struct stat attribExt;
@@ -44,21 +44,30 @@ namespace asapi
 		strcpy(metadataPath+strlen(metadataPath), ".asset.json");
 
 
-		bool ret = false;
+		eAssetImportType ret;
     	if( stat(path, &attribExt)!=0 )
     	{
     		log::error << "Could not find file " << path << std::endl;
+    		ret = Invalid;
     	}
     	else if( stat(metadataPath, &attribInt)!=0 )
     	{
     		log::info << "Could not find asset metadata file " << metadataPath << " asset metadata will be generated" << std::endl;
+    		ret = BrandNew;
+
+    		AssetMetaDataSocket* asset = SYSTEMS::GetObject().RESOURCES.GetAssetMetaDataSocketByHash( AssetMetaDataSocket::GetHash(path) );
+    		if( asset!=nullptr )
+    		{
+    			ret = Moved;
+    		}
     	}
     	else
     	{
-    		ret = attribExt.st_mtime < attribInt.st_mtime;
+    		ret = attribExt.st_mtime < attribInt.st_mtime ? Updated : Untouched;
     	}
     	return ret;
 	}
+
 	string AssetMetaDataSocket::GetHash(const char* path)
 	{
 		struct stat attrib;
@@ -89,6 +98,27 @@ namespace asapi
 	{
 		log::debug << "OnAssetAdded: " << path << std::endl;
 
-		return AssetMetaDataSocket();
+		char buff[MAX_PATH_SIZE];
+		strncpy(buff, path, MAX_PATH_SIZE-1);
+		RemoveExtensions(buff);
+		strncat(buff, ".asset.json", MAX_PATH_SIZE-1);
+
+		AssetMetaDataSocket asset;
+		asset.m_hash = hash;
+		const char* relPath = strstr(path, "/assets/") + strlen("/assets/");
+		asset.m_assetPath = string(relPath);
+
+		SYSTEMS::IO::STREAM file;
+		file.InitForWrite(path);
+
+		bfu::JSONSerializer &jsonSerializer = SYSTEMS::GetObject().SCENE.GetJSONSerializer();
+		jsonSerializer.clear();
+
+		jsonSerializer.Serialize( &asset );
+
+		SceneSystem::JSON2File( jsonSerializer, buff ) ;
+
+
+		return asset;
 	}
 }
