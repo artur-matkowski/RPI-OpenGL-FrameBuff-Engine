@@ -237,14 +237,12 @@ namespace asapi{
 
 		for(int i=0; i<assetsPaths.size(); ++i)
 		{
-			log::debug << assetsPaths[i] << std::endl;
-
-			eAssetImportType importState = AssetMetaDataSocket::AssetImportState(assetsPaths[i].c_str());
 			std::string hash = AssetMetaDataSocket::GetHash( assetsPaths[i].c_str() );
+			eAssetImportType importState = AssetMetaDataSocket::AssetImportState( assetsPaths[i].c_str(), hash );
 
 			switch(importState)
 			{
-				case BrandNew:
+				case New:
 					{
 						AssetMetaDataSocket asset = AssetMetaDataSocket::OnAssetAdded( assetsPaths[i].c_str(), hash );
 						m_assetsMap[hash] = asset;

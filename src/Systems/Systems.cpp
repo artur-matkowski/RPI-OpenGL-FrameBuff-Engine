@@ -72,6 +72,7 @@ namespace asapi
 		PRIFILE( SCENE.Init( SYSTEMS::SYSTEMS_ALLOCATOR, argc, argv ); );
 
 		RESOURCES.Init(argc, argv);
+		ASSETS.Init(argc, argv);
 
 		#ifdef IS_EDITOR
 			STUDIO.Init(argc, argv);
@@ -108,6 +109,12 @@ namespace asapi
 		if (fstat(fd, &sb) == -1) 
 		{
 			log::error << "Can not fstat file: " << filename << std::endl;
+			return;
+		}
+
+		if( sb.st_size==0 )
+		{
+			log::error << "File size is 0: " << filename << std::endl;
 			return;
 		}
 

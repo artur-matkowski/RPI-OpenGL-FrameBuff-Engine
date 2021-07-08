@@ -6,7 +6,7 @@ namespace asapi
 {
 	using bfu::string;
 
-	enum eAssetImportType{BrandNew, Moved, Updated, Untouched, Invalid};
+	enum eAssetImportType{Invalid = 0, New, Moved, Updated, Untouched, Removed};
 
 	class AssetMetaDataSocket: public bfu::SerializableClassBase<AssetMetaDataSocket>
 	{
@@ -18,7 +18,7 @@ namespace asapi
 
 		AssetMetaDataSocket();
 
-		static eAssetImportType AssetImportState(const char* path);
+		static eAssetImportType AssetImportState(const char* path, const std::string& hash);
 		static string GetHash(const char* path);
 
 		static void OnAssetMoved(const char* newPath, AssetMetaDataSocket * asset);

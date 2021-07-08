@@ -8,6 +8,7 @@
 #include "RendererSystem.hpp"
 #include "Context.hpp"
 #include "ResourceSystem.hpp"
+#include "AssetSystem.hpp"
 #include "TimeSystem.hpp"
 #include "MemoryManagmentSystem.hpp"
 #include "SceneSystem.hpp"
@@ -28,6 +29,7 @@ namespace asapi
 		RendererSystem 			RENDERER;
 		ContextBase				*CONTEXT;
 		ResourceSystem			RESOURCES;
+		AssetSystem				ASSETS;
 		TimeSystem				TIME;
 		SceneSystem				SCENE;
 

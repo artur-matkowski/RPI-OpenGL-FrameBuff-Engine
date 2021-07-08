@@ -27,7 +27,7 @@ namespace asapi
 	}
 
 
-	eAssetImportType AssetMetaDataSocket::AssetImportState(const char* path)
+	eAssetImportType AssetMetaDataSocket::AssetImportState(const char* path, const std::string& hash)
 	{
 		struct stat attribInt;
 		struct stat attribExt;
@@ -53,9 +53,9 @@ namespace asapi
     	else if( stat(metadataPath, &attribInt)!=0 )
     	{
     		log::info << "Could not find asset metadata file " << metadataPath << " asset metadata will be generated" << std::endl;
-    		ret = BrandNew;
+    		ret = New;
 
-    		AssetMetaDataSocket* asset = SYSTEMS::GetObject().RESOURCES.GetAssetMetaDataSocketByHash( AssetMetaDataSocket::GetHash(path) );
+    		AssetMetaDataSocket* asset = SYSTEMS::GetObject().RESOURCES.GetAssetMetaDataSocketByHash( hash );
     		if( asset!=nullptr )
     		{
     			ret = Moved;
@@ -83,9 +83,6 @@ namespace asapi
 		SHA256 sha256; 
 		sha256(mmap.Data(), mmap.Size());
 
-
-		log::debug << "hash of file: " << path << " : " << sha256.getHash() << std::endl; 
-
 		return sha256.getHash();
 	}
 
@@ -107,9 +104,6 @@ namespace asapi
 		asset.m_hash = hash;
 		const char* relPath = strstr(path, "/assets/") + strlen("/assets/");
 		asset.m_assetPath = string(relPath);
-
-		SYSTEMS::IO::STREAM file;
-		file.InitForWrite(path);
 
 		bfu::JSONSerializer &jsonSerializer = SYSTEMS::GetObject().SCENE.GetJSONSerializer();
 		jsonSerializer.clear();
