@@ -36,10 +36,11 @@ namespace asapi
 		
 		if( m_material.IsValid() )
 		{
+			/* TODO
 			if( strcmp( m_material->GetMaterialName(), m_MaterialName.c_str() )!=0 )
 			{
 				systems.RESOURCES.requestResource( &m_material, m_MaterialName.c_str() );
-			}
+			}*/
 		}
 		else
 		{

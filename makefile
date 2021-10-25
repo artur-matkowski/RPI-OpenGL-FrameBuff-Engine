@@ -75,7 +75,7 @@ release-editor: RELEASE_CC 	+=  -DIS_EDITOR
 release-editor: BUILDPATH 	 =  build/rel/editor/
 release-editor: HEADER_DEPS += 	-I./vendor/imgui/
 release-editor: HEADER_DEPS += 	-I./vendor/ImGuiFileDialog/ImGuiFileDialog/
-debug-editor: HEADER_DEPS 	+= 	-I./vendor/hash-library/
+release-editor: HEADER_DEPS += 	-I./vendor/hash-library/
 release-editor: VENDOR_DIR 	+=  $(VENDOR_EDITOR_ONLY_DIR)
 release-editor: release
 
@@ -83,7 +83,7 @@ ifeq ($(ARCHITECTURE),armhf)
 	@echo -----Build for target
 debug: DEBUG_CC 	+= -DIS_TARGET
 else
-debug: DEPGL 		+=  -lglfw vendor/bitforgeutils/build/$(ARCHITECTURE)/dbg/libbitforgeutils.a
+debug: DEPGL 		+=  -lglfw vendor/bitforgeutils/build/$(ARCHITECTURE)/dbg/*.o
 endif
 debug: CC 			+= $(DEBUG_CC)
 debug: OBJDIR 		= $(BUILDPATH)obj/
@@ -96,7 +96,7 @@ ifeq ($(ARCHITECTURE),armhf)
 	@echo -----Build for target
 release: RELEASE_CC 	+= -DIS_TARGET
 else
-release: DEPGL 			+=  -lglfw vendor/bitforgeutils/build/$(ARCHITECTURE)/rel/libbitforgeutils.a
+release: DEPGL 			+=  -lglfw vendor/bitforgeutils/build/$(ARCHITECTURE)/rel/*.o
 endif
 release: CC 			+= $(RELEASE_CC)
 release: OBJDIR 		= $(BUILDPATH)obj/
@@ -107,9 +107,9 @@ release: $(OUT)
 
 
 $(OUT): $(SOURCES)
-	cp vendor/bitforgeutils/build/$(ARCHITECTURE)/rel/libbitforgeutils.a $(BUILDPATH)libbitforgeutils.a
-	$(CC) -shared -o $(BUILDPATH)$@.so $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* $(VENDOR_DIR) $(DEPGL)
-	@echo 
+	#cp vendor/bitforgeutils/build/$(ARCHITECTURE)/rel/libbitforgeutils.a $(BUILDPATH)libbitforgeutils.a
+	#$(CC) -shared -o $(BUILDPATH)$@.so $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* $(VENDOR_DIR) $(DEPGL)
+	#@echo 
 	$(CC) -o $(BUILDPATH)$@ $(CPPFLAGS) $(INCSTRUCTURE) $(HEADER_DEPS)  $(OBJDIR)* $(VENDOR_DIR) main.cpp  $(DEPGL)
 	@echo 
 
