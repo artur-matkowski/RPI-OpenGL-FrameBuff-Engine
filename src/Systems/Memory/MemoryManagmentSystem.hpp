@@ -15,7 +15,6 @@ namespace asapi
 		char buff[1024*1024*10];
 
 		bfu::PreAllocatedMemBlock 					SystemsMemoryBlock;
-		bfu::StdAllocatorMemBlock					m_StdAllocatorMemBlock;
 
 		std::vector<bfu::MemBlockBase*, bfu::custom_allocator<bfu::MemBlockBase*>> v_memBlocks;
 
@@ -24,13 +23,9 @@ namespace asapi
 		MemoryManagmentSystem()
 			:SystemsMemoryBlock(buff, 1024*1024*10, "Systems Memory Block")
 			,v_memBlocks(bfu::custom_allocator<bfu::MemBlockBase*>(&SystemsMemoryBlock))
-			,m_StdAllocatorMemBlock("std allocator")
 		{
 			v_memBlocks.reserve(16);
 			v_memBlocks.push_back(&SystemsMemoryBlock);
-			v_memBlocks.push_back(&m_StdAllocatorMemBlock);
-
-			SetNewAllocator(&m_StdAllocatorMemBlock);
 		}
 
 		~MemoryManagmentSystem()
@@ -65,11 +60,6 @@ namespace asapi
 
 		bfu::MemBlockBase* RequestPrefabMemBlock(const char* memblockDesc);
 		void ReleasePrefabMemBlock(bfu::MemBlockBase* memblock);
-
-		inline bfu::MemBlockBase* GetSTDAllocator()
-		{
-			return &m_StdAllocatorMemBlock;
-		}
 	};
 
 
@@ -81,6 +71,6 @@ namespace asapi
 #define DELETE(x)				bfu::MemBlockBase::DeallocateUnknown(x)
 #define SYSTEMS_ALLOCATOR 		GetObject().MEMORY.GetSystemsAllocator()
 
-#define STD_NEW(x,t) 			(t*)SYSTEMS::GetObject().MEMORY.GetSTDAllocator()->allocate(x, sizeof(t), alignof(t))
+#define STD_NEW(x,t) 			new t[x];
 
 #endif
