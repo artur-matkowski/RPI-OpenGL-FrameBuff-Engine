@@ -2,7 +2,7 @@
 #define H_RESOURCETRACKET
 //resource is a source file like: jpg, glsl, psd, fbx. 
 
-namespace asapi:
+namespace asapi
 {
 
 }
