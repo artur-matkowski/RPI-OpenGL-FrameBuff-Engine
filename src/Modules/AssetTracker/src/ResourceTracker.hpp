@@ -17,20 +17,22 @@ namespace asapi
 		SERIALIZABLE_VAR( ResourceTracker, string, m_content_hash );
 		SERIALIZABLE_VAR( ResourceTracker, uint32_t, m_size );
 		SERIALIZABLE_VAR( ResourceTracker, uint64_t, m_modified_epoch );
-		SERIALIZABLE_VAR( ResourceTracker, uint64_t, m_modified_ns );
+		SERIALIZABLE_VAR( ResourceTracker, uint64_t, m_modified_ns ); //modification time in nano seconds since last full second
 
 		FILE::MMAP data;
 	public:
 		ResourceTracker();
 		~ResourceTracker();
+		ResourceTracker(const ResourceTracker& cp);
+		ResourceTracker(ResourceTracker&& cp) noexcept;
+
 
 		void Init(const char* path);
+		ResourceTracker& operator=(const ResourceTracker& other);
+		ResourceTracker& operator=(ResourceTracker&& other);
 		
 		bool operator==(const ResourceTracker& other);
-		inline bool operator!=(const ResourceTracker& other)
-		{
-			return !this->operator==(other);
-		}
+		bool operator!=(const ResourceTracker& other);
 		friend bfu::stream& operator<<(bfu::stream&, const ResourceTracker& );
 	};
 	bfu::stream& operator<<(bfu::stream&, const ResourceTracker& );

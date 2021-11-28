@@ -1,4 +1,4 @@
-#include "ResourceSystem2.hpp"
+#include "AssetSystem.hpp"
 #include "object.hpp"
 
 #include <dirent.h> 
@@ -61,23 +61,63 @@ namespace asapi
 	}
 
 
-	void ResourceSystem2::Init(char** resourcesPath)
+	void AssetSystem::Init(char** resourcesPath)
 	{
 		ps_resourcesDirectoryPath = resourcesPath;
+
+		srand( time( NULL ) );
 	}
 
-	void ResourceSystem2::RefreshResources()
+	ResourceTracker* FindResource(std::vector<ResourceTracker>& where, const ResourceTracker& what)
 	{
-		std::vector< std::string > paths;
+		ResourceTracker* ret = 0;
+
+		for(int i=0; i<where.size(); ++i)
+		{
+			if( where[i]==what )
+			{
+				ret = &where[i];
+				break;
+			}
+		}
+		return ret;
+	}
+
+	void AssetSystem::RefreshResources()
+	{
+		std::vector< std::string > 			paths;
+		std::vector< ResourceTracker > 		upToDateResources;
 
 		ListFiles(paths, *ps_resourcesDirectoryPath);
 
+		upToDateResources.resize( paths.size() );
+
+
 		for(int i=0; i<paths.size(); ++i)
 		{
-			ResourceTracker newres;
-			newres.Init( paths[i].c_str() );
-
-			log::info << newres << std::endl;
+			upToDateResources[i].Init( paths[i].c_str() );
 		}
+
+		for(int i=0; i<v_ResourceTrackers.size(); ++i)
+		{
+			ResourceTracker* res = FindResource( upToDateResources, v_ResourceTrackers[i] );
+
+			if( res != nullptr )
+			{
+				*res = std::move( v_ResourceTrackers[i] );
+			}
+		}
+
+		v_ResourceTrackers = std::move( upToDateResources );
+	}
+
+
+	bfu::stream& operator<<(bfu::stream& os, const AssetSystem& res)
+	{
+		for(int i=0; i<res.v_ResourceTrackers.size(); ++i)
+		{
+			os << res.v_ResourceTrackers[i];
+		}
+		return os;
 	}
 }

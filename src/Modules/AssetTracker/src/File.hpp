@@ -20,6 +20,11 @@ namespace asapi
 			MMAP(){};
 			~MMAP();
 
+
+			MMAP(MMAP&& cp) noexcept;
+
+			MMAP& operator=(MMAP&& cp);
+
 			void InitForRead(const char* filename);
 			void InitForWrite(const char* filename, size_t size);
 

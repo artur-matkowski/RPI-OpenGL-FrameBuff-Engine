@@ -1,4 +1,4 @@
-#include "ResourceSystem2.hpp"
+#include "AssetSystem.hpp"
 #include "log.hpp"
 
 char** resourcePath;
@@ -44,7 +44,7 @@ int main(int argc, char** argv)
 
 
 
-	asapi::ResourceSystem2 res;
+	asapi::AssetSystem res;
 
 	res.Init( resourcePath );
 
@@ -57,10 +57,13 @@ int main(int argc, char** argv)
 	Command("echo testData2 > %s/testImage2.txt", *resourcePath);
 
 	res.RefreshResources();
+	log::debug << res << std::endl;
 
 	Command("mv %s/testImage.txt %s/testImagenew.txt", *resourcePath, *resourcePath);
 
 	res.RefreshResources();
+	log::debug << res << std::endl;
+
 
 	CleanUpTests();
 

@@ -1,18 +1,21 @@
-#ifndef H_RESOURCESYSTEM
-#define H_RESOURCESYSTEM
+#ifndef H_AssetSystem
+#define H_AssetSystem
 #include <vector>
 #include "ResourceTracker.hpp"
 
 
 namespace asapi
 {
-	class ResourceSystem2
+	class AssetSystem
 	{
 		char** 							ps_resourcesDirectoryPath = 0;
 		std::vector<ResourceTracker> 	v_ResourceTrackers;
 	public:
 		void Init(char** resourcesPath);
 		void RefreshResources();
+
+		
+		friend bfu::stream& operator<<(bfu::stream&, const AssetSystem& );
 	};
 }
 

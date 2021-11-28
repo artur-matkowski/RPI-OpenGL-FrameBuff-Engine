@@ -10,6 +10,33 @@
 
 namespace asapi
 {
+	FILE::MMAP::MMAP(FILE::MMAP&& cp) noexcept
+	{
+		Close();
+		
+		data = cp.data;
+		fd = cp.fd;
+		sb = cp.sb;
+
+		cp.data = nullptr;
+		cp.fd = -1;
+	}
+
+	FILE::MMAP& FILE::MMAP::operator=(FILE::MMAP&& cp)
+	{
+		Close();
+
+		data = cp.data;
+		fd = cp.fd;
+		sb = cp.sb;
+
+		cp.data = nullptr;
+		cp.fd = -1;
+
+		return *this;
+	}
+
+
 	void FILE::MMAP::InitForRead(const char* filename)
 	{
 		fd = open(filename, O_RDONLY );
@@ -75,6 +102,7 @@ namespace asapi
 		{
 			msync(data, sb.st_size, MS_SYNC);
 			munmap(data, sb.st_size);
+			log::error << "FILE::MMAP::Close() " << std::endl;
 		}
 		if(fd!=-1)
 			close(fd);

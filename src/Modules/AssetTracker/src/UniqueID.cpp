@@ -17,6 +17,26 @@ namespace asapi
 		ID64 = cp.ID64;
 	}
 
+	UniqueID::UniqueID( UniqueID&& cp ) noexcept
+	{
+		m_ID = cp.m_ID;
+		ID64 = cp.ID64;
+
+		cp.m_ID = 0;
+		cp.ID64 = 0;
+	}
+
+	UniqueID& UniqueID::operator=(UniqueID&& cp)
+	{
+		m_ID = cp.m_ID;
+		ID64 = cp.ID64;
+
+		cp.m_ID = 0;
+		cp.ID64 = 0;
+
+		return *this;
+	}
+
 
 	void UniqueID::PreSerializationCallback()
 	{
