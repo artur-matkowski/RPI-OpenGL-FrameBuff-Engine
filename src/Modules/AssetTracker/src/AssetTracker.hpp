@@ -3,4 +3,12 @@
 // Asset is data set processed from resource file. it contains header, data, and links to resources it is composed of
 
 
+namespace asapi
+{
+	class AssetTracker
+	{
+		
+	};
+}
+
 #endif
