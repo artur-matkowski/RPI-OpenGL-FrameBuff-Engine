@@ -19,11 +19,11 @@ namespace asapi
 		UniqueID( const UniqueID& cp );
 		~UniqueID(){};
 
-		inline uint64_t ID()
+		inline uint64_t ID() const
 		{
 			return ID64;
 		}
-		inline void SetID(uint64_t id)
+		inline void SetID(const uint64_t id)
 		{
 			ID64 = id;
 			m_ID = id;

@@ -23,6 +23,8 @@ namespace asapi
     	}
 
     	m_path = std::string(path);
+    	const char* filename = path + strlen(path-1);
+
 
         data.InitForRead(path);
 
@@ -37,7 +39,7 @@ namespace asapi
 
 	bool ResourceTracker::operator==(const ResourceTracker& other)
 	{
-		return false;
+		return m_path == other.m_path || m_content_hash == other.m_content_hash;
 	}
 
 
@@ -48,11 +50,13 @@ namespace asapi
 		char buff[128];
 		strftime(buff, 128, "%D %T", gmtime(&mod));
 
-		os << "ResourceTracker printout:"; 
-		os << "\n\tpath: " << res.m_path.c_str(); 
-		os << "\n\tcontent hash: " << res.m_content_hash.c_str(); 
-		os << "\n\tsize: " << res.m_size; 
-		os << "\n\tmodified: " << buff << ":" << res.m_modified_ns; 
+		os << "\nResourceTracker printout:"; 
+		os << "\n\tfilename: " << res.m_filename.c_str();
+		os << "\n\tpath: " << res.m_path.c_str();
+		os << "\n\tassetID: " << res.m_resourceID.ID();
+		os << "\n\tcontent hash: " << res.m_content_hash.c_str();
+		os << "\n\tsize: " << res.m_size;
+		os << "\n\tmodified: " << buff << ":" << res.m_modified_ns;
 		return os;
 	}
 }
