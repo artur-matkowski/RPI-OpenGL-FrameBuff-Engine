@@ -11,6 +11,9 @@ namespace asapi
 {
 	class ResourceTracker: public bfu::SerializableClassBase<ResourceTracker>
 	{
+#ifdef TESTS
+	public:
+#endif
 		SERIALIZABLE_OBJ( ResourceTracker, UniqueID, m_resourceID );
 		SERIALIZABLE_VAR( ResourceTracker, string, m_filename );
 		SERIALIZABLE_VAR( ResourceTracker, string, m_path );
@@ -36,7 +39,7 @@ namespace asapi
 
 		bool CmpContent(const ResourceTracker& other);
 		bool CmpPath(const ResourceTracker& other);
-		
+
 		friend bfu::stream& operator<<(bfu::stream&, const ResourceTracker& );
 	};
 	bfu::stream& operator<<(bfu::stream&, const ResourceTracker& );

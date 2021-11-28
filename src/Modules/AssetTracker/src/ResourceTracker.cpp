@@ -39,7 +39,11 @@ namespace asapi
     	}
 
     	m_path = std::string(path);
-    	const char* filename = path + strlen(path-1);
+    	const char* filename = path + m_path.size()-2;
+    	for(; filename!=path && filename[0]!='/' ;--filename);
+    	filename++;
+
+    	m_filename = std::string(filename);
 
 
         data.InitForRead(path);
