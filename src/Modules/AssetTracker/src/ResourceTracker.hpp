@@ -33,6 +33,10 @@ namespace asapi
 		
 		bool operator==(const ResourceTracker& other);
 		bool operator!=(const ResourceTracker& other);
+
+		bool CmpContent(const ResourceTracker& other);
+		bool CmpPath(const ResourceTracker& other);
+		
 		friend bfu::stream& operator<<(bfu::stream&, const ResourceTracker& );
 	};
 	bfu::stream& operator<<(bfu::stream&, const ResourceTracker& );

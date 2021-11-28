@@ -56,10 +56,18 @@ int main(int argc, char** argv)
 	Command("touch %s/testImage2.txt", *resourcePath);
 	Command("echo testData2 > %s/testImage2.txt", *resourcePath);
 
+	Command("touch %s/testImage3.txt", *resourcePath);
+	Command("echo testData3 > %s/testImage3.txt", *resourcePath);
+
 	res.RefreshResources();
 	log::debug << res << std::endl;
 
 	Command("mv %s/testImage.txt %s/testImagenew.txt", *resourcePath, *resourcePath);
+	Command("mv %s/testImage3.txt %s/testImagenew2.txt", *resourcePath, *resourcePath);
+
+
+	Command("touch %s/testImage3.txt", *resourcePath);
+	Command("echo testData3.1 > %s/testImage3.txt", *resourcePath);
 
 	res.RefreshResources();
 	log::debug << res << std::endl;

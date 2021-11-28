@@ -102,7 +102,6 @@ namespace asapi
 		{
 			msync(data, sb.st_size, MS_SYNC);
 			munmap(data, sb.st_size);
-			log::error << "FILE::MMAP::Close() " << std::endl;
 		}
 		if(fd!=-1)
 			close(fd);

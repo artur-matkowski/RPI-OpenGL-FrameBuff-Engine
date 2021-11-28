@@ -74,12 +74,25 @@ namespace asapi
 
 		for(int i=0; i<where.size(); ++i)
 		{
-			if( where[i]==what )
+			if( where[i].CmpPath(what) )
 			{
 				ret = &where[i];
 				break;
 			}
 		}
+
+		if( ret==0 )
+		{
+			for(int i=0; i<where.size(); ++i)
+			{
+				if( where[i].CmpContent(what) )
+				{
+					ret = &where[i];
+					break;
+				}
+			}
+		}
+
 		return ret;
 	}
 

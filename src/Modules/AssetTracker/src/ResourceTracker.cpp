@@ -65,7 +65,7 @@ namespace asapi
 		m_resourceID = std::move(cp.m_resourceID);
 
 		data = std::move(cp.data);
-		
+
 		return *this;
 	}
 
@@ -76,6 +76,16 @@ namespace asapi
 	bool ResourceTracker::operator!=(const ResourceTracker& other)
 	{
 		return !this->operator==(other);
+	}
+
+
+	bool ResourceTracker::CmpContent(const ResourceTracker& other)
+	{
+		return m_content_hash == other.m_content_hash;
+	}
+	bool ResourceTracker::CmpPath(const ResourceTracker& other)
+	{
+		return m_path == other.m_path;
 	}
 
 
