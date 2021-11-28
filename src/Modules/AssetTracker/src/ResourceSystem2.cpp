@@ -74,7 +74,10 @@ namespace asapi
 
 		for(int i=0; i<paths.size(); ++i)
 		{
-			log::info << paths[i] << std::endl;
+			ResourceTracker newres;
+			newres.Init( paths[i].c_str() );
+
+			log::info << newres << std::endl;
 		}
 	}
 }

@@ -5,9 +5,10 @@ ARCHITECTURE 	= $(shell dpkg --print-architecture)
 
 VENDOR_INC 	+= 	-I$(ROOT_PROJECT)/vendor/hash-library/
 VENDOR_INC 	+= 	-I$(ROOT_PROJECT)/vendor/bitforgeutils/inc
-VENDOR_INC += 	-I$(ROOT_PROJECT)/vendor/glm/glm/
+VENDOR_INC  += 	-I$(ROOT_PROJECT)/vendor/glm/glm/
 
 VENDOR_DEPS += $(ROOT_PROJECT)/vendor/bitforgeutils/build/$(ARCHITECTURE)/dbg/*.o
+VENDOR_DEPS += $(ROOT_PROJECT)/vendor/hash-library/sha256.cpp
 
 
 SRCDIR	 	= src/

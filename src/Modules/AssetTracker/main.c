@@ -25,7 +25,6 @@ void SetupTests(char** argv)
 	strcpy(*resourcePath, argv[1]);
 	strcat(*resourcePath, "/assets");
 
-	Command("touch %s/testImage.txt", *resourcePath);
 }
 
 void CleanUpTests()
@@ -48,9 +47,20 @@ int main(int argc, char** argv)
 	asapi::ResourceSystem2 res;
 
 	res.Init( resourcePath );
+
+
+
+	Command("touch %s/testImage.txt", *resourcePath);
+	Command("echo testData > %s/testImage.txt", *resourcePath);
+
+	Command("touch %s/testImage2.txt", *resourcePath);
+	Command("echo testData2 > %s/testImage2.txt", *resourcePath);
+
 	res.RefreshResources();
 
+	Command("mv %s/testImage.txt %s/testImagenew.txt", *resourcePath, *resourcePath);
 
+	res.RefreshResources();
 
 	CleanUpTests();
 
