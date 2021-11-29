@@ -36,14 +36,14 @@ void CleanUpTests()
 
 struct resourceEntry
 {
-	std::string 	m_content_hash;
+	bfu::string 	m_content_hash;
 	uint64_t  		m_resourceID;
 
-	resourceEntry(std::string& arg1, uint64_t arg2) : m_content_hash(arg1), m_resourceID(arg2){};
+	resourceEntry(bfu::string& arg1, uint64_t arg2) : m_content_hash(arg1), m_resourceID(arg2){};
 };
 
 std::vector<resourceEntry> resources;
-bool findEntry(std::string& arg1, uint64_t arg2)
+bool findEntry(bfu::string& arg1, uint64_t arg2)
 {
 	for(int i=0; i<resources.size(); ++i)
 	{
@@ -141,7 +141,7 @@ int main(int argc, char** argv)
 
 
 
-	CleanUpTests();
+	//CleanUpTests();
 
 	return 0;
 }

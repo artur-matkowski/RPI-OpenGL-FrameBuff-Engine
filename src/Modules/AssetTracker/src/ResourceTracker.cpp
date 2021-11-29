@@ -24,8 +24,6 @@ namespace asapi
 		m_size = std::move(cp.m_size);
 		m_modified_epoch = std::move(cp.m_modified_epoch);
 		m_modified_ns = std::move(cp.m_modified_ns);
-
-		data = std::move(cp.data);
 	}
 
 	void ResourceTracker::Init(const char* path)
@@ -46,6 +44,7 @@ namespace asapi
     	m_filename = std::string(filename);
 
 
+		FILE::MMAP data;
         data.InitForRead(path);
 
 		SHA256 sha256; 
@@ -67,10 +66,18 @@ namespace asapi
 	ResourceTracker& ResourceTracker::operator=(ResourceTracker&& cp)
 	{
 		m_resourceID = std::move(cp.m_resourceID);
-
-		data = std::move(cp.data);
+		m_filename = std::move(cp.m_filename);
+		m_path = std::move(cp.m_path);
+		m_content_hash = std::move(cp.m_content_hash);
+		m_size = std::move(cp.m_size);
+		m_modified_epoch = std::move(cp.m_modified_epoch);
+		m_modified_ns = std::move(cp.m_modified_ns);
 
 		return *this;
+	}
+	void ResourceTracker::MoveResourceId(ResourceTracker & dest, ResourceTracker & source)
+	{
+		dest.m_resourceID = std::move(source.m_resourceID);
 	}
 
 	bool ResourceTracker::operator==(const ResourceTracker& other)

@@ -5,12 +5,15 @@
 #include "UniqueID.hpp"
 //resource is a source file like: jpg, glsl, psd, fbx, txt, etc. 
 
-using std::string;
+using bfu::string;
 
 namespace asapi
 {
+	class AssetSystem;
+
 	class ResourceTracker: public bfu::SerializableClassBase<ResourceTracker>
 	{
+		friend class AssetSystem;
 #ifdef TESTS
 	public:
 #endif
@@ -22,7 +25,6 @@ namespace asapi
 		SERIALIZABLE_VAR( ResourceTracker, uint64_t, m_modified_epoch );
 		SERIALIZABLE_VAR( ResourceTracker, uint64_t, m_modified_ns ); //modification time in nano seconds since last full second
 
-		FILE::MMAP data;
 	public:
 		ResourceTracker();
 		~ResourceTracker();
@@ -41,6 +43,8 @@ namespace asapi
 		bool CmpPath(const ResourceTracker& other);
 
 		friend bfu::stream& operator<<(bfu::stream&, const ResourceTracker& );
+
+		static void MoveResourceId(ResourceTracker & dest, ResourceTracker & source);
 	};
 	bfu::stream& operator<<(bfu::stream&, const ResourceTracker& );
 

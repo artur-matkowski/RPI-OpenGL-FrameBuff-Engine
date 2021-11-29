@@ -34,7 +34,7 @@ namespace asapi
 			/* Don't descend up the tree or include the current directory */
 			if( (strncmp(entry->d_name, "..", 2) != 0) &&
 				(strncmp(entry->d_name, ".", 1) != 0) &&
-				(strstr(entry->d_name, ".asset.json") == 0) &&
+				(strstr(entry->d_name, ".res.json") == 0) &&
 				(strstr(entry->d_name, ".asset.bin") == 0) )
 			{
 				/* Prepend the current directory and recurse */
@@ -96,10 +96,24 @@ namespace asapi
 		return ret;
 	}
 
+	void GetDirectory(char* buff, const char* fullpath, uint32_t fullPathSize)
+	{
+		strncpy(buff, fullpath, std::min(fullPathSize, (uint32_t)MAX_PATH_SIZE));
+
+		int index = (int)std::min(fullPathSize, (uint32_t)MAX_PATH_SIZE)-1;
+
+		while( buff[index]!='/' && index>=0 )
+		{
+			buff[index]='\0';
+			--index;
+		}
+	}
+
 	void AssetSystem::RefreshResources()
 	{
 		std::vector< std::string > 			paths;
 		std::vector< ResourceTracker > 		upToDateResources;
+		char pathBuff[MAX_PATH_SIZE];
 
 		ListFiles(paths, *ps_resourcesDirectoryPath);
 
@@ -111,17 +125,38 @@ namespace asapi
 			upToDateResources[i].Init( paths[i].c_str() );
 		}
 
+		//transfer uniqueID to new resource set, so the links are preserved
 		for(int i=0; i<v_ResourceTrackers.size(); ++i)
 		{
 			ResourceTracker* res = FindResource( upToDateResources, v_ResourceTrackers[i] );
 
 			if( res != nullptr )
 			{
-				*res = std::move( v_ResourceTrackers[i] );
+				ResourceTracker::MoveResourceId(v_ResourceTrackers[i], *res);
 			}
 		}
 
 		v_ResourceTrackers = std::move( upToDateResources );
+
+
+		for(int i=0; i<v_ResourceTrackers.size(); ++i)
+		{
+			FILE::STREAM out;
+			
+			GetDirectory( pathBuff, v_ResourceTrackers[i].m_path.c_str(), v_ResourceTrackers[i].m_path.size() );
+			std::string resourceTrackerPath(pathBuff);
+			resourceTrackerPath += std::to_string( v_ResourceTrackers[i].m_resourceID.ID() );
+			resourceTrackerPath += ".res.json";
+
+			//log::debug << "resource path: " << resourceTrackerPath << std::endl;
+
+			p_JSONSerializer.clear();
+
+			p_JSONSerializer.Serialize( &v_ResourceTrackers[i] );
+
+			out.InitForWrite( resourceTrackerPath.c_str() );
+			out.Write( p_JSONSerializer.c_str(), p_JSONSerializer.size() );
+		}
 	}
 
 

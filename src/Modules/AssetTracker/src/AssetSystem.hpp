@@ -9,6 +9,8 @@ namespace asapi
 	class AssetSystem
 	{
 		char** 							ps_resourcesDirectoryPath = 0;
+		bfu::JSONSerializer				p_JSONSerializer;
+		bfu::BinarySerializer			p_BinarySerializer;
 #ifdef TESTS
 	public:
 #endif
