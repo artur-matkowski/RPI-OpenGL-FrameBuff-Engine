@@ -140,7 +140,7 @@ namespace asapi
 		}
 		else
 		{
-			log::debug << "Removed ResourceTracker file: " << path.c_str() << std::endl;
+			//log::debug << "Removed ResourceTracker file: " << path.c_str() << std::endl;
 		}
 	}
 
