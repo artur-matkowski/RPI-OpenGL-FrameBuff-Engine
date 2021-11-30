@@ -12,7 +12,10 @@ namespace asapi
 	}
 	ResourceTracker::~ResourceTracker()
 	{
-
+		if( m_outDated && m_resourceID.ID() != 0 )
+		{
+			RemoveResourceTrackerFile();
+		}
 	}
 	ResourceTracker::ResourceTracker(const ResourceTracker& cp)
 	{
@@ -117,6 +120,21 @@ namespace asapi
 		ret += ".res.json";
 
 		return ret;
+	}
+
+	void ResourceTracker::RemoveResourceTrackerFile()
+	{
+		std::string path = GetResourceTrackerPath();
+		int resoult = unlink( path.c_str() );
+
+		if( resoult!=0 )
+		{
+			log::warning << "Can not remove ResourceTracker file: " << path.c_str() << std::endl;
+		}
+		else
+		{
+			log::debug << "Removed ResourceTracker file: " << path.c_str() << std::endl;
+		}
 	}
 
 	bfu::stream& operator<<(bfu::stream& os, const ResourceTracker& res)

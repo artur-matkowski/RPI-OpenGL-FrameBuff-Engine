@@ -32,7 +32,7 @@ void SetupTests(char** argv)
 void CleanUpTests()
 {
 	Command("rm %s/assets/*txt", *resourcePath);
-	Command("rm %s/assets/Resource_Trackers/*", *resourcePath);
+	//Command("rm %s/assets/Resource_Trackers/*", *resourcePath);
 }
 
 struct resourceEntry
@@ -131,7 +131,7 @@ int main(int argc, char** argv)
 			//log::info << "New Resource found: " << res.v_ResourceTrackers[i].m_filename << std::endl;
 		}
 	}
-	
+
 
 	if(founded_oldResources == (expectedresources-expectedUpdates) && res.v_ResourceTrackers.size() == expectedresources)
 		log::info << "TEST passed : old resources found: " << founded_oldResources << " all reosurces found :" << res.v_ResourceTrackers.size() << std::endl;
