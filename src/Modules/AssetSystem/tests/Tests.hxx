@@ -37,6 +37,7 @@ public:
 	void CreateResource(const char* filename, const char* content);
 	void MoveResource(const char* source, const char* destination);
 	void RemoveResource(const char* filename);
+	void AppendResource(const char* filename, const char* content);
 
 	bool TestDataCohesion();
 

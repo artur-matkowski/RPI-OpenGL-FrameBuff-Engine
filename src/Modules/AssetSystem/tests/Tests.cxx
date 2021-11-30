@@ -84,10 +84,22 @@ void Tests::RemoveResource(const char* filename)
 
 	removedResources++;
 }
+void Tests::AppendResource(const char* filename, const char* content)
+{
+
+	Command("echo %s > %s/assets/%s", content, m_testProjectPath, filename);
+
+
+	removedResources++;
+}
 
 bool ProcessResourceTracker(asapi::ResourceTracker* in)
 {
-	log::debug << "ProcessResourceTracker called for: " << in->GetFilename() << std::endl;
+	char buff[256];
+
+	sprintf(buff, "%llu", in->GetResourceID() );
+
+	log::debug << "ProcessResourceTracker called for: " << in->GetFilename() << " / " << buff << std::endl;
 	return true;
 }
 
@@ -133,7 +145,11 @@ bool Tests::TestDataCohesion()
 	{
 		if( res.FindResourceByResourceID( currentResources[i].resourceLink ) == nullptr )
 		{
-			log::error << "Could not find resource by resourceID in any of the ResourceTracker class objects: "  << currentResources[i].resourceLink << std::endl;
+			char buff[256];
+
+			sprintf(buff, "%llu", currentResources[i].resourceLink );
+
+			log::error << "Could not find resource by resourceID in any of the ResourceTracker class objects: "  << buff << std::endl;
 			dataCohesion = false;
 		}
 
@@ -150,13 +166,21 @@ bool Tests::TestDataCohesion()
 
 		if( !linkFound )
 		{
-			log::error << "Could not find resource by resourceID in any of the ResourceTracker files (*.res.json): "  << currentResources[i].resourceLink << std::endl;
+			char buff[256];
+
+			sprintf(buff, "%llu", currentResources[i].resourceLink );
+			
+			log::error << "Could not find resource by resourceID in any of the ResourceTracker files (*.res.json): "  << buff << std::endl;
 			dataCohesion = false;
 		}
 
 		if( res.FindResourceByResourceID( currentResources[i].resourceLink ) == nullptr )
 		{
-			log::error << "Could not find resource by resourceID in any of the ResourceTracker class objects: "  << currentResources[i].resourceLink << std::endl;
+			char buff[256];
+
+			sprintf(buff, "%llu", currentResources[i].resourceLink );
+
+			log::error << "Could not find resource by resourceID in any of the ResourceTracker class objects: "  << buff << std::endl;
 			dataCohesion = false;
 		}
 	}

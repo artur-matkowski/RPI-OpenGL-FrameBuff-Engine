@@ -30,8 +30,7 @@ int main(int argc, char** argv)
 	tests.TestDataCohesion();
 
 
-	tests.RemoveResource("resoruce2.txt");
-	tests.CreateResource("resoruce2.txt", "randomData22");
+	tests.AppendResource("resoruce2.txt", "randomData22");
 
 	tests.TestDataCohesion();
 
