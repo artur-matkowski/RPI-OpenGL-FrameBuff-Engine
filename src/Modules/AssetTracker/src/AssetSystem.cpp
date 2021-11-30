@@ -1,65 +1,10 @@
 #include "AssetSystem.hpp"
 #include "object.hpp"
 
-#include <dirent.h> 
-#include <sys/stat.h>
 
 
 namespace asapi
 {
-	void ListFiles(std::vector< std::string >& out, const char* dirname)
-	{
-		int i;
-		DIR* d_fh;
-		struct dirent* entry;
-		char longest_name[MAX_PATH_SIZE];
-
-		mkdir(dirname, 755);
-
-		if( (d_fh = opendir(dirname)) == NULL) 
-		{
-			log::error << "Couldn't open directory, errno: " << errno << "\n\tDirname: " << dirname << " " << std::endl;
-			return;
-		}
-
-		// if( (entry=readdir(d_fh)) == NULL )
-		// {
-		// 	log::error << "readdir error: " << errno << std::endl;
-		// 	return;
-		// }
-		
-		
-		while( (entry=readdir(d_fh)) != NULL )
-		{
-			/* Don't descend up the tree or include the current directory */
-			if( (strncmp(entry->d_name, "..", 2) != 0) &&
-				(strncmp(entry->d_name, ".", 1) != 0) &&
-				(strstr(entry->d_name, ".res.json") == 0) &&
-				(strstr(entry->d_name, ".asset.bin") == 0) )
-			{
-				/* Prepend the current directory and recurse */
-				strncpy(longest_name, dirname, MAX_PATH_SIZE-1);
-				strncat(longest_name, "/", MAX_PATH_SIZE-1);
-				strncat(longest_name, entry->d_name, MAX_PATH_SIZE-1);
-
-				/* If it's a directory print it's name and recurse into it */
-				if (entry->d_type == DT_DIR) 
-				{
-					ListFiles(out, longest_name);
-				}
-				else //if not dir
-				{
-					out.emplace_back(longest_name);
-				}
-			}
-		}
-		
-		
-		
-
-		closedir(d_fh);
-	}
-
 	void AssetSystem::Init(const char* projectPath)
 	{
 		SetProjectPath(projectPath);
@@ -126,7 +71,7 @@ namespace asapi
 		std::vector< ResourceTracker > 		upToDateResources;
 		char pathBuff[MAX_PATH_SIZE];
 
-		ListFiles(paths, s_assetsDirectoryPath.c_str());
+		ListFiles(paths, s_assetsDirectoryPath.c_str(), {".res.json"});
 
 		upToDateResources.resize( paths.size() );
 
@@ -172,6 +117,43 @@ namespace asapi
 			out.InitForWrite( resourceTrackerPath.c_str() );
 			out.Write( p_JSONSerializer.c_str(), p_JSONSerializer.size() );
 		}
+	}
+
+	ResourceTracker* AssetSystem::FindResourceByContentHash(const std::string& content_hash)
+	{
+		for(int i=0; i<v_ResourceTrackers.size(); ++i)
+		{
+			if( strcmp( v_ResourceTrackers[i].m_content_hash.c_str(), content_hash.c_str() ) == 0 )
+			{
+				return &v_ResourceTrackers[i];
+			}
+		}
+
+		return nullptr;
+	}
+	ResourceTracker* AssetSystem::FindResourceByFilename(const std::string& filename)
+	{
+		for(int i=0; i<v_ResourceTrackers.size(); ++i)
+		{
+			if( strcmp( v_ResourceTrackers[i].m_filename.c_str(), filename.c_str() ) == 0 )
+			{
+				return &v_ResourceTrackers[i];
+			}
+		}
+
+		return nullptr;
+	}
+	ResourceTracker* AssetSystem::FindResourceByResourceID(const uint64_t& resourceID)
+	{
+		for(int i=0; i<v_ResourceTrackers.size(); ++i)
+		{
+			if( v_ResourceTrackers[i].m_resourceID.ID() == resourceID )
+			{
+				return &v_ResourceTrackers[i];
+			}
+		}
+
+		return nullptr;
 	}
 
 

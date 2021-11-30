@@ -1,58 +1,5 @@
-#include "log.hpp"
 
-#define TESTS
-#include "AssetSystem.hpp"
-
-char** resourcePath;
-
-void Command(const char *format, ...)
-{
-	char buff[1024];
-
-	va_list args;
-	va_start (args, format);
-	vsprintf (buff, format, args);
-	va_end (args);
-
-	system(buff);
-}
-
-void SetupTests(char** argv)
-{
-	resourcePath = new char*;
-	*resourcePath = new char[1024];
-	char command[1024];
-
-
-	strcpy(*resourcePath, argv[1]);
-	//strcat(*resourcePath, "/assets");
-
-}
-
-void CleanUpTests()
-{
-	Command("rm %s/assets/*txt", *resourcePath);
-	//Command("rm %s/assets/Resource_Trackers/*", *resourcePath);
-}
-
-struct resourceEntry
-{
-	bfu::string 	m_content_hash;
-	uint64_t  		m_resourceID;
-
-	resourceEntry(bfu::string& arg1, uint64_t arg2) : m_content_hash(arg1), m_resourceID(arg2){};
-};
-
-std::vector<resourceEntry> resources;
-bool findEntry(bfu::string& arg1, uint64_t arg2)
-{
-	for(int i=0; i<resources.size(); ++i)
-	{
-		if(resources[i].m_content_hash == arg1 && resources[i].m_resourceID == arg2)
-			return true;
-	}
-	return false;
-}
+#include "Tests.hxx"
 
 int main(int argc, char** argv)
 {
@@ -62,7 +9,21 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
+	Tests tests(argv[1]);
 
+
+	tests.CreateResource("resoruce1.txt", "randomData1");
+	tests.CreateResource("resoruce2.txt", "randomData11");
+	tests.CreateResource("resoruce3.txt", "randomData111");
+
+	tests.TestDataCohesion();
+
+
+	tests.MoveResource("resoruce1.txt", "resoruce1new.txt");
+
+	tests.TestDataCohesion();
+
+/*
 	SetupTests(argv);
 
 
@@ -183,7 +144,11 @@ int main(int argc, char** argv)
 		resources.push_back( resourceEntry(res.v_ResourceTrackers[i].m_content_hash, res.v_ResourceTrackers[i].m_resourceID.ID()) );
 	}
 	/////////////////////////////////////////////////////////////////////////////////////////
-	//CleanUpTests();
+
+	CleanUpTests();
+*/
+
+
 
 	return 0;
 }

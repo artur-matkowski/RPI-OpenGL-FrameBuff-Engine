@@ -38,6 +38,8 @@ namespace asapi
 
 
 		static void SetProjectPath(const char* path);
+		static std::string GetContentHash(const char* path, uint32_t* out_size );
+
 
 		void Init(const char* path);
 		ResourceTracker& operator=(const ResourceTracker& other);
@@ -53,6 +55,9 @@ namespace asapi
 
 		inline void SetDirty(bool isDirty) { this->isDirty = isDirty; }
 		inline void MarkOutdated() { m_outDated = true; }
+		inline uint64_t GetResourceID(){ return m_resourceID.ID(); }
+		inline std::string GetFilename(){ return m_filename; }
+
 
 		void ObtainResourceOwnership(ResourceTracker & source);
 

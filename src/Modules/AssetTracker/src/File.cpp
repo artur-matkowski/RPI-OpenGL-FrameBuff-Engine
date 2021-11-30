@@ -1,7 +1,10 @@
 #include "File.hpp"
+#include "object.hpp"
 
 #include <fcntl.h>
 #include <sys/mman.h>
+#include <dirent.h> 
+#include <sys/stat.h>
 
 #include "sha256.h"
 #include "bfu.hpp"
@@ -10,6 +13,70 @@
 
 namespace asapi
 {
+	void ListFiles(std::vector< std::string >& out, const char* dirname, const std::vector< std::string >& excludeExtensions)
+	{
+		int i;
+		DIR* d_fh;
+		struct dirent* entry;
+		char longest_name[MAX_PATH_SIZE];
+
+		mkdir(dirname, 755);
+
+		if( (d_fh = opendir(dirname)) == NULL) 
+		{
+			log::error << "Couldn't open directory, errno: " << errno << "\n\tDirname: " << dirname << " " << std::endl;
+			return;
+		}
+
+		// if( (entry=readdir(d_fh)) == NULL )
+		// {
+		// 	log::error << "readdir error: " << errno << std::endl;
+		// 	return;
+		// }
+		
+		
+		while( (entry=readdir(d_fh)) != NULL )
+		{
+
+			/* Don't descend up the tree or include the current directory */
+			if( (strncmp(entry->d_name, "..", 2) != 0) &&
+				(strncmp(entry->d_name, ".", 1) != 0) )
+			{
+				bool skipfile = false;
+				for(auto it = excludeExtensions.begin(); it!=excludeExtensions.end(); ++it)
+				{
+					if(strstr(entry->d_name, it->c_str()) != 0 )
+					{
+						skipfile = true;
+						break;
+					}
+				}
+
+				if( !skipfile )
+				{
+					/* Prepend the current directory and recurse */
+					strncpy(longest_name, dirname, MAX_PATH_SIZE-1);
+					strncat(longest_name, "/", MAX_PATH_SIZE-1);
+					strncat(longest_name, entry->d_name, MAX_PATH_SIZE-1);
+
+					/* If it's a directory print it's name and recurse into it */
+					if (entry->d_type == DT_DIR) 
+					{
+						ListFiles(out, longest_name, excludeExtensions);
+					}
+					else //if not dir
+					{
+						out.emplace_back(longest_name);
+					}
+				}
+
+			}
+		}
+
+		closedir(d_fh);
+	}
+
+
 	FILE::MMAP::MMAP(FILE::MMAP&& cp) noexcept
 	{
 		Close();

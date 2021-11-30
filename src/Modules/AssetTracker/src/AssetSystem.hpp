@@ -18,7 +18,13 @@ namespace asapi
 	public:
 		void Init(const char* projectPath);
 		void SetProjectPath(const char* projectPath);
+
+
+		//resoruces:
 		void RefreshResources();
+		ResourceTracker* FindResourceByContentHash(const std::string& content_hash);
+		ResourceTracker* FindResourceByFilename(const std::string& filename);
+		ResourceTracker* FindResourceByResourceID(const uint64_t& resourceID);
 
 
 		friend bfu::stream& operator<<(bfu::stream&, const AssetSystem& );

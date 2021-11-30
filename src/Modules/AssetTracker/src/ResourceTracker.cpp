@@ -40,6 +40,20 @@ namespace asapi
 		_ResourceTrackersPath += "assets/Resource_Trackers/";
 	}
 
+	std::string ResourceTracker::GetContentHash(const char* path, uint32_t* out_size )
+	{
+		FILE::MMAP data;
+        data.InitForRead(path);
+
+		SHA256 sha256; 
+		sha256(data.Data(), data.Size());
+
+		std::string ret = sha256.getHash();
+		*out_size = data.Size();
+
+		return ret;
+	}
+
 	void ResourceTracker::Init(const char* path)
 	{
 		struct stat attrib;
@@ -57,15 +71,8 @@ namespace asapi
 
     	m_filename = std::string(filename);
 
+		m_content_hash = GetContentHash(path, &m_size);
 
-		FILE::MMAP data;
-        data.InitForRead(path);
-
-		SHA256 sha256; 
-		sha256(data.Data(), data.Size());
-
-		m_content_hash = sha256.getHash();
-		m_size = data.Size();
 		m_modified_epoch = static_cast<uint64_t>(attrib.st_mtim.tv_sec);
 		m_modified_ns = static_cast<uint64_t>(attrib.st_mtim.tv_nsec);
 	}

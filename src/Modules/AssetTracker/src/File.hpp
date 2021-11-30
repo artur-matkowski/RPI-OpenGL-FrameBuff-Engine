@@ -3,11 +3,15 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <cstdint>
+#include <vector>
 #include <string>
 
 
 namespace asapi
 {
+	void ListFiles(std::vector< std::string >& out, const char* dirname, const std::vector< std::string >& excludeExtensions);
+
+
 	struct FILE
 	{
 		class MMAP

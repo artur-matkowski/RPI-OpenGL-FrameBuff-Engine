@@ -20,7 +20,7 @@ INCSTRUCTURE = $(patsubst %, -I%, $(DIRSTRUCTURE))
 
 
 final:
-	$(CC) -DIS_EDITOR $(VENDOR_INC) $(INCSTRUCTURE) $(VENDOR_DEPS) $(SOURCES) main.c
+	$(CC) -DIS_EDITOR $(VENDOR_INC) $(INCSTRUCTURE) $(VENDOR_DEPS) $(SOURCES) -Itests tests/*.cxx main.cxx
 
 all: bfu hash
 	$(MAKE) -C ./ final
