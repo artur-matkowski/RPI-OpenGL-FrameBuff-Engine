@@ -226,56 +226,12 @@ namespace asapi{
 		mkdir(dir_path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 	}
 
-	void ResourceSystem::RefreshAssets()
-	{
-		char dir_path[MAX_PATH_SIZE];
 
-		std::vector<std::string> assetsPaths;
-		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
-		strncat(dir_path, "/assets", MAX_PATH_SIZE-1);
-		ListFiles(assetsPaths, dir_path);
 
-		for(int i=0; i<assetsPaths.size(); ++i)
-		{
-			std::string hash = AssetMetaDataSocket::GetHash( assetsPaths[i].c_str() );
-			eAssetImportType importState = AssetMetaDataSocket::AssetImportState( assetsPaths[i].c_str(), hash );
 
-			switch(importState)
-			{
-				case New:
-					{
-						AssetMetaDataSocket asset = AssetMetaDataSocket::OnAssetAdded( assetsPaths[i].c_str(), hash );
-						m_assetsMap[hash] = asset;
-					}
-					break;
-				case Moved:
-					{
-						auto resoult = m_assetsMap.find( hash );
-						AssetMetaDataSocket::OnAssetMoved( assetsPaths[i].c_str(), &resoult->second );
-					}
-					break;
-			}
-		}
-	}
-
-	AssetMetaDataSocket* ResourceSystem::GetAssetMetaDataSocketByHash(const std::string& hash)
-	{
-		AssetMetaDataSocket* ret = nullptr;
-
-		auto it = m_assetsMap.find(hash);
-
-		if( it!=m_assetsMap.end() )
-		{
-			ret = &it->second;
-		}
-
-		return ret;
-	}
 
 	void ResourceSystem::RefreshResources()
 	{
-		RefreshAssets();
-
 		char buff[MAX_PATH_SIZE];
 
 		if(strcmp(m_ProjectPath, ".")==0)

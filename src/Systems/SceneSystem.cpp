@@ -31,7 +31,7 @@ namespace asapi
 
 	bool SceneSystem::File2JSON(bfu::JSONSerializer& jsonStream, const char* filePath)
 	{
-		FILE * pFile = fopen (filePath,"rb");
+		::FILE * pFile = fopen (filePath,"rb");
 
 		if( pFile==NULL )
 		{
@@ -54,7 +54,7 @@ namespace asapi
 
 	bool SceneSystem::JSON2File(bfu::JSONSerializer& jsonStream, const char* filePath)
 	{
-		FILE * pFile = fopen (filePath,"wb");
+		::FILE * pFile = fopen (filePath,"wb");
 
 		if( pFile==NULL )
 		{
@@ -73,7 +73,7 @@ namespace asapi
 		bfu::JSONSerializer& jsonSerializer = SYSTEMS::GetObject().SCENE.GetJSONSerializer();
 		jsonSerializer.clear();
 
-		FILE * pFile = fopen (filePath,"rb");
+		::FILE * pFile = fopen (filePath,"rb");
 
 		if( pFile==NULL )
 		{
@@ -102,7 +102,7 @@ namespace asapi
 		bfu::JSONSerializer& jsonSerializer = SYSTEMS::GetObject().SCENE.GetJSONSerializer();
 		jsonSerializer.clear();
 
-		FILE * pFile = fopen (filePath,"wb");
+		::FILE * pFile = fopen (filePath,"wb");
 
 		if( pFile==NULL )
 		{

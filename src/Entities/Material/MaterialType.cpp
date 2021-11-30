@@ -225,7 +225,7 @@ namespace asapi
 
 	void MaterialType::Compile(const char* dest, const char* source)
 	{
-		FILE *src, *dst;
+		::FILE *src, *dst;
 		long int srcSize, dstSize;
 
 		src = fopen (source,"rb");
