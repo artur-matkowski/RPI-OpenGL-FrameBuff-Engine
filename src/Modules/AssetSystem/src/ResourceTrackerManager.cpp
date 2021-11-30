@@ -1,18 +1,18 @@
-#include "AssetSystem.hpp"
+#include "ResourceTrackerManager.hpp"
 #include "object.hpp"
 
 
 
 namespace asapi
 {
-	void AssetSystem::Init(const char* projectPath)
+	void ResourceTrackerManager::Init(const char* projectPath)
 	{
 		SetProjectPath(projectPath);
 
 		srand( time( NULL ) );
 	}
 
-	void AssetSystem::SetProjectPath(const char* projectPath)
+	void ResourceTrackerManager::SetProjectPath(const char* projectPath)
 	{
 		s_assetsDirectoryPath = projectPath;
 
@@ -51,27 +51,14 @@ namespace asapi
 
 		return ret;
 	}
-/*
-	void GetDirectory(char* buff, const char* fullpath, uint32_t fullPathSize)
-	{
-		strncpy(buff, fullpath, std::min(fullPathSize, (uint32_t)MAX_PATH_SIZE));
 
-		int index = (int)std::min(fullPathSize, (uint32_t)MAX_PATH_SIZE)-1;
-
-		while( buff[index]!='/' && index>=0 )
-		{
-			buff[index]='\0';
-			--index;
-		}
-	}
-*/
-	void AssetSystem::RefreshResources()
+	void ResourceTrackerManager::RefreshResources()
 	{
 		std::vector< std::string > 			paths;
 		std::vector< ResourceTracker > 		upToDateResources;
 		char pathBuff[MAX_PATH_SIZE];
 
-		ListFiles(paths, s_assetsDirectoryPath.c_str(), {".res.json"});
+		ListFiles(paths, s_assetsDirectoryPath.c_str(), {".res.json", ".res.bin"});
 
 		upToDateResources.resize( paths.size() );
 
@@ -119,7 +106,7 @@ namespace asapi
 		}
 	}
 
-	ResourceTracker* AssetSystem::FindResourceByContentHash(const std::string& content_hash)
+	ResourceTracker* ResourceTrackerManager::FindResourceByContentHash(const std::string& content_hash)
 	{
 		for(int i=0; i<v_ResourceTrackers.size(); ++i)
 		{
@@ -131,7 +118,7 @@ namespace asapi
 
 		return nullptr;
 	}
-	ResourceTracker* AssetSystem::FindResourceByFilename(const std::string& filename)
+	ResourceTracker* ResourceTrackerManager::FindResourceByFilename(const std::string& filename)
 	{
 		for(int i=0; i<v_ResourceTrackers.size(); ++i)
 		{
@@ -143,7 +130,7 @@ namespace asapi
 
 		return nullptr;
 	}
-	ResourceTracker* AssetSystem::FindResourceByResourceID(const uint64_t& resourceID)
+	ResourceTracker* ResourceTrackerManager::FindResourceByResourceID(const uint64_t& resourceID)
 	{
 		for(int i=0; i<v_ResourceTrackers.size(); ++i)
 		{
@@ -157,7 +144,7 @@ namespace asapi
 	}
 
 
-	bfu::stream& operator<<(bfu::stream& os, const AssetSystem& res)
+	bfu::stream& operator<<(bfu::stream& os, const ResourceTrackerManager& res)
 	{
 		for(int i=0; i<res.v_ResourceTrackers.size(); ++i)
 		{

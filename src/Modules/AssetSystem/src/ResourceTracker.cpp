@@ -1,6 +1,6 @@
 #include "ResourceTracker.hpp"
 #include "sha256.h"
-#include "AssetSystem.hpp"
+#include "ResourceTrackerManager.hpp"
 
 namespace asapi
 {

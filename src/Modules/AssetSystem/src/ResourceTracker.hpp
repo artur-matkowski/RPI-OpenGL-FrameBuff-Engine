@@ -9,11 +9,11 @@ using bfu::string;
 
 namespace asapi
 {
-	class AssetSystem;
+	class ResourceTrackerManager;
 
 	class ResourceTracker: public bfu::SerializableClassBase<ResourceTracker>
 	{
-		friend class AssetSystem;
+		friend class ResourceTrackerManager;
 #ifdef TESTS
 	public:
 #endif

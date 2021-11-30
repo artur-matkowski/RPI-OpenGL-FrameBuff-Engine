@@ -1,12 +1,12 @@
-#ifndef H_AssetSystem
-#define H_AssetSystem
+#ifndef H_ResourceTrackerManager
+#define H_ResourceTrackerManager
 #include <vector>
 #include "ResourceTracker.hpp"
 
 
 namespace asapi
 {
-	class AssetSystem
+	class ResourceTrackerManager
 	{
 		std::string						s_assetsDirectoryPath;
 		bfu::JSONSerializer				p_JSONSerializer;
@@ -27,7 +27,7 @@ namespace asapi
 		ResourceTracker* FindResourceByResourceID(const uint64_t& resourceID);
 
 
-		friend bfu::stream& operator<<(bfu::stream&, const AssetSystem& );
+		friend bfu::stream& operator<<(bfu::stream&, const ResourceTrackerManager& );
 	};
 }
 

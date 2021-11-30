@@ -4,7 +4,7 @@
 #include "object.hpp"
 
 #define TESTS
-#include "AssetSystem.hpp"
+#include "ResourceTrackerManager.hpp"
 
 
 class Tests
@@ -25,7 +25,7 @@ class Tests
 	char m_testProjectPath[MAX_PATH_SIZE];
 	char m_ResourceFilesDirPath[MAX_PATH_SIZE];
 
-	asapi::AssetSystem res;
+	asapi::ResourceTrackerManager res;
 	std::vector< resourceEntry > currentResources;
 
 	static void Command(const char *format, ...);
