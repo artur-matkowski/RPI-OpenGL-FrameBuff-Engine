@@ -85,6 +85,11 @@ void Tests::RemoveResource(const char* filename)
 	removedResources++;
 }
 
+bool ProcessResourceTracker(asapi::ResourceTracker* in)
+{
+	log::debug << "ProcessResourceTracker called for: " << in->GetFilename() << std::endl;
+	return true;
+}
 
 bool Tests::TestDataCohesion()
 {
@@ -93,6 +98,7 @@ bool Tests::TestDataCohesion()
 	std::vector< std::string > resourceFiles;
 
 	res.RefreshResources();
+	res.IterateOverDirtyResourceTrackers( ProcessResourceTracker );
 
 	//check if we introduced new resources, and fetch their linkID if so
 	for(int i=0; i<currentResources.size(); ++i)

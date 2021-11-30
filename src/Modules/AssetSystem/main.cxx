@@ -8,6 +8,7 @@ int main(int argc, char** argv)
 		log::error << "argv[1] must be a path to project directory." << std::endl;
 		return -1;
 	}
+	log::debug << "Starting tests" << std::endl;
 
 	Tests tests(argv[1]);
 
@@ -28,6 +29,11 @@ int main(int argc, char** argv)
 
 	tests.TestDataCohesion();
 
+
+	tests.RemoveResource("resoruce2.txt");
+	tests.CreateResource("resoruce2.txt", "randomData22");
+
+	tests.TestDataCohesion();
 
 
 

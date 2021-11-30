@@ -54,6 +54,7 @@ namespace asapi
 		friend bfu::stream& operator<<(bfu::stream&, const ResourceTracker& );
 
 		inline void SetContentDirty(bool isContentDirty) { this->isContentDirty = isContentDirty; }
+		inline bool IsContentDirty() { return isContentDirty; }
 		inline void MarkOutdated() { m_outDated = true; }
 		inline uint64_t GetResourceID(){ return m_resourceID.ID(); }
 		inline std::string GetFilename(){ return m_filename; }

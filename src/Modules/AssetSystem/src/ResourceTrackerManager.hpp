@@ -27,6 +27,8 @@ namespace asapi
 		ResourceTracker* FindResourceByResourceID(const uint64_t& resourceID);
 		ResourceTracker* FindResourceByResourceID(const UniqueID& resourceID);
 
+		void IterateOverDirtyResourceTrackers(bool (*callback)(ResourceTracker*) );
+
 
 		friend bfu::stream& operator<<(bfu::stream&, const ResourceTrackerManager& );
 	};
