@@ -25,6 +25,7 @@ namespace asapi
 		ResourceTracker* FindResourceByContentHash(const std::string& content_hash);
 		ResourceTracker* FindResourceByFilename(const std::string& filename);
 		ResourceTracker* FindResourceByResourceID(const uint64_t& resourceID);
+		ResourceTracker* FindResourceByResourceID(const UniqueID& resourceID);
 
 
 		friend bfu::stream& operator<<(bfu::stream&, const ResourceTrackerManager& );

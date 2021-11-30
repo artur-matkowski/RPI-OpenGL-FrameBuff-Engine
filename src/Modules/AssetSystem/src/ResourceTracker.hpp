@@ -25,7 +25,7 @@ namespace asapi
 		SERIALIZABLE_VAR( ResourceTracker, uint64_t, m_modified_epoch );
 		SERIALIZABLE_VAR( ResourceTracker, uint64_t, m_modified_ns ); //modification time in nano seconds since last full second
 
-		bool 				isDirty = true; 	//Need processing
+		bool 				isContentDirty = true; 	//Need processing
 		bool 				m_outDated = false; //true if resource tracker json file is to be deleted upon destruction
 
 		static std::string 	_ResourceTrackersPath;
@@ -53,7 +53,7 @@ namespace asapi
 
 		friend bfu::stream& operator<<(bfu::stream&, const ResourceTracker& );
 
-		inline void SetDirty(bool isDirty) { this->isDirty = isDirty; }
+		inline void SetContentDirty(bool isContentDirty) { this->isContentDirty = isContentDirty; }
 		inline void MarkOutdated() { m_outDated = true; }
 		inline uint64_t GetResourceID(){ return m_resourceID.ID(); }
 		inline std::string GetFilename(){ return m_filename; }

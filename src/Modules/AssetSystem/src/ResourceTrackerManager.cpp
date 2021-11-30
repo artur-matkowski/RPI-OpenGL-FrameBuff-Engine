@@ -81,7 +81,7 @@ namespace asapi
 
 				if( !res->CmpContent( v_ResourceTrackers[i] ) )
 				{
-					res->SetDirty( true );
+					res->SetContentDirty( true );
 				}
 			}
 		}
@@ -135,6 +135,18 @@ namespace asapi
 		for(int i=0; i<v_ResourceTrackers.size(); ++i)
 		{
 			if( v_ResourceTrackers[i].m_resourceID.ID() == resourceID )
+			{
+				return &v_ResourceTrackers[i];
+			}
+		}
+
+		return nullptr;
+	}
+	ResourceTracker* ResourceTrackerManager::FindResourceByResourceID(const UniqueID& resourceID)
+	{
+		for(int i=0; i<v_ResourceTrackers.size(); ++i)
+		{
+			if( v_ResourceTrackers[i].m_resourceID.ID() == resourceID.ID() )
 			{
 				return &v_ResourceTrackers[i];
 			}
