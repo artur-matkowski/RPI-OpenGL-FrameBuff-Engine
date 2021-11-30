@@ -8,7 +8,7 @@ namespace asapi
 {
 	class AssetSystem
 	{
-		char** 							ps_resourcesDirectoryPath = 0;
+		std::string						s_assetsDirectoryPath;
 		bfu::JSONSerializer				p_JSONSerializer;
 		bfu::BinarySerializer			p_BinarySerializer;
 #ifdef TESTS
@@ -16,12 +16,12 @@ namespace asapi
 #endif
 		std::vector<ResourceTracker> 	v_ResourceTrackers;
 	public:
-		void Init(char** resourcesPath);
+		void Init(const char* projectPath);
+		void SetProjectPath(const char* projectPath);
 		void RefreshResources();
 
 
 		friend bfu::stream& operator<<(bfu::stream&, const AssetSystem& );
-
 	};
 }
 

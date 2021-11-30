@@ -33,3 +33,7 @@ hash:
 
 test:
 	./a.out $(ROOT_MODULE)
+
+clean-test:
+	rm -f assets/Resource_Trackers/*.json
+	rm -f assets/*.txt

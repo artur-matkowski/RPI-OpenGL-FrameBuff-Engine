@@ -1,8 +1,11 @@
 #include "ResourceTracker.hpp"
 #include "sha256.h"
+#include "AssetSystem.hpp"
 
 namespace asapi
 {
+	std::string ResourceTracker::_ResourceTrackersPath;
+
 	ResourceTracker::ResourceTracker()
 	{
 
@@ -24,6 +27,14 @@ namespace asapi
 		m_size = std::move(cp.m_size);
 		m_modified_epoch = std::move(cp.m_modified_epoch);
 		m_modified_ns = std::move(cp.m_modified_ns);
+	}
+
+	void ResourceTracker::SetProjectPath(const char* path)
+	{
+		_ResourceTrackersPath = path;
+		if( _ResourceTrackersPath.back() != '/' )
+			_ResourceTrackersPath += "/";
+		_ResourceTrackersPath += "assets/Resource_Trackers/";
 	}
 
 	void ResourceTracker::Init(const char* path)
@@ -75,9 +86,9 @@ namespace asapi
 
 		return *this;
 	}
-	void ResourceTracker::MoveResourceId(ResourceTracker & dest, ResourceTracker & source)
+	void ResourceTracker::ObtainResourceOwnership(ResourceTracker & source)
 	{
-		dest.m_resourceID = std::move(source.m_resourceID);
+		m_resourceID = std::move(source.m_resourceID);
 	}
 
 	bool ResourceTracker::operator==(const ResourceTracker& other)
@@ -99,6 +110,14 @@ namespace asapi
 		return m_path == other.m_path;
 	}
 
+	std::string ResourceTracker::GetResourceTrackerPath()
+	{
+		std::string ret = _ResourceTrackersPath;
+		ret += std::to_string( m_resourceID.ID() );
+		ret += ".res.json";
+
+		return ret;
+	}
 
 	bfu::stream& operator<<(bfu::stream& os, const ResourceTracker& res)
 	{

@@ -25,12 +25,18 @@ namespace asapi
 		SERIALIZABLE_VAR( ResourceTracker, uint64_t, m_modified_epoch );
 		SERIALIZABLE_VAR( ResourceTracker, uint64_t, m_modified_ns ); //modification time in nano seconds since last full second
 
+		bool 				isDirty = true; 	//Need processing
+
+		static std::string 	_ResourceTrackersPath;
+
 	public:
 		ResourceTracker();
 		~ResourceTracker();
 		ResourceTracker(const ResourceTracker& cp);
 		ResourceTracker(ResourceTracker&& cp) noexcept;
 
+
+		static void SetProjectPath(const char* path);
 
 		void Init(const char* path);
 		ResourceTracker& operator=(const ResourceTracker& other);
@@ -44,7 +50,11 @@ namespace asapi
 
 		friend bfu::stream& operator<<(bfu::stream&, const ResourceTracker& );
 
-		static void MoveResourceId(ResourceTracker & dest, ResourceTracker & source);
+		inline void SetDirty(bool isDirty) { this->isDirty = isDirty; }
+
+		void ObtainResourceOwnership(ResourceTracker & source);
+
+		std::string GetResourceTrackerPath();
 	};
 	bfu::stream& operator<<(bfu::stream&, const ResourceTracker& );
 

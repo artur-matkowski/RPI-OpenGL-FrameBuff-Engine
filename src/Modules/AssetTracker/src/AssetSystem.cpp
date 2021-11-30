@@ -60,12 +60,23 @@ namespace asapi
 		closedir(d_fh);
 	}
 
-
-	void AssetSystem::Init(char** resourcesPath)
+	void AssetSystem::Init(const char* projectPath)
 	{
-		ps_resourcesDirectoryPath = resourcesPath;
+		SetProjectPath(projectPath);
 
 		srand( time( NULL ) );
+	}
+
+	void AssetSystem::SetProjectPath(const char* projectPath)
+	{
+		s_assetsDirectoryPath = projectPath;
+
+		if( s_assetsDirectoryPath.back() != '/' )
+			s_assetsDirectoryPath += "/";
+
+		s_assetsDirectoryPath += "assets/";
+
+		ResourceTracker::SetProjectPath(projectPath);
 	}
 
 	ResourceTracker* FindResource(std::vector<ResourceTracker>& where, const ResourceTracker& what)
@@ -95,7 +106,7 @@ namespace asapi
 
 		return ret;
 	}
-
+/*
 	void GetDirectory(char* buff, const char* fullpath, uint32_t fullPathSize)
 	{
 		strncpy(buff, fullpath, std::min(fullPathSize, (uint32_t)MAX_PATH_SIZE));
@@ -108,14 +119,14 @@ namespace asapi
 			--index;
 		}
 	}
-
+*/
 	void AssetSystem::RefreshResources()
 	{
 		std::vector< std::string > 			paths;
 		std::vector< ResourceTracker > 		upToDateResources;
 		char pathBuff[MAX_PATH_SIZE];
 
-		ListFiles(paths, *ps_resourcesDirectoryPath);
+		ListFiles(paths, s_assetsDirectoryPath.c_str());
 
 		upToDateResources.resize( paths.size() );
 
@@ -132,7 +143,12 @@ namespace asapi
 
 			if( res != nullptr )
 			{
-				ResourceTracker::MoveResourceId(v_ResourceTrackers[i], *res);
+				res->ObtainResourceOwnership(v_ResourceTrackers[i]);
+
+				if( !res->CmpContent( v_ResourceTrackers[i] ) )
+				{
+					res->SetDirty( true );
+				}
 			}
 		}
 
@@ -143,10 +159,7 @@ namespace asapi
 		{
 			FILE::STREAM out;
 			
-			GetDirectory( pathBuff, v_ResourceTrackers[i].m_path.c_str(), v_ResourceTrackers[i].m_path.size() );
-			std::string resourceTrackerPath(pathBuff);
-			resourceTrackerPath += std::to_string( v_ResourceTrackers[i].m_resourceID.ID() );
-			resourceTrackerPath += ".res.json";
+			std::string resourceTrackerPath = v_ResourceTrackers[i].GetResourceTrackerPath();
 
 			//log::debug << "resource path: " << resourceTrackerPath << std::endl;
 
