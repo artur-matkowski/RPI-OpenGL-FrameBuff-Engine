@@ -3,6 +3,8 @@
 
 int main(int argc, char** argv)
 {
+	bool testsPassed = true;
+
 	if(argc<2)
 	{
 		log::error << "argv[1] must be a path to project directory." << std::endl;
@@ -17,24 +19,24 @@ int main(int argc, char** argv)
 	tests.CreateResource("resoruce2.txt", "randomData11");
 	tests.CreateResource("resoruce3.txt", "randomData111");
 
-	tests.TestDataCohesion();
+	testsPassed = testsPassed && tests.TestDataCohesion();
 
 
 	tests.MoveResource("resoruce1.txt", "resoruce1new.txt");
 
-	tests.TestDataCohesion();
+	testsPassed = testsPassed && tests.TestDataCohesion();
 
 
 	tests.RemoveResource("resoruce1new.txt");
 
-	tests.TestDataCohesion();
+	testsPassed = testsPassed && tests.TestDataCohesion();
 
 
 	tests.AppendResource("resoruce2.txt", "randomData22");
 
-	tests.TestDataCohesion();
+	testsPassed = testsPassed && tests.TestDataCohesion();
 
 
 
-	return 0;
+	return testsPassed ? 0 : -1;
 }

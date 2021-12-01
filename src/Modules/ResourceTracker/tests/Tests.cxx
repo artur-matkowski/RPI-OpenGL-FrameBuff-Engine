@@ -196,5 +196,5 @@ bool Tests::TestDataCohesion()
 		log::error << "TEST failed"<< std::endl;
 	}
 
-	return false;
+	return dataCohesion;
 }
