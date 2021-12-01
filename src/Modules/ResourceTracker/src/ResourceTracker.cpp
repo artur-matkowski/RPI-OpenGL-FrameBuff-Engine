@@ -1,6 +1,9 @@
 #include "ResourceTracker.hpp"
-#include "sha256.h"
 #include "ResourceTrackerManager.hpp"
+
+#ifdef IS_EDITOR
+#include "sha256.h"
+#endif
 
 namespace asapi
 {
@@ -40,6 +43,7 @@ namespace asapi
 		_ResourceTrackersPath += "assets/Resource_Trackers/";
 	}
 
+	#ifdef IS_EDITOR
 	std::string ResourceTracker::GetContentHash(const char* path, uint32_t* out_size )
 	{
 		FILE::MMAP data;
@@ -53,6 +57,7 @@ namespace asapi
 
 		return ret;
 	}
+	#endif
 
 	void ResourceTracker::Init(const char* path)
 	{
@@ -71,7 +76,9 @@ namespace asapi
 
     	m_filename = std::string(filename);
 
+		#ifdef IS_EDITOR
 		m_content_hash = GetContentHash(path, &m_size);
+		#endif
 
 		m_modified_epoch = static_cast<uint64_t>(attrib.st_mtim.tv_sec);
 		m_modified_ns = static_cast<uint64_t>(attrib.st_mtim.tv_nsec);

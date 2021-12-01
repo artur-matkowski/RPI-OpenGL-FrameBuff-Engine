@@ -3,4 +3,12 @@
 
 
 
+class Tests
+{
+public:
+	Tests();
+	~Tests();
+};
+
+
 #endif

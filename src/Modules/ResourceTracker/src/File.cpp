@@ -6,7 +6,6 @@
 #include <dirent.h> 
 #include <sys/stat.h>
 
-#include "sha256.h"
 #include "bfu.hpp"
 
 
@@ -175,21 +174,6 @@ namespace asapi
 
 		data = nullptr;
 		fd = -1;
-	}
-
-	std::string FILE::MMAP::GetHash(const char* path)
-	{
-		struct stat attrib;
-
-		if( stat(path, &attrib)!=0 )
-    	{
-    		log::error << "Could not find file " << path << std::endl;
-    	}
-
-		SHA256 sha256; 
-		sha256(Data(), Size());
-
-		return sha256.getHash();
 	}
 
 

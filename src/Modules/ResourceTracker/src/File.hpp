@@ -37,9 +37,6 @@ namespace asapi
 			bool IsValid(){ return fd!=-1; }
 			void* Data(){ return data; }
 			uint32_t Size(){ return sb.st_size; }
-
-			std::string GetHash(const char* path);
-
 		};
 
 		class STREAM

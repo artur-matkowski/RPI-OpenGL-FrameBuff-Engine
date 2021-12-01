@@ -38,7 +38,9 @@ namespace asapi
 
 
 		static void SetProjectPath(const char* path);
+		#ifdef IS_EDITOR
 		static std::string GetContentHash(const char* path, uint32_t* out_size );
+		#endif
 
 
 		void Init(const char* path);
