@@ -21,7 +21,7 @@ namespace asapi
     	#endif
 
 	protected:
-		virtual void LoadResource();
+		virtual bool LoadResource();
 		virtual void DispouseResource();
 
 		//for use only by Resource manager

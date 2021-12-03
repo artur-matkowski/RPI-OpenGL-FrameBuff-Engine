@@ -7,22 +7,23 @@ class TestResource: public asapi::ResourceBase
 {
 protected:
 
-	virtual void LoadResource()
+	virtual void LoadResource() override
 	{
 
 	}
-	virtual void DispouseResource()
+	virtual void DispouseResource() override
+	{
+
+	}
+	
+	TestResource(uint64_t resourceIDlink)
+		:asapi::ResourceBase(resourceIDlink)
 	{
 
 	}
 
 public:
 
-	TestResource(uint64_t resourceIDlink)
-		:asapi::ResourceBase(resourceIDlink)
-	{
-
-	}
 	TestResource(const TestResource& cp)
 		:asapi::ResourceBase(cp)
 	{

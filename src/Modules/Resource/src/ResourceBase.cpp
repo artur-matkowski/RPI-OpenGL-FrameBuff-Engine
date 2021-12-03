@@ -34,9 +34,10 @@ namespace asapi
 	}
 
 
-	void ResourceBase::LoadResource()
+	bool ResourceBase::LoadResource()
 	{
 		log::warning << "Function overload not implemented for ResourceBase::LoadResource()" << std::endl;
+		return false;
 	}
 	void ResourceBase::DispouseResource()
 	{
