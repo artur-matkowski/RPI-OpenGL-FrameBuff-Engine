@@ -12,15 +12,16 @@ namespace asapi
 		friend ResourceManager;
 
 	private:
-		uint64_t 		m_resourceIDlink = 0;
-    	int* 			m_reference = 0;
+		uint64_t 				m_resourceIDlink = 0;
+    	int* 					m_reference = 0;
     	
     	#ifdef IS_EDITOR
-    	std::string 	m_resourceName;
-    	std::string 	m_resourcePath;
+    	std::string 			m_resourceName;
+    	std::string 			m_resourcePath;
     	#endif
 
 	protected:
+
 		virtual bool LoadResource();
 		virtual void DispouseResource();
 

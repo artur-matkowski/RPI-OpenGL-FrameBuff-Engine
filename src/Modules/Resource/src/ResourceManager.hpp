@@ -2,9 +2,6 @@
 #define H_Resource_Manager
 #include "ResourceBase.hpp"
 #include "ResourceTrackerManager.hpp"
-#include "Texture.hpp"
-#include "Shaders.hpp"
-#include "Mesh.hpp"
 #include <map>
 
 namespace asapi

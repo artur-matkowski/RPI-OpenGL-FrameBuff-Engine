@@ -9,6 +9,9 @@
 #include "Systems.hpp"
 
 #include "RendererComponent.hpp"
+#include "DebugComponent.hpp"
+
+
 #include "Texture.hpp"
 #include "Shader.hpp"
 #include "Mesh.hpp"
@@ -80,6 +83,12 @@ namespace asapi{
 			for(auto it = v_rendererComponents.begin(); it!=v_rendererComponents.end(); ++it)
 			{
 				(*it)->Render(&m_projectionMatrix, &viewMatrix);
+			}
+
+			if( debugComponent!=0 )
+			{
+				DebugComponent* dc = (DebugComponent*)debugComponent;
+				dc->Render();
 			}
 		}
 
