@@ -102,7 +102,8 @@ namespace ResourceTrackerTests
 		sprintf(buff, "%llu", in->GetResourceID() );
 
 		log::debug << "ProcessResourceTracker called for: " << in->GetFilename() << " / " << buff << std::endl;
-		return true;
+
+		return false;
 	}
 
 	bool Tests::TestDataCohesion()

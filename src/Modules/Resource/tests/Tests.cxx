@@ -2,6 +2,7 @@
 
 
 Tests::Tests()
+	:manager()
 {
 	
 }

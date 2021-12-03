@@ -11,16 +11,18 @@ VENDOR_DEPS += $(ROOT_PROJECT)/vendor/bitforgeutils/build/$(ARCHITECTURE)/dbg/*.
 VENDOR_DEPS += $(ROOT_PROJECT)/vendor/hash-library/sha256.cpp
 
 
-SRCDIR	 	= src/
-SOURCES		= $(shell find $(SRCDIR) -type f | grep cpp)
+SOURCES		= $(shell find src/ -type f | grep cpp)
 INCDIR		= $(ROOT_PROJECT)/src
 DIRSTRUCTURE = $(shell find $(INCDIR) -type d)
 INCSTRUCTURE = $(patsubst %, -I%, $(DIRSTRUCTURE))
 
 
+SOURCES		+= $(shell find $(ROOT_MODULE)/../ResourceTracker/src/ -type f | grep cpp)
+
+
 
 final:
-	$(CC) -DIS_EDITOR $(VENDOR_INC) $(INCSTRUCTURE) $(VENDOR_DEPS) $(SOURCES) -Itests tests/*.cxx main.cxx
+	$(CC) -DIS_EDITOR -Itests $(VENDOR_INC) $(INCSTRUCTURE) $(VENDOR_DEPS) $(SOURCES) tests/*.cxx main.cxx
 
 all: bfu hash
 	$(MAKE) -C ./ final
