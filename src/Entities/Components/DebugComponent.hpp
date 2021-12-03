@@ -2,7 +2,7 @@
 #define H_DebugComponent
 #include "ComponentBase.hpp"
 #include "glm.hpp"
-
+#include "Mesh.hpp"
 
 namespace asapi
 {
@@ -10,6 +10,7 @@ namespace asapi
 	{
 	protected:
 
+		Mesh mesh;
 	public:
 		DebugComponent(bfu::MemBlockBase* mBlock);
 		DebugComponent(const DebugComponent&) = delete;
