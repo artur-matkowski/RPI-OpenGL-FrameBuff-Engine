@@ -12,7 +12,7 @@ int main(int argc, char** argv)
 	}
 	log::debug << "Starting tests" << std::endl;
 
-	Tests tests(argv[1]);
+	ResourceTrackerTests::Tests tests(argv[1]);
 
 
 	tests.CreateResource("resoruce1.txt", "randomData1");

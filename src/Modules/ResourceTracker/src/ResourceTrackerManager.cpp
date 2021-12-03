@@ -22,6 +22,7 @@ namespace asapi
 		s_assetsDirectoryPath += "assets/";
 
 		ResourceTracker::SetProjectPath(projectPath);
+		RefreshResources();
 	}
 
 	ResourceTracker* FindResource(std::vector<ResourceTracker>& where, const ResourceTracker& what)
@@ -159,13 +160,13 @@ namespace asapi
 		return nullptr;
 	}
 
-	void ResourceTrackerManager::IterateOverDirtyResourceTrackers(bool (*callback)(ResourceTracker*) )
+	void ResourceTrackerManager::IterateOverDirtyResourceTrackers(bool (*callback)(ResourceTracker*, void*), void* passthrough )
 	{
 		for(int i=0; i<v_ResourceTrackers.size(); ++i)
 		{
 			if( v_ResourceTrackers[i].IsContentDirty() )
 			{
-				const bool succesfulyProcessed = callback( &v_ResourceTrackers[i] );
+				const bool succesfulyProcessed = callback( &v_ResourceTrackers[i], passthrough);
 				v_ResourceTrackers[i].SetContentDirty( !succesfulyProcessed );  //if processet succesfully then is NOT dirty
 			}
 		}
