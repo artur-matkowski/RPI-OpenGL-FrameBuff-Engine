@@ -8,7 +8,7 @@ namespace asapi
 {
 	class RendererSystem;
 
-	class Mesh
+	class Mesh_old
 	{
 		friend RendererSystem;
 		
@@ -16,8 +16,8 @@ namespace asapi
 
 
 	public:
-		Mesh(const char*);
-		~Mesh();
+		Mesh_old(const char*);
+		~Mesh_old();
 
 		void* GetRawHandle(){ return (void*)h_meshHandle; }
 

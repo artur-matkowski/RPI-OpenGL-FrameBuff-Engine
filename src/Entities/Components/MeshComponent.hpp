@@ -2,7 +2,7 @@
 #define H_MeshComponent
 #include "ComponentBase.hpp"
 #include "ResourcePtr.hpp"
-#include "Mesh.hpp"
+#include "Mesh_old.hpp"
 #include "glm.hpp"
 
 
@@ -15,7 +15,7 @@ namespace asapi
 	{
 	protected:
 		SERIALIZABLE_VAR(MeshComponent, stream, m_meshName );
-		ResourcePtr< Mesh >		 		m_mesh;
+		ResourcePtr< Mesh_old >		 		m_mesh;
 		char buffMesh[255];
 		
 	public:
@@ -23,7 +23,7 @@ namespace asapi
 		MeshComponent(const MeshComponent&) = delete;
 		~MeshComponent(){};
 
-		Mesh* GetMeshResource(){ return (Mesh*)m_mesh.GetRawPtr(); }
+		Mesh_old* GetMeshResource(){ return (Mesh_old*)m_mesh.GetRawPtr(); }
 
 
 		//virtual void OnAttach() override;

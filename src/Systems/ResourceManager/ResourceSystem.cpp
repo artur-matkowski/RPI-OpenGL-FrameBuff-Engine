@@ -290,7 +290,7 @@ namespace asapi{
 		{
 			if( ! IsInternalAssetUpToDate(MeshesPaths[i].c_str(), buff) )
 			{
-				Mesh::Compile(buff, MeshesPaths[i].c_str());
+				Mesh_old::Compile(buff, MeshesPaths[i].c_str());
 			}
 		}
 
