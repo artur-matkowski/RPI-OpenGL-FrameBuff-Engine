@@ -16,6 +16,7 @@ namespace ResourceTrackerTests
 	{
 		Tests::Command("rm %s/assets/*.txt", m_testProjectPath);
 		Tests::Command("rm %s/assets/Resource_Trackers/*.res.json", m_testProjectPath);
+		Tests::Command("rm -rf %s/auto*", m_testProjectPath);
 	}
 
 	void Tests::Command(const char *format, ...)
@@ -123,6 +124,8 @@ namespace ResourceTrackerTests
 				asapi::ResourceTracker* r = res.FindResourceByContentHash( currentResources[i].content_hash );
 
 				currentResources[i].resourceLink = r->GetResourceID();
+
+				log::debug << "File extension is: " << r->GetFileExtension().c_str() << std::endl;
 			}
 		}
 

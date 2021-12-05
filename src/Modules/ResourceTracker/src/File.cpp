@@ -12,6 +12,46 @@
 
 namespace asapi
 {
+	std::string GetPath(const char* fullFilePath)
+	{
+		std::string ret(fullFilePath);
+
+		ret.erase(ret.find_last_of('/'), std::string::npos);
+
+		return ret;
+	}
+
+	bool mkdir_recursivly(const std::string& arg_path)
+	{
+		if( arg_path.size() <= 1 )
+		{
+			return false;
+		}
+
+
+		log::debug << "----building directory: " << arg_path.c_str() << std::endl;
+
+		if( mkdir( arg_path.c_str(), S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH ) == 0 )
+		{
+			log::debug << "----tu : " << arg_path.c_str() << std::endl;
+			return true;
+		}
+		else
+		{
+			std::string path = GetPath( arg_path.c_str() );
+
+			if( mkdir_recursivly( path ) ){
+			log::debug << "----tu : " << path.c_str() << std::endl;
+				return ( 0 == mkdir( arg_path.c_str(), S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH ) );
+			}
+			else{
+			log::debug << "----tu : " << path.c_str() << std::endl;
+				return false;
+			}
+		}
+	}
+
+
 	void ListFiles(std::vector< std::string >& out, const char* dirname, const std::vector< std::string >& excludeExtensions)
 	{
 		int i;
@@ -19,7 +59,6 @@ namespace asapi
 		struct dirent* entry;
 		char longest_name[MAX_PATH_SIZE];
 
-		mkdir(dirname, 755);
 
 		if( (d_fh = opendir(dirname)) == NULL) 
 		{
@@ -136,8 +175,19 @@ namespace asapi
 		fd = open(filename, O_RDWR | O_CREAT | O_TRUNC | O_SYNC, (mode_t)0666);
 		if (fd == -1)
 		{
-			log::error << "Can not open file: " << filename << std::endl;
-			return;
+			log::warning << "Can not open file: " << filename << " attempting to rebuild directory path." << std::endl;
+			std::string path = GetPath(filename);
+			if( mkdir_recursivly( path.c_str() ) )
+			{
+				fd = open(filename, O_RDWR | O_CREAT | O_TRUNC | O_SYNC, (mode_t)0666);
+				if (fd == -1)
+				{
+					log::error << "Can not open file: " << filename << std::endl;
+					return;
+				}
+			}
+			else
+				return;
 		}
 
 		const int pageSize = getpagesize();
@@ -198,6 +248,18 @@ namespace asapi
 		if (fd == -1)
 		{
 			log::error << "Can not open file: " << filename << std::endl;
+			std::string path = GetPath(filename);
+			if( mkdir_recursivly( path.c_str() ) )
+			{
+				fd = open(filename, O_RDWR | O_CREAT | O_TRUNC | O_SYNC, (mode_t)0666);
+				if (fd == -1)
+				{
+					log::error << "Can not open file: " << filename << std::endl;
+					return;
+				}
+			}
+			else
+				return;
 			return;
 		}
 	}
@@ -206,5 +268,11 @@ namespace asapi
 	void FILE::STREAM::Write(const char* buff, const int size)
 	{
 		write(fd, buff, size);
+	}
+
+
+	void FILE::Remove(const char* filename)
+	{
+		unlink(filename);
 	}
 }

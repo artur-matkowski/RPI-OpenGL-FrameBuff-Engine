@@ -49,9 +49,12 @@ namespace asapi
 
 			void Close();
 
+			bool IsValid(){ return fd!=-1; }
 			void InitForWrite(const char* filename);
 			void Write(const char* buff, const int size);
 		};
+
+		static void Remove(const char*);
 	};
 }
 

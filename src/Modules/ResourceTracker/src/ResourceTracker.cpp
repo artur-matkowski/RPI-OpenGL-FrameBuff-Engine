@@ -151,6 +151,23 @@ namespace asapi
 		}
 	}
 
+
+	std::string ResourceTracker::GetFileExtension()
+	{
+		std::string ret;
+
+		for(int i=m_filename.size()-1; i>=0; --i)
+		{
+			if( m_filename[i]=='.' )
+			{
+				const char* extensionDot = m_filename.c_str() + i;
+				ret = extensionDot;
+				break;
+			}
+		}
+		return ret;
+	}
+
 	bfu::stream& operator<<(bfu::stream& os, const ResourceTracker& res)
 	{
 		time_t mod = static_cast<time_t>( res.m_modified_epoch );

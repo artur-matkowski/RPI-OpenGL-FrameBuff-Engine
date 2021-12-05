@@ -1,6 +1,7 @@
 
 #include "Tests.hxx"
 
+
 int main(int argc, char** argv)
 {
 	bool testsPassed = true;
@@ -36,6 +37,14 @@ int main(int argc, char** argv)
 
 	testsPassed = testsPassed && tests.TestDataCohesion();
 
+
+	asapi::FILE::MMAP file;
+	std::string path = argv[1];
+	path+= "/autoCreatingDirectoryTest/dfu/tmp.bin";
+
+	file.InitForWrite(path.c_str(), 512);
+
+	strcpy((char*)file.Data(), "dummy content");
 
 
 	return testsPassed ? 0 : -1;

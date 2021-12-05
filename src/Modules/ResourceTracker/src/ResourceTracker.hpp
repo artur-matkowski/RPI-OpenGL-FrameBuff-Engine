@@ -60,6 +60,7 @@ namespace asapi
 		inline void MarkOutdated() { m_outDated = true; }
 		inline uint64_t GetResourceID(){ return m_resourceID.ID(); }
 		inline std::string GetFilename(){ return m_filename; }
+		std::string GetFileExtension();
 
 
 		void ObtainResourceOwnership(ResourceTracker & source);
