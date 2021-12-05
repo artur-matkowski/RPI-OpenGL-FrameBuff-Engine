@@ -1,15 +1,12 @@
-#ifndef H_TESTS
-#define H_TESTS
+#ifndef H_TESTSResourceTracker
+#define H_TESTSResourceTracker
 #include "log.hpp"
 #include "object.hpp"
 
 #define TESTS
 #include "ResourceTrackerManager.hpp"
 
-
-namespace ResourceTrackerTests
-{
-	class Tests
+	class TestsResourceTracker
 	{
 		struct resourceEntry
 		{
@@ -33,8 +30,8 @@ namespace ResourceTrackerTests
 		static void Command(const char *format, ...);
 
 	public:
-		Tests(const char* testProjectPath);
-		~Tests();
+		TestsResourceTracker(const char* testProjectPath);
+		~TestsResourceTracker();
 
 		void CreateResource(const char* filename, const char* content);
 		void MoveResource(const char* source, const char* destination);
@@ -44,6 +41,6 @@ namespace ResourceTrackerTests
 		bool TestDataCohesion();
 
 	};
-}
+
 
 #endif

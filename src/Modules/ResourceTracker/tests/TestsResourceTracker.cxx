@@ -1,10 +1,8 @@
-#include "Tests.hxx"
+#include "TestsResourceTracker.hxx"
 #include "sha256.h"
 
 
-namespace ResourceTrackerTests
-{
-	Tests::Tests(const char* testProjectPath)
+	TestsResourceTracker::TestsResourceTracker(const char* testProjectPath)
 	{
 		strncpy(m_testProjectPath, testProjectPath, MAX_PATH_SIZE);
 
@@ -12,14 +10,14 @@ namespace ResourceTrackerTests
 
 		res.Init( m_testProjectPath );
 	}
-	Tests::~Tests()
+	TestsResourceTracker::~TestsResourceTracker()
 	{
-		Tests::Command("rm %s/assets/*.txt", m_testProjectPath);
-		Tests::Command("rm %s/assets/Resource_Trackers/*.res.json", m_testProjectPath);
-		Tests::Command("rm -rf %s/auto*", m_testProjectPath);
+		TestsResourceTracker::Command("rm %s/assets/*.txt", m_testProjectPath);
+		TestsResourceTracker::Command("rm %s/assets/Resource_Trackers/*.res.json", m_testProjectPath);
+		TestsResourceTracker::Command("rm -rf %s/auto*", m_testProjectPath);
 	}
 
-	void Tests::Command(const char *format, ...)
+	void TestsResourceTracker::Command(const char *format, ...)
 	{
 		char buff[2048];
 
@@ -34,7 +32,7 @@ namespace ResourceTrackerTests
 
 
 
-	void Tests::CreateResource(const char* filename, const char* content)
+	void TestsResourceTracker::CreateResource(const char* filename, const char* content)
 	{
 		resourceEntry res;
 		res.filename = filename;
@@ -56,7 +54,7 @@ namespace ResourceTrackerTests
 
 		introducedResources++;
 	}
-	void Tests::MoveResource(const char* source, const char* destination)
+	void TestsResourceTracker::MoveResource(const char* source, const char* destination)
 	{
 		for(int i=0; i<currentResources.size(); ++i)
 		{
@@ -71,7 +69,7 @@ namespace ResourceTrackerTests
 
 		movedResources++;
 	}
-	void Tests::RemoveResource(const char* filename)
+	void TestsResourceTracker::RemoveResource(const char* filename)
 	{
 		for(auto it = currentResources.begin(); it!=currentResources.end(); ++it)
 		{
@@ -87,7 +85,7 @@ namespace ResourceTrackerTests
 
 		removedResources++;
 	}
-	void Tests::AppendResource(const char* filename, const char* content)
+	void TestsResourceTracker::AppendResource(const char* filename, const char* content)
 	{
 
 		Command("echo %s > %s/assets/%s", content, m_testProjectPath, filename);
@@ -107,7 +105,7 @@ namespace ResourceTrackerTests
 		return false;
 	}
 
-	bool Tests::TestDataCohesion()
+	bool TestsResourceTracker::TestDataCohesion()
 	{
 		bool dataCohesion = true;
 
@@ -204,4 +202,3 @@ namespace ResourceTrackerTests
 
 		return dataCohesion;
 	}
-}

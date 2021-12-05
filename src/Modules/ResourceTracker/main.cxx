@@ -1,5 +1,5 @@
 
-#include "Tests.hxx"
+#include "TestsResourceTracker.hxx"
 
 
 int main(int argc, char** argv)
@@ -13,7 +13,7 @@ int main(int argc, char** argv)
 	}
 	log::debug << "Starting tests" << std::endl;
 
-	ResourceTrackerTests::Tests tests(argv[1]);
+	TestsResourceTracker tests(argv[1]);
 
 
 	tests.CreateResource("resoruce1.txt", "randomData1");
