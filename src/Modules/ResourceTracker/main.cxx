@@ -20,22 +20,22 @@ int main(int argc, char** argv)
 	tests.CreateResource("resoruce2.txt", "randomData11");
 	tests.CreateResource("resoruce3.txt", "randomData111");
 
-	testsPassed = testsPassed && tests.TestDataCohesion();
+	testsPassed = testsPassed && tests.TestDataCohesion(ProcessInputResourceToBinary);
 
 
 	tests.MoveResource("resoruce1.txt", "resoruce1new.txt");
 
-	testsPassed = testsPassed && tests.TestDataCohesion();
+	testsPassed = testsPassed && tests.TestDataCohesion(ProcessInputResourceToBinary);
 
 
 	tests.RemoveResource("resoruce1new.txt");
 
-	testsPassed = testsPassed && tests.TestDataCohesion();
+	testsPassed = testsPassed && tests.TestDataCohesion(ProcessInputResourceToBinary);
 
 
 	tests.AppendResource("resoruce2.txt", "randomData22");
 
-	testsPassed = testsPassed && tests.TestDataCohesion();
+	testsPassed = testsPassed && tests.TestDataCohesion(ProcessInputResourceToBinary);
 
 
 	asapi::FILE::MMAP file;

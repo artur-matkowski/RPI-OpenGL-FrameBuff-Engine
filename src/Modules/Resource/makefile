@@ -18,6 +18,7 @@ INCSTRUCTURE = $(patsubst %, -I%, $(DIRSTRUCTURE))
 
 
 SOURCES		+= $(shell find $(ROOT_MODULE)/../ResourceTracker/src/ -type f | grep cpp)
+SOURCES		+= $(shell find $(ROOT_MODULE)/../ResourceTracker/tests/ -type f | grep cxx)
 
 
 

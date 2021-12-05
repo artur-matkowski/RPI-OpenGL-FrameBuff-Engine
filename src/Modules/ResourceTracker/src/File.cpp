@@ -29,11 +29,8 @@ namespace asapi
 		}
 
 
-		log::debug << "----building directory: " << arg_path.c_str() << std::endl;
-
 		if( mkdir( arg_path.c_str(), S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH ) == 0 )
 		{
-			log::debug << "----tu : " << arg_path.c_str() << std::endl;
 			return true;
 		}
 		else
@@ -41,11 +38,9 @@ namespace asapi
 			std::string path = GetPath( arg_path.c_str() );
 
 			if( mkdir_recursivly( path ) ){
-			log::debug << "----tu : " << path.c_str() << std::endl;
 				return ( 0 == mkdir( arg_path.c_str(), S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH ) );
 			}
 			else{
-			log::debug << "----tu : " << path.c_str() << std::endl;
 				return false;
 			}
 		}

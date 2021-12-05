@@ -6,6 +6,8 @@
 #define TESTS
 #include "ResourceTrackerManager.hpp"
 
+	bool ProcessResourceTracker(asapi::ResourceTracker* in, void* passthrough);
+
 	class TestsResourceTracker
 	{
 		struct resourceEntry
@@ -38,7 +40,7 @@
 		void RemoveResource(const char* filename);
 		void AppendResource(const char* filename, const char* content);
 
-		bool TestDataCohesion();
+		bool TestDataCohesion(bool (*callback)(asapi::ResourceTracker*, void*) = ProcessResourceTracker);
 
 	};
 

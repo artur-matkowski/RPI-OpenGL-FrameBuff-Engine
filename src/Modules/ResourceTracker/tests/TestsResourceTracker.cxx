@@ -105,14 +105,14 @@
 		return false;
 	}
 
-	bool TestsResourceTracker::TestDataCohesion()
+	bool TestsResourceTracker::TestDataCohesion(bool (*callback)(asapi::ResourceTracker*, void*))
 	{
 		bool dataCohesion = true;
 
 		std::vector< std::string > resourceFiles;
 
 		res.RefreshResources();
-		res.IterateOverDirtyResourceTrackers( ProcessResourceTracker, nullptr );
+		res.IterateOverDirtyResourceTrackers( callback, nullptr );
 
 		//check if we introduced new resources, and fetch their linkID if so
 		for(int i=0; i<currentResources.size(); ++i)
