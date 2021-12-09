@@ -59,7 +59,7 @@ namespace asapi
 		std::vector< ResourceTracker > 		upToDateResources;
 		char pathBuff[MAX_PATH_SIZE];
 
-		ListFiles(paths, s_assetsDirectoryPath.c_str(), {".res.json", ".res.bin"});
+		ListFiles(paths, s_assetsDirectoryPath.c_str(), {".res.json", ".bin"});
 
 		upToDateResources.resize( paths.size() );
 

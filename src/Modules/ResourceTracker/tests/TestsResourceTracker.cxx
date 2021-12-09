@@ -12,9 +12,9 @@
 	}
 	TestsResourceTracker::~TestsResourceTracker()
 	{
-		TestsResourceTracker::Command("rm %s/assets/*.txt", m_testProjectPath);
-		TestsResourceTracker::Command("rm %s/assets/Resource_Trackers/*.res.json", m_testProjectPath);
-		TestsResourceTracker::Command("rm -rf %s/auto*", m_testProjectPath);
+		//TestsResourceTracker::Command("rm %s/assets/*.txt", m_testProjectPath);
+		//TestsResourceTracker::Command("rm %s/assets/Resource_Trackers/*.res.json", m_testProjectPath);
+		//TestsResourceTracker::Command("rm -rf %s/auto*", m_testProjectPath);
 	}
 
 	void TestsResourceTracker::Command(const char *format, ...)
@@ -94,13 +94,21 @@
 		removedResources++;
 	}
 
-	bool ProcessResourceTracker(asapi::ResourceTracker* in, void* passthrough)
+	bool ProcessResourceTracker(asapi::ResourceTracker* restrack, void* data)
 	{
-		char buff[256];
+		asapi::FILE::MMAP _in, _out;
+		const std::string binaryResourceDir = std::string( (const char*)data ) + std::string("/assets/Resource_Binaries/");
+		const std::string binaryResource = binaryResourceDir + std::to_string( restrack->GetResourceID() ) + std::string(".txt.bin");
 
-		sprintf(buff, "%llu", in->GetResourceID() );
 
-		log::debug << "ProcessResourceTracker called for: " << in->GetFilename() << " / " << buff << std::endl;
+		_in.InitForRead( restrack->GetPath().c_str() );
+
+		_out.InitForWrite( binaryResource.c_str(), 64);
+
+
+		strncpy( (char*)_out.Data(), (const char*)_in.Data(), _in.Size() );
+
+		//log::debug << binaryResourceDir.c_str() << std::endl;
 
 		return false;
 	}
@@ -112,7 +120,7 @@
 		std::vector< std::string > resourceFiles;
 
 		res.RefreshResources();
-		res.IterateOverDirtyResourceTrackers( callback, nullptr );
+		res.IterateOverDirtyResourceTrackers( callback, (char*)m_testProjectPath );
 
 		//check if we introduced new resources, and fetch their linkID if so
 		for(int i=0; i<currentResources.size(); ++i)
@@ -129,7 +137,7 @@
 
 
 
-		asapi::ListFiles(resourceFiles, m_ResourceFilesDirPath, {} );
+		asapi::ListFiles(resourceFiles, m_ResourceFilesDirPath, {".bin"} );
 
 
 
