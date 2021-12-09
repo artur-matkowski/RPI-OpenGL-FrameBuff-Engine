@@ -8,15 +8,25 @@ namespace asapi
 {
 	class ResourceTrackerManager
 	{
+	public:
+		typedef bool (*IterateOverDirtyResourceTrackersCallbackType)(ResourceTracker* in_currentResource, const char* in_projectPath, std::vector<std::string>& out_resourceBinaries);
+
+	private:
 		std::string						s_assetsDirectoryPath;
 		bfu::JSONSerializer				p_JSONSerializer;
 		bfu::BinarySerializer			p_BinarySerializer;
+
+		IterateOverDirtyResourceTrackersCallbackType m_callback = nullptr;
+		void IterateOverDirtyResourceTrackers();
+
 #ifdef TESTS
 	public:
 #endif
 		std::vector<ResourceTracker> 	v_ResourceTrackers;
 	public:
-		void Init(const char* projectPath);
+		void Init(const char* projectPath
+			, IterateOverDirtyResourceTrackersCallbackType callback
+			);
 		void SetProjectPath(const char* projectPath);
 
 
@@ -26,8 +36,6 @@ namespace asapi
 		ResourceTracker* FindResourceByFilename(const std::string& filename);
 		ResourceTracker* FindResourceByResourceID(const uint64_t& resourceID);
 		ResourceTracker* FindResourceByResourceID(const UniqueID& resourceID);
-
-		void IterateOverDirtyResourceTrackers(bool (*callback)(ResourceTracker* in_currentResource, const char* in_projectPath, std::vector<std::string>& out_resourceBinaries));
 
 
 		friend bfu::stream& operator<<(bfu::stream&, const ResourceTrackerManager& );

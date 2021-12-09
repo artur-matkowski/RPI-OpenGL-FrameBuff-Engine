@@ -24,6 +24,7 @@ namespace asapi
 		SERIALIZABLE_VAR( ResourceTracker, uint32_t, m_size );
 		SERIALIZABLE_VAR( ResourceTracker, uint64_t, m_modified_epoch );
 		SERIALIZABLE_VAR( ResourceTracker, uint64_t, m_modified_ns ); //modification time in nano seconds since last full second
+		SERIALIZABLE_VAR_VEC( ResourceTracker, string, v_resourceIDs );
 
 		bool 				isContentDirty = true; 	//Need processing
 		bool 				m_outDated = false; //true if resource tracker json file is to be deleted upon destruction

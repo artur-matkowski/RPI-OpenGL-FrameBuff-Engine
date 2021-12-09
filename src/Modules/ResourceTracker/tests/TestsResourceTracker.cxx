@@ -2,13 +2,13 @@
 #include "sha256.h"
 
 
-	TestsResourceTracker::TestsResourceTracker(const char* testProjectPath)
+	TestsResourceTracker::TestsResourceTracker(const char* testProjectPath, bool (*callback)(asapi::ResourceTracker* in_currentResource, const char* in_projectPath, std::vector<std::string>& out_resourceBinaries))
 	{
 		strncpy(m_testProjectPath, testProjectPath, MAX_PATH_SIZE);
 
 		sprintf(m_ResourceFilesDirPath, "%s/assets/Resource_Trackers/", testProjectPath);
 
-		res.Init( m_testProjectPath );
+		res.Init( m_testProjectPath, callback );
 	}
 	TestsResourceTracker::~TestsResourceTracker()
 	{
@@ -116,14 +116,13 @@
 		return false;
 	}
 
-	bool TestsResourceTracker::TestDataCohesion(bool (*callback)(asapi::ResourceTracker* in_currentResource, const char* in_projectPath, std::vector<std::string>& out_resourceBinaries))
+	bool TestsResourceTracker::TestDataCohesion()
 	{
 		bool dataCohesion = true;
 
 		std::vector< std::string > resourceFiles;
 
 		res.RefreshResources();
-		res.IterateOverDirtyResourceTrackers( callback );
 
 		//check if we introduced new resources, and fetch their linkID if so
 		for(int i=0; i<currentResources.size(); ++i)

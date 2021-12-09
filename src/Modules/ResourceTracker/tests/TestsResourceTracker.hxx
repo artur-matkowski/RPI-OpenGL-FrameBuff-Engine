@@ -32,7 +32,7 @@
 		static void Command(const char *format, ...);
 
 	public:
-		TestsResourceTracker(const char* testProjectPath);
+		TestsResourceTracker(const char* testProjectPath, bool (*callback)(asapi::ResourceTracker* in_currentResource, const char* in_projectPath, std::vector<std::string>& out_resourceBinaries) = ProcessResourceTracker);
 		~TestsResourceTracker();
 
 		void CreateResource(const char* filename, const char* content);
@@ -40,7 +40,7 @@
 		void RemoveResource(const char* filename);
 		void AppendResource(const char* filename, const char* content);
 
-		bool TestDataCohesion(bool (*callback)(asapi::ResourceTracker* in_currentResource, const char* in_projectPath, std::vector<std::string>& out_resourceBinaries) = ProcessResourceTracker);
+		bool TestDataCohesion();
 
 	};
 

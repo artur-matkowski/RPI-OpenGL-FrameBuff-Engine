@@ -5,9 +5,11 @@
 
 namespace asapi
 {
-	void ResourceTrackerManager::Init(const char* projectPath)
+	void ResourceTrackerManager::Init(const char* projectPath, IterateOverDirtyResourceTrackersCallbackType callback)
 	{
 		SetProjectPath(projectPath);
+
+		m_callback = callback;
 
 		srand( time( NULL ) );
 	}
@@ -93,6 +95,8 @@ namespace asapi
 
 		v_ResourceTrackers = std::move( upToDateResources );
 
+		IterateOverDirtyResourceTrackers();
+
 
 		for(int i=0; i<v_ResourceTrackers.size(); ++i)
 		{
@@ -160,15 +164,23 @@ namespace asapi
 		return nullptr;
 	}
 
-	void ResourceTrackerManager::IterateOverDirtyResourceTrackers(bool (*callback)(ResourceTracker* in_currentResource, const char* in_projectPath, std::vector<std::string>& out_resourceBinaries) )
+	void ResourceTrackerManager::IterateOverDirtyResourceTrackers()
 	{
-		std::vector<std::string> DELETEME;
+		std::vector<std::string> tmpVec;
 
 		for(int i=0; i<v_ResourceTrackers.size(); ++i)
 		{
 			if( v_ResourceTrackers[i].IsContentDirty() )
 			{
-				const bool succesfulyProcessed = callback( &v_ResourceTrackers[i], s_assetsDirectoryPath.c_str(), DELETEME);
+				const bool succesfulyProcessed = m_callback( &v_ResourceTrackers[i], s_assetsDirectoryPath.c_str(), tmpVec);
+
+				v_ResourceTrackers[i].v_resourceIDs.clear();
+				for(int i=0; i<tmpVec.size(); ++i)
+				{
+					log::debug << "DUPAASsafasfdgasdf" << std::endl;
+					v_ResourceTrackers[i].v_resourceIDs.push_back( tmpVec[i] );
+				}
+
 				v_ResourceTrackers[i].SetContentDirty( !succesfulyProcessed );  //if processet succesfully then is NOT dirty
 			}
 		}
