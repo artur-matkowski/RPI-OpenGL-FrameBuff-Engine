@@ -94,33 +94,36 @@
 		removedResources++;
 	}
 
-	bool ProcessResourceTracker(asapi::ResourceTracker* restrack, void* data)
+	bool ProcessResourceTracker(asapi::ResourceTracker* in_currentResource, const char* in_projectPath, std::vector<std::string>& out_resourceBinaries)
 	{
 		asapi::FILE::MMAP _in, _out;
-		const std::string binaryResourceDir = std::string( (const char*)data ) + std::string("/assets/Resource_Binaries/");
-		const std::string binaryResource = binaryResourceDir + std::to_string( restrack->GetResourceID() ) + std::string(".txt.bin");
+		const std::string binaryResourceDir = std::string( (const char*)in_projectPath ) + std::string("/Resource_Binaries/");
+		const std::string binaryResource = binaryResourceDir + std::to_string( in_currentResource->GetResourceID() ) + std::string(".txt.bin");
 
 
-		_in.InitForRead( restrack->GetPath().c_str() );
+		_in.InitForRead( in_currentResource->GetPath().c_str() );
 
 		_out.InitForWrite( binaryResource.c_str(), 64);
 
 
 		strncpy( (char*)_out.Data(), (const char*)_in.Data(), _in.Size() );
 
+		out_resourceBinaries.clear();
+		out_resourceBinaries.push_back( binaryResource );
+
 		//log::debug << binaryResourceDir.c_str() << std::endl;
 
 		return false;
 	}
 
-	bool TestsResourceTracker::TestDataCohesion(bool (*callback)(asapi::ResourceTracker*, void*))
+	bool TestsResourceTracker::TestDataCohesion(bool (*callback)(asapi::ResourceTracker* in_currentResource, const char* in_projectPath, std::vector<std::string>& out_resourceBinaries))
 	{
 		bool dataCohesion = true;
 
 		std::vector< std::string > resourceFiles;
 
 		res.RefreshResources();
-		res.IterateOverDirtyResourceTrackers( callback, (char*)m_testProjectPath );
+		res.IterateOverDirtyResourceTrackers( callback );
 
 		//check if we introduced new resources, and fetch their linkID if so
 		for(int i=0; i<currentResources.size(); ++i)

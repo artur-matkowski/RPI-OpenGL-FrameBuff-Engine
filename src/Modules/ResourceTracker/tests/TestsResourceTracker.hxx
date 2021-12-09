@@ -6,7 +6,7 @@
 #define TESTS
 #include "ResourceTrackerManager.hpp"
 
-	bool ProcessResourceTracker(asapi::ResourceTracker* in, void* passthrough);
+	bool ProcessResourceTracker(asapi::ResourceTracker* in_currentResource, const char* in_projectPath, std::vector<std::string>& out_resourceBinaries);
 
 	class TestsResourceTracker
 	{
@@ -40,7 +40,7 @@
 		void RemoveResource(const char* filename);
 		void AppendResource(const char* filename, const char* content);
 
-		bool TestDataCohesion(bool (*callback)(asapi::ResourceTracker*, void*) = ProcessResourceTracker);
+		bool TestDataCohesion(bool (*callback)(asapi::ResourceTracker* in_currentResource, const char* in_projectPath, std::vector<std::string>& out_resourceBinaries) = ProcessResourceTracker);
 
 	};
 
