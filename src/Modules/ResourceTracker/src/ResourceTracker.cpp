@@ -15,7 +15,7 @@ namespace asapi
 	}
 	ResourceTracker::~ResourceTracker()
 	{
-		if( m_outDated && m_resourceID.ID() != 0 )
+		if( !IsResourceOwner() )
 		{
 			RemoveResourceTrackerFile();
 		}
@@ -34,8 +34,6 @@ namespace asapi
 		m_modified_epoch = std::move(cp.m_modified_epoch);
 		m_modified_ns = std::move(cp.m_modified_ns);
 		v_resourceIDs = std::move(cp.v_resourceIDs);
-		
-		log::debug << "std::move(ResourceTracker) " << m_filename.c_str() << std::endl;
 	}
 
 	void ResourceTracker::SetProjectPath(const char* path)

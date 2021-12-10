@@ -27,7 +27,7 @@ namespace asapi
 		SERIALIZABLE_VAR_VEC( ResourceTracker, string, v_resourceIDs );
 
 		bool 				isContentDirty = true; 	//Need processing
-		bool 				m_outDated = false; //true if resource tracker json file is to be deleted upon destruction
+		
 
 		static std::string 	_ResourceTrackersPath;
 
@@ -58,7 +58,7 @@ namespace asapi
 
 		inline void SetContentDirty(bool isContentDirty) { this->isContentDirty = isContentDirty; }
 		inline bool IsContentDirty() { return isContentDirty; }
-		inline void MarkOutdated() { m_outDated = true; }
+
 		inline uint64_t GetResourceID(){ return m_resourceID.ID(); }
 		inline std::string GetFilename(){ return m_filename; }
 		inline std::string GetPath(){ return m_path; }
@@ -66,6 +66,7 @@ namespace asapi
 
 
 		void ObtainResourceOwnership(ResourceTracker & source);
+		inline bool IsResourceOwner(){ return m_resourceID.ID() != 0; }
 
 		std::string GetResourceTrackerPath();
 

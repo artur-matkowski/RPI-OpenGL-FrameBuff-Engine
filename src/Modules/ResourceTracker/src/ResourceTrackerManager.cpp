@@ -74,8 +74,6 @@ namespace asapi
 		//transfer uniqueID to new resource set, so the links are preserved
 		for(int i=0; i<v_ResourceTrackers.size(); ++i)
 		{
-			v_ResourceTrackers[i].MarkOutdated();
-
 			ResourceTracker* res = FindResource( upToDateResources, v_ResourceTrackers[i] );
 
 			if( res != nullptr )
