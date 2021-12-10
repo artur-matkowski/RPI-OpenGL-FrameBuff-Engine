@@ -47,7 +47,7 @@ namespace asapi
 	}
 
 
-	void ListFiles(std::vector< std::string >& out, const char* dirname, const std::vector< std::string >& excludeExtensions)
+	void ListFiles(std::vector< std::string >& out, const char* dirname, const std::vector< std::string >& extensions, ListingStrategy strategy)
 	{
 		int i;
 		DIR* d_fh;
@@ -76,12 +76,27 @@ namespace asapi
 				(strncmp(entry->d_name, ".", 1) != 0) )
 			{
 				bool skipfile = false;
-				for(auto it = excludeExtensions.begin(); it!=excludeExtensions.end(); ++it)
+				if( strategy==ListingStrategy::blacklist )
 				{
-					if(strstr(entry->d_name, it->c_str()) != 0 )
+					for(auto it = extensions.begin(); it!=extensions.end(); ++it)
 					{
-						skipfile = true;
-						break;
+						if(strstr(entry->d_name, it->c_str()) != 0 )
+						{
+							skipfile = true;
+							break;
+						}
+					}
+				}
+				else // if( strategy==ListingStrategy::whitelist )
+				{
+					skipfile = true;
+					for(auto it = extensions.begin(); it!=extensions.end(); ++it)
+					{
+						if(strstr(entry->d_name, it->c_str()) != 0 )
+						{
+							skipfile = false;
+							break;
+						}
 					}
 				}
 
@@ -95,7 +110,7 @@ namespace asapi
 					/* If it's a directory print it's name and recurse into it */
 					if (entry->d_type == DT_DIR) 
 					{
-						ListFiles(out, longest_name, excludeExtensions);
+						ListFiles(out, longest_name, extensions, strategy);
 					}
 					else //if not dir
 					{

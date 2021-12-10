@@ -1,4 +1,3 @@
-
 #include "TestsResourceTracker.hxx"
 
 
@@ -26,7 +25,6 @@ int main(int argc, char** argv)
 	tests.MoveResource("resoruce1.txt", "resoruce1new.txt");
 
 	testsPassed = testsPassed && tests.TestDataCohesion();
-
 
 	tests.RemoveResource("resoruce1new.txt");
 

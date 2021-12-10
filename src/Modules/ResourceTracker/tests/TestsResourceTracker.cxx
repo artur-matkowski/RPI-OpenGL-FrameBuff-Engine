@@ -97,7 +97,7 @@
 	bool ProcessResourceTracker(asapi::ResourceTracker* in_currentResource, const char* in_projectPath, std::vector<std::string>& out_resourceBinaries)
 	{
 		asapi::FILE::MMAP _in, _out;
-		const std::string binaryResourceDir = std::string( (const char*)in_projectPath ) + std::string("/Resource_Binaries/");
+		const std::string binaryResourceDir = std::string( (const char*)in_projectPath ) + std::string("Resource_Binaries/");
 		const std::string binaryResource = binaryResourceDir + std::to_string( in_currentResource->GetResourceID() ) + std::string(".txt.bin");
 
 
@@ -109,7 +109,7 @@
 		strncpy( (char*)_out.Data(), (const char*)_in.Data(), _in.Size() );
 
 		out_resourceBinaries.clear();
-		out_resourceBinaries.push_back( binaryResource );
+		out_resourceBinaries.push_back( std::to_string( in_currentResource->GetResourceID() ) + std::string(".txt.bin") );
 
 		//log::debug << binaryResourceDir.c_str() << std::endl;
 
@@ -133,13 +133,13 @@
 
 				currentResources[i].resourceLink = r->GetResourceID();
 
-				log::debug << "File extension is: " << r->GetFileExtension().c_str() << std::endl;
+				log::debug << "File name is: " << r->GetFilename().c_str() << std::endl;
 			}
 		}
 
 
 
-		asapi::ListFiles(resourceFiles, m_ResourceFilesDirPath, {".bin"} );
+		asapi::ListFiles(resourceFiles, m_ResourceFilesDirPath, {".bin"}, asapi::ListingStrategy::blacklist );
 
 
 

@@ -61,7 +61,7 @@ namespace asapi
 		std::vector< ResourceTracker > 		upToDateResources;
 		char pathBuff[MAX_PATH_SIZE];
 
-		ListFiles(paths, s_assetsDirectoryPath.c_str(), {".res.json", ".bin"});
+		ListFiles(paths, s_assetsDirectoryPath.c_str(), {".res.json", ".bin"}, ListingStrategy::blacklist);
 
 		upToDateResources.resize( paths.size() );
 
@@ -166,19 +166,19 @@ namespace asapi
 
 	void ResourceTrackerManager::IterateOverDirtyResourceTrackers()
 	{
-		std::vector<std::string> tmpVec;
 
-		for(int i=0; i<v_ResourceTrackers.size(); ++i)
+		for(int i=0; i<v_ResourceTrackers.size(); i++)
 		{
 			if( v_ResourceTrackers[i].IsContentDirty() )
 			{
-				const bool succesfulyProcessed = m_callback( &v_ResourceTrackers[i], s_assetsDirectoryPath.c_str(), tmpVec);
+				std::vector<std::string> tmpVec;
+				const bool succesfulyProcessed = m_callback( &(v_ResourceTrackers[i]), s_assetsDirectoryPath.c_str(), tmpVec);
 
 				v_ResourceTrackers[i].v_resourceIDs.clear();
-				for(int i=0; i<tmpVec.size(); ++i)
+				for(int j=0; j<tmpVec.size(); ++j)
 				{
-					log::debug << "DUPAASsafasfdgasdf" << std::endl;
-					v_ResourceTrackers[i].v_resourceIDs.push_back( tmpVec[i] );
+					log::debug << "DUPAASsafasfdgasdf " << i << " " << (v_ResourceTrackers[i]).m_filename.c_str() << std::endl;
+					v_ResourceTrackers[i].v_resourceIDs.push_back( tmpVec[j] );
 				}
 
 				v_ResourceTrackers[i].SetContentDirty( !succesfulyProcessed );  //if processet succesfully then is NOT dirty

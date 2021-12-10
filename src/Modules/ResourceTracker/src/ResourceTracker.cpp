@@ -33,6 +33,9 @@ namespace asapi
 		m_size = std::move(cp.m_size);
 		m_modified_epoch = std::move(cp.m_modified_epoch);
 		m_modified_ns = std::move(cp.m_modified_ns);
+		v_resourceIDs = std::move(cp.v_resourceIDs);
+		
+		log::debug << "std::move(ResourceTracker) " << m_filename.c_str() << std::endl;
 	}
 
 	void ResourceTracker::SetProjectPath(const char* path)
@@ -106,6 +109,7 @@ namespace asapi
 	void ResourceTracker::ObtainResourceOwnership(ResourceTracker & source)
 	{
 		m_resourceID = std::move(source.m_resourceID);
+		v_resourceIDs = std::move(source.v_resourceIDs);
 	}
 
 	bool ResourceTracker::operator==(const ResourceTracker& other)

@@ -9,7 +9,10 @@
 
 namespace asapi
 {
-	void ListFiles(std::vector< std::string >& out, const char* dirname, const std::vector< std::string >& excludeExtensions);
+	enum class ListingStrategy: char
+	{ whitelist, blacklist };
+
+	void ListFiles(std::vector< std::string >& out, const char* dirname, const std::vector< std::string >& extensions, ListingStrategy strategy);
 
 
 	struct FILE
