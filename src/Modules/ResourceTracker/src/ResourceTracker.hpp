@@ -5,11 +5,30 @@
 #include "UniqueID.hpp"
 //resource is a source file like: jpg, glsl, psd, fbx, txt, etc. 
 
+#define RESOURCE_TRACKERS_DIR  "/Resource_Trackers"
+#define RESOURCE_BINARIES_DIR "/Resource_Binaries"
+
 using bfu::string;
+
+
 
 namespace asapi
 {
 	class ResourceTrackerManager;
+	class SubResourceData;
+
+	class SerializableSubResourceData: public bfu::SerializableClassBase<SerializableSubResourceData>
+	{
+	public:
+		SERIALIZABLE_VAR( SerializableSubResourceData, string, m_filename );
+		SERIALIZABLE_VAR( SerializableSubResourceData, string, m_internalID ); //subresource identifier to destenquishe subresources in resource file
+
+
+		SerializableSubResourceData();
+		SerializableSubResourceData( const SubResourceData& in_data );
+		SerializableSubResourceData( SerializableSubResourceData&& in_data );
+		SerializableSubResourceData& operator=( SubResourceData&& in_data );
+	};
 
 	class ResourceTracker: public bfu::SerializableClassBase<ResourceTracker>
 	{
@@ -24,7 +43,7 @@ namespace asapi
 		SERIALIZABLE_VAR( ResourceTracker, uint32_t, m_size );
 		SERIALIZABLE_VAR( ResourceTracker, uint64_t, m_modified_epoch );
 		SERIALIZABLE_VAR( ResourceTracker, uint64_t, m_modified_ns ); //modification time in nano seconds since last full second
-		SERIALIZABLE_VAR_VEC( ResourceTracker, string, v_resourceIDs );
+		SERIALIZABLE_OBJ_VEC( ResourceTracker, SerializableSubResourceData, v_subresources );
 
 		bool 				isContentDirty = true; 	//Need processing
 		

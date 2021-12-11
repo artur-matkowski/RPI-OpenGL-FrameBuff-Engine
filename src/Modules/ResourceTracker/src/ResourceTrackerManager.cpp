@@ -7,9 +7,9 @@ namespace asapi
 {
 	void ResourceTrackerManager::Init(const char* projectPath, IterateOverDirtyResourceTrackersCallbackType callback)
 	{
-		SetProjectPath(projectPath);
-
 		m_callback = callback;
+
+		SetProjectPath(projectPath);
 
 		srand( time( NULL ) );
 	}
@@ -169,14 +169,15 @@ namespace asapi
 		{
 			if( v_ResourceTrackers[i].IsContentDirty() )
 			{
-				std::vector<std::string> tmpVec;
+				std::vector<SubResourceData> tmpVec;
 				const bool succesfulyProcessed = m_callback( &(v_ResourceTrackers[i]), s_assetsDirectoryPath.c_str(), tmpVec);
 
-				v_ResourceTrackers[i].v_resourceIDs.clear();
+				v_ResourceTrackers[i].v_subresources.clear();
 				for(int j=0; j<tmpVec.size(); ++j)
 				{
 					log::debug << "DUPAASsafasfdgasdf " << i << " " << (v_ResourceTrackers[i]).m_filename.c_str() << std::endl;
-					v_ResourceTrackers[i].v_resourceIDs.push_back( tmpVec[j] );
+					
+					v_ResourceTrackers[i].v_subresources.push_back( new SerializableSubResourceData( tmpVec[j] ) );
 				}
 
 				v_ResourceTrackers[i].SetContentDirty( !succesfulyProcessed );  //if processet succesfully then is NOT dirty

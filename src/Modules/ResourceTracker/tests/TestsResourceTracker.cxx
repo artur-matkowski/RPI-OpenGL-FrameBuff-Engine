@@ -2,7 +2,7 @@
 #include "sha256.h"
 
 
-	TestsResourceTracker::TestsResourceTracker(const char* testProjectPath, bool (*callback)(asapi::ResourceTracker* in_currentResource, const char* in_projectPath, std::vector<std::string>& out_resourceBinaries))
+	TestsResourceTracker::TestsResourceTracker(const char* testProjectPath, bool (*callback)(asapi::ResourceTracker* in_currentResource, const char* in_projectPath, std::vector<asapi::SubResourceData>& out_resourceBinaries))
 	{
 		strncpy(m_testProjectPath, testProjectPath, MAX_PATH_SIZE);
 
@@ -94,7 +94,7 @@
 		removedResources++;
 	}
 
-	bool ProcessResourceTracker(asapi::ResourceTracker* in_currentResource, const char* in_projectPath, std::vector<std::string>& out_resourceBinaries)
+	bool ProcessResourceTracker(asapi::ResourceTracker* in_currentResource, const char* in_projectPath, std::vector<asapi::SubResourceData>& out_resourceBinaries)
 	{
 		asapi::FILE::MMAP _in, _out;
 		const std::string binaryResourceDir = std::string( (const char*)in_projectPath ) + std::string("Resource_Binaries/");
@@ -108,8 +108,12 @@
 
 		strncpy( (char*)_out.Data(), (const char*)_in.Data(), _in.Size() );
 
+		asapi::SubResourceData subresource;
+		subresource.m_filename = std::to_string( in_currentResource->GetResourceID() ) + std::string(".txt.bin");
+		subresource.m_internalID = "---NaN ID---";
+
 		out_resourceBinaries.clear();
-		out_resourceBinaries.push_back( std::to_string( in_currentResource->GetResourceID() ) + std::string(".txt.bin") );
+		out_resourceBinaries.push_back( subresource );
 
 		//log::debug << binaryResourceDir.c_str() << std::endl;
 

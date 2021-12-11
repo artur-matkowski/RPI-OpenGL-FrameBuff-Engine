@@ -6,10 +6,18 @@
 
 namespace asapi
 {
+	struct SubResourceData
+	{
+		std::string 		m_filename;
+		std::string 		m_internalID; //subresource identifier to destenquishe subresources in resource file
+	};
+
 	class ResourceTrackerManager
 	{
 	public:
-		typedef bool (*IterateOverDirtyResourceTrackersCallbackType)(ResourceTracker* in_currentResource, const char* in_projectPath, std::vector<std::string>& out_resourceBinaries);
+		typedef bool (*IterateOverDirtyResourceTrackersCallbackType)(ResourceTracker* in_currentResource
+																	, const char* in_projectPath
+																	, std::vector<SubResourceData>& out_resourceBinaries);
 
 	private:
 		std::string						s_assetsDirectoryPath;

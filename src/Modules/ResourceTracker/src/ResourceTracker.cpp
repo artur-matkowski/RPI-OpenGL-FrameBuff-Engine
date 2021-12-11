@@ -9,6 +9,32 @@ namespace asapi
 {
 	std::string ResourceTracker::_ResourceTrackersPath;
 
+
+	SerializableSubResourceData::SerializableSubResourceData()
+	{
+
+	}
+	SerializableSubResourceData::SerializableSubResourceData( const SubResourceData& in_data )
+	{
+		m_filename = in_data.m_filename;
+		m_internalID = in_data.m_internalID;
+	}
+	SerializableSubResourceData::SerializableSubResourceData( SerializableSubResourceData&& in_data )
+	{
+		m_filename = in_data.m_filename;
+		m_internalID = in_data.m_internalID;
+	}
+	SerializableSubResourceData& SerializableSubResourceData::operator=( SubResourceData&& in_data )
+	{
+		m_filename = in_data.m_filename;
+		in_data.m_filename = "";
+
+		m_internalID = in_data.m_internalID;
+		in_data.m_internalID = "";
+
+		return *this;
+	}
+
 	ResourceTracker::ResourceTracker()
 	{
 
@@ -33,7 +59,7 @@ namespace asapi
 		m_size = std::move(cp.m_size);
 		m_modified_epoch = std::move(cp.m_modified_epoch);
 		m_modified_ns = std::move(cp.m_modified_ns);
-		v_resourceIDs = std::move(cp.v_resourceIDs);
+		v_subresources = std::move(cp.v_subresources);
 	}
 
 	void ResourceTracker::SetProjectPath(const char* path)
@@ -107,7 +133,7 @@ namespace asapi
 	void ResourceTracker::ObtainResourceOwnership(ResourceTracker & source)
 	{
 		m_resourceID = std::move(source.m_resourceID);
-		v_resourceIDs = std::move(source.v_resourceIDs);
+		v_subresources = std::move(source.v_subresources);
 	}
 
 	bool ResourceTracker::operator==(const ResourceTracker& other)

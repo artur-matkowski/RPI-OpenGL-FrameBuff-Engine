@@ -6,7 +6,7 @@
 #define TESTS
 #include "ResourceTrackerManager.hpp"
 
-	bool ProcessResourceTracker(asapi::ResourceTracker* in_currentResource, const char* in_projectPath, std::vector<std::string>& out_resourceBinaries);
+	bool ProcessResourceTracker(asapi::ResourceTracker* in_currentResource, const char* in_projectPath, std::vector<asapi::SubResourceData>& out_resourceBinaries);
 
 	class TestsResourceTracker
 	{
@@ -32,7 +32,7 @@
 		static void Command(const char *format, ...);
 
 	public:
-		TestsResourceTracker(const char* testProjectPath, bool (*callback)(asapi::ResourceTracker* in_currentResource, const char* in_projectPath, std::vector<std::string>& out_resourceBinaries) = ProcessResourceTracker);
+		TestsResourceTracker(const char* testProjectPath, bool (*callback)(asapi::ResourceTracker* in_currentResource, const char* in_projectPath, std::vector<asapi::SubResourceData>& out_resourceBinaries) = ProcessResourceTracker);
 		~TestsResourceTracker();
 
 		void CreateResource(const char* filename, const char* content);
