@@ -32,6 +32,9 @@ namespace asapi
 #endif
 		std::vector<ResourceTracker> 	v_ResourceTrackers;
 	public:
+
+		~ResourceTrackerManager();
+
 		void Init(const char* projectPath
 			, IterateOverDirtyResourceTrackersCallbackType callback
 			);

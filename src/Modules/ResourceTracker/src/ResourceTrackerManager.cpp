@@ -5,6 +5,14 @@
 
 namespace asapi
 {
+	ResourceTrackerManager::~ResourceTrackerManager()
+	{
+		for(int i=0; i<v_ResourceTrackers.size(); ++i)
+		{
+			v_ResourceTrackers[i].DetachFromResourceOnApplicationCLose();
+		}
+	}
+
 	void ResourceTrackerManager::Init(const char* projectPath, IterateOverDirtyResourceTrackersCallbackType callback)
 	{
 		m_callback = callback;
@@ -177,7 +185,9 @@ namespace asapi
 				{
 					log::debug << "DUPAASsafasfdgasdf " << i << " " << (v_ResourceTrackers[i]).m_filename.c_str() << std::endl;
 					
-					v_ResourceTrackers[i].v_subresources.push_back( new SerializableSubResourceData( tmpVec[j] ) );
+					//v_ResourceTrackers[i].v_subresources.push_back( new SerializableSubResourceData( tmpVec[j] ) );
+					v_ResourceTrackers[i].v_subresources.push_back( SerializableSubResourceData::AllocateAndInit( bfu::StdAllocatorMemBlock::GetMemBlock() ) );
+					*(SerializableSubResourceData*)v_ResourceTrackers[i].v_subresources.back() = std::move( tmpVec[j] );
 				}
 
 				v_ResourceTrackers[i].SetContentDirty( !succesfulyProcessed );  //if processet succesfully then is NOT dirty

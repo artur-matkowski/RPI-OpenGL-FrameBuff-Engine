@@ -150,7 +150,7 @@
 		if( currentResources.size() != resourceFiles.size() )
 		{
 			log::error << "Amount of resource tracker files (*.res.json) differes from test set\n\tcurrentResources.size(" << currentResources.size() << ") != resourceFiles.size(" << resourceFiles.size() << ")" << std::endl;
-			dataCohesion |= false;
+			dataCohesion = false;
 		}
 
 		if( currentResources.size() != res.v_ResourceTrackers.size() )
@@ -174,9 +174,9 @@
 
 			//check if resourceIDs coresponds to resourceIDs, files names (*.res.json)
 			bool linkFound = false;
-			for(int i=0; i<resourceFiles.size(); ++i)
+			for(int j=0; j<resourceFiles.size(); ++j)
 			{
-				if( strstr(resourceFiles[i].c_str(), std::to_string(currentResources[i].resourceLink).c_str() ) != 0 )
+				if( strstr(resourceFiles[j].c_str(), std::to_string(currentResources[i].resourceLink).c_str() ) != 0 )
 				{
 					linkFound = true;
 				}

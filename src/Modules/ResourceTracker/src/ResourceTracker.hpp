@@ -89,11 +89,13 @@ namespace asapi
 
 		void ObtainResourceOwnership(ResourceTracker & source);
 		inline bool IsResourceOwner(){ return m_resourceID.ID() != 0; }
+		inline void DetachFromResourceOnApplicationCLose(){ m_resourceID.SetID(0); }
 
 		std::string GetResourceTrackerPath();
 
 	private:
 		void RemoveResourceTrackerFile();
+		void RemoveResourceBinaryFile();
 	};
 	bfu::stream& operator<<(bfu::stream&, const ResourceTracker& );
 

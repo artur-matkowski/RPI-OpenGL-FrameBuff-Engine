@@ -42,8 +42,9 @@ namespace asapi
 	}
 	ResourceTracker::~ResourceTracker()
 	{
-		if( !IsResourceOwner() )
+		if( IsResourceOwner() )
 		{
+			RemoveResourceBinaryFile();
 			RemoveResourceTrackerFile();
 		}
 	}
@@ -193,7 +194,28 @@ namespace asapi
 		}
 		else
 		{
-			//log::debug << "Removed ResourceTracker file: " << path.c_str() << std::endl;
+			//log::debug << "Removed ResourceTracker file: " << path.c_str()  << std::endl;
+		}
+	}
+
+	void ResourceTracker::RemoveResourceBinaryFile()
+	{
+		for(int i=0; i<v_subresources.size(); ++i)
+		{
+			std::string path = _ProjectPath + RESOURCE_BINARIES_DIR;
+			path += "/";
+			path += v_subresources[i].m_filename;
+
+			int resoult = unlink( path.c_str() );
+
+			if( resoult!=0 )
+			{
+				log::warning << "Can not remove Resource file: " << path.c_str() << std::endl;
+			}
+			else
+			{
+				//log::debug << "Removed Resource file: " << path.c_str() << std::endl;
+			}
 		}
 	}
 
