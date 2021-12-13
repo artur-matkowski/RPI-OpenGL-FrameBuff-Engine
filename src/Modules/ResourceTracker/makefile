@@ -38,3 +38,4 @@ clean-test:
 	rm -f assets/Resource_Trackers/*.json
 	rm -f assets/Resource_Binaries/*.bin
 	rm -f assets/*.txt
+	rm -rf autoCreatingDirectoryTest

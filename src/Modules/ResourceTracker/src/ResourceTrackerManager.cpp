@@ -220,9 +220,6 @@ namespace asapi
 				v_ResourceTrackers[i].v_subresources.clear();
 				for(int j=0; j<tmpVec.size(); ++j)
 				{
-					log::debug << "DUPAASsafasfdgasdf " << i << " " << (v_ResourceTrackers[i]).m_filename.c_str() << std::endl;
-					
-					//v_ResourceTrackers[i].v_subresources.push_back( new SerializableSubResourceData( tmpVec[j] ) );
 					v_ResourceTrackers[i].v_subresources.push_back( SerializableSubResourceData::AllocateAndInit( bfu::StdAllocatorMemBlock::GetMemBlock() ) );
 					*(SerializableSubResourceData*)v_ResourceTrackers[i].v_subresources.back() = std::move( tmpVec[j] );
 				}
