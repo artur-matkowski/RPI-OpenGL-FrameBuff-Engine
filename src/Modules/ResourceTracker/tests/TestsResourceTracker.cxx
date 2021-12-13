@@ -216,3 +216,8 @@
 
 		return dataCohesion;
 	}
+
+	void TestsResourceTracker::Print()
+	{
+		log::debug << res << std::endl;
+	}

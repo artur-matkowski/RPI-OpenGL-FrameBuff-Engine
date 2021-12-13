@@ -7,10 +7,7 @@ namespace asapi
 {
 	ResourceTrackerManager::~ResourceTrackerManager()
 	{
-		for(int i=0; i<v_ResourceTrackers.size(); ++i)
-		{
-			v_ResourceTrackers[i].DetachFromResourceOnApplicationCLose();
-		}
+		CleanResourceTrackersContainer();
 	}
 
 	void ResourceTrackerManager::Init(const char* projectPath, IterateOverDirtyResourceTrackersCallbackType callback)
@@ -24,6 +21,8 @@ namespace asapi
 
 	void ResourceTrackerManager::SetProjectPath(const char* projectPath)
 	{
+		CleanResourceTrackersContainer();
+
 		s_assetsDirectoryPath = projectPath;
 
 		if( s_assetsDirectoryPath.back() != '/' )
@@ -31,8 +30,46 @@ namespace asapi
 
 		s_assetsDirectoryPath += "assets/";
 
+		s_projectDirectoryPath = projectPath;
+
 		ResourceTracker::SetProjectPath(projectPath);
-		RefreshResources();
+
+
+		DeserializeResourceTrackerContainerFromDisk();
+	}
+
+	void ResourceTrackerManager::DeserializeResourceTrackerContainerFromDisk()
+	{
+
+		std::string 						path = s_projectDirectoryPath + RESOURCE_TRACKERS_DIR;
+		std::vector< std::string > 			paths;
+		char pathBuff[MAX_PATH_SIZE];
+
+
+		ListFiles(paths, {".res.json"}, ListingStrategy::whitelist, path.c_str());
+
+
+		v_ResourceTrackers.resize( paths.size() );
+
+
+		for(int i=0; i<paths.size(); ++i)
+		{
+			FILE::MMAP input;
+			
+			std::string resourceTrackerPath = s_projectDirectoryPath + RESOURCE_TRACKERS_DIR;
+			resourceTrackerPath += "/";
+			resourceTrackerPath += paths[i];
+
+			input.InitForRead( resourceTrackerPath.c_str() );
+
+			//log::debug << "resource path: " << resourceTrackerPath << std::endl;
+
+			p_JSONSerializer.assignData( (char*)input.Data(), input.Size() );
+
+			p_JSONSerializer.Deserialize( &v_ResourceTrackers[i] );
+
+			input.Close();
+		}
 	}
 
 	ResourceTracker* FindResource(std::vector<ResourceTracker>& where, const ResourceTracker& what)
@@ -193,6 +230,15 @@ namespace asapi
 				v_ResourceTrackers[i].SetContentDirty( !succesfulyProcessed );  //if processet succesfully then is NOT dirty
 			}
 		}
+	}
+
+	void ResourceTrackerManager::CleanResourceTrackersContainer()
+	{
+		for(int i=0; i<v_ResourceTrackers.size(); ++i)
+		{
+			v_ResourceTrackers[i].DetachFromResourceOnApplicationCLose();
+		}
+		v_ResourceTrackers.clear();
 	}
 
 

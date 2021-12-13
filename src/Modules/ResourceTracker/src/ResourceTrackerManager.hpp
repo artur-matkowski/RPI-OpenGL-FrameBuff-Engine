@@ -21,11 +21,15 @@ namespace asapi
 
 	private:
 		std::string						s_assetsDirectoryPath;
+		std::string						s_projectDirectoryPath;
 		bfu::JSONSerializer				p_JSONSerializer;
 		bfu::BinarySerializer			p_BinarySerializer;
 
 		IterateOverDirtyResourceTrackersCallbackType m_callback = nullptr;
 		void IterateOverDirtyResourceTrackers();
+
+		void CleanResourceTrackersContainer();
+		void DeserializeResourceTrackerContainerFromDisk();
 
 #ifdef TESTS
 	public:
@@ -50,6 +54,8 @@ namespace asapi
 
 
 		friend bfu::stream& operator<<(bfu::stream&, const ResourceTrackerManager& );
+
+		inline int Size() { return v_ResourceTrackers.size(); }
 	};
 }
 

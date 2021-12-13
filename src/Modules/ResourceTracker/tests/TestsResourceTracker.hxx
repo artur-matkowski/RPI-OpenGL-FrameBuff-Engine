@@ -42,6 +42,8 @@
 
 		bool TestDataCohesion();
 
+		void Print();
+
 	};
 
 

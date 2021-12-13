@@ -14,6 +14,8 @@ int main(int argc, char** argv)
 
 	TestsResourceTracker tests(argv[1]);
 
+	tests.Print();
+
 
 	tests.CreateResource("resoruce1.txt", "randomData1");
 	tests.CreateResource("resoruce2.txt", "randomData11");
