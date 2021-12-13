@@ -61,7 +61,7 @@ namespace asapi
 		std::vector< ResourceTracker > 		upToDateResources;
 		char pathBuff[MAX_PATH_SIZE];
 
-		ListFiles(paths, s_assetsDirectoryPath.c_str(), {".res.json", ".bin"}, ListingStrategy::blacklist);
+		ListFiles(paths, {".res.json", ".bin"}, ListingStrategy::blacklist, s_assetsDirectoryPath.c_str());
 
 		upToDateResources.resize( paths.size() );
 

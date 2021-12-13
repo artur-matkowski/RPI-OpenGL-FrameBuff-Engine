@@ -8,6 +8,7 @@
 namespace asapi
 {
 	std::string ResourceTracker::_ResourceTrackersPath;
+	std::string ResourceTracker::_ProjectPath;
 
 
 	SerializableSubResourceData::SerializableSubResourceData()
@@ -60,14 +61,16 @@ namespace asapi
 		m_modified_epoch = std::move(cp.m_modified_epoch);
 		m_modified_ns = std::move(cp.m_modified_ns);
 		v_subresources = std::move(cp.v_subresources);
+
+		m_resTrackerFilename = std::to_string( m_resourceID.ID() );
+		m_resTrackerFilename += ".res.json";
 	}
 
 	void ResourceTracker::SetProjectPath(const char* path)
 	{
 		_ResourceTrackersPath = path;
-		if( _ResourceTrackersPath.back() != '/' )
-			_ResourceTrackersPath += "/";
-		_ResourceTrackersPath += "assets/Resource_Trackers/";
+		_ProjectPath = path;
+		_ResourceTrackersPath += RESOURCE_TRACKERS_DIR;
 	}
 
 	#ifdef IS_EDITOR
@@ -90,25 +93,34 @@ namespace asapi
 	{
 		struct stat attrib;
 
-		if( stat(path, &attrib)!=0 )
+    	m_path = _ProjectPath;
+    	m_path += ASSETS_DIR;
+    	m_path +="/";
+    	m_path += path;
+
+		if( stat(m_path.c_str(), &attrib)!=0 )
     	{
-    		log::warning << "Could not find file " << path << std::endl;
+    		log::warning << "Could not find file " << m_path.c_str() << std::endl;
     		return;
     	}
 
-    	m_path = std::string(path);
-    	const char* filename = path + m_path.size()-2;
-    	for(; filename!=path && filename[0]!='/' ;--filename);
+
+    	const char* filename = m_path.c_str() + m_path.size()-2;
+    	for(; filename!=m_path.c_str() && filename[0]!='/' ;--filename);
     	filename++;
 
     	m_filename = std::string(filename);
 
 		#ifdef IS_EDITOR
-		m_content_hash = GetContentHash(path, &m_size);
+		m_content_hash = GetContentHash(m_path.c_str(), &m_size);
 		#endif
 
 		m_modified_epoch = static_cast<uint64_t>(attrib.st_mtim.tv_sec);
 		m_modified_ns = static_cast<uint64_t>(attrib.st_mtim.tv_nsec);
+
+		
+		m_resTrackerFilename = std::to_string( m_resourceID.ID() );
+		m_resTrackerFilename += ".res.json";
 	}
 
 
@@ -128,12 +140,18 @@ namespace asapi
 		m_modified_epoch = std::move(cp.m_modified_epoch);
 		m_modified_ns = std::move(cp.m_modified_ns);
 
+		m_resTrackerFilename = std::to_string( m_resourceID.ID() );
+		m_resTrackerFilename += ".res.json";
+
 		return *this;
 	}
 	void ResourceTracker::ObtainResourceOwnership(ResourceTracker & source)
 	{
 		m_resourceID = std::move(source.m_resourceID);
 		v_subresources = std::move(source.v_subresources);
+
+		m_resTrackerFilename = std::to_string( m_resourceID.ID() );
+		m_resTrackerFilename += ".res.json";
 	}
 
 	bool ResourceTracker::operator==(const ResourceTracker& other)
@@ -158,8 +176,8 @@ namespace asapi
 	std::string ResourceTracker::GetResourceTrackerPath()
 	{
 		std::string ret = _ResourceTrackersPath;
-		ret += std::to_string( m_resourceID.ID() );
-		ret += ".res.json";
+		ret += "/";
+		ret += m_resTrackerFilename;
 
 		return ret;
 	}

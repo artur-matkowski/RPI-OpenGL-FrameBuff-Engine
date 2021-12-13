@@ -5,8 +5,9 @@
 #include "UniqueID.hpp"
 //resource is a source file like: jpg, glsl, psd, fbx, txt, etc. 
 
-#define RESOURCE_TRACKERS_DIR  "/Resource_Trackers"
-#define RESOURCE_BINARIES_DIR "/Resource_Binaries"
+#define RESOURCE_TRACKERS_DIR  "/assets/Resource_Trackers"
+#define RESOURCE_BINARIES_DIR "/assets/Resource_Binaries"
+#define ASSETS_DIR "/assets"
 
 using bfu::string;
 
@@ -38,6 +39,7 @@ namespace asapi
 #endif
 		SERIALIZABLE_OBJ( ResourceTracker, UniqueID, m_resourceID );
 		SERIALIZABLE_VAR( ResourceTracker, string, m_filename );
+		SERIALIZABLE_VAR( ResourceTracker, string, m_resTrackerFilename );
 		SERIALIZABLE_VAR( ResourceTracker, string, m_path );
 		SERIALIZABLE_VAR( ResourceTracker, string, m_content_hash );
 		SERIALIZABLE_VAR( ResourceTracker, uint32_t, m_size );
@@ -49,6 +51,7 @@ namespace asapi
 		
 
 		static std::string 	_ResourceTrackersPath;
+		static std::string 	_ProjectPath;
 
 	public:
 		ResourceTracker();

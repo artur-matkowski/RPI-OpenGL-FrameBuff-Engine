@@ -143,7 +143,7 @@
 
 
 
-		asapi::ListFiles(resourceFiles, m_ResourceFilesDirPath, {".bin"}, asapi::ListingStrategy::blacklist );
+		asapi::ListFiles(resourceFiles, {".bin"}, asapi::ListingStrategy::blacklist, m_ResourceFilesDirPath );
 
 
 

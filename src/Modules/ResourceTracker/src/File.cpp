@@ -47,17 +47,28 @@ namespace asapi
 	}
 
 
-	void ListFiles(std::vector< std::string >& out, const char* dirname, const std::vector< std::string >& extensions, ListingStrategy strategy)
+	void ListFiles(std::vector< std::string >& out
+				, const std::vector< std::string >& extensions
+				, ListingStrategy strategy
+				, const char* dirname
+				, const char* subdirname)
 	{
 		int i;
 		DIR* d_fh;
 		struct dirent* entry;
-		char longest_name[MAX_PATH_SIZE];
+		char path[MAX_PATH_SIZE];
 
-
-		if( (d_fh = opendir(dirname)) == NULL) 
+		strncpy(path, dirname, MAX_PATH_SIZE-1);
+		if( subdirname!=0 )
 		{
-			log::error << "Couldn't open directory, errno: " << errno << "\n\tDirname: " << dirname << " " << std::endl;
+			strncat(path, "/", MAX_PATH_SIZE-1);
+			strncat(path, subdirname, MAX_PATH_SIZE-1);
+		}
+
+
+		if( (d_fh = opendir(path)) == NULL) 
+		{
+			log::error << "Couldn't open directory, errno: " << errno << "\n\tDirname: " << path << " " << std::endl;
 			return;
 		}
 
@@ -102,19 +113,22 @@ namespace asapi
 
 				if( !skipfile )
 				{
-					/* Prepend the current directory and recurse */
-					strncpy(longest_name, dirname, MAX_PATH_SIZE-1);
-					strncat(longest_name, "/", MAX_PATH_SIZE-1);
-					strncat(longest_name, entry->d_name, MAX_PATH_SIZE-1);
+					bzero(path, MAX_PATH_SIZE);
+					if( subdirname!=0 )
+					{
+						strncpy(path, subdirname, MAX_PATH_SIZE-1);
+						strncat(path, "/", MAX_PATH_SIZE-1);
+					}
+					strncat(path, entry->d_name, MAX_PATH_SIZE-1);
 
 					/* If it's a directory print it's name and recurse into it */
 					if (entry->d_type == DT_DIR) 
 					{
-						ListFiles(out, longest_name, extensions, strategy);
+						ListFiles(out, extensions, strategy, dirname, path);
 					}
 					else //if not dir
 					{
-						out.emplace_back(longest_name);
+						out.emplace_back(path);
 					}
 				}
 
