@@ -215,7 +215,7 @@ namespace asapi
 			if( v_ResourceTrackers[i].IsContentDirty() )
 			{
 				std::vector<SubResourceData> tmpVec;
-				const bool succesfulyProcessed = m_callback( &(v_ResourceTrackers[i]), s_assetsDirectoryPath.c_str(), tmpVec);
+				const bool succesfulyProcessed = m_callback( &(v_ResourceTrackers[i]), s_projectDirectoryPath.c_str(), tmpVec);
 
 				v_ResourceTrackers[i].v_subresources.clear();
 				for(int j=0; j<tmpVec.size(); ++j)

@@ -97,16 +97,20 @@
 	bool ProcessResourceTracker(asapi::ResourceTracker* in_currentResource, const char* in_projectPath, std::vector<asapi::SubResourceData>& out_resourceBinaries)
 	{
 		asapi::FILE::MMAP _in, _out;
-		const std::string binaryResourceDir = std::string( (const char*)in_projectPath ) + std::string("Resource_Binaries/");
+
+		std::string binaryResourceDir = in_projectPath;
+		binaryResourceDir += RESOURCE_BINARIES_DIR;
+		binaryResourceDir += "/";
+
 		const std::string binaryResource = binaryResourceDir + std::to_string( in_currentResource->GetResourceID() ) + std::string(".txt.bin");
 
 
-		_in.InitForRead( in_currentResource->GetPath().c_str() );
+		_in.InitForRead( in_currentResource->GetFullPath().c_str() );
 
-		_out.InitForWrite( binaryResource.c_str(), 64);
+		_out.InitForWrite( binaryResource.c_str(), _in.Size());
 
 
-		strncpy( (char*)_out.Data(), (const char*)_in.Data(), _in.Size() );
+		memcpy( _out.Data(), _in.Data(), _in.Size() );
 
 		asapi::SubResourceData subresource;
 		subresource.m_filename = std::to_string( in_currentResource->GetResourceID() ) + std::string(".txt.bin");

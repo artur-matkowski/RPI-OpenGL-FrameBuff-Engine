@@ -84,6 +84,7 @@ namespace asapi
 		inline uint64_t GetResourceID(){ return m_resourceID.ID(); }
 		inline std::string GetFilename(){ return m_filename; }
 		inline std::string GetPath(){ return m_path; }
+		inline std::string GetFullPath(){ return _ProjectPath+std::string(ASSETS_DIR)+std::string("/")+m_path.c_str(); }
 		std::string GetFileExtension();
 
 

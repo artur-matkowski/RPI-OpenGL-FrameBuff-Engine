@@ -90,30 +90,32 @@ namespace asapi
 	}
 	#endif
 
-	void ResourceTracker::Init(const char* path)
+	void ResourceTracker::Init(const char* in_path)
 	{
 		struct stat attrib;
 
-    	m_path = _ProjectPath;
-    	m_path += ASSETS_DIR;
-    	m_path +="/";
-    	m_path += path;
+    	m_path = in_path;
 
-		if( stat(m_path.c_str(), &attrib)!=0 )
+		std::string path = _ProjectPath;
+    	path += ASSETS_DIR;
+    	path +="/";
+    	path += in_path;
+
+		if( stat(path.c_str(), &attrib)!=0 )
     	{
-    		log::warning << "Could not find file " << m_path.c_str() << std::endl;
+    		log::warning << "Could not find file " << path.c_str() << std::endl;
     		return;
     	}
 
 
-    	const char* filename = m_path.c_str() + m_path.size()-2;
-    	for(; filename!=m_path.c_str() && filename[0]!='/' ;--filename);
+    	const char* filename = path.c_str() + path.size()-2;
+    	for(; filename!=path.c_str() && filename[0]!='/' ;--filename);
     	filename++;
 
     	m_filename = std::string(filename);
 
 		#ifdef IS_EDITOR
-		m_content_hash = GetContentHash(m_path.c_str(), &m_size);
+		m_content_hash = GetContentHash(path.c_str(), &m_size);
 		#endif
 
 		m_modified_epoch = static_cast<uint64_t>(attrib.st_mtim.tv_sec);
