@@ -19,7 +19,7 @@ int main(int argc, char** argv)
 
 	tests.CreateResource("resoruce1.txt", "randomData1");
 	tests.CreateResource("resoruce2.txt", "randomData11");
-	tests.CreateResource("resoruce3.txt", "randomData111");
+	tests.CreateResource("somedir/resoruce3.txt", "randomData111");
 	testsPassed = testsPassed && tests.TestDataCohesion();
 
 

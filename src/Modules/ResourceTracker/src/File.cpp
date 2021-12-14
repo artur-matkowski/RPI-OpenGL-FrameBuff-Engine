@@ -271,7 +271,7 @@ namespace asapi
 		fd = open(filename, O_RDWR | O_CREAT | O_TRUNC | O_SYNC, (mode_t)0666);
 		if (fd == -1)
 		{
-			log::error << "Can not open file: " << filename << std::endl;
+			//log::error << "Can not open file: " << filename << std::endl;
 			std::string path = GetPath(filename);
 			if( mkdir_recursivly( path.c_str() ) )
 			{
@@ -283,7 +283,10 @@ namespace asapi
 				}
 			}
 			else
+			{
+				log::error << "Can not open file: " << filename << std::endl;
 				return;
+			}
 			return;
 		}
 	}
