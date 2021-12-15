@@ -13,7 +13,7 @@ namespace asapi
 #ifdef TESTS
 	public:
 #endif		
-		SERIALIZABLE_OBJ( ResourceTracker, UniqueID, m_resourceID );
+		SERIALIZABLE_OBJ( ResourceTracker, UniqueID, m_binaryResourceID );
 		SERIALIZABLE_OBJ( ResourceTracker, UniqueID, m_resourceTrackerID );
 		SERIALIZABLE_VAR( BinaryResourceTracker, string, m_displayedName );
 
@@ -28,23 +28,37 @@ namespace asapi
 			}
 		}
 
-		bool OnGUI( UniqueID& out_newResource )
+		#ifdef IS_EDITOR
+		bool OnGUI( UniqueID* out_newResource, const char* typeFilter )
 		{
 			//Render resource selector with type restriction
 			//return true if resourcewas changes
 		}
-		
+		#endif
 	};
 
-	class RendererResource
+	class ConsumerResourceReferenceTXT: public IConsumerResourceReferenceBase
 	{
+		#ifdef IS_EDITOR
 		//sharedPtr<
 		BinaryResourceTracker binrestracker;
+		#endif
 
 		void * rendererHandle = nullptr;
 
-		void OnLoad2Renderer()
+		ConsumerResourceReferenceTXT();
+
+		void OnLoad2Renderer(UniqueID m_binaryResourceID)
 		{
+			#ifdef IS_EDITOR
+			if( m_binaryResourceID==binrestracker.m_binaryResourceID )
+			{
+				log::warnign << "Traying to reaply the same resource. That makes no sense, check your code." << std::endl;
+				return;
+			}
+			binrestracker = requestBinaryResourceTracker(m_binaryResourceID);
+			#endif
+
 			//TODO
 		}
 
@@ -53,45 +67,60 @@ namespace asapi
 			//TODO
 		}
 
+		#ifdef IS_EDITOR
+		bool OnGUI( UniqueID* out_newResource, const char* typeFilter)
+		{
+			return binrestracker->OnGUI( out_newResource, typeFilter );
+		}
+		#endif
+
 	};
 
 
 
 
-	class ResourceReferenceTXT: public bfu::SerializableClassBase<ResourceReferenceTXT>
+	class ResourceReference: public bfu::SerializableClassBase<ResourceReference>
 	{
-		SERIALIZABLE_OBJ( ResourceTracker, UniqueID, m_resourceID );
+		char m_resourceType[16];
 
-		sharedPtr<RendererResource> rendererResource;
+		SERIALIZABLE_OBJ( ResourceTracker, UniqueID, m_binaryResourceID );
+
+		sharedPtr<IConsumerResourceReferenceBase> rendererTXTResource;
 	public:
-		ResourceReferenceTXT();
-		~ResourceReferenceTXT();
+		ResourceReference(const char* ResourceType);
+		~ResourceReference();
 
+		#ifdef IS_EDITOR
 		void OnGUI()
 		{
-			auto resourceID;
+			ImGUI.Label("Resource type: %s", m_resourceType);
+			
+			UniqueID resourceID;
 			//TODO
-			if( binResTracker.OnGUI( &resourceID ) ) //changed resourceID
+			if( rendererTXTResource.OnGUI( &resourceID, m_resourceType ) ) //changed resourceID
 			{
-				m_resourceID = resourceID;
-				binrestracker = requestBinaryResourceTracker(resourceID);
-				rendererResource.OnUnload2Renderer();
-				rendererResource.OnLoad2Renderer();
+				m_binaryResourceID = resourceID;
+				rendererTXTResource = requestConsumerResourceReference(resourceID);
+				rendererTXTResource.OnUnload2Renderer();
+				rendererTXTResource.OnLoad2Renderer();
 			}
 
 			//optional
 			RenderTYPEpreview();
 		};
+		#endif
 
 
-		virtual OnDeserialize() override
+		virtual void PostDeserialize() override
 		{
-			binrestracker = requestBinaryResourceTracker(m_resourceID);
+			//if( m_binaryResourceID==0 ) request empty dummy resource for sanity
 
-			if( rendererResource!=nullptr )
-				rendererResource.OnUnload2Renderer();
+			rendererTXTResource = requestConsumerResourceReference(m_binaryResourceID);
+
+			if( rendererTXTResource!=nullptr )
+				rendererTXTResource.OnUnload2Renderer();
 			
-			rendererResource.OnLoad2Renderer();
+			rendererTXTResource.OnLoad2Renderer();
 		}
 		
 	};
