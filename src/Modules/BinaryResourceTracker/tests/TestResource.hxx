@@ -2,7 +2,7 @@
 #define _H_TESTresBin
 #include "ResourceTracker.hpp"
 
-bool ProcessInputResourceToBinary(asapi::ResourceTracker* restrack, void* data);
+bool ProcessResourceTracker(asapi::ResourceTracker* in_currentResource, const char* in_projectPath, std::vector<asapi::SubResourceData>& out_resourceBinaries);
 
 
 class TestResourceBinaries

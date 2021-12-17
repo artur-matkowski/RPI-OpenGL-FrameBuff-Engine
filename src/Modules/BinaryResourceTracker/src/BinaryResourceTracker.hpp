@@ -37,7 +37,8 @@ namespace asapi
 		#endif
 	};
 
-	class ConsumerResourceReferenceTXT: public IConsumerResourceReferenceBase
+	template<class T>
+	class ConsumerResourceReference: public IConsumerResourceReferenceBase
 	{
 		#ifdef IS_EDITOR
 		//sharedPtr<
@@ -46,25 +47,25 @@ namespace asapi
 
 		void * rendererHandle = nullptr;
 
-		ConsumerResourceReferenceTXT();
+		ConsumerResourceReference();
 
-		void OnLoad2Renderer(UniqueID m_binaryResourceID)
+		inline void OnLoad2Renderer(UniqueID binaryResourceID)
 		{
 			#ifdef IS_EDITOR
-			if( m_binaryResourceID==binrestracker.m_binaryResourceID )
+			if( binaryResourceID==binrestracker.binaryResourceID )
 			{
 				log::warnign << "Traying to reaply the same resource. That makes no sense, check your code." << std::endl;
 				return;
 			}
-			binrestracker = requestBinaryResourceTracker(m_binaryResourceID);
+			binrestracker = requestBinaryResourceTracker(binaryResourceID);
 			#endif
 
-			//TODO
+			T::OnLoad2Renderer( binaryResourceID )
 		}
 
-		void OnUnload2Renderer()
+		inline void OnUnload2Renderer()
 		{
-			//TODO
+			T::OnUnload2Renderer( binaryResourceID )
 		}
 
 		#ifdef IS_EDITOR
@@ -85,7 +86,7 @@ namespace asapi
 
 		SERIALIZABLE_OBJ( ResourceTracker, UniqueID, m_binaryResourceID );
 
-		sharedPtr<IConsumerResourceReferenceBase> rendererTXTResource;
+		sharedPtr<IConsumerResourceReferenceBase> rendererResource;
 	public:
 		ResourceReference(const char* ResourceType);
 		~ResourceReference();
@@ -97,12 +98,12 @@ namespace asapi
 			
 			UniqueID resourceID;
 			//TODO
-			if( rendererTXTResource.OnGUI( &resourceID, m_resourceType ) ) //changed resourceID
+			if( rendererResource.OnGUI( &resourceID, m_resourceType ) ) //changed resourceID
 			{
 				m_binaryResourceID = resourceID;
-				rendererTXTResource = requestConsumerResourceReference(resourceID);
-				rendererTXTResource.OnUnload2Renderer();
-				rendererTXTResource.OnLoad2Renderer();
+				rendererResource = requestConsumerResourceReference(resourceID);
+				rendererResource.OnUnload2Renderer();
+				rendererResource.OnLoad2Renderer();
 			}
 
 			//optional
@@ -115,12 +116,12 @@ namespace asapi
 		{
 			//if( m_binaryResourceID==0 ) request empty dummy resource for sanity
 
-			rendererTXTResource = requestConsumerResourceReference(m_binaryResourceID);
+			rendererResource = requestConsumerResourceReference(m_binaryResourceID);
 
-			if( rendererTXTResource!=nullptr )
-				rendererTXTResource.OnUnload2Renderer();
+			if( rendererResource!=nullptr )
+				rendererResource.OnUnload2Renderer();
 			
-			rendererTXTResource.OnLoad2Renderer();
+			rendererResource.OnLoad2Renderer();
 		}
 		
 	};

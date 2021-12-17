@@ -10,6 +10,11 @@ namespace asapi
 	{
 		std::string 		m_filename;
 		std::string 		m_internalID; //subresource identifier to destenquishe subresources in resource file
+
+		SubResourceData(const std::string& filename, const std::string& internalID)
+			:m_filename( filename )
+			,m_internalID( internalID )
+		{}
 	};
 
 	class ResourceTrackerManager

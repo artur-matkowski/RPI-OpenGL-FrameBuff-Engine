@@ -1,19 +1,27 @@
 #include "TestResource.hxx"
 
-//bool (*callback)(ResourceTracker*, void*
-bool ProcessInputResourceToBinary(asapi::ResourceTracker* restrack, void* data)
+
+bool ProcessResourceTracker(asapi::ResourceTracker* in_currentResource, const char* in_projectPath, std::vector<asapi::SubResourceData>& out_resourceBinaries)
 {
 	asapi::FILE::MMAP _in, _out;
-	const std::string binaryResourceDir = std::string( (const char*)data ) + std::string("Resource_Binaries/");
-	const std::string binaryResource = binaryResourceDir + std::to_string( restrack->GetResourceID() ) + std::string(".txt.bin");
+
+	std::string binaryResourcePath = std::string( in_projectPath );
+		binaryResourcePath += std::string( RESOURCE_BINARIES_DIR );
+		binaryResourcePath += std::to_string( restrack->GetResourceID() );
+		binaryResourcePath +=  std::string(".txt.bin");
 
 
-	_in.InitForRead( restrack->GetPath().c_str() );
+	std::string resourcePath = in_currentResource->GetFullPath();
 
-	_out.InitForWrite( binaryResource.c_str(), 64);
+
+	_in.InitForRead( resourcePath.c_str() );
+
+	_out.InitForWrite( binaryResourcePath.c_str(), 64);
 
 
 	strncpy( (char*)_out.Data(), (const char*)_in.Data(), _in.Size() );
+
+	out_resourceBinaries.emplace_back( std::to_string( restrack->GetResourceID() ), "--no id needed--")
 
 	return true;
 }
