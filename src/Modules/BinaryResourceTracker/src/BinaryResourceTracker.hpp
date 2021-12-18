@@ -38,16 +38,18 @@ namespace asapi
 	};
 
 	template<class T>
-	class ConsumerResourceReference: public IConsumerResourceReferenceBase
+	class ResourceReference: public IResourceReferenceBase
 	{
 		#ifdef IS_EDITOR
 		//sharedPtr<
-		BinaryResourceTracker binrestracker;
+		BinaryResourceTracker* binrestracker = nullptr;
 		#endif
 
 		void * rendererHandle = nullptr;
 
-		ConsumerResourceReference();
+		uint16_t 			m_referenceCounter = 0;
+
+		ResourceReference();
 
 		inline void OnLoad2Renderer(UniqueID binaryResourceID)
 		{
@@ -80,16 +82,39 @@ namespace asapi
 
 
 
-	class ResourceReference: public bfu::SerializableClassBase<ResourceReference>
+	class ResourceSharedReference: public bfu::SerializableClassBase<ResourceSharedReference>
 	{
 		char m_resourceType[16];
 
 		SERIALIZABLE_OBJ( ResourceTracker, UniqueID, m_binaryResourceID );
 
-		sharedPtr<IConsumerResourceReferenceBase> rendererResource;
+		IResourceReferenceBase* m_resourcePtr = 0;
+
+		ResourceSharedReference(IResourceReferenceBase* resourcePtr) // used by resourceSystem
+		{
+			//TODO
+			resourcePtr->m_referenceCounter++;
+			m_resourcePtr = resourcePtr;
+		}
 	public:
-		ResourceReference(const char* ResourceType);
-		~ResourceReference();
+	
+		ResourceSharedReference( const ResourceSharedReference& cp )
+		{
+			//TODO
+			m_resourcePtr = cp.m_resourcePtr;
+			m_resourcePtr->m_referenceCounter++;
+		}
+
+		ResourceSharedReference( ResourceSharedReference&& cp )
+		{
+			//TODO
+			m_resourcePtr = cp.m_resourcePtr;
+			cp.m_resourcePtr.SetID(0);
+		}
+		~ResourceSharedReference()
+		{
+			m_resourcePtr->m_referenceCounter--;
+		}
 
 		#ifdef IS_EDITOR
 		void OnGUI()
