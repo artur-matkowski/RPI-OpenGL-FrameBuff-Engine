@@ -247,4 +247,16 @@ namespace asapi
 		}
 		return os;
 	}
+
+	int ResourceTrackerManager::CountSubresources() 
+	{ 
+		int count = 0;
+
+		for(int i=0; i<v_ResourceTrackers.size(); ++i)
+		{
+			count += v_ResourceTrackers[i].CountSubresources();
+		}
+
+		return count; 
+	}
 }

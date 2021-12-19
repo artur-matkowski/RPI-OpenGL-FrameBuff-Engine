@@ -18,7 +18,7 @@ int main(int argc, char** argv)
 
 
 	tests.CreateResource("resoruce1.txt", "randomData1");
-	tests.CreateResource("resoruce2.txt", "randomData11");
+	tests.CreateResource("resoruce2.txt", "randomData11\nline2data");
 	tests.CreateResource("somedir/resoruce3.txt", "randomData111");
 	testsPassed = testsPassed && tests.TestDataCohesion();
 
@@ -31,16 +31,16 @@ int main(int argc, char** argv)
 
 	tests.RemoveResource("resoruce1new.txt");
 	testsPassed = testsPassed && tests.TestDataCohesion();
-	return 0;
+	//return 0;
 
 
 
-	tests.AppendResource("resoruce2.txt", "randomData22");
+	tests.AppendResource("resoruce2.txt", "\nrandomData22");
 	testsPassed = testsPassed && tests.TestDataCohesion();
 
 
 
-
+	return 0;
 	asapi::FILE::MMAP file;
 	std::string path = argv[1];
 	path+= "/autoCreatingDirectoryTest/dfu/tmp.bin";

@@ -8,7 +8,7 @@
 
 		sprintf(m_ResourceFilesDirPath, "%s/assets/Resource_Trackers/", testProjectPath);
 
-		res.Init( m_testProjectPath, callback );
+		resourceTrackerManager.Init( m_testProjectPath, callback );
 	}
 	TestsResourceTracker::~TestsResourceTracker()
 	{
@@ -88,7 +88,7 @@
 	void TestsResourceTracker::AppendResource(const char* filename, const char* content)
 	{
 
-		Command("echo %s > %s/assets/%s", content, m_testProjectPath, filename);
+		Command("printf '%s' >> %s/assets/%s", content, m_testProjectPath, filename);
 
 
 		removedResources++;
@@ -112,9 +112,9 @@
 
 		memcpy( _out.Data(), _in.Data(), _in.Size() );
 
-		asapi::SubResourceData subresource;
-		subresource.m_filename = std::to_string( in_currentResource->GetResourceID() ) + std::string(".txt.bin");
-		subresource.m_internalID = "---NaN ID---";
+		asapi::SubResourceData subresource(
+									std::to_string( in_currentResource->GetResourceID() ) + std::string(".txt.bin")
+									, "---NaN ID---");
 
 		out_resourceBinaries.clear();
 		out_resourceBinaries.push_back( subresource );
@@ -130,14 +130,14 @@
 
 		std::vector< std::string > resourceFiles;
 
-		res.RefreshResources();
+		resourceTrackerManager.RefreshResources();
 
 		//check if we introduced new resources, and fetch their linkID if so
 		for(int i=0; i<currentResources.size(); ++i)
 		{
 			if( currentResources[i].resourceLink == 0 )
 			{
-				asapi::ResourceTracker* r = res.FindResourceByContentHash( currentResources[i].content_hash );
+				asapi::ResourceTracker* r = resourceTrackerManager.FindResourceByContentHash( currentResources[i].content_hash );
 
 				currentResources[i].resourceLink = r->GetResourceID();
 
@@ -157,15 +157,15 @@
 			dataCohesion = false;
 		}
 
-		if( currentResources.size() != res.v_ResourceTrackers.size() )
+		if( currentResources.size() != resourceTrackerManager.CountSubresources() )
 		{
-			log::error << "Amount of ResourceTracker class objects differes from test set\n\tcurrentResources.size(" << currentResources.size() << ") != AssetSystem::v_ResourceTrackers.size(" << res.v_ResourceTrackers.size() << ")" << std::endl;
+			log::error << "Amount of ResourceTracker class objects differes from test set\n\tcurrentResources.size(" << currentResources.size() << ") != AssetSystem::v_ResourceTrackers.size(" << resourceTrackerManager.v_ResourceTrackers.size() << ")" << std::endl;
 			dataCohesion = false;
 		}
 		
 		for(int i=0; i<currentResources.size(); ++i)
 		{
-			if( res.FindResourceByResourceID( currentResources[i].resourceLink ) == nullptr )
+			if( resourceTrackerManager.FindResourceByResourceID( currentResources[i].resourceLink ) == nullptr )
 			{
 				char buff[256];
 
@@ -196,7 +196,7 @@
 				dataCohesion = false;
 			}
 
-			if( res.FindResourceByResourceID( currentResources[i].resourceLink ) == nullptr )
+			if( resourceTrackerManager.FindResourceByResourceID( currentResources[i].resourceLink ) == nullptr )
 			{
 				char buff[256];
 
@@ -223,5 +223,5 @@
 
 	void TestsResourceTracker::Print()
 	{
-		log::debug << res << std::endl;
+		log::debug << resourceTrackerManager << std::endl;
 	}

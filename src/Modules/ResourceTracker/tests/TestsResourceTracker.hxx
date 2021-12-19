@@ -26,7 +26,7 @@
 		char m_testProjectPath[MAX_PATH_SIZE];
 		char m_ResourceFilesDirPath[MAX_PATH_SIZE];
 
-		asapi::ResourceTrackerManager res;
+		asapi::ResourceTrackerManager resourceTrackerManager;
 		std::vector< resourceEntry > currentResources;
 
 		static void Command(const char *format, ...);

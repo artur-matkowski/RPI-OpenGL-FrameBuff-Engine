@@ -94,6 +94,8 @@ namespace asapi
 
 		std::string GetResourceTrackerPath();
 
+		inline int CountSubresources() { return v_subresources.size(); }
+
 	private:
 		void RemoveResourceTrackerFile();
 		void RemoveResourceBinaryFile();

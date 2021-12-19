@@ -60,7 +60,8 @@ namespace asapi
 
 		friend bfu::stream& operator<<(bfu::stream&, const ResourceTrackerManager& );
 
-		inline int Size() { return v_ResourceTrackers.size(); }
+		inline int CountResouceTrackers() { return v_ResourceTrackers.size(); }
+		int CountSubresources();
 	};
 }
 

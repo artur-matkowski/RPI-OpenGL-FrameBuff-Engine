@@ -32,6 +32,29 @@ namespace asapi
 			m_ID = id;
 		}
 
+		inline UniqueID& operator=(const uint64_t id)
+		{
+			ID64 = id;
+			m_ID = id;
+
+			return *this;
+		}
+
+		inline bool operator==( const UniqueID& other )
+		{
+			return ID64 == other.ID64;
+		}
+
+		inline bool operator!=( const UniqueID& other )
+		{
+			return ID64 != other.ID64;
+		}
+
+		inline operator uint64_t() const
+		{
+			return ID64;
+		}
+
 		virtual void PreSerializationCallback() override;
 		virtual void PostDeserializationCallback() override;
 	};
