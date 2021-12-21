@@ -121,7 +121,25 @@
 
 			bool subresourcePreviouslyExisted = in_currentResource->FindSubResourceByInternalID( std::to_string(i), binaryFilename );
 
-			if( subresourcePreviouslyExisted )
+
+
+
+			//////////////////////////////////////////////////////////////////////////////////////////////////
+			//																								//
+			//																								//
+			//																								//
+			//																								//
+			//				This if section needs to be reimplemented in custom implementations.			//
+			//				Otherwise binary resource name will not be tranfered between updates			//
+			//																								//
+			//																								//
+			//																								//
+			//																								//
+			///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+			
+			if( subresourcePreviouslyExisted )  // <------- this if needs to be reimplemented in all 
 			{
 				binaryResource = binaryFilename;
 			}
@@ -146,12 +164,6 @@
 			i++;
 			out_resourceBinaries.push_back( subresource );
 		}
-
-
-
-
-
-
 
 		//log::debug << binaryResourceDir.c_str() << std::endl;
 
