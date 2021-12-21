@@ -21,22 +21,26 @@ int main(int argc, char** argv)
 	tests.CreateResource("resoruce2.txt", "randomData11\nline2data");
 	tests.CreateResource("somedir/resoruce3.txt", "randomData111");
 	testsPassed = testsPassed && tests.TestDataCohesion();
-
+	tests.Print();
+	//return 0;
 
 
 	tests.MoveResource("resoruce1.txt", "resoruce1new.txt");
 	testsPassed = testsPassed && tests.TestDataCohesion();
+	tests.Print();
 
 
 
 	tests.RemoveResource("resoruce1new.txt");
 	testsPassed = testsPassed && tests.TestDataCohesion();
+	tests.Print();
 	//return 0;
 
 
 
 	tests.AppendResource("resoruce2.txt", "\nrandomData22");
 	testsPassed = testsPassed && tests.TestDataCohesion();
+	tests.Print();
 
 
 

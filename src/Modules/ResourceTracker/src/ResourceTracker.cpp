@@ -238,6 +238,20 @@ namespace asapi
 		return ret;
 	}
 
+	bool ResourceTracker::FindSubResourceByInternalID( const std::string& in_id, std::string& out_filename )
+	{
+		for(int i=0; i<v_subresources.size(); ++i)
+		{
+			if( strcmp(v_subresources[i].m_internalID.c_str(), in_id.c_str()) == 0 )
+			{
+				out_filename = v_subresources[i].m_filename;
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	bfu::stream& operator<<(bfu::stream& os, const ResourceTracker& res)
 	{
 		time_t mod = static_cast<time_t>( res.m_modified_epoch );
@@ -252,6 +266,21 @@ namespace asapi
 		os << "\n\tcontent hash: " << res.m_content_hash.c_str();
 		os << "\n\tsize: " << res.m_size;
 		os << "\n\tmodified: " << buff << ":" << res.m_modified_ns;
+
+		os << "\n\tSubresources:" << res.m_modified_ns;
+		//for(int i=0; i<res.v_subresources.size(); ++i)
+		{
+			os << "\n" << res.v_subresources;
+		}
+
+		return os;
+	}
+
+	bfu::stream& operator<<(bfu::stream& os, const SerializableSubResourceData& res)
+	{
+		os << "\n\t\tInternal ID     : " << res.m_internalID.c_str();
+		os << "\n\t\tbinary filemane : " << res.m_filename.c_str();
+
 		return os;
 	}
 }

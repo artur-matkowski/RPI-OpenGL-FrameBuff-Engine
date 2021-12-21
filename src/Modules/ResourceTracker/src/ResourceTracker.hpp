@@ -29,6 +29,8 @@ namespace asapi
 		SerializableSubResourceData( const SubResourceData& in_data );
 		SerializableSubResourceData( SerializableSubResourceData&& in_data );
 		SerializableSubResourceData& operator=( SubResourceData&& in_data );
+
+		friend bfu::stream& operator<<(bfu::stream&, const SerializableSubResourceData& );
 	};
 
 	class ResourceTracker: public bfu::SerializableClassBase<ResourceTracker>
@@ -95,12 +97,14 @@ namespace asapi
 		std::string GetResourceTrackerPath();
 
 		inline int CountSubresources() { return v_subresources.size(); }
+		bool FindSubResourceByInternalID( const std::string& in_id, std::string& out_filename );
 
 	private:
 		void RemoveResourceTrackerFile();
 		void RemoveResourceBinaryFile();
 	};
 	bfu::stream& operator<<(bfu::stream&, const ResourceTracker& );
+	bfu::stream& operator<<(bfu::stream&, const SerializableSubResourceData& );
 
 }	
 

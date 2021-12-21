@@ -96,28 +96,62 @@
 
 	bool ProcessResourceTracker(asapi::ResourceTracker* in_currentResource, const char* in_projectPath, std::vector<asapi::SubResourceData>& out_resourceBinaries)
 	{
-		asapi::FILE::MMAP _in, _out;
+		asapi::FILE::MMAP _in;
 
 		std::string binaryResourceDir = in_projectPath;
 		binaryResourceDir += RESOURCE_BINARIES_DIR;
 		binaryResourceDir += "/";
 
-		const std::string binaryResource = binaryResourceDir + std::to_string( in_currentResource->GetResourceID() ) + std::string(".txt.bin");
+		out_resourceBinaries.clear();
+
+		//const std::string binaryResource = binaryResourceDir + std::to_string( in_currentResource->GetResourceID() ) + std::string(".txt.bin");
 
 
 		_in.InitForRead( in_currentResource->GetFullPath().c_str() );
+		std::string databuff( (char*)_in.Data(), (char*)_in.Data()+_in.Size() );
+		std::istringstream iss(databuff);
 
-		_out.InitForWrite( binaryResource.c_str(), _in.Size());
+		std::string line;
+		int i = 0;
+		while (std::getline(iss, line))
+		{
+			asapi::FILE::MMAP _out;
+			std::string binaryFilename;
+			std::string binaryResource;
+
+			bool subresourcePreviouslyExisted = in_currentResource->FindSubResourceByInternalID( std::to_string(i), binaryFilename );
+
+			if( subresourcePreviouslyExisted )
+			{
+				binaryResource = binaryFilename;
+			}
+			else
+			{
+				binaryResource = std::to_string( (uint64_t)asapi::UniqueID() ) + ".txt.bin";
+			}
 
 
-		memcpy( _out.Data(), _in.Data(), _in.Size() );
+			asapi::SubResourceData subresource(
+									binaryResource
+									, std::to_string(i));
 
-		asapi::SubResourceData subresource(
-									std::to_string( in_currentResource->GetResourceID() ) + std::string(".txt.bin")
-									, "---NaN ID---");
+			binaryResource = binaryResourceDir + binaryResource;
 
-		out_resourceBinaries.clear();
-		out_resourceBinaries.push_back( subresource );
+			_out.InitForWrite( binaryResource.c_str(), _in.Size());
+			memcpy( _out.Data(), (void*)line.c_str(), line.size() );
+
+
+
+
+			i++;
+			out_resourceBinaries.push_back( subresource );
+		}
+
+
+
+
+
+
 
 		//log::debug << binaryResourceDir.c_str() << std::endl;
 
@@ -153,13 +187,13 @@
 
 		if( currentResources.size() != resourceFiles.size() )
 		{
-			log::error << "Amount of resource tracker files (*.res.json) differes from test set\n\tcurrentResources.size(" << currentResources.size() << ") != resourceFiles.size(" << resourceFiles.size() << ")" << std::endl;
+			log::error << "Amount of resource tracker files (*.res.json) differes from test set\n\tcurrentResources.size(" << (int)currentResources.size() << ") != resourceFiles.size(" << resourceFiles.size() << ")" << std::endl;
 			dataCohesion = false;
 		}
 
-		if( currentResources.size() != resourceTrackerManager.CountSubresources() )
+		if( currentResources.size() != resourceTrackerManager.CountResouceTrackers() )
 		{
-			log::error << "Amount of ResourceTracker class objects differes from test set\n\tcurrentResources.size(" << currentResources.size() << ") != AssetSystem::v_ResourceTrackers.size(" << resourceTrackerManager.v_ResourceTrackers.size() << ")" << std::endl;
+			log::error << "Amount of ResourceTracker class objects differes from test set\n\tcurrentResources.size(" << (int)currentResources.size() << ") != resourceTrackerManager.CountResouceTrackers(" << resourceTrackerManager.CountSubresources() << ")" << std::endl;
 			dataCohesion = false;
 		}
 		
