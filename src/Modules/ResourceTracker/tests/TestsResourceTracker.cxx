@@ -94,6 +94,80 @@
 		removedResources++;
 	}
 
+	void ResourceTXTProcessor::ProcessResource2Binary(asapi::ResourceTracker* in_currentResource
+											, const char* in_projectPath
+											, std::vector<asapi::SubResourceData>& out_resourceBinaries)
+	{
+		asapi::FILE::MMAP _in;
+
+		std::string binaryResourceDir = in_projectPath;
+		binaryResourceDir += RESOURCE_BINARIES_DIR;
+		binaryResourceDir += "/";
+
+		out_resourceBinaries.clear();
+
+		//const std::string binaryResource = binaryResourceDir + std::to_string( in_currentResource->GetResourceID() ) + std::string(".txt.bin");
+
+
+		_in.InitForRead( in_currentResource->GetFullPath().c_str() );
+		std::string databuff( (char*)_in.Data(), (char*)_in.Data()+_in.Size() );
+		std::istringstream iss(databuff);
+
+		std::string line;
+		int i = 0;
+		while (std::getline(iss, line))
+		{
+			asapi::FILE::MMAP _out;
+			std::string binaryFilename;
+			std::string binaryResource;
+
+			bool subresourcePreviouslyExisted = in_currentResource->FindSubResourceByInternalID( std::to_string(i), binaryFilename );
+
+
+
+
+			//////////////////////////////////////////////////////////////////////////////////////////////////
+			//																								//
+			//																								//
+			//																								//
+			//																								//
+			//				This if section needs to be reimplemented in custom implementations.			//
+			//				Otherwise binary resource name will not be tranfered between updates			//
+			//																								//
+			//																								//
+			//																								//
+			//																								//
+			///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+			
+			if( subresourcePreviouslyExisted )  // <------- this if needs to be reimplemented in all 
+			{
+				binaryResource = binaryFilename;
+			}
+			else
+			{
+				binaryResource = std::to_string( (uint64_t)asapi::UniqueID() ) + ".txt.bin";
+			}
+
+
+			asapi::SubResourceData subresource(
+									binaryResource
+									, std::to_string(i));
+
+			binaryResource = binaryResourceDir + binaryResource;
+
+			_out.InitForWrite( binaryResource.c_str(), _in.Size());
+			memcpy( _out.Data(), (void*)line.c_str(), line.size() );
+
+
+
+
+			i++;
+			out_resourceBinaries.push_back( subresource );
+		}
+	}
+
 	bool ProcessResourceTracker(asapi::ResourceTracker* in_currentResource, const char* in_projectPath, std::vector<asapi::SubResourceData>& out_resourceBinaries)
 	{
 		asapi::FILE::MMAP _in;

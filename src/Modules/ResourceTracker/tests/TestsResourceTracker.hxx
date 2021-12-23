@@ -8,6 +8,20 @@
 
 	bool ProcessResourceTracker(asapi::ResourceTracker* in_currentResource, const char* in_projectPath, std::vector<asapi::SubResourceData>& out_resourceBinaries);
 
+
+	class ResourceTXTProcessor
+	{
+	public:
+		static void ProcessResource2Binary(asapi::ResourceTracker* in_currentResource
+											, const char* in_projectPath
+											, std::vector<asapi::SubResourceData>& out_resourceBinaries);
+
+		static void GetSuportedFilesExtensions( std::vector<std::string>& out_suportedFileExtensions )
+		{
+			out_suportedFileExtensions.emplace_back(".txt");
+		}
+	};
+
 	class TestsResourceTracker
 	{
 		struct resourceEntry

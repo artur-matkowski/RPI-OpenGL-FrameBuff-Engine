@@ -1,8 +1,69 @@
 #include "TestsResourceTracker.hxx"
 
+/*
+
+template <int ... Is>
+void foo_helper (std::integer_sequence<int, Is...> const &)
+ {
+   using unused = int[];
+
+   (void)unused { 0, (log::debug << Is << std::endl, 0)... };
+ }
+
+template <int T>
+void foo ()
+ { 
+ 	foo_helper(std::make_integer_sequence<int, T>{}); 
+ }
+*/
+
+
+
+class TMP1
+{
+public:
+	static void FUN()
+	{
+		log::debug << "TMP1::FUN()" << std::endl;
+	}
+};
+class TMP2
+{
+public:
+	static void FUN()
+	{
+		log::debug << "TMP2::FUN()" << std::endl;
+	}
+};
+
+
+
+template<class... ResourceReferencesTs>
+class TMP
+{
+	template<int... Is>
+	void classIterator(std::integer_sequence<int, Is...> const &)
+	{
+		using unused = int[];
+
+		(void)unused { 0, (std::tuple_element_t<Is, mytuple>::FUN(), 0)... };
+	}
+public:
+	
+	using mytuple = std::tuple<ResourceReferencesTs ...>;
+
+	void fun()
+	{
+		constexpr int tupleSize = std::tuple_size<mytuple>();
+		classIterator(std::make_integer_sequence<int, tupleSize>{});
+	}
+};
 
 int main(int argc, char** argv)
 {
+	TMP<TMP1, TMP2> dd;
+	dd.fun();
+
 	bool testsPassed = true;
 
 	if(argc<2)
