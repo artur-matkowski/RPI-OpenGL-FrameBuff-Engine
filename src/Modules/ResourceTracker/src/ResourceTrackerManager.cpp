@@ -10,10 +10,8 @@ namespace asapi
 		CleanResourceTrackersContainer();
 	}
 
-	void ResourceTrackerManagerBase::Init(const char* projectPath, IterateOverDirtyResourceTrackersCallbackType callback)
+	void ResourceTrackerManagerBase::Init(const char* projectPath)
 	{
-		m_callback = callback;
-
 		SetProjectPath(projectPath);
 
 		srand( time( NULL ) );

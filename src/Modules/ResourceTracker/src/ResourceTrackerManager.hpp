@@ -19,19 +19,12 @@ namespace asapi
 
 	class ResourceTrackerManagerBase
 	{
-		
-	public:
-		typedef bool (*IterateOverDirtyResourceTrackersCallbackType)(ResourceTracker* in_currentResource
-																	, const char* in_projectPath
-																	, std::vector<SubResourceData>& out_resourceBinaries);
-
 	private:
 		std::string						s_assetsDirectoryPath;
 		std::string						s_projectDirectoryPath;
 		bfu::JSONSerializer				p_JSONSerializer;
 		bfu::BinarySerializer			p_BinarySerializer;
 
-		IterateOverDirtyResourceTrackersCallbackType m_callback = nullptr;
 		void IterateOverDirtyResourceTrackers();
 
 		void CleanResourceTrackersContainer();
@@ -49,9 +42,7 @@ namespace asapi
 
 		~ResourceTrackerManagerBase();
 
-		void Init(const char* projectPath
-			, IterateOverDirtyResourceTrackersCallbackType callback
-			);
+		void Init(const char* projectPath);
 		void SetProjectPath(const char* projectPath);
 
 
