@@ -212,8 +212,11 @@ namespace asapi
 			if( v_ResourceTrackers[i].IsContentDirty() )
 			{
 				std::vector<SubResourceData> tmpVec;
-				//const bool resourceBinaryChanged = m_callback( &(v_ResourceTrackers[i]), s_projectDirectoryPath.c_str(), tmpVec);
+				asapi::FILE::MMAP _in;
+				_in.InitForRead( v_ResourceTrackers[i].GetFullPath().c_str() );
+				
 				const bool resourceBinaryChanged = ProcessResource( v_ResourceTrackers[i]
+																, &_in
 																, s_projectDirectoryPath.c_str()
 																, &tmpVec );
 

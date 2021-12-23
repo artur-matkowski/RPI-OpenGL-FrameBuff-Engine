@@ -10,6 +10,7 @@
 	{
 	public:
 		static bool ProcessResource2Binary(const asapi::ResourceTracker& in_currentResource
+											, asapi::FILE::MMAP* in_resourceFile
 											, const char* in_projectPath
 											, std::vector<asapi::SubResourceData>* out_resourceBinaries);
 

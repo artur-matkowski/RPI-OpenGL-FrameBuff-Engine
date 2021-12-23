@@ -31,6 +31,7 @@ namespace asapi
 		void DeserializeResourceTrackerContainerFromDisk();
 
 		virtual bool ProcessResource(const asapi::ResourceTracker& in_currentResource
+											, asapi::FILE::MMAP* in_resourceFile
 											, const char* in_projectPath
 											, std::vector<asapi::SubResourceData>* out_resourceBinaries) = 0;
 
@@ -85,6 +86,7 @@ namespace asapi
 
 		template<int i>
 		inline static void ProcessResourseForType(const asapi::ResourceTracker& in_currentResource
+											, asapi::FILE::MMAP* in_resourceFile
 											, const char* in_projectPath
 											, std::vector<asapi::SubResourceData>* out_resourceBinaries
 											, bool *updatedBinaries)
@@ -98,6 +100,7 @@ namespace asapi
 			if(IsCompatible(fileExtensions, in_currentResource))
 			{
 				*updatedBinaries = std::tuple_element_t<i, ResourceProcesors>::ProcessResource2Binary(in_currentResource
+																					, in_resourceFile
 																					, in_projectPath
 																					, out_resourceBinaries);
 			}
@@ -106,6 +109,7 @@ namespace asapi
 		template<int... Is>
 		inline static bool ProcesorClassIterator(std::integer_sequence<int, Is...> const &
 											, const asapi::ResourceTracker& in_currentResource
+											, asapi::FILE::MMAP* in_resourceFile
 											, const char* in_projectPath
 											, std::vector<asapi::SubResourceData>* out_resourceBinaries)
 		{
@@ -113,6 +117,7 @@ namespace asapi
 			bool updatedBinaries = false;
 
 			(void)unused { 0, (ProcessResourseForType<Is>(in_currentResource
+													, in_resourceFile
 													, in_projectPath
 													, out_resourceBinaries
 													, &updatedBinaries), 0)... };
@@ -122,6 +127,7 @@ namespace asapi
 
 
 		virtual bool ProcessResource(const asapi::ResourceTracker& in_currentResource
+											, asapi::FILE::MMAP* in_resourceFile
 											, const char* in_projectPath
 											, std::vector<asapi::SubResourceData>* out_resourceBinaries) override
 		{
@@ -129,6 +135,7 @@ namespace asapi
 
 			const bool rebuildedBinarie = ProcesorClassIterator(std::make_integer_sequence<int, tupleSize>{}
 																, in_currentResource
+																, in_resourceFile
 																, in_projectPath
 																, out_resourceBinaries );
 
