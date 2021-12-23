@@ -90,6 +90,7 @@ namespace asapi
 	}
 	#endif
 
+
 	void ResourceTracker::Init(const char* in_path)
 	{
 		struct stat attrib;
@@ -157,26 +158,26 @@ namespace asapi
 		m_resTrackerFilename += ".res.json";
 	}
 
-	bool ResourceTracker::operator==(const ResourceTracker& other)
+	bool ResourceTracker::operator==(const ResourceTracker& other) const
 	{
 		return m_path == other.m_path || m_content_hash == other.m_content_hash;
 	}
-	bool ResourceTracker::operator!=(const ResourceTracker& other)
+	bool ResourceTracker::operator!=(const ResourceTracker& other) const
 	{
 		return !this->operator==(other);
 	}
 
 
-	bool ResourceTracker::CmpContent(const ResourceTracker& other)
+	bool ResourceTracker::CmpContent(const ResourceTracker& other) const
 	{
 		return m_content_hash == other.m_content_hash;
-	}
-	bool ResourceTracker::CmpPath(const ResourceTracker& other)
+	} 
+	bool ResourceTracker::CmpPath(const ResourceTracker& other) const
 	{
 		return m_path == other.m_path;
 	}
 
-	std::string ResourceTracker::GetResourceTrackerPath()
+	std::string ResourceTracker::GetResourceTrackerPath() const
 	{
 		std::string ret = _ResourceTrackersPath;
 		ret += "/";
@@ -222,7 +223,7 @@ namespace asapi
 	}
 
 
-	std::string ResourceTracker::GetFileExtension()
+	std::string ResourceTracker::GetFileExtension() const
 	{
 		std::string ret;
 
@@ -238,13 +239,23 @@ namespace asapi
 		return ret;
 	}
 
-	bool ResourceTracker::FindSubResourceByInternalID( const std::string& in_id, std::string& out_filename )
+	void ResourceTracker::MoveSubresources(std::vector<SubResourceData>* in_subresources)
+	{
+		v_subresources.clear();
+		for(int j=0; j<in_subresources->size(); ++j)
+		{
+			v_subresources.push_back( SerializableSubResourceData::AllocateAndInit( bfu::StdAllocatorMemBlock::GetMemBlock() ) );
+			*(SerializableSubResourceData*)v_subresources.back() = std::move( (*in_subresources)[j] );
+		}
+	}
+
+	bool ResourceTracker::FindSubResourceByInternalID( const std::string& in_id, std::string& out_filename ) const
 	{
 		for(int i=0; i<v_subresources.size(); ++i)
 		{
-			if( strcmp(v_subresources[i].m_internalID.c_str(), in_id.c_str()) == 0 )
+			if( strcmp( (*(SerializableSubResourceData*)*(v_subresources.begin()+i)).m_internalID.c_str(), in_id.c_str()) == 0 )
 			{
-				out_filename = v_subresources[i].m_filename;
+				out_filename = (*(SerializableSubResourceData*)*(v_subresources.begin()+i)).m_filename;
 				return true;
 			}
 		}

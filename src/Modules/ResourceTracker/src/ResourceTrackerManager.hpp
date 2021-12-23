@@ -17,8 +17,9 @@ namespace asapi
 		{}
 	};
 
-	class ResourceTrackerManager
+	class ResourceTrackerManagerBase
 	{
+		
 	public:
 		typedef bool (*IterateOverDirtyResourceTrackersCallbackType)(ResourceTracker* in_currentResource
 																	, const char* in_projectPath
@@ -36,13 +37,17 @@ namespace asapi
 		void CleanResourceTrackersContainer();
 		void DeserializeResourceTrackerContainerFromDisk();
 
+		virtual bool ProcessResource(const asapi::ResourceTracker& in_currentResource
+											, const char* in_projectPath
+											, std::vector<asapi::SubResourceData>* out_resourceBinaries) = 0;
+
 #ifdef TESTS
 	public:
 #endif
 		std::vector<ResourceTracker> 	v_ResourceTrackers;
 	public:
 
-		~ResourceTrackerManager();
+		~ResourceTrackerManagerBase();
 
 		void Init(const char* projectPath
 			, IterateOverDirtyResourceTrackersCallbackType callback
@@ -58,11 +63,88 @@ namespace asapi
 		ResourceTracker* FindResourceByResourceID(const UniqueID& resourceID);
 
 
-		friend bfu::stream& operator<<(bfu::stream&, const ResourceTrackerManager& );
+		friend bfu::stream& operator<<(bfu::stream&, const ResourceTrackerManagerBase& );
 
 		inline int CountResouceTrackers() { return v_ResourceTrackers.size(); }
 		int CountSubresources();
 	};
+
+
+
+	template<class... ResourceProcesorTs>
+	class ResourceTrackerManager: public ResourceTrackerManagerBase
+	{
+	protected:
+		using ResourceProcesors = std::tuple<ResourceProcesorTs ...>;
+
+		bool static IsCompatible(const std::vector<std::string>& in_fileExtensions
+											, const asapi::ResourceTracker& in_currentResource)
+		{
+			bool isCompatible = false;
+			for(int i=0; i<in_fileExtensions.size(); ++i)
+			{
+				if( (in_fileExtensions.begin()+i)->compare( in_currentResource.GetFileExtension() )==0 )
+				{
+					isCompatible = true;
+					break;
+				}
+			}
+			return isCompatible;
+		}
+
+		template<int i>
+		inline static void ProcessResourseForType(const asapi::ResourceTracker& in_currentResource
+											, const char* in_projectPath
+											, std::vector<asapi::SubResourceData>* out_resourceBinaries
+											, bool *updatedBinaries)
+		{
+			std::vector<std::string> fileExtensions;
+
+			*updatedBinaries = false;
+
+			std::tuple_element_t<i, ResourceProcesors>::GetSuportedFilesExtensions( &fileExtensions );
+
+			if(IsCompatible(fileExtensions, in_currentResource))
+			{
+				*updatedBinaries = std::tuple_element_t<i, ResourceProcesors>::ProcessResource2Binary(in_currentResource
+																					, in_projectPath
+																					, out_resourceBinaries);
+			}
+		}
+
+		template<int... Is>
+		inline static bool ProcesorClassIterator(std::integer_sequence<int, Is...> const &
+											, const asapi::ResourceTracker& in_currentResource
+											, const char* in_projectPath
+											, std::vector<asapi::SubResourceData>* out_resourceBinaries)
+		{
+			using unused = int[];
+			bool updatedBinaries = false;
+
+			(void)unused { 0, (ProcessResourseForType<Is>(in_currentResource
+													, in_projectPath
+													, out_resourceBinaries
+													, &updatedBinaries), 0)... };
+
+			return updatedBinaries;
+		}
+
+
+		virtual bool ProcessResource(const asapi::ResourceTracker& in_currentResource
+											, const char* in_projectPath
+											, std::vector<asapi::SubResourceData>* out_resourceBinaries) override
+		{
+			constexpr int tupleSize = std::tuple_size<ResourceProcesors>();
+
+			const bool rebuildedBinarie = ProcesorClassIterator(std::make_integer_sequence<int, tupleSize>{}
+																, in_currentResource
+																, in_projectPath
+																, out_resourceBinaries );
+
+			return rebuildedBinarie;
+		}
+	};
+
 }
 
 #endif

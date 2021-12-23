@@ -5,12 +5,12 @@
 
 namespace asapi
 {
-	ResourceTrackerManager::~ResourceTrackerManager()
+	ResourceTrackerManagerBase::~ResourceTrackerManagerBase()
 	{
 		CleanResourceTrackersContainer();
 	}
 
-	void ResourceTrackerManager::Init(const char* projectPath, IterateOverDirtyResourceTrackersCallbackType callback)
+	void ResourceTrackerManagerBase::Init(const char* projectPath, IterateOverDirtyResourceTrackersCallbackType callback)
 	{
 		m_callback = callback;
 
@@ -19,7 +19,7 @@ namespace asapi
 		srand( time( NULL ) );
 	}
 
-	void ResourceTrackerManager::SetProjectPath(const char* projectPath)
+	void ResourceTrackerManagerBase::SetProjectPath(const char* projectPath)
 	{
 		CleanResourceTrackersContainer();
 
@@ -38,7 +38,7 @@ namespace asapi
 		DeserializeResourceTrackerContainerFromDisk();
 	}
 
-	void ResourceTrackerManager::DeserializeResourceTrackerContainerFromDisk()
+	void ResourceTrackerManagerBase::DeserializeResourceTrackerContainerFromDisk()
 	{
 
 		std::string 						path = s_projectDirectoryPath + RESOURCE_TRACKERS_DIR;
@@ -100,7 +100,7 @@ namespace asapi
 		return ret;
 	}
 
-	void ResourceTrackerManager::RefreshResources()
+	void ResourceTrackerManagerBase::RefreshResources()
 	{
 		std::vector< std::string > 			paths;
 		std::vector< ResourceTracker > 		upToDateResources;
@@ -158,11 +158,11 @@ namespace asapi
 		}
 	}
 
-	ResourceTracker* ResourceTrackerManager::FindResourceByContentHash(const std::string& content_hash)
+	ResourceTracker* ResourceTrackerManagerBase::FindResourceByContentHash(const std::string& content_hash)
 	{
 		for(int i=0; i<v_ResourceTrackers.size(); ++i)
 		{
-			if( strcmp( v_ResourceTrackers[i].m_content_hash.c_str(), content_hash.c_str() ) == 0 )
+			if( strcmp( v_ResourceTrackers[i].GetContentHash().c_str(), content_hash.c_str() ) == 0 )
 			{
 				return &v_ResourceTrackers[i];
 			}
@@ -170,11 +170,11 @@ namespace asapi
 
 		return nullptr;
 	}
-	ResourceTracker* ResourceTrackerManager::FindResourceByFilename(const std::string& filename)
+	ResourceTracker* ResourceTrackerManagerBase::FindResourceByFilename(const std::string& filename)
 	{
 		for(int i=0; i<v_ResourceTrackers.size(); ++i)
 		{
-			if( strcmp( v_ResourceTrackers[i].m_filename.c_str(), filename.c_str() ) == 0 )
+			if( strcmp( v_ResourceTrackers[i].GetFilename().c_str(), filename.c_str() ) == 0 )
 			{
 				return &v_ResourceTrackers[i];
 			}
@@ -182,11 +182,11 @@ namespace asapi
 
 		return nullptr;
 	}
-	ResourceTracker* ResourceTrackerManager::FindResourceByResourceID(const uint64_t& resourceID)
+	ResourceTracker* ResourceTrackerManagerBase::FindResourceByResourceID(const uint64_t& resourceID)
 	{
 		for(int i=0; i<v_ResourceTrackers.size(); ++i)
 		{
-			if( v_ResourceTrackers[i].m_resourceID.ID() == resourceID )
+			if( v_ResourceTrackers[i].GetResourceID() == resourceID )
 			{
 				return &v_ResourceTrackers[i];
 			}
@@ -194,11 +194,11 @@ namespace asapi
 
 		return nullptr;
 	}
-	ResourceTracker* ResourceTrackerManager::FindResourceByResourceID(const UniqueID& resourceID)
+	ResourceTracker* ResourceTrackerManagerBase::FindResourceByResourceID(const UniqueID& resourceID)
 	{
 		for(int i=0; i<v_ResourceTrackers.size(); ++i)
 		{
-			if( v_ResourceTrackers[i].m_resourceID.ID() == resourceID.ID() )
+			if( v_ResourceTrackers[i].GetResourceID() == resourceID.ID() )
 			{
 				return &v_ResourceTrackers[i];
 			}
@@ -207,29 +207,26 @@ namespace asapi
 		return nullptr;
 	}
 
-	void ResourceTrackerManager::IterateOverDirtyResourceTrackers()
+	void ResourceTrackerManagerBase::IterateOverDirtyResourceTrackers()
 	{
-
 		for(int i=0; i<v_ResourceTrackers.size(); i++)
 		{
 			if( v_ResourceTrackers[i].IsContentDirty() )
 			{
 				std::vector<SubResourceData> tmpVec;
-				const bool succesfulyProcessed = m_callback( &(v_ResourceTrackers[i]), s_projectDirectoryPath.c_str(), tmpVec);
+				//const bool resourceBinaryChanged = m_callback( &(v_ResourceTrackers[i]), s_projectDirectoryPath.c_str(), tmpVec);
+				const bool resourceBinaryChanged = ProcessResource( v_ResourceTrackers[i]
+																, s_projectDirectoryPath.c_str()
+																, &tmpVec );
 
-				v_ResourceTrackers[i].v_subresources.clear();
-				for(int j=0; j<tmpVec.size(); ++j)
-				{
-					v_ResourceTrackers[i].v_subresources.push_back( SerializableSubResourceData::AllocateAndInit( bfu::StdAllocatorMemBlock::GetMemBlock() ) );
-					*(SerializableSubResourceData*)v_ResourceTrackers[i].v_subresources.back() = std::move( tmpVec[j] );
-				}
+				v_ResourceTrackers[i].MoveSubresources( &tmpVec );
 
-				v_ResourceTrackers[i].SetContentDirty( !succesfulyProcessed );  //if processet succesfully then is NOT dirty
+				v_ResourceTrackers[i].SetContentDirty( !resourceBinaryChanged );  //if processet succesfully then is NOT dirty
 			}
 		}
 	}
 
-	void ResourceTrackerManager::CleanResourceTrackersContainer()
+	void ResourceTrackerManagerBase::CleanResourceTrackersContainer()
 	{
 		for(int i=0; i<v_ResourceTrackers.size(); ++i)
 		{
@@ -239,7 +236,7 @@ namespace asapi
 	}
 
 
-	bfu::stream& operator<<(bfu::stream& os, const ResourceTrackerManager& res)
+	bfu::stream& operator<<(bfu::stream& os, const ResourceTrackerManagerBase& res)
 	{
 		for(int i=0; i<res.v_ResourceTrackers.size(); ++i)
 		{
@@ -248,7 +245,7 @@ namespace asapi
 		return os;
 	}
 
-	int ResourceTrackerManager::CountSubresources() 
+	int ResourceTrackerManagerBase::CountSubresources() 
 	{ 
 		int count = 0;
 

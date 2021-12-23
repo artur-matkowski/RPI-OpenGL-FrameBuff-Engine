@@ -1,24 +1,5 @@
 #include "TestsResourceTracker.hxx"
 
-/*
-
-template <int ... Is>
-void foo_helper (std::integer_sequence<int, Is...> const &)
- {
-   using unused = int[];
-
-   (void)unused { 0, (log::debug << Is << std::endl, 0)... };
- }
-
-template <int T>
-void foo ()
- { 
- 	foo_helper(std::make_integer_sequence<int, T>{}); 
- }
-*/
-
-
-
 class TMP1
 {
 public:
@@ -61,7 +42,7 @@ public:
 
 int main(int argc, char** argv)
 {
-	TMP<TMP1, TMP2> dd;
+	TMP<TMP2, TMP1> dd;
 	dd.fun();
 
 	bool testsPassed = true;

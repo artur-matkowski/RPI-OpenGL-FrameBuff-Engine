@@ -94,9 +94,9 @@
 		removedResources++;
 	}
 
-	void ResourceTXTProcessor::ProcessResource2Binary(asapi::ResourceTracker* in_currentResource
+	bool ResourceTXTProcessor::ProcessResource2Binary(const asapi::ResourceTracker& in_currentResource
 											, const char* in_projectPath
-											, std::vector<asapi::SubResourceData>& out_resourceBinaries)
+											, std::vector<asapi::SubResourceData>* out_resourceBinaries)
 	{
 		asapi::FILE::MMAP _in;
 
@@ -104,12 +104,12 @@
 		binaryResourceDir += RESOURCE_BINARIES_DIR;
 		binaryResourceDir += "/";
 
-		out_resourceBinaries.clear();
+		out_resourceBinaries->clear();
 
 		//const std::string binaryResource = binaryResourceDir + std::to_string( in_currentResource->GetResourceID() ) + std::string(".txt.bin");
 
 
-		_in.InitForRead( in_currentResource->GetFullPath().c_str() );
+		_in.InitForRead( in_currentResource.GetFullPath().c_str() );
 		std::string databuff( (char*)_in.Data(), (char*)_in.Data()+_in.Size() );
 		std::istringstream iss(databuff);
 
@@ -121,7 +121,7 @@
 			std::string binaryFilename;
 			std::string binaryResource;
 
-			bool subresourcePreviouslyExisted = in_currentResource->FindSubResourceByInternalID( std::to_string(i), binaryFilename );
+			bool subresourcePreviouslyExisted = in_currentResource.FindSubResourceByInternalID( std::to_string(i), binaryFilename );
 
 
 
@@ -164,8 +164,10 @@
 
 
 			i++;
-			out_resourceBinaries.push_back( subresource );
+			out_resourceBinaries->push_back( subresource );
 		}
+
+		return true;
 	}
 
 	bool ProcessResourceTracker(asapi::ResourceTracker* in_currentResource, const char* in_projectPath, std::vector<asapi::SubResourceData>& out_resourceBinaries)

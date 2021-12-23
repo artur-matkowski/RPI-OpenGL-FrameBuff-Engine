@@ -12,13 +12,13 @@
 	class ResourceTXTProcessor
 	{
 	public:
-		static void ProcessResource2Binary(asapi::ResourceTracker* in_currentResource
+		static bool ProcessResource2Binary(const asapi::ResourceTracker& in_currentResource
 											, const char* in_projectPath
-											, std::vector<asapi::SubResourceData>& out_resourceBinaries);
+											, std::vector<asapi::SubResourceData>* out_resourceBinaries);
 
-		static void GetSuportedFilesExtensions( std::vector<std::string>& out_suportedFileExtensions )
+		static void GetSuportedFilesExtensions( std::vector<std::string>* out_suportedFileExtensions )
 		{
-			out_suportedFileExtensions.emplace_back(".txt");
+			out_suportedFileExtensions->emplace_back(".txt");
 		}
 	};
 
@@ -40,7 +40,7 @@
 		char m_testProjectPath[MAX_PATH_SIZE];
 		char m_ResourceFilesDirPath[MAX_PATH_SIZE];
 
-		asapi::ResourceTrackerManager resourceTrackerManager;
+		asapi::ResourceTrackerManager<ResourceTXTProcessor> resourceTrackerManager;
 		std::vector< resourceEntry > currentResources;
 
 		static void Command(const char *format, ...);

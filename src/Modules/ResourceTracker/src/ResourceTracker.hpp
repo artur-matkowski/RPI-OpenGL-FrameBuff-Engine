@@ -15,7 +15,7 @@ using bfu::string;
 
 namespace asapi
 {
-	class ResourceTrackerManager;
+	//class ResourceTrackerManager;
 	class SubResourceData;
 
 	class SerializableSubResourceData: public bfu::SerializableClassBase<SerializableSubResourceData>
@@ -35,7 +35,7 @@ namespace asapi
 
 	class ResourceTracker: public bfu::SerializableClassBase<ResourceTracker>
 	{
-		friend class ResourceTrackerManager;
+		//friend class ResourceTrackerManager;
 #ifdef TESTS
 	public:
 #endif
@@ -72,32 +72,39 @@ namespace asapi
 		ResourceTracker& operator=(const ResourceTracker& other);
 		ResourceTracker& operator=(ResourceTracker&& other);
 		
-		bool operator==(const ResourceTracker& other);
-		bool operator!=(const ResourceTracker& other);
+		bool operator==(const ResourceTracker& other) const;
+		bool operator!=(const ResourceTracker& other) const;
 
-		bool CmpContent(const ResourceTracker& other);
-		bool CmpPath(const ResourceTracker& other);
+		bool CmpContent(const ResourceTracker& other) const;
+		bool CmpPath(const ResourceTracker& other) const;
 
 		friend bfu::stream& operator<<(bfu::stream&, const ResourceTracker& );
 
 		inline void SetContentDirty(bool isContentDirty) { this->isContentDirty = isContentDirty; }
-		inline bool IsContentDirty() { return isContentDirty; }
+		inline bool IsContentDirty() const { return isContentDirty; }
 
-		inline uint64_t GetResourceID(){ return m_resourceID.ID(); }
-		inline std::string GetFilename(){ return m_filename; }
-		inline std::string GetPath(){ return m_path; }
-		inline std::string GetFullPath(){ return _ProjectPath+std::string(ASSETS_DIR)+std::string("/")+m_path.c_str(); }
-		std::string GetFileExtension();
+
+
+
+		inline uint64_t GetResourceID() const { return m_resourceID.ID(); }
+		inline std::string GetFilename() const { return m_filename; }
+		inline std::string GetPath() const { return m_path; }
+		inline std::string GetFullPath() const { return _ProjectPath+std::string(ASSETS_DIR)+std::string("/")+m_path.c_str(); }
+		std::string GetFileExtension() const;
+		inline std::string GetContentHash() const { return m_content_hash; }
+
+
+		void MoveSubresources(std::vector<SubResourceData>* in_subresources);
 
 
 		void ObtainResourceOwnership(ResourceTracker & source);
-		inline bool IsResourceOwner(){ return m_resourceID.ID() != 0; }
+		inline bool IsResourceOwner() const { return m_resourceID.ID() != 0; }
 		inline void DetachFromResourceOnApplicationCLose(){ m_resourceID.SetID(0); }
 
-		std::string GetResourceTrackerPath();
+		std::string GetResourceTrackerPath() const;
 
-		inline int CountSubresources() { return v_subresources.size(); }
-		bool FindSubResourceByInternalID( const std::string& in_id, std::string& out_filename );
+		inline int CountSubresources() const { return v_subresources.size(); }
+		bool FindSubResourceByInternalID( const std::string& in_id, std::string& out_filename ) const;
 
 	private:
 		void RemoveResourceTrackerFile();
