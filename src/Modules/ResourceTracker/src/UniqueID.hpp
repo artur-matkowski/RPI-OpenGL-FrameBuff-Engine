@@ -61,14 +61,6 @@ namespace asapi
 		virtual void PreSerializationCallback() override;
 		virtual void PostDeserializationCallback() override;
 	};
-
-	struct UniqueIDCompare
-	{
-	   bool operator() (const UniqueID& lhs, const UniqueID& rhs) const
-	   {
-	       return lhs < rhs;
-	   }
-	};
 }
 
 #endif

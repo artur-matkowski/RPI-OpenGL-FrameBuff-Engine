@@ -11,7 +11,7 @@ namespace asapi
 	{
 	protected:
 		std::string 										s_projectPath;
-		std::map< UniqueID, BinaryResourceTracker*, UniqueIDCompare  >
+		std::map< UniqueID, BinaryResourceTracker*  >
 													 		m_binaryResourceTrackers;
 		bool 												m_needGarbageCollection = false;
 
@@ -32,12 +32,12 @@ namespace asapi
 
 
 
-	
+
 
 	template<class... ResourceProcessorsTs>
 	class ResourceSystem: public ResourceSystemBase
 	{
-		std::tuple< std::map< UniqueID, ResourceReference<ResourceProcessorsTs ...>*, UniqueIDCompare > >  		
+		std::tuple< std::map< UniqueID, ResourceReference<ResourceProcessorsTs ...>* > >  		
 																			m_resources;
 		ResourceTrackerManager<ResourceProcessorsTs ...>					m_resourceTrackerManager;
 
@@ -71,7 +71,7 @@ namespace asapi
 		{
 			ResourceSystem<ResourceProcessorsTs ...>* _this = (ResourceSystem<ResourceProcessorsTs ...>*)resSys;
 
-			auto& resourceTypeContainer = std::get< std::map< UniqueID, ResourceReference<U>*, UniqueIDCompare  > >( _this->m_resources );
+			auto& resourceTypeContainer = std::get< std::map< UniqueID, ResourceReference<U>*  > >( _this->m_resources );
 
 			auto it_resourceSearchResoult = resourceTypeContainer.find( resourceID );
 			if( it_resourceSearchResoult != resourceTypeContainer.end() ) // resource already loaded
@@ -82,7 +82,7 @@ namespace asapi
 			{
 				resourceTypeContainer.emplace( std::make_pair(resourceID, new ResourceReference<U>( resourceID ) ) );
 
-				//auto& resourceTypeContainer = std::get< std::map< UniqueID, ResourceReference<U>*, UniqueIDCompare  > >( _this->m_resources );
+				//auto& resourceTypeContainer = std::get< std::map< UniqueID, ResourceReference<U>*  > >( _this->m_resources );
 
 				auto it = resourceTypeContainer.find( resourceID );
 				
