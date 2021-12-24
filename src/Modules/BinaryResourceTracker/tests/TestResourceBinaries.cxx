@@ -1,0 +1,151 @@
+#include "TestResourceBinaries.hxx"
+
+
+
+bool ResourceTXTProcessor::ProcessResource2Binary(const asapi::ResourceTracker& in_currentResource
+										, asapi::FILE::MMAP* in_resourceFile
+										, const char* in_projectPath
+										, std::vector<asapi::SubResourceData>* out_resourceBinaries)
+{
+	std::string binaryResourceDir = in_projectPath;
+	binaryResourceDir += RESOURCE_BINARIES_DIR;
+	binaryResourceDir += "/";
+
+	out_resourceBinaries->clear();
+
+	//const std::string binaryResource = binaryResourceDir + std::to_string( in_currentResource->GetResourceID() ) + std::string(".txt.bin");
+
+
+	std::string databuff( (char*)in_resourceFile->Data(), (char*)in_resourceFile->Data()+in_resourceFile->Size() );
+	std::istringstream iss(databuff);
+
+	std::string line;
+	int i = 0;
+	while (std::getline(iss, line))
+	{
+		asapi::FILE::MMAP _out;
+		std::string binaryFilename;
+		std::string binaryResource;
+
+		bool subresourcePreviouslyExisted = in_currentResource.FindSubResourceByInternalID( std::to_string(i), binaryFilename );
+
+
+
+
+		//////////////////////////////////////////////////////////////////////////////////////////////////
+		//																								//
+		//																								//
+		//																								//
+		//																								//
+		//				This if section needs to be reimplemented in custom implementations.			//
+		//				Otherwise binary resource name will not be tranfered between updates			//
+		//																								//
+		//																								//
+		//																								//
+		//																								//
+		///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+		
+		if( subresourcePreviouslyExisted )  // <------- this if needs to be reimplemented in all 
+		{
+			binaryResource = binaryFilename;
+		}
+		else
+		{
+			binaryResource = std::to_string( (uint64_t)asapi::UniqueID() ) + ".txt.bin";
+		}
+
+
+		asapi::SubResourceData subresource(
+								binaryResource
+								, std::to_string(i));
+
+		binaryResource = binaryResourceDir + binaryResource;
+
+		_out.InitForWrite( binaryResource.c_str(), in_resourceFile->Size());
+		memcpy( _out.Data(), (void*)line.c_str(), line.size() );
+
+		i++;
+		out_resourceBinaries->push_back( subresource );
+	}
+
+	return true;
+}
+
+void TestResourceBinaries::Command(const char *format, ...)
+{
+	char buff[2048];
+
+	va_list args;
+	va_start (args, format);
+	vsprintf (buff, format, args);
+	va_end (args);
+
+	log::info << "Runing command: " << buff << std::endl;
+	system(buff);
+}
+
+
+
+void TestResourceBinaries::CreateResource(const char* filename, const char* content)
+{
+	resourceEntry res;
+	res.filename = filename;
+	res.content = content;
+	char buff[MAX_PATH_SIZE];
+
+	SHA256 sha256; 
+	sha256( res.content.c_str(), res.content.size() );
+	res.content_hash = sha256.getHash();
+
+	currentResources.push_back( res );
+
+	sprintf(buff, "%s/assets/%s", m_testProjectPath, filename);
+
+	asapi::FILE::STREAM file;
+
+	file.InitForWrite( buff );
+	file.Write(content, strlen(content));
+
+	introducedResources++;
+}
+void TestResourceBinaries::MoveResource(const char* source, const char* destination)
+{
+	for(int i=0; i<currentResources.size(); ++i)
+	{
+		if( strcmp( currentResources[i].filename.c_str(), source ) == 0 )
+		{
+			currentResources[i].filename = destination;
+		}
+	}
+
+	Command("mv %s/assets/%s %s/assets/%s", m_testProjectPath, source, m_testProjectPath, destination);
+
+
+	movedResources++;
+}
+void TestResourceBinaries::RemoveResource(const char* filename)
+{
+	for(auto it = currentResources.begin(); it!=currentResources.end(); ++it)
+	{
+		if( strcmp( it->filename.c_str(), filename ) == 0 )
+		{
+			currentResources.erase( it );
+			break;
+		}
+	}
+
+	Command("rm %s/assets/%s", m_testProjectPath, filename);
+
+
+	removedResources++;
+}
+void TestResourceBinaries::AppendResource(const char* filename, const char* content)
+{
+
+	Command("echo %s > %s/assets/%s", content, m_testProjectPath, filename);
+
+
+	removedResources++;
+}

@@ -1,24 +1,24 @@
 #include "ResourceSystem.hpp"
 
+
 namespace asapi
 {
+	//std::string ResourceSystemBase::s_projectPath;
 
-		ResourceSystem::ResourceSystem()
-		{
-			
-		}
-		ResourceSystem::~ResourceSystem()
-		{
-			
-		}
+	void ResourceSystemBase::Init()
+	{
+		IResourceReferenceBase::SetResourceSystemReference( this );
+		ResourceSharedReferenceInterface::SetResourceSystemReference( this );
+	}
 
-		ResourceSharedReference ResourceSystem::RequestResource( UniqueID resourceID )
-		{
-			
-		}
-
-		bool ResourceSystem::SetProjectPath( const char* projectPath )
-		{
-			
-		}
+	void ResourceSystemBase::SetProjectPath(const char* projectPath)
+	{
+		s_projectPath = projectPath;
+		IResourceReferenceBase::SetProjectPath( projectPath );
+	}
+		
+	BinaryResourceTracker* ResourceSystemBase::RequestBinaryResourceTracker( UniqueID id )
+	{
+		return m_binaryResourceTrackers[id];
+	}
 }

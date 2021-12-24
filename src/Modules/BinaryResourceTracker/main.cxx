@@ -1,9 +1,12 @@
 
-#include "TestsResourceTracker.hxx"
+#include "TestResourceBinaries.hxx"
+
 
 
 int main(int argc, char** argv)
 {
+
+
 	bool testsPassed = true;
 
 	if(argc<2)
@@ -13,13 +16,13 @@ int main(int argc, char** argv)
 	}
 	log::debug << "Starting tests" << std::endl;
 
-	TestsResourceTracker tests(argv[1]);
+	TestResourceBinaries tests(argv[1]);
 
 
 	tests.CreateResource("resoruce1.txt", "randomData1");
 	tests.CreateResource("resoruce2.txt", "randomData11");
 	tests.CreateResource("resoruce3.txt", "randomData111");
-
+/*
 	testsPassed = testsPassed && tests.TestDataCohesion(0);
 
 
@@ -37,14 +40,7 @@ int main(int argc, char** argv)
 
 	testsPassed = testsPassed && tests.TestDataCohesion(0);
 
-
-	asapi::FILE::MMAP file;
-	std::string path = argv[1];
-	path+= "/autoCreatingDirectoryTest/dfu/tmp.bin";
-
-	file.InitForWrite(path.c_str(), 512);
-
-	strcpy((char*)file.Data(), "dummy content");
+*/
 
 
 	return testsPassed ? 0 : -1;
