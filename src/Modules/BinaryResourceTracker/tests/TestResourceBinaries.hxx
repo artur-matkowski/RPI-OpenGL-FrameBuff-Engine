@@ -48,7 +48,15 @@ public:
 	{
 		out_suportedFileExtensions->emplace_back(".txt");
 	}
+
+	static const char* GetBinaryPartialExtension()
+	{
+		return ".txt";
+	}
+
+	friend bfu::stream& operator<<(bfu::stream&, const ResourceTXTProcessor& );	
 };
+
 
 class ResourceTXTSharedReference: public asapi::ResourceSharedReferenceBase<ResourceTXTSharedReference, ResourceTXTProcessor>
 {

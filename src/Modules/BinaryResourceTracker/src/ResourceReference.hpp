@@ -2,6 +2,7 @@
 #define H_ResourceReference
 #include "BinaryResourceTracker.hpp"
 #include "ResourceTrackerManager.hpp"
+#include "object.hpp"
 
 namespace asapi
 {
@@ -53,12 +54,16 @@ namespace asapi
 			m_binrestracker = RequestBinaryResourceTracker( id );
 			#endif
 
-			//m_rendererHandle = T::LoadResource( id );
+			char buff[MAX_PATH_SIZE];
+			snprintf(buff, MAX_PATH_SIZE, "%s" ASSETS_DIR "/%llu%s.bin", s_projectPath, id.ID(), T::GetBinaryPartialExtension());
+			
+			m_rendererHandle = T::LoadResource( buff );
 		}
 
 		ResourceReference(ResourceReference&& cp)
 		{
-			m_rendererHandle = cp.m_referenceCounter;
+			m_rendererHandle = cp.m_rendererHandle;
+			m_referenceCounter = cp.m_referenceCounter;
 			cp.m_referenceCounter = -1;
 
 			#ifdef IS_EDITOR

@@ -127,6 +127,7 @@ namespace asapi
 	bfu::stream& operator<<(bfu::stream& st, const ResourceSystem<Ts ...>& obj)
 	{
 		obj.Print( st );
+
 		return st;
 	}
 }

@@ -2,6 +2,9 @@
 #include "sha256.h"
 
 
+std::vector<std::string> ResourceTXTProcessor::data;
+
+
 bool ResourceTXTProcessor::ProcessResource2Binary(const asapi::ResourceTracker& in_currentResource
 										, asapi::FILE::MMAP* in_resourceFile
 										, const char* in_projectPath
@@ -175,6 +178,23 @@ bool TestResourceBinaries::TestDataCohesion()
 
 bfu::stream& operator<<(bfu::stream& st, const TestResourceBinaries& obj)
 {
+	ResourceTXTProcessor t;
+
 	st << obj.m_resourceSystem;
+
+	st << t;
+	return st;
+}
+
+
+bfu::stream& operator<<(bfu::stream& st, const ResourceTXTProcessor& out )
+{
+	st << "\n\tResourceTXTProcessor::data:";
+
+	for(int i=0; i<ResourceTXTProcessor::data.size(); i++)
+	{
+		st << "\n\t\t" << ResourceTXTProcessor::data[i].c_str();
+	}
+
 	return st;
 }
