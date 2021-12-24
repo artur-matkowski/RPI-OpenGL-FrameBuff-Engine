@@ -2,7 +2,8 @@
 #define _H_TESTresBin
 #include <vector>
 #define TESTS
-#include "ResourceSystem.hpp"
+#include "object.hpp"
+#include "ResourceSystem2.hpp"
 
 
 class ResourceTXTProcessor
@@ -21,14 +22,21 @@ public:
 			return 0;
 		}
 
-		data.emplace_back( file.data() );
+		data.emplace_back( (const char*)file.Data() );
 
-		return data.last().c_str();
+		return (void*)data.back().c_str();
 	}
 
 	static void UnloadResource(void* handle)
 	{
-		data.remove( handle );
+		for(auto it = data.begin(); it!=data.end(); it++)
+		{
+			if( it->c_str() == handle )
+			{
+				data.erase( it );
+				break;
+			}
+		}
 	}
 
 	static bool ProcessResource2Binary(const asapi::ResourceTracker& in_currentResource
@@ -42,15 +50,34 @@ public:
 	}
 };
 
-class ResourceTXTSharedReference: public ResourceSharedReferenceBase<ResourceTXTSharedReference, ResourceTXTProcessor>
+class ResourceTXTSharedReference: public asapi::ResourceSharedReferenceBase<ResourceTXTSharedReference, ResourceTXTProcessor>
 {};
 
 
 
 class TestResourceBinaries
 {
+	struct resourceEntry
+		{
+			std::string filename;
+			std::string content;
+			std::string content_hash;
+			uint64_t 	resourceLink = 0;
+		};
+
+		char m_testProjectPath[MAX_PATH_SIZE];
+		char m_ResourceFilesDirPath[MAX_PATH_SIZE];
+		std::vector< resourceEntry > currentResources;
+		
+		int introducedResources = 0;
+		int movedResources = 0;
+		int removedResources = 0;
+
+
+
+
 	asapi::ResourceSystem<
-		ResourceReference<ResourceTXTProcessor>
+		asapi::ResourceReference<ResourceTXTProcessor>
 		> 										m_resourceSystem;
 
 
@@ -58,8 +85,8 @@ class TestResourceBinaries
 		
 		static void Command(const char *format, ...);
 public:
-	TestResourceBinaries();
-	~TestResourceBinaries();
+	TestResourceBinaries(const char* testProjectPath);
+	~TestResourceBinaries(){};
 
 
 	void CreateResource(const char* filename, const char* content);

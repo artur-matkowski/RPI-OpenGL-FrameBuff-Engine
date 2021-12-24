@@ -37,8 +37,8 @@ namespace asapi
 
 
 	public:
-		ResourceSystem();
-		~ResourceSystem();
+		ResourceSystem(){};
+		~ResourceSystem(){};
 
 		void Init()
 		{

@@ -1,7 +1,7 @@
 #ifndef H_ResourceReference
 #define H_ResourceReference
 #include "BinaryResourceTracker.hpp"
-
+#include "ResourceTrackerManager.hpp"
 
 namespace asapi
 {
@@ -75,6 +75,19 @@ namespace asapi
 			}
 			if( m_referenceCounter==0 )
 				T::UnloadResource( m_rendererHandle );
+		}
+
+		static inline bool ProcessResource2Binary(const asapi::ResourceTracker& in_currentResource
+											, asapi::FILE::MMAP* in_resourceFile
+											, const char* in_projectPath
+											, std::vector<asapi::SubResourceData>* out_resourceBinaries)
+		{
+			return T::ProcessResource2Binary(in_currentResource, in_resourceFile, in_projectPath, out_resourceBinaries);
+		}
+
+		static inline void GetSuportedFilesExtensions( std::vector<std::string>* out_suportedFileExtensions )
+		{
+			T::GetSuportedFilesExtensions( out_suportedFileExtensions );
 		}
 		
 		#ifdef IS_EDITOR

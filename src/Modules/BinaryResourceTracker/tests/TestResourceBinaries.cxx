@@ -1,5 +1,5 @@
 #include "TestResourceBinaries.hxx"
-
+#include "sha256.h"
 
 
 bool ResourceTXTProcessor::ProcessResource2Binary(const asapi::ResourceTracker& in_currentResource
@@ -87,6 +87,15 @@ void TestResourceBinaries::Command(const char *format, ...)
 }
 
 
+TestResourceBinaries::TestResourceBinaries(const char* testProjectPath)
+{
+	strncpy(m_testProjectPath, testProjectPath, MAX_PATH_SIZE);
+
+	sprintf(m_ResourceFilesDirPath, "%s/assets/Resource_Trackers/", testProjectPath);
+
+	m_resourceSystem.Init(  );
+	m_resourceSystem.SetProjectPath( m_testProjectPath );
+}
 
 void TestResourceBinaries::CreateResource(const char* filename, const char* content)
 {
