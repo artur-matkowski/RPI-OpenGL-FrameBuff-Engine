@@ -53,7 +53,7 @@ namespace asapi
 			m_binrestracker = RequestBinaryResourceTracker( id );
 			#endif
 
-			m_rendererHandle = T::LoadResource( id );
+			//m_rendererHandle = T::LoadResource( id );
 		}
 
 		ResourceReference(ResourceReference&& cp)
@@ -73,7 +73,7 @@ namespace asapi
 			{
 				log::error << "Destroying ResourceReference while resource still in use. Program might soon crash." << std::endl;
 			}
-			if( m_referenceCounter==0 )
+			if( m_referenceCounter==0 ) 
 				T::UnloadResource( m_rendererHandle );
 		}
 
@@ -93,7 +93,8 @@ namespace asapi
 		#ifdef IS_EDITOR
 		virtual bool OnGUI( UniqueID* out_newResource ) override
 		{
-			return T::OnGUI( out_newResource );
+			//return T::OnGUI( out_newResource );
+			return false;
 		}
 		#endif
 

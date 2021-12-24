@@ -55,8 +55,19 @@ namespace asapi
 			return ID64;
 		}
 
+		bool operator<( const UniqueID& );
+		bool operator>( const UniqueID& );
+
 		virtual void PreSerializationCallback() override;
 		virtual void PostDeserializationCallback() override;
+	};
+
+	struct UniqueIDCompare
+	{
+	   bool operator() (const UniqueID& lhs, const UniqueID& rhs) const
+	   {
+	       return lhs < rhs;
+	   }
 	};
 }
 

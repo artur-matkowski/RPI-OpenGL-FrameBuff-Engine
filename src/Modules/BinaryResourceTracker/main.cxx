@@ -5,8 +5,6 @@
 
 int main(int argc, char** argv)
 {
-
-
 	bool testsPassed = true;
 
 	if(argc<2)
@@ -22,23 +20,25 @@ int main(int argc, char** argv)
 	tests.CreateResource("resoruce1.txt", "randomData1");
 	tests.CreateResource("resoruce2.txt", "randomData11");
 	tests.CreateResource("resoruce3.txt", "randomData111");
-/*
-	testsPassed = testsPassed && tests.TestDataCohesion(0);
 
+	testsPassed = testsPassed && tests.TestDataCohesion();
+
+	log::debug << tests << std::endl;
+/*
 
 	tests.MoveResource("resoruce1.txt", "resoruce1new.txt");
 
-	testsPassed = testsPassed && tests.TestDataCohesion(0);
+	testsPassed = testsPassed && tests.TestDataCohesion();
 
 
 	tests.RemoveResource("resoruce1new.txt");
 
-	testsPassed = testsPassed && tests.TestDataCohesion(0);
+	testsPassed = testsPassed && tests.TestDataCohesion();
 
 
 	tests.AppendResource("resoruce2.txt", "randomData22");
 
-	testsPassed = testsPassed && tests.TestDataCohesion(0);
+	testsPassed = testsPassed && tests.TestDataCohesion();
 
 */
 

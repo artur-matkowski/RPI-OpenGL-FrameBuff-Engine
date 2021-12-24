@@ -32,8 +32,8 @@ hash:
 	$(MAKE) -C $(ROOT_PROJECT)/vendor hash
 
 test:
-	./a.out $(ROOT_MODULE)
+	./a.out $(ROOT_MODULE)/demo_project
 
 clean-test:
-	rm -rf assets/
+	rm -rf demo_project/
 	rm -rf autoCreatingDirectoryTest

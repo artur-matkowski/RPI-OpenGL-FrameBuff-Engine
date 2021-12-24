@@ -37,6 +37,7 @@ namespace asapi
 
 #ifdef TESTS
 	public:
+		ResourceTracker* GetResourceTrackerByIndex(int i) { return &(v_ResourceTrackers[i]); }
 #endif
 		std::vector<ResourceTracker> 	v_ResourceTrackers;
 	public:

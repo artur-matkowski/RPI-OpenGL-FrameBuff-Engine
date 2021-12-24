@@ -11,7 +11,8 @@ namespace asapi
 	{
 	protected:
 		std::string 										s_projectPath;
-		std::map< UniqueID, BinaryResourceTracker* > 		m_binaryResourceTrackers;
+		std::map< UniqueID, BinaryResourceTracker*, UniqueIDCompare  >
+													 		m_binaryResourceTrackers;
 		bool 												m_needGarbageCollection = false;
 
 		void RefreshBinaryResourceTrackers();
@@ -22,20 +23,29 @@ namespace asapi
 
 		BinaryResourceTracker* RequestBinaryResourceTracker( UniqueID );
 		inline void ScheduleGarbageCollection() { m_needGarbageCollection = true; }
-
-		
-		
-
 	};
+
+
+
+
+
+
+
+
+	
 
 	template<class... ResourceProcessorsTs>
 	class ResourceSystem: public ResourceSystemBase
 	{
-		std::tuple< std::map< UniqueID, ResourceReference<ResourceProcessorsTs ...>* > >  		
+		std::tuple< std::map< UniqueID, ResourceReference<ResourceProcessorsTs ...>*, UniqueIDCompare > >  		
 																			m_resources;
 		ResourceTrackerManager<ResourceProcessorsTs ...>					m_resourceTrackerManager;
 
 
+#ifdef TESTS
+	public:
+		ResourceTracker* GetResourceTrackerByIndex(int i) { return m_resourceTrackerManager.GetResourceTrackerByIndex(i); }
+#endif
 	public:
 		ResourceSystem(){};
 		~ResourceSystem(){};
@@ -51,9 +61,9 @@ namespace asapi
 		}
 
 		template<class SharedResourceReferenceT, class ResourceProcessorT>
-		SharedResourceReferenceT RequestResource( UniqueID resourceID )
+		void InitializeResource( UniqueID resourceID, SharedResourceReferenceT* out)
 		{
-			return SharedResourceReferenceT(resourceID, RequestResourceReference<ResourceProcessorT>);
+			SharedResourceReferenceT::InitializeObject( resourceID, RequestResourceReference<ResourceProcessorT>, out);
 		}
 
 		template<class U>
@@ -61,30 +71,64 @@ namespace asapi
 		{
 			ResourceSystem<ResourceProcessorsTs ...>* _this = (ResourceSystem<ResourceProcessorsTs ...>*)resSys;
 
-			auto& resourceTypeContainer = std::get< std::map< UniqueID, ResourceReference<U> > >( _this->m_resources );
+			auto& resourceTypeContainer = std::get< std::map< UniqueID, ResourceReference<U>*, UniqueIDCompare  > >( _this->m_resources );
 
 			auto it_resourceSearchResoult = resourceTypeContainer.find( resourceID );
-			if( it_resourceSearchResoult != _this->m_resources.end() ) // resource already loaded
+			if( it_resourceSearchResoult != resourceTypeContainer.end() ) // resource already loaded
 			{
-				return ResourceSharedReference( *it_resourceSearchResoult );
+				return it_resourceSearchResoult->second;
 			}
 			else //resource not used so far
 			{
-				//ResourceReference<T>( resourceID );
-				_this->m_resources.emplace( std::make_pair(resourceID, resourceID) );
+				resourceTypeContainer.emplace( std::make_pair(resourceID, new ResourceReference<U>( resourceID ) ) );
+
+				//auto& resourceTypeContainer = std::get< std::map< UniqueID, ResourceReference<U>*, UniqueIDCompare  > >( _this->m_resources );
 
 				auto it = resourceTypeContainer.find( resourceID );
 				
-				if( it != _this->m_resources.end() ) // resource already loaded
+				if( it != resourceTypeContainer.end() ) // resource loaded
 				{
-					return ResourceSharedReference( *it );
+					return it->second;
 				}
 			}
 
 			log::warning << "Could not find resource: " << resourceID.ID() << std::endl;
 			return nullptr;
 		}
+
+		template<int K>
+		void PrintI( bfu::stream& st ) const
+		{
+			auto resourceTypeContainer = std::get<K>( m_resources );
+
+			st << "\n\tResource printout for resource type " << K << ":";
+			for(auto it = resourceTypeContainer.begin(); it!=resourceTypeContainer.end(); it++)
+			{
+				st << "\n\t\t" << it->first.ID();
+			}
+		}
+
+		void Print( bfu::stream& st ) const
+		{
+			PrintI<0>( st );
+		}
+
+		inline void RefreshResources()
+		{
+			m_resourceTrackerManager.RefreshResources();
+		}
+
+
+		template<class... Ts>
+		friend bfu::stream& operator<<(bfu::stream&, const ResourceSystem<Ts ...>& );
 	};
+
+	template<class... Ts>
+	bfu::stream& operator<<(bfu::stream& st, const ResourceSystem<Ts ...>& obj)
+	{
+		obj.Print( st );
+		return st;
+	}
 }
 
 #endif

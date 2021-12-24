@@ -5,9 +5,9 @@
 #include "UniqueID.hpp"
 //resource is a source file like: jpg, glsl, psd, fbx, txt, etc. 
 
-#define RESOURCE_TRACKERS_DIR  "/assets/Resource_Trackers"
-#define RESOURCE_BINARIES_DIR "/assets/Resource_Binaries"
-#define ASSETS_DIR "/assets"
+#define RESOURCE_TRACKERS_DIR  		"/Resource_Trackers"
+#define RESOURCE_BINARIES_DIR 		"/Resource_Binaries"
+#define ASSETS_DIR 					"/assets"
 
 using bfu::string;
 

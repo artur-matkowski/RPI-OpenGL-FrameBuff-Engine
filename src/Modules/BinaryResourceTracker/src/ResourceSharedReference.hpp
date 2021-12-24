@@ -18,6 +18,7 @@ namespace asapi
 	template<class T, class ResourceProcessorT>
 	class ResourceSharedReferenceBase: public bfu::SerializableClassBase<T>, public ResourceSharedReferenceInterface
 	{
+	protected:
 		SERIALIZABLE_OBJ( ResourceSharedReferenceBase, UniqueID, m_binaryResourceID );
 
 		typedef ResourceReference<ResourceProcessorT>* (*RequestCallbackT)( UniqueID, ResourceSystemBase* );
@@ -26,7 +27,7 @@ namespace asapi
 		ResourceReference<ResourceProcessorT>*			m_resourcePtr = nullptr;
 		RequestCallbackT 								m_callback;
 
-
+/*
 		ResourceSharedReferenceBase(IResourceReferenceBase* resourcePtr) // used by resourceSystem
 		{
 			//TODO
@@ -41,8 +42,16 @@ namespace asapi
 			m_callback = callback;
 			m_resourcePtr = m_callback(m_binaryResourceID, s_resourceSystem);
 			m_resourcePtr->IncreaseReferenceCounter();
-		}
+		}*/
+
 	public:
+		static void InitializeObject(UniqueID binaryResourceID, RequestCallbackT callback, T* out)
+		{
+			out->m_binaryResourceID = std::move( binaryResourceID );
+			out->m_callback = callback;
+			out->m_resourcePtr = out->m_callback(out->m_binaryResourceID, s_resourceSystem);
+			out->m_resourcePtr->IncreaseReferenceCounter();
+		}
 
 
 		ResourceSharedReferenceBase(){};

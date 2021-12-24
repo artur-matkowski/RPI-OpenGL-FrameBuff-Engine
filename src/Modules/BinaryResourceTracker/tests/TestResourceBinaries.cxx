@@ -91,7 +91,7 @@ TestResourceBinaries::TestResourceBinaries(const char* testProjectPath)
 {
 	strncpy(m_testProjectPath, testProjectPath, MAX_PATH_SIZE);
 
-	sprintf(m_ResourceFilesDirPath, "%s/assets/Resource_Trackers/", testProjectPath);
+	sprintf(m_ResourceFilesDirPath, "%s" RESOURCE_TRACKERS_DIR "/", testProjectPath);
 
 	m_resourceSystem.Init(  );
 	m_resourceSystem.SetProjectPath( m_testProjectPath );
@@ -110,7 +110,7 @@ void TestResourceBinaries::CreateResource(const char* filename, const char* cont
 
 	currentResources.push_back( res );
 
-	sprintf(buff, "%s/assets/%s", m_testProjectPath, filename);
+	sprintf(buff, "%s" ASSETS_DIR "/%s", m_testProjectPath, filename);
 
 	asapi::FILE::STREAM file;
 
@@ -129,7 +129,7 @@ void TestResourceBinaries::MoveResource(const char* source, const char* destinat
 		}
 	}
 
-	Command("mv %s/assets/%s %s/assets/%s", m_testProjectPath, source, m_testProjectPath, destination);
+	Command("mv %s" ASSETS_DIR "/%s %s" ASSETS_DIR "/%s", m_testProjectPath, source, m_testProjectPath, destination);
 
 
 	movedResources++;
@@ -145,7 +145,7 @@ void TestResourceBinaries::RemoveResource(const char* filename)
 		}
 	}
 
-	Command("rm %s/assets/%s", m_testProjectPath, filename);
+	Command("rm %s" ASSETS_DIR "/%s", m_testProjectPath, filename);
 
 
 	removedResources++;
@@ -153,8 +153,28 @@ void TestResourceBinaries::RemoveResource(const char* filename)
 void TestResourceBinaries::AppendResource(const char* filename, const char* content)
 {
 
-	Command("echo %s > %s/assets/%s", content, m_testProjectPath, filename);
+	Command("echo %s > %s" ASSETS_DIR "/%s", content, m_testProjectPath, filename);
 
 
 	removedResources++;
+}
+
+bool TestResourceBinaries::TestDataCohesion()
+{
+	m_resourceSystem.RefreshResources();
+
+	asapi::ResourceTracker* tracker = m_resourceSystem.GetResourceTrackerByIndex(0);
+
+
+	m_resourceSystem.InitializeResource<ResourceTXTSharedReference, ResourceTXTProcessor>( tracker->m_resourceID, &m_testResource );
+
+	//asapi::ListFiles(resourceFiles, {".bin"}, asapi::ListingStrategy::blacklist, m_ResourceFilesDirPath );
+
+	return true;
+}
+
+bfu::stream& operator<<(bfu::stream& st, const TestResourceBinaries& obj)
+{
+	st << obj.m_resourceSystem;
+	return st;
 }

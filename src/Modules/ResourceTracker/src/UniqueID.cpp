@@ -36,7 +36,16 @@ namespace asapi
 
 		return *this;
 	}
+	
+	bool UniqueID::operator<( const UniqueID& other )
+	{
+		return ID64 < other.ID64;
+	}
 
+	bool UniqueID::operator>( const UniqueID& other )
+	{
+		return ID64 > other.ID64;
+	}
 
 	void UniqueID::PreSerializationCallback()
 	{

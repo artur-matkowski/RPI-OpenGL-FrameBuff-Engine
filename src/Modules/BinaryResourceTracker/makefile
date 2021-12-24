@@ -35,8 +35,7 @@ hash:
 	$(MAKE) -C $(ROOT_PROJECT)/vendor hash
 
 test:
-	./a.out $(ROOT_MODULE)
+	./a.out $(ROOT_MODULE)/demo_project
 
 clean-test:
-	rm -f assets/Resource_Trackers/*.json
-	rm -f assets/*.txt
+	rm -rf demo_project/

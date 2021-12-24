@@ -51,7 +51,16 @@ public:
 };
 
 class ResourceTXTSharedReference: public asapi::ResourceSharedReferenceBase<ResourceTXTSharedReference, ResourceTXTProcessor>
-{};
+{
+public:
+	ResourceTXTSharedReference(){}
+
+	ResourceTXTSharedReference( ResourceTXTSharedReference&& cp )
+	{
+		m_resourcePtr = cp.m_resourcePtr;
+		cp.m_resourcePtr = nullptr;
+	}
+};
 
 
 
@@ -77,8 +86,8 @@ class TestResourceBinaries
 
 
 	asapi::ResourceSystem<
-		asapi::ResourceReference<ResourceTXTProcessor>
-		> 										m_resourceSystem;
+			ResourceTXTProcessor
+			> 										m_resourceSystem;
 
 
 		ResourceTXTSharedReference 				m_testResource;
@@ -93,6 +102,10 @@ public:
 	void MoveResource(const char* source, const char* destination);
 	void RemoveResource(const char* filename);
 	void AppendResource(const char* filename, const char* content);
+
+	bool TestDataCohesion();
+
+	friend bfu::stream& operator<<(bfu::stream&, const TestResourceBinaries& );
 	
 };
 

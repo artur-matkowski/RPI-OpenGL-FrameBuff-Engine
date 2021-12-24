@@ -76,7 +76,7 @@
 	{
 		strncpy(m_testProjectPath, testProjectPath, MAX_PATH_SIZE);
 
-		sprintf(m_ResourceFilesDirPath, "%s/assets/Resource_Trackers/", testProjectPath);
+		sprintf(m_ResourceFilesDirPath, "%s" RESOURCE_TRACKERS_DIR "/", testProjectPath);
 
 		resourceTrackerManager.Init( m_testProjectPath );
 	}
@@ -115,7 +115,7 @@
 
 		currentResources.push_back( res );
 
-		sprintf(buff, "%s/assets/%s", m_testProjectPath, filename);
+		sprintf(buff, "%s" ASSETS_DIR "/%s", m_testProjectPath, filename);
 
 		asapi::FILE::STREAM file;
 
@@ -134,7 +134,7 @@
 			}
 		}
 
-		Command("mv %s/assets/%s %s/assets/%s", m_testProjectPath, source, m_testProjectPath, destination);
+		Command("mv %s" ASSETS_DIR "/%s %s" ASSETS_DIR "/%s", m_testProjectPath, source, m_testProjectPath, destination);
 
 
 		movedResources++;
@@ -157,9 +157,7 @@
 	}
 	void TestsResourceTracker::AppendResource(const char* filename, const char* content)
 	{
-
-		Command("printf '%s' >> %s/assets/%s", content, m_testProjectPath, filename);
-
+		Command("printf '%s' >> %s" ASSETS_DIR "/%s", content, m_testProjectPath, filename);
 
 		removedResources++;
 	}
