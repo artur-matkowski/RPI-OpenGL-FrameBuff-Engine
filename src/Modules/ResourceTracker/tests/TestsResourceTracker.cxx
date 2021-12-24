@@ -65,9 +65,6 @@
 			_out.InitForWrite( binaryResource.c_str(), in_resourceFile->Size());
 			memcpy( _out.Data(), (void*)line.c_str(), line.size() );
 
-
-
-
 			i++;
 			out_resourceBinaries->push_back( subresource );
 		}
