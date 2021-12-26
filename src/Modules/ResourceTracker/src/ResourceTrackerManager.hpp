@@ -8,11 +8,11 @@ namespace asapi
 {
 	struct SubResourceData
 	{
-		std::string 		m_filename;
+		asapi::UniqueID		m_resourceID;
 		std::string 		m_internalID; //subresource identifier to destenquishe subresources in resource file
 
-		SubResourceData(const std::string& filename, const std::string& internalID)
-			:m_filename( filename )
+		SubResourceData(const asapi::UniqueID& resourceID, const std::string& internalID)
+			:m_resourceID( resourceID )
 			,m_internalID( internalID )
 		{}
 	};

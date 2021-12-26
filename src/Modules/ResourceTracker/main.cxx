@@ -70,7 +70,7 @@ int main(int argc, char** argv)
 	tests.MoveResource("resoruce1.txt", "resoruce1new.txt");
 	testsPassed = testsPassed && tests.TestDataCohesion();
 	tests.Print();
-
+	//return 0;
 
 
 	tests.RemoveResource("resoruce1new.txt");

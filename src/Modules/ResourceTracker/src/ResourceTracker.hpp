@@ -21,7 +21,7 @@ namespace asapi
 	class SerializableSubResourceData: public bfu::SerializableClassBase<SerializableSubResourceData>
 	{
 	public:
-		SERIALIZABLE_VAR( SerializableSubResourceData, string, m_filename );
+		SERIALIZABLE_OBJ( SerializableSubResourceData, UniqueID, m_resourceID );
 		SERIALIZABLE_VAR( SerializableSubResourceData, string, m_internalID ); //subresource identifier to destenquishe subresources in resource file
 
 
@@ -38,6 +38,7 @@ namespace asapi
 		//friend class ResourceTrackerManager;
 #ifdef TESTS
 	public:
+		SerializableSubResourceData* GetSubResourceByIndex(int i) { return &(v_subresources[i]); }
 #endif
 		SERIALIZABLE_OBJ( ResourceTracker, UniqueID, m_resourceID );
 		SERIALIZABLE_VAR( ResourceTracker, string, m_filename );
@@ -104,7 +105,7 @@ namespace asapi
 		std::string GetResourceTrackerPath() const;
 
 		inline int CountSubresources() const { return v_subresources.size(); }
-		bool FindSubResourceByInternalID( const std::string& in_id, std::string& out_filename ) const;
+		bool FindSubResourceByInternalID( const std::string& in_id, asapi::UniqueID& out_ID ) const;
 
 	private:
 		void RemoveResourceTrackerFile();

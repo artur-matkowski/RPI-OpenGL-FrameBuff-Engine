@@ -24,9 +24,10 @@
 		{
 			asapi::FILE::MMAP _out;
 			std::string binaryFilename;
+			asapi::UniqueID subresourceID;
 			std::string binaryResource;
 
-			bool subresourcePreviouslyExisted = in_currentResource.FindSubResourceByInternalID( std::to_string(i), binaryFilename );
+			bool subresourcePreviouslyExisted = in_currentResource.FindSubResourceByInternalID( std::to_string(i), subresourceID );
 
 
 
@@ -45,19 +46,10 @@
 			///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-			
-			if( subresourcePreviouslyExisted )  // <------- this if needs to be reimplemented in all 
-			{
-				binaryResource = binaryFilename;
-			}
-			else
-			{
-				binaryResource = std::to_string( (uint64_t)asapi::UniqueID() ) + ".txt.bin";
-			}
-
+			binaryResource = std::to_string( (uint64_t)subresourceID ) + ".txt.bin";
 
 			asapi::SubResourceData subresource(
-									binaryResource
+									subresourceID
 									, std::to_string(i));
 
 			binaryResource = binaryResourceDir + binaryResource;

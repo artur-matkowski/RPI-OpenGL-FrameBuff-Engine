@@ -40,6 +40,14 @@ namespace asapi
 			return *this;
 		}
 
+		inline UniqueID& operator=(const UniqueID& id)
+		{
+			ID64 = id.ID64;
+			m_ID = id.m_ID;
+
+			return *this;
+		}
+
 		inline bool operator==( const UniqueID& other )
 		{
 			return ID64 == other.ID64;

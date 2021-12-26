@@ -17,21 +17,16 @@ namespace asapi
 	}
 	SerializableSubResourceData::SerializableSubResourceData( const SubResourceData& in_data )
 	{
-		m_filename = in_data.m_filename;
 		m_internalID = in_data.m_internalID;
+		m_resourceID = in_data.m_resourceID;
 	}
 	SerializableSubResourceData::SerializableSubResourceData( SerializableSubResourceData&& in_data )
 	{
-		m_filename = in_data.m_filename;
-		m_internalID = in_data.m_internalID;
 	}
 	SerializableSubResourceData& SerializableSubResourceData::operator=( SubResourceData&& in_data )
 	{
-		m_filename = in_data.m_filename;
-		in_data.m_filename = "";
-
-		m_internalID = in_data.m_internalID;
-		in_data.m_internalID = "";
+		m_internalID = std::move( in_data.m_internalID );
+		m_resourceID = std::move( in_data.m_resourceID );
 
 		return *this;
 	}
@@ -203,21 +198,29 @@ namespace asapi
 
 	void ResourceTracker::RemoveResourceBinaryFile()
 	{
+		const std::string binaryDirectory = _ProjectPath + RESOURCE_BINARIES_DIR;
+		std::vector< std::string > paths;
+
+		ListFiles(paths, {".bin"}, ListingStrategy::whitelist, binaryDirectory.c_str() );
+
 		for(int i=0; i<v_subresources.size(); ++i)
 		{
-			std::string path = _ProjectPath + RESOURCE_BINARIES_DIR;
-			path += "/";
-			path += v_subresources[i].m_filename;
-
-			int resoult = unlink( path.c_str() );
-
-			if( resoult!=0 )
+			for(int k=0; k<paths.size(); ++k)
 			{
-				log::warning << "Can not remove Resource file: " << path.c_str() << std::endl;
-			}
-			else
-			{
-				//log::debug << "Removed Resource file: " << path.c_str() << std::endl;
+				if( strstr(paths[k].c_str(), std::to_string(v_subresources[i].m_resourceID.ID()).c_str())!=0 )
+				{
+					std::string path = binaryDirectory + "/" + paths[k].c_str();
+					int resoult = unlink( path.c_str() );
+
+					if( resoult!=0 )
+					{
+						log::warning << "Can not remove Resource file: " << path.c_str() << std::endl;
+					}
+					else
+					{
+						//log::debug << "Removed Resource file: " << path.c_str() << std::endl;
+					}
+				}
 			}
 		}
 	}
@@ -249,13 +252,16 @@ namespace asapi
 		}
 	}
 
-	bool ResourceTracker::FindSubResourceByInternalID( const std::string& in_id, std::string& out_filename ) const
+	bool ResourceTracker::FindSubResourceByInternalID( const std::string& in_id, asapi::UniqueID& out_ID ) const
 	{
+		out_ID = UniqueID();
+
 		for(int i=0; i<v_subresources.size(); ++i)
 		{
 			if( strcmp( (*(SerializableSubResourceData*)*(v_subresources.begin()+i)).m_internalID.c_str(), in_id.c_str()) == 0 )
 			{
-				out_filename = (*(SerializableSubResourceData*)*(v_subresources.begin()+i)).m_filename;
+				out_ID = (*(SerializableSubResourceData*)*(v_subresources.begin()+i)).m_resourceID;
+				log::debug << "------------------------founded " << out_ID << std::endl;
 				return true;
 			}
 		}
@@ -278,7 +284,7 @@ namespace asapi
 		os << "\n\tsize: " << res.m_size;
 		os << "\n\tmodified: " << buff << ":" << res.m_modified_ns;
 
-		os << "\n\tSubresources:" << res.m_modified_ns;
+		os << "\n\tSubresources:";
 		//for(int i=0; i<res.v_subresources.size(); ++i)
 		{
 			os << "\n" << res.v_subresources;
@@ -289,8 +295,8 @@ namespace asapi
 
 	bfu::stream& operator<<(bfu::stream& os, const SerializableSubResourceData& res)
 	{
+		os << "\n\t\tResource ID     : " << res.m_resourceID.ID();
 		os << "\n\t\tInternal ID     : " << res.m_internalID.c_str();
-		os << "\n\t\tbinary filemane : " << res.m_filename.c_str();
 
 		return os;
 	}
