@@ -226,7 +226,7 @@ namespace asapi
 	}
 
 
-	std::string ResourceTracker::GetFileExtension() const
+	const std::string ResourceTracker::GetFileExtension() const
 	{
 		std::string ret;
 

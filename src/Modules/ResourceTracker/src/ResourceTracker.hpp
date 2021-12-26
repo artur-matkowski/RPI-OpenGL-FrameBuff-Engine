@@ -91,7 +91,7 @@ namespace asapi
 		inline std::string GetFilename() const { return m_filename; }
 		inline std::string GetPath() const { return m_path; }
 		inline std::string GetFullPath() const { return _ProjectPath+std::string(ASSETS_DIR)+std::string("/")+m_path.c_str(); }
-		std::string GetFileExtension() const;
+		const std::string GetFileExtension() const;
 		inline std::string GetContentHash() const { return m_content_hash; }
 
 

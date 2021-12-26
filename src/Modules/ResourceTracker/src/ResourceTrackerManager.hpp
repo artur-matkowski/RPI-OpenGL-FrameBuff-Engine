@@ -70,19 +70,10 @@ namespace asapi
 	protected:
 		using ResourceProcesors = std::tuple<ResourceProcesorTs ...>;
 
-		bool static IsCompatible(const std::vector<std::string>& in_fileExtensions
+		inline bool static IsCompatible(const char* in_fileExtension
 											, const asapi::ResourceTracker& in_currentResource)
 		{
-			bool isCompatible = false;
-			for(int i=0; i<in_fileExtensions.size(); ++i)
-			{
-				if( (in_fileExtensions.begin()+i)->compare( in_currentResource.GetFileExtension() )==0 )
-				{
-					isCompatible = true;
-					break;
-				}
-			}
-			return isCompatible;
+			return strcmp( in_fileExtension, in_currentResource.GetFileExtension().c_str() ) == 0;
 		}
 
 		template<int i>
@@ -92,13 +83,11 @@ namespace asapi
 											, std::vector<asapi::SubResourceData>* out_resourceBinaries
 											, bool *updatedBinaries)
 		{
-			std::vector<std::string> fileExtensions;
-
 			*updatedBinaries = false;
 
-			std::tuple_element_t<i, ResourceProcesors>::GetSuportedFilesExtensions( &fileExtensions );
+			const char* resourceExtension = std::tuple_element_t<i, ResourceProcesors>::GetSuportedResourceFileExtension();
 
-			if(IsCompatible(fileExtensions, in_currentResource))
+			if(IsCompatible(resourceExtension, in_currentResource))
 			{
 				*updatedBinaries = std::tuple_element_t<i, ResourceProcesors>::ProcessResource2Binary(in_currentResource
 																					, in_resourceFile
