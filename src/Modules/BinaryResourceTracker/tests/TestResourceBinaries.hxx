@@ -44,12 +44,12 @@ public:
 											, const char* in_projectPath
 											, std::vector<asapi::SubResourceData>* out_resourceBinaries);
 
-	static void GetSuportedFilesExtensions( std::vector<std::string>* out_suportedFileExtensions )
+	static const char* GetSuportedResourceFileExtension()
 	{
-		out_suportedFileExtensions->emplace_back(".txt");
+		return ".txt";
 	}
 
-	static const char* GetBinaryPartialExtension()
+	static const char* GetBinaryOutputFileExtension()
 	{
 		return ".txt";
 	}

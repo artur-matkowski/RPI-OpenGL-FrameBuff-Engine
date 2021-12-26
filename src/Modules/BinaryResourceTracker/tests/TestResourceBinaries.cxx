@@ -28,9 +28,10 @@ bool ResourceTXTProcessor::ProcessResource2Binary(const asapi::ResourceTracker& 
 	{
 		asapi::FILE::MMAP _out;
 		std::string binaryFilename;
+		asapi::UniqueID subresourceID;
 		std::string binaryResource;
 
-		bool subresourcePreviouslyExisted = in_currentResource.FindSubResourceByInternalID( std::to_string(i), binaryFilename );
+		bool subresourcePreviouslyExisted = in_currentResource.FindSubResourceByInternalID( std::to_string(i), subresourceID );
 
 
 
@@ -48,20 +49,10 @@ bool ResourceTXTProcessor::ProcessResource2Binary(const asapi::ResourceTracker& 
 		//																								//
 		///////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-		
-		if( subresourcePreviouslyExisted )  // <------- this if needs to be reimplemented in all 
-		{
-			binaryResource = binaryFilename;
-		}
-		else
-		{
-			binaryResource = std::to_string( (uint64_t)asapi::UniqueID() ) + ".txt.bin";
-		}
-
+		binaryResource = std::to_string( (uint64_t)subresourceID ) + ".txt.bin";
 
 		asapi::SubResourceData subresource(
-								binaryResource
+								subresourceID
 								, std::to_string(i));
 
 		binaryResource = binaryResourceDir + binaryResource;
@@ -168,8 +159,10 @@ bool TestResourceBinaries::TestDataCohesion()
 
 	asapi::ResourceTracker* tracker = m_resourceSystem.GetResourceTrackerByIndex(0);
 
+	asapi::UniqueID id = tracker->GetSubResourceByIndex(0)->m_resourceID;
 
-	m_resourceSystem.InitializeResource<ResourceTXTSharedReference, ResourceTXTProcessor>( tracker->m_resourceID, &m_testResource );
+
+	m_resourceSystem.InitializeResource<ResourceTXTSharedReference, ResourceTXTProcessor>( id, &m_testResource );
 
 	//asapi::ListFiles(resourceFiles, {".bin"}, asapi::ListingStrategy::blacklist, m_ResourceFilesDirPath );
 

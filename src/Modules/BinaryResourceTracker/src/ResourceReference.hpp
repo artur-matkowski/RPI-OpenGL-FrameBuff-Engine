@@ -55,7 +55,7 @@ namespace asapi
 			#endif
 
 			char buff[MAX_PATH_SIZE];
-			snprintf(buff, MAX_PATH_SIZE, "%s" ASSETS_DIR "/%llu%s.bin", s_projectPath, id.ID(), T::GetBinaryPartialExtension());
+			snprintf(buff, MAX_PATH_SIZE, "%s" RESOURCE_BINARIES_DIR "/%llu%s.bin", s_projectPath.c_str(), id.ID(), T::GetBinaryOutputFileExtension());
 			
 			m_rendererHandle = T::LoadResource( buff );
 		}
