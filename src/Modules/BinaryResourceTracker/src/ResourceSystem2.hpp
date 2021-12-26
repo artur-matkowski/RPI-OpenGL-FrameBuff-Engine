@@ -37,8 +37,9 @@ namespace asapi
 	template<class... ResourceProcessorsTs>
 	class ResourceSystem: public ResourceSystemBase
 	{
-		std::tuple< std::map< UniqueID, ResourceReference<ResourceProcessorsTs ...>* > >  		
-																			m_resources;
+		using ResourceTuple_t = std::tuple< std::map< UniqueID, ResourceReference<ResourceProcessorsTs ...>* > >;
+		
+		ResourceTuple_t														m_resources;
 		ResourceTrackerManager<ResourceProcessorsTs ...>					m_resourceTrackerManager;
 
 
@@ -100,8 +101,11 @@ namespace asapi
 		void PrintI( bfu::stream& st ) const
 		{
 			auto resourceTypeContainer = std::get<K>( m_resources );
+			const char* resourceExtension = std::tuple_element_t<K, std::tuple<ResourceProcessorsTs ...>>::GetSuportedResourceFileExtension();
 
-			st << "\n\tResource printout for resource type " << K << ":";
+			st << "\n\tResource printout for resource type ";
+			st << resourceExtension;
+			st << ":";
 			for(auto it = resourceTypeContainer.begin(); it!=resourceTypeContainer.end(); it++)
 			{
 				st << "\n\t\t" << it->first.ID();

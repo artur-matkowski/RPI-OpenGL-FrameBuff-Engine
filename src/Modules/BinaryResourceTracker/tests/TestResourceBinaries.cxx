@@ -47,7 +47,7 @@ bool ResourceTXTProcessor::ProcessResource2Binary(const asapi::ResourceTracker& 
 		//																								//
 		//																								//
 		//																								//
-		///////////////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////////////
 
 		binaryResource = std::to_string( (uint64_t)subresourceID ) + ".txt.bin";
 
@@ -162,9 +162,9 @@ bool TestResourceBinaries::TestDataCohesion()
 	asapi::UniqueID id = tracker->GetSubResourceByIndex(0)->m_resourceID;
 
 
+
 	m_resourceSystem.InitializeResource<ResourceTXTSharedReference, ResourceTXTProcessor>( id, &m_testResource );
 
-	//asapi::ListFiles(resourceFiles, {".bin"}, asapi::ListingStrategy::blacklist, m_ResourceFilesDirPath );
 
 	return true;
 }
