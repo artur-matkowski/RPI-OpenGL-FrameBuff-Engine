@@ -35,10 +35,8 @@ namespace asapi
 
 	class ResourceTracker: public bfu::SerializableClassBase<ResourceTracker>
 	{
-		//friend class ResourceTrackerManager;
 #ifdef TESTS
 	public:
-		SerializableSubResourceData* GetSubResourceByIndex(int i) { return &(v_subresources[i]); }
 #endif
 		SERIALIZABLE_OBJ( ResourceTracker, UniqueID, m_resourceID );
 		SERIALIZABLE_VAR( ResourceTracker, string, m_filename );
@@ -105,6 +103,7 @@ namespace asapi
 		std::string GetResourceTrackerPath() const;
 
 		inline int CountSubresources() const { return v_subresources.size(); }
+		inline SerializableSubResourceData* GetSubResourceByIndex(int i) { return &(v_subresources[i]); }
 		bool FindSubResourceByInternalID( const std::string& in_id, asapi::UniqueID& out_ID ) const;
 
 	private:

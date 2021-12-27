@@ -21,6 +21,11 @@ namespace asapi
 
 		int ResourceReferenceCounter;
 	public:
+		BinaryResourceTracker(const UniqueID& binaryResourceID, const UniqueID& sourceResourceID, const std::string& displayName)
+			:m_binaryResourceID(binaryResourceID)
+			,m_resourceTrackerID(sourceResourceID)
+			,m_displayedName(displayName)
+		{};
 		BinaryResourceTracker(){};
 		~BinaryResourceTracker()
 		{}
@@ -33,7 +38,12 @@ namespace asapi
 			return false;
 		}
 		#endif
+
+
+		friend bfu::stream& operator<<(bfu::stream&, const BinaryResourceTracker& );
 	};
 
+
+	bfu::stream& operator<<(bfu::stream& st, const BinaryResourceTracker& obj);
 }
 #endif

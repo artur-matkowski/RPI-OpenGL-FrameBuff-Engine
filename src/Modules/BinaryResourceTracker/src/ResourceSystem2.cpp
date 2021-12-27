@@ -16,9 +16,5 @@ namespace asapi
 		s_projectPath = projectPath;
 		IResourceReferenceBase::SetProjectPath( projectPath );
 	}
-		
-	BinaryResourceTracker* ResourceSystemBase::RequestBinaryResourceTracker( UniqueID id )
-	{
-		return m_binaryResourceTrackers[id];
-	}
+	
 }

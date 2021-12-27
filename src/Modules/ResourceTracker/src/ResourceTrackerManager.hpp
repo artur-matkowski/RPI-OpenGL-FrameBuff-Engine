@@ -60,6 +60,8 @@ namespace asapi
 
 		inline int CountResouceTrackers() { return v_ResourceTrackers.size(); }
 		int CountSubresources();
+
+		virtual void GetBinaryResourceData(const char* path, UniqueID* out_resourceTrackerID, UniqueID* out_subresourceID, std::string* internalName) = 0;
 	};
 
 
@@ -130,6 +132,26 @@ namespace asapi
 																, out_resourceBinaries );
 
 			return rebuildedBinarie;
+		}
+
+	public:
+		virtual void GetBinaryResourceData(const char* path, UniqueID* out_resourceTrackerID, UniqueID* out_subresourceID, std::string* out_internalName) override
+		{
+			for(int i=0; i<v_ResourceTrackers.size(); i++)
+			{
+				for(int k=0; k<v_ResourceTrackers[i].CountSubresources(); ++k)
+				{
+					const std::string id_str = std::to_string( v_ResourceTrackers[i].GetSubResourceByIndex(k)->m_resourceID.ID() );
+					if( strstr( path, id_str.c_str() )!=0 )
+					{
+						*out_resourceTrackerID = v_ResourceTrackers[i].GetResourceID();
+						*out_subresourceID = v_ResourceTrackers[i].GetSubResourceByIndex(k)->m_resourceID;
+						*out_internalName = v_ResourceTrackers[i].GetSubResourceByIndex(k)->m_internalID;
+
+						return;
+					}
+				}
+			}
 		}
 	};
 
