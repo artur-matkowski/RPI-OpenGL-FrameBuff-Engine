@@ -16,13 +16,13 @@ namespace asapi
 	void MeshComponent::OnIsDirty()
 	{
 		SYSTEMS& systems = SYSTEMS::GetObject();
-		systems.RESOURCES.requestResource( &m_mesh, m_meshName.c_str() );
+		systems.ASSETS.requestResource( &m_mesh, m_meshName.c_str() );
 	}
 
 	#ifdef IS_EDITOR
 	void MeshComponent::OnGUI()
 	{
-		std::vector<std::string>* items = SYSTEMS::GetObject().RESOURCES.GetMeshesPaths();
+		std::vector<std::string>* items = SYSTEMS::GetObject().ASSETS.GetMeshesPaths();
 
 		if (ImGui::BeginCombo("Mesh_old resource", m_meshName.c_str()))
         {

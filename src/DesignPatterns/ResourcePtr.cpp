@@ -15,7 +15,7 @@ ResourcePtr<T>::~ResourcePtr()
 	    if( *reference == 1 )
 	    {
 	        delete pData;
-	        asapi::SYSTEMS::GetObject().RESOURCES.dispouseResource(this);
+	        asapi::SYSTEMS::GetObject().ASSETS.dispouseResource(this);
 	        pData = 0;
 	    }
 	    else if( *reference == 0 )
@@ -37,7 +37,7 @@ void ResourcePtr<T>::Rebuild(T* pValue)
 	    if( *reference == 1 )
 	    {
 	        delete pData;
-	        asapi::SYSTEMS::GetObject().RESOURCES.dispouseResource(this);
+	        asapi::SYSTEMS::GetObject().ASSETS.dispouseResource(this);
 	        pData = 0;
 	    }
 	    else if( *reference == 0 )
@@ -62,7 +62,7 @@ ResourcePtr<T>& ResourcePtr<T>::operator = (const ResourcePtr<T>& sp)
 		    if( *reference == 1 )
 		    {
 		        delete pData;
-	        asapi::SYSTEMS::GetObject().RESOURCES.dispouseResource(this);
+	        asapi::SYSTEMS::GetObject().ASSETS.dispouseResource(this);
 		        pData = 0;
 		    }
 		    else if( *reference == 0 )

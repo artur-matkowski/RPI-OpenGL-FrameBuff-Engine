@@ -92,12 +92,12 @@ namespace asapi
             }
             if (ImGui::BeginTabItem("Opened project info"))
             {
-                ImGui::LabelText("Currently opened project", SYSTEMS::GetObject().RESOURCES.GetProjectPath());
+                ImGui::LabelText("Currently opened project", SYSTEMS::GetObject().ASSETS.GetProjectPath());
                 ImGui::EndTabItem();
             }
             if (ImGui::BeginTabItem("Resources in use"))
             {
-                SYSTEMS::GetObject().RESOURCES.OnGUI();
+                SYSTEMS::GetObject().ASSETS.OnGUI();
                 ImGui::EndTabItem();
             }
             ImGui::EndTabBar();
@@ -110,7 +110,7 @@ namespace asapi
 
 	bool StatsWindow::OpenProject(const char* path)
 	{
-		SYSTEMS::GetObject().RESOURCES.SetProjectPath(path);
+		SYSTEMS::GetObject().ASSETS.SetProjectPath(path);
 
 		if ( SYSTEMS::GetObject().SCENE.OpenProject() )
 		{

@@ -58,7 +58,7 @@ namespace asapi
 
         char buff[1024];
         sprintf(buff, "%s/assets_int/meshes/%s.mmp"
-            , SYSTEMS::GetObject().RESOURCES.GetProjectPath()
+            , SYSTEMS::GetObject().ASSETS.GetProjectPath()
             , mesh->mName.C_Str());
 
         //allocte memory maped file to convert the data

@@ -261,7 +261,7 @@ namespace asapi
 
 		if (ImGui::BeginCombo("Texture resource", m_data->GetName()))
         {
-			std::vector<std::string>* items = SYSTEMS::GetObject().RESOURCES.GetTexturesPaths();
+			std::vector<std::string>* items = SYSTEMS::GetObject().ASSETS.GetTexturesPaths();
 
             for (int n = 0; n < items->size(); n++)
             {
@@ -273,7 +273,7 @@ namespace asapi
                 	{
 						log::debug << "updating texture name from: " << m_data->GetName() << " to: " << displayName << std::endl;
 
-						SYSTEMS::GetObject().RESOURCES.requestResource( &m_data, displayName );
+						SYSTEMS::GetObject().ASSETS.requestResource( &m_data, displayName );
 			    		m_isDirty = true;
 			    		ret = true;
                 	}
@@ -300,7 +300,7 @@ namespace asapi
 	template<>
 	void Uniform<ResourcePtr<Texture>>::sscanf(const char* str )
 	{
-		SYSTEMS::GetObject().RESOURCES.requestResource( &m_data, str );
+		SYSTEMS::GetObject().ASSETS.requestResource( &m_data, str );
 		m_isDirty = true;
 	}
 	template<>

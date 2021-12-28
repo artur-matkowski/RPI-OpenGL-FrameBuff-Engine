@@ -39,8 +39,8 @@ namespace asapi
 				{
 					strncpy(buff, argv[i+1], MAX_PATH_SIZE);
 				}
-				SYSTEMS::GetObject().RESOURCES.SetProjectPath(buff);
-				SYSTEMS::GetObject().RESOURCES.RefreshResources();
+				SYSTEMS::GetObject().ASSETS.SetProjectPath(buff);
+				SYSTEMS::GetObject().ASSETS.RefreshResources();
 				SYSTEMS::GetObject().cloaseApp();
 			}
 		}

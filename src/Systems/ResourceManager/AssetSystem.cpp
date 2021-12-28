@@ -341,7 +341,7 @@ namespace asapi{
 		    			strncpy((char*)it->second->GetMaterialName(), namebuff, MATERIAL_MAX_NAME_LENGTH-1);
 		    			it->second->OnIsDirty();
 		    			doRefreshResources = true;
-						SYSTEMS::GetObject().RESOURCES.OnRenderersDirty();
+						SYSTEMS::GetObject().ASSETS.OnRenderersDirty();
 	    			}
 		        	ImGui::TreePop();		    		
 		    	}

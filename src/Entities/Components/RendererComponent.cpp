@@ -19,7 +19,7 @@ namespace asapi
 	{
 		p_modelViewMat = ((Transform3D*)m_owner->GET_COMPONENT(Transform3D))->GetModelMatrix();
 		#ifdef IS_EDITOR
-		SYSTEMS::GetObject().RESOURCES.RegisterRendererComponent( this );
+		SYSTEMS::GetObject().ASSETS.RegisterRendererComponent( this );
 		#endif
 
 	}
@@ -27,7 +27,7 @@ namespace asapi
 	{
 		SYSTEMS::GetObject().RENDERER.UnRegisterRenderer( this );
 		#ifdef IS_EDITOR
-		SYSTEMS::GetObject().RESOURCES.UnRegisterRendererComponent( this );
+		SYSTEMS::GetObject().ASSETS.UnRegisterRendererComponent( this );
 		#endif
 	}
 	void RendererComponent::OnIsDirty()
@@ -39,12 +39,12 @@ namespace asapi
 			/* TODO
 			if( strcmp( m_material->GetMaterialName(), m_MaterialName.c_str() )!=0 )
 			{
-				systems.RESOURCES.requestResource( &m_material, m_MaterialName.c_str() );
+				systems.ASSETS.requestResource( &m_material, m_MaterialName.c_str() );
 			}*/
 		}
 		else
 		{
-			systems.RESOURCES.requestResource( &m_material, m_MaterialName.c_str() );			
+			systems.ASSETS.requestResource( &m_material, m_MaterialName.c_str() );			
 		}
 
 		p_meshComponent = (MeshComponent*)m_owner->GET_COMPONENT(MeshComponent);
@@ -100,7 +100,7 @@ namespace asapi
 	#ifdef IS_EDITOR
 	void RendererComponent::OnGUI()
 	{
-		std::vector<std::string>* items = SYSTEMS::GetObject().RESOURCES.GetMaterialsPaths();
+		std::vector<std::string>* items = SYSTEMS::GetObject().ASSETS.GetMaterialsPaths();
         bool isAltered = false;
 
 

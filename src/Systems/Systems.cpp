@@ -71,7 +71,7 @@ namespace asapi
 
 		PRIFILE( SCENE.Init( SYSTEMS::SYSTEMS_ALLOCATOR, argc, argv ); );
 
-		RESOURCES.Init(argc, argv);
+		ASSETS.Init(argc, argv);
 
 		#ifdef IS_EDITOR
 			STUDIO.Init(argc, argv);

@@ -25,7 +25,7 @@ namespace asapi
 	{
 		char path[MAX_PATH_SIZE];
 
-		snprintf(path, MAX_PATH_SIZE-1, "%s/assets_ext/materials/%s.mat", SYSTEMS::GetObject().RESOURCES.GetProjectPath(), materialName);
+		snprintf(path, MAX_PATH_SIZE-1, "%s/assets_ext/materials/%s.mat", SYSTEMS::GetObject().ASSETS.GetProjectPath(), materialName);
 
 
 		SYSTEMS::IO::MMAP mat;
@@ -67,7 +67,7 @@ namespace asapi
 		bfu::MemBlockBase* materialsMemBlock = systems.RENDERER.GetMaterialsMemBlock();
 		bfu::MemBlockBase* metadataMemBlock = systems.MEMORY.GetSystemsAllocator();
 
-		systems.RESOURCES.requestResource( &m_shader, shaderName );
+		systems.ASSETS.requestResource( &m_shader, shaderName );
 
 		m_shader->UseProgram();
 
@@ -138,7 +138,7 @@ namespace asapi
 		    	case GL_SAMPLER_2D:
 		    		p_uniforms[i] = (UniformInterface*)materialsMemBlock->allocate(1, sizeof(Uniform<ResourcePtr<Texture>>), alignof(Uniform<ResourcePtr<Texture>>));
 		    		new (p_uniforms[i]) Uniform<ResourcePtr<Texture>>(location, name, metadataMemBlock);
-					// systems.RESOURCES.requestResource( &texturePtr, "debug.png" );
+					// systems.ASSETS.requestResource( &texturePtr, "debug.png" );
 		   //  		((Uniform<ResourcePtr<Texture>>*)p_uniforms[i])->SetUniform(texturePtr);
 		    		break;		    		
 		    	default:
@@ -155,7 +155,7 @@ namespace asapi
 	#ifdef IS_EDITOR
 	void MaterialType::OnGUI()
 	{
-		std::vector<std::string>* items = SYSTEMS::GetObject().RESOURCES.GetShadersPaths();
+		std::vector<std::string>* items = SYSTEMS::GetObject().ASSETS.GetShadersPaths();
         bool isAltered = false;
 
 		if (ImGui::BeginCombo("Shader resource", m_shaderName))
@@ -201,7 +201,7 @@ namespace asapi
 
 		if( strlen(m_MaterialName)!=0  )
 		{
-			snprintf(extPath, MAX_PATH_SIZE-1, "%s/assets_ext/materials/%s.mat", SYSTEMS::GetObject().RESOURCES.GetProjectPath(), m_MaterialName);
+			snprintf(extPath, MAX_PATH_SIZE-1, "%s/assets_ext/materials/%s.mat", SYSTEMS::GetObject().ASSETS.GetProjectPath(), m_MaterialName);
 
 			SYSTEMS::IO::MMAP mat;
 
@@ -219,7 +219,7 @@ namespace asapi
 		{
 			log::warning << "Could not save material as name length is 0 " << std::endl;
 		}
-		SYSTEMS::GetObject().RESOURCES.OnRenderersDirty();
+		SYSTEMS::GetObject().ASSETS.OnRenderersDirty();
 	}
 	#endif
 

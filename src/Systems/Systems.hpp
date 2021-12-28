@@ -28,7 +28,7 @@ namespace asapi
 		bfu::EventSystem 		EVENTS;
 		RendererSystem 			RENDERER;
 		ContextBase				*CONTEXT;
-		AssetSystem				RESOURCES;
+		AssetSystem				ASSETS;
 		TimeSystem				TIME;
 		SceneSystem				SCENE;
 
