@@ -19,7 +19,7 @@ namespace asapi
 
 	class ResourceTrackerManagerBase
 	{
-	private:
+	protected:
 		std::string						s_assetsDirectoryPath;
 		std::string						s_projectDirectoryPath;
 		bfu::JSONSerializer				p_JSONSerializer;
@@ -35,10 +35,6 @@ namespace asapi
 											, const char* in_projectPath
 											, std::vector<asapi::SubResourceData>* out_resourceBinaries) = 0;
 
-#ifdef TESTS
-	public:
-		ResourceTracker* GetResourceTrackerByIndex(int i) { return &(v_ResourceTrackers[i]); }
-#endif
 		std::vector<ResourceTracker> 	v_ResourceTrackers;
 	public:
 
@@ -59,6 +55,7 @@ namespace asapi
 		friend bfu::stream& operator<<(bfu::stream&, const ResourceTrackerManagerBase& );
 
 		inline int CountResouceTrackers() { return v_ResourceTrackers.size(); }
+		ResourceTracker* GetResourceTrackerByIndex(int i) { return &(v_ResourceTrackers[i]); }
 		int CountSubresources();
 
 		virtual void GetBinaryResourceData(const char* path, UniqueID* out_resourceTrackerID, UniqueID* out_subresourceID, std::string* internalName) = 0;

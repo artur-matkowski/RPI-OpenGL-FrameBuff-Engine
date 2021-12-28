@@ -3,7 +3,7 @@
 #include "log.hpp"
 #include "object.hpp"
 
-#define TESTS
+//#define TESTS
 #include "ResourceTrackerManager.hpp"
 
 	class ResourceTXTProcessor

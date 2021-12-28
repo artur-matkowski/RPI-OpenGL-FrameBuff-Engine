@@ -105,17 +105,15 @@ namespace asapi
 		}
 
 
-
-#ifdef TESTS
-	public:
-		ResourceTracker* GetResourceTrackerByIndex(int i) { return m_resourceTrackerManager.GetResourceTrackerByIndex(i); }
-#endif
 	public:
 		ResourceSystem(){};
 		~ResourceSystem()
 		{
 
 		};
+
+		
+		ResourceTracker* GetResourceTrackerByIndex(int i) { return m_resourceTrackerManager.GetResourceTrackerByIndex(i); }
 
 		void Init()
 		{
@@ -220,6 +218,10 @@ namespace asapi
 			constexpr int tupleSize = std::tuple_size<std::tuple<ResourceProcessorsTs ...> >();
 			RefreshBinaryResourceTrackers_Is( std::make_integer_sequence<int, tupleSize>{} );
 		}
+
+		#ifdef IS_EDITOR
+		void OnGUI(){};
+		#endif
 
 
 		template<class... Ts>

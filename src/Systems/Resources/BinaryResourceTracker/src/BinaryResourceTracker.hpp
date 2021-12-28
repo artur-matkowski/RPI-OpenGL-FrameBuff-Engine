@@ -12,9 +12,8 @@ namespace asapi
 
 	class BinaryResourceTracker: public bfu::SerializableClassBase<BinaryResourceTracker>
 	{
-#ifdef TESTS
 	public:
-#endif		
+
 		SERIALIZABLE_OBJ( BinaryResourceTracker, UniqueID, m_binaryResourceID );
 		SERIALIZABLE_OBJ( BinaryResourceTracker, UniqueID, m_resourceTrackerID );
 		SERIALIZABLE_VAR( BinaryResourceTracker, string, m_displayedName );

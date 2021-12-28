@@ -63,6 +63,17 @@ namespace asapi
 			log::info << HELP << std::endl;
 			exit(0);
 		}
+
+		const char* projectPath = 0;
+
+		for(int i=1; i<argc; i++)
+		{
+			if( strcmp(argv[i], "-path")==0 )
+			{
+				projectPath = argv[i+1];
+			}
+		}
+
 		//srand (time(NULL)); // moved to TIME.RANDOM
 
 		PRIFILE( CONTEXT = ContextInit(); );
@@ -72,6 +83,12 @@ namespace asapi
 		PRIFILE( SCENE.Init( SYSTEMS::SYSTEMS_ALLOCATOR, argc, argv ); );
 
 		ASSETS.Init(argc, argv);
+		RESOURCES.Init();
+		if( projectPath!=0 )
+		{
+			RESOURCES.SetProjectPath( projectPath );
+		}
+
 
 		#ifdef IS_EDITOR
 			STUDIO.Init(argc, argv);

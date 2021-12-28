@@ -1,9 +1,9 @@
 #ifndef _H_TESTresBin
 #define _H_TESTresBin
 #include <vector>
-#define TESTS
+//#define TESTS
 #include "object.hpp"
-#include "ResourceSystem2.hpp"
+#include "ResourceSystem.hpp"
 
 
 class ResourceTXTProcessor
