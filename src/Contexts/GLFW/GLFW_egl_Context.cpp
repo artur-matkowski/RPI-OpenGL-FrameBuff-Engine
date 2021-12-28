@@ -396,7 +396,7 @@ namespace asapi
 		if(focused)
 		{
 			SYSTEMS::GetObject().RESOURCES.RefreshResources();
-			SYSTEMS::GetObject().ASSETS.RefreshResources();
+			//SYSTEMS::GetObject().ASSETS.RefreshResources();
 		}
 		#endif
 	}

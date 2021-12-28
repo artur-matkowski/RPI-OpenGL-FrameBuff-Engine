@@ -29,7 +29,6 @@ namespace asapi
 		RendererSystem 			RENDERER;
 		ContextBase				*CONTEXT;
 		ResourceSystem			RESOURCES;
-		ResourceTrackerManager	ASSETS;
 		TimeSystem				TIME;
 		SceneSystem				SCENE;
 
