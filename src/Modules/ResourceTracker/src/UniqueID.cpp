@@ -15,7 +15,14 @@ namespace asapi
 	UniqueID::UniqueID( const UniqueID& cp )
 	{
 		ID64 = cp.ID64;
+		m_ID = cp.ID64;
 	}
+	UniqueID::UniqueID( const uint64_t& value )
+	{
+		ID64 = value;
+		m_ID = value;
+	}
+
 
 	UniqueID::UniqueID( UniqueID&& cp ) noexcept
 	{

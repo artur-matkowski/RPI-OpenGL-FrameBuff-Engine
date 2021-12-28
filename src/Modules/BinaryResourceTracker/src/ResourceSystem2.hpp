@@ -58,12 +58,12 @@ namespace asapi
 			
 			ListFiles( paths, {typeExt}, ListingStrategy::whitelist, binaryDir.c_str() );
 
-			resourceTypeContainer.second.resize( paths.size() );
+			resourceTypeContainer.second.reserve( paths.size() );
 
 			for(int i=0; i<paths.size(); i++)
 			{
-				UniqueID resourcetrackerID;
-				UniqueID subResourcetrackerID;
+				UniqueID resourcetrackerID( (uint64_t)0 );
+				UniqueID subResourcetrackerID( (uint64_t)0 );
 				std::string displayName;
 
 				m_resourceTrackerManager.GetBinaryResourceData( paths[i].c_str(), &resourcetrackerID, &subResourcetrackerID, &displayName );
@@ -201,7 +201,7 @@ namespace asapi
 			for(auto it = resourceTypeContainer.second.begin(); it!=resourceTypeContainer.second.end(); it++)
 			{
 				i++;
-				st << "\n\t" << i << std::endl;
+				st << "\n\t" << i;
 				st << *it;
 			}
 		}

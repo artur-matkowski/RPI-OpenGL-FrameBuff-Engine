@@ -17,6 +17,7 @@ namespace asapi
 	public:
 		UniqueID();
 		UniqueID( const UniqueID& cp );
+		UniqueID( const uint64_t& );
 		UniqueID( UniqueID&& cp ) noexcept;
 		~UniqueID(){};
 

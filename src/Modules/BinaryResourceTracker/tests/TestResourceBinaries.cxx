@@ -146,9 +146,7 @@ void TestResourceBinaries::RemoveResource(const char* filename)
 }
 void TestResourceBinaries::AppendResource(const char* filename, const char* content)
 {
-
-	Command("echo %s > %s" ASSETS_DIR "/%s", content, m_testProjectPath, filename);
-
+	Command("printf '%s' >> %s" ASSETS_DIR "/%s", content, m_testProjectPath, filename);
 
 	removedResources++;
 }

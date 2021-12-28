@@ -21,9 +21,9 @@ namespace asapi
 
 		int ResourceReferenceCounter;
 	public:
-		BinaryResourceTracker(const UniqueID& binaryResourceID, const UniqueID& sourceResourceID, const std::string& displayName)
-			:m_binaryResourceID(binaryResourceID)
-			,m_resourceTrackerID(sourceResourceID)
+		BinaryResourceTracker(const UniqueID& resourceTrackerID, const UniqueID& subResourceID, const std::string& displayName)
+			:m_binaryResourceID(subResourceID)
+			,m_resourceTrackerID(resourceTrackerID)
 			,m_displayedName(displayName)
 		{};
 		BinaryResourceTracker(){};

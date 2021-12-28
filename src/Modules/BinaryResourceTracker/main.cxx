@@ -17,30 +17,32 @@ int main(int argc, char** argv)
 	TestResourceBinaries tests(argv[1]);
 
 
-	tests.CreateResource("resoruce1.txt", "randomData1");
+	tests.CreateResource("resoruce1.txt", "randomData1\nuut");
 	tests.CreateResource("resoruce2.txt", "randomData11");
 	tests.CreateResource("resoruce3.txt", "randomData111");
 
 	testsPassed = testsPassed && tests.TestDataCohesion();
-
 	log::debug << tests << std::endl;
-/*
+
 
 	tests.MoveResource("resoruce1.txt", "resoruce1new.txt");
 
 	testsPassed = testsPassed && tests.TestDataCohesion();
+	log::debug << tests << std::endl;
 
 
 	tests.RemoveResource("resoruce1new.txt");
 
 	testsPassed = testsPassed && tests.TestDataCohesion();
+	log::debug << tests << std::endl;
 
 
-	tests.AppendResource("resoruce2.txt", "randomData22");
+	tests.AppendResource("resoruce2.txt", "\nrandomData22");
 
 	testsPassed = testsPassed && tests.TestDataCohesion();
+	log::debug << tests << std::endl;
 
-*/
+
 
 
 	return testsPassed ? 0 : -1;
