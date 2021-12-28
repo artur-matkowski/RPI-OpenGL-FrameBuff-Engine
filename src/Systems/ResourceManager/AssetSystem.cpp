@@ -1,4 +1,4 @@
-#include "ResourceSystem.hpp"
+#include "AssetSystem.hpp"
 #include <dirent.h> 
 #include <sys/stat.h>
 #include "Systems.hpp"
@@ -9,7 +9,7 @@
 
 namespace asapi{
 
-	void ResourceSystem::Init(const int argc, const char** argv)
+	void AssetSystem::Init(const int argc, const char** argv)
 	{
 		p_materialsMemBlock = SYSTEMS::GetObject().RENDERER.GetMaterialsMemBlock();
 
@@ -39,7 +39,7 @@ namespace asapi{
 		}
 		#endif
 	}
-	void ResourceSystem::SetProjectPath(const char* path)
+	void AssetSystem::SetProjectPath(const char* path)
 	{
 		strncpy(m_ProjectPath, path, MAX_PATH_SIZE );
 		m_ProjectPath[MAX_PATH_SIZE-1] = '\0';
@@ -201,7 +201,7 @@ namespace asapi{
     	return ret;
 	}
 
-	void ResourceSystem::BuildDirectoryStructure()
+	void AssetSystem::BuildDirectoryStructure()
 	{
 		char dir_path[MAX_PATH_SIZE];
 		
@@ -230,7 +230,7 @@ namespace asapi{
 
 
 
-	void ResourceSystem::RefreshResources()
+	void AssetSystem::RefreshResources()
 	{
 		char buff[MAX_PATH_SIZE];
 
@@ -318,7 +318,7 @@ namespace asapi{
 		ScanDirForPaths(v_MeshesPaths, dir_path, ".mmp");
 	}
 
-	void ResourceSystem::OnGUI()
+	void AssetSystem::OnGUI()
 	{
 		static char  namebuff[MATERIAL_MAX_NAME_LENGTH] = {'\0'};
 		bool doRefreshResources = false;
@@ -356,11 +356,11 @@ namespace asapi{
 		// if(doRefreshResources)
 		//     RefreshResources();
 	}
-	void ResourceSystem::RegisterRendererComponent(RendererComponent* obj)
+	void AssetSystem::RegisterRendererComponent(RendererComponent* obj)
 	{
 		v_rendererComponentsOnScene.push_back(obj);
 	}
-	void ResourceSystem::UnRegisterRendererComponent(RendererComponent* obj)
+	void AssetSystem::UnRegisterRendererComponent(RendererComponent* obj)
 	{
 		for(auto it = v_rendererComponentsOnScene.begin(); it!=v_rendererComponentsOnScene.end(); ++it)
 		{
@@ -371,7 +371,7 @@ namespace asapi{
 			}
 		}
 	}
-	void ResourceSystem::OnRenderersDirty()
+	void AssetSystem::OnRenderersDirty()
 	{
 		for(int i=0; i<v_rendererComponentsOnScene.size(); ++i)
 		{

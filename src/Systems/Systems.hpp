@@ -7,7 +7,7 @@
 #include "object.hpp"
 #include "RendererSystem.hpp"
 #include "Context.hpp"
-#include "ResourceSystem.hpp"
+#include "AssetSystem.hpp"
 #include "ResourceTrackerManager.hpp"
 #include "TimeSystem.hpp"
 #include "MemoryManagmentSystem.hpp"
@@ -28,7 +28,7 @@ namespace asapi
 		bfu::EventSystem 		EVENTS;
 		RendererSystem 			RENDERER;
 		ContextBase				*CONTEXT;
-		ResourceSystem			RESOURCES;
+		AssetSystem			RESOURCES;
 		TimeSystem				TIME;
 		SceneSystem				SCENE;
 

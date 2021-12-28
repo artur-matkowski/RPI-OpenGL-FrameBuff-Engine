@@ -11,7 +11,7 @@
 namespace asapi
 {
 
-	class ResourceSystem
+	class AssetSystem
 	{
 		bfu::MemBlockBase* 									p_materialsMemBlock;
 
