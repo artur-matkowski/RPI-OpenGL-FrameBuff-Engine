@@ -201,7 +201,7 @@ namespace asapi
 		const std::string binaryDirectory = _ProjectPath + RESOURCE_BINARIES_DIR;
 		std::vector< std::string > paths;
 
-		ListFiles(paths, {".bin"}, ListingStrategy::whitelist, binaryDirectory.c_str() );
+		ListFiles(paths, {".bin",".json"}, ListingStrategy::whitelist, binaryDirectory.c_str() );
 
 		for(int i=0; i<v_subresources.size(); ++i)
 		{

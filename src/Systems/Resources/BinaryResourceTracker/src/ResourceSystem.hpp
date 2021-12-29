@@ -18,7 +18,6 @@ namespace asapi
 		~ResourceSystemBase(){};
 
 		void Init();
-		void SetProjectPath(const char* projectPath);
 		inline const char* GetProjectPath() const { return s_projectPath.c_str(); }
 
 		virtual BinaryResourceTracker* RequestBinaryResourceTracker( const UniqueID& ) = 0;
@@ -158,12 +157,14 @@ namespace asapi
 	{
 		auto& resourceTypeContainer = std::get<I>( m_binaryResourceTrackers );
 		const char* typeExt = std::tuple_element_t<I, std::tuple<ResourceProcessorsTs ...>>::GetBinaryOutputFileExtension();
+		char typeExtBuff[64];
 		std::vector<std::string> paths;
 		std::string binaryDir = s_projectPath + RESOURCE_BINARIES_DIR;
 
+		snprintf(typeExtBuff, 64, "%s.bin", typeExt);
 		resourceTypeContainer.second.clear();
 		
-		ListFiles( paths, {typeExt}, ListingStrategy::whitelist, binaryDir.c_str() );
+		ListFiles( paths, {typeExtBuff}, ListingStrategy::whitelist, binaryDir.c_str() );
 
 		resourceTypeContainer.second.reserve( paths.size() );
 
@@ -173,9 +174,15 @@ namespace asapi
 			UniqueID subResourcetrackerID( (uint64_t)0 );
 			std::string displayName;
 
-			m_resourceTrackerManager.GetBinaryResourceData( paths[i].c_str(), &resourcetrackerID, &subResourcetrackerID, &displayName );
+			m_resourceTrackerManager.GetBinaryResourceData( paths[i].c_str()
+														, &resourcetrackerID
+														, &subResourcetrackerID
+														, &displayName );
 
-			resourceTypeContainer.second.emplace_back( resourcetrackerID, subResourcetrackerID, displayName );
+			resourceTypeContainer.second.emplace_back( resourcetrackerID
+														, subResourcetrackerID
+														, displayName
+														, typeExt );
 		}
 	}
 
@@ -196,7 +203,7 @@ namespace asapi
 
 		for(auto it = resourceTypeContainer.second.begin(); it!=resourceTypeContainer.second.end(); it++)
 		{
-			if( it->m_binaryResourceID == id )
+			if( it->GetSubResourceID() == id )
 			{
 				out = &(*it);
 				return;
@@ -219,7 +226,9 @@ namespace asapi
 	void ResourceSystem<ResourceProcessorsTs ...>::SetProjectPath(const char* projectPath)
 	{
 		m_resourceTrackerManager.SetProjectPath( projectPath );
-		ResourceSystemBase::SetProjectPath( projectPath );
+		BinaryResourceTracker::SetProjectPath( projectPath );
+		IResourceReferenceBase::SetProjectPath( projectPath );		
+		s_projectPath = projectPath;
 
 		RefreshResources();
 	}
@@ -325,24 +334,21 @@ namespace asapi
 					ImGui::Text("%d", i);
 					
                     ImGui::TableSetColumnIndex(1);
-					ImGui::Text("%llu", it->m_resourceTrackerID.ID() );
+					ImGui::Text("%llu", it->GetResourceID().ID() );
 					
                     ImGui::TableSetColumnIndex(2);
-					ImGui::Text("%llu", it->m_binaryResourceID.ID() );
+					ImGui::Text("%llu", it->GetSubResourceID().ID() );
 
                     ImGui::TableSetColumnIndex(3);
                     char buff[128];
-                    strncpy(buff, it->m_displayedName.c_str(), 128);
-					//ImGui::Text("%llu", it->m_binaryResourceID);
+                    strncpy(buff, it->GetDisplayName(), 128);
 					if( ImGui::InputText("", buff, 128) )
 					{
-						it->m_displayedName = buff;
+						it->SetDisplayName( buff );
 					}
-
 
 					++i;
 				}
-
 
 				ImGui::EndTable();
 			}

@@ -3,18 +3,10 @@
 
 namespace asapi
 {
-	//std::string ResourceSystemBase::s_projectPath;
-
 	void ResourceSystemBase::Init()
 	{
 		IResourceReferenceBase::SetResourceSystemReference( this );
 		ResourceSharedReferenceInterface::SetResourceSystemReference( this );
-	}
-
-	void ResourceSystemBase::SetProjectPath(const char* projectPath)
-	{
-		s_projectPath = projectPath;
-		IResourceReferenceBase::SetProjectPath( projectPath );
 	}
 	
 }

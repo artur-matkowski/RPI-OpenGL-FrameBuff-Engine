@@ -1,0 +1,18 @@
+{
+"m_resourceID": {
+"m_ID": 1462878940833826811
+}, 
+"m_filename": "test.txt", 
+"m_resTrackerFilename": "1462878940833826811.res.json", 
+"m_path": "test.txt", 
+"m_content_hash": "503126878d17fcd6bde7df320ff6eb7c278a1c42f30014a03b17f3dd0c023c1d", 
+"m_size": 2, 
+"m_modified_epoch": 1640810489, 
+"m_modified_ns": 41014943, 
+"v_subresources": [{
+"m_resourceID": {
+"m_ID": 3126616170267723771
+}, 
+"m_internalID": "0"
+}]
+}

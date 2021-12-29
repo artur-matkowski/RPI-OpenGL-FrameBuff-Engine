@@ -41,7 +41,7 @@ namespace asapi
 
 			void Close();
 
-			bool IsValid(){ return fd!=-1; }
+			bool IsValid(){ return fd!=-1 && data!=nullptr; }
 			void* Data(){ return data; }
 			uint32_t Size(){ return sb.st_size; }
 		};
