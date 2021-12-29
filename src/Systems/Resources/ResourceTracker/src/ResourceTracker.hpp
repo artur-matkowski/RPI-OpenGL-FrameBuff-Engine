@@ -23,6 +23,7 @@ namespace asapi
 	public:
 		SERIALIZABLE_OBJ( SerializableSubResourceData, UniqueID, m_resourceID );
 		SERIALIZABLE_VAR( SerializableSubResourceData, string, m_internalID ); //subresource identifier to destenquishe subresources in resource file
+		
 
 
 		SerializableSubResourceData();

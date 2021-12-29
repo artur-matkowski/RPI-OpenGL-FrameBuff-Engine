@@ -4,6 +4,7 @@
 #include <map>
 #include "ResourceTrackerManager.hpp"
 #include "ResourceSharedReference.hpp"
+#include "imgui.h"
 
 namespace asapi
 {
@@ -45,146 +46,47 @@ namespace asapi
 
 
 		template<int I>
-		void RefreshBinaryResourceTrackers_I()
-		{
-			//log::warning << "RefreshBinaryResourceTrackers_Is" << std::endl;
-
-			auto& resourceTypeContainer = std::get<I>( m_binaryResourceTrackers );
-			const char* typeExt = std::tuple_element_t<I, std::tuple<ResourceProcessorsTs ...>>::GetBinaryOutputFileExtension();
-			std::vector<std::string> paths;
-			std::string binaryDir = s_projectPath + RESOURCE_BINARIES_DIR;
-
-			resourceTypeContainer.second.clear();
-			
-			ListFiles( paths, {typeExt}, ListingStrategy::whitelist, binaryDir.c_str() );
-
-			resourceTypeContainer.second.reserve( paths.size() );
-
-			for(int i=0; i<paths.size(); i++)
-			{
-				UniqueID resourcetrackerID( (uint64_t)0 );
-				UniqueID subResourcetrackerID( (uint64_t)0 );
-				std::string displayName;
-
-				m_resourceTrackerManager.GetBinaryResourceData( paths[i].c_str(), &resourcetrackerID, &subResourcetrackerID, &displayName );
-
-				resourceTypeContainer.second.emplace_back( resourcetrackerID, subResourcetrackerID, displayName );
-			}
-		}
-
+		inline void 		RefreshBinaryResourceTrackers_I();
 
 		template<int... Is>
-		inline void RefreshBinaryResourceTrackers_Is( std::integer_sequence<int, Is...> const & )
-		{
-			RefreshBinaryResourceTrackers_I<Is...>();
-		}
+		inline void 		RefreshBinaryResourceTrackers_Is( std::integer_sequence<int, Is...> const & );
+
+
 
 
 		template<int K>
-		void RequestBinaryResourceTracker_K( const UniqueID& id, BinaryResourceTracker* out )
-		{
-			auto resourceTypeContainer = std::get<K>( m_binaryResourceTrackers );			
-
-			for(auto it = resourceTypeContainer.second.begin(); it!=resourceTypeContainer.second.end(); it++)
-			{
-				if( it->m_binaryResourceID == id )
-				{
-					out = &(*it);
-					return;
-				}
-			}
-		}
+		void 				RequestBinaryResourceTracker_K( const UniqueID& id, BinaryResourceTracker* out );
 
 		template<int... Is>
-		void RequestBinaryResourceTracker_Is( std::integer_sequence<int, Is...> const &, const UniqueID& id, BinaryResourceTracker* out )
-		{
-			if( out!=nullptr )
-				return;
-
-			RequestBinaryResourceTracker_K<Is...>( id, out );
-		}
+		void 				RequestBinaryResourceTracker_Is( std::integer_sequence<int, Is...> const &, const UniqueID& id, BinaryResourceTracker* out );
 
 
 	public:
-		ResourceSystem(){};
-		~ResourceSystem()
-		{
-
-		};
+							ResourceSystem()						{};
+							~ResourceSystem()						{};
 
 		
-		ResourceTracker* GetResourceTrackerByIndex(int i) { return m_resourceTrackerManager.GetResourceTrackerByIndex(i); }
+		ResourceTracker* 	GetResourceTrackerByIndex(int i) 		{ return m_resourceTrackerManager.GetResourceTrackerByIndex(i); }
 
-		void Init()
-		{
-			ResourceSystemBase::Init();
-		}
-		void SetProjectPath(const char* projectPath)
-		{
-			m_resourceTrackerManager.SetProjectPath( projectPath );
-			ResourceSystemBase::SetProjectPath( projectPath );
-		}
+		void 				Init()									{ ResourceSystemBase::Init(); }
+		void 				SetProjectPath(const char* projectPath);
 
-		template<class SharedResourceReferenceT, class ResourceProcessorT>
-		void InitializeResource( UniqueID resourceID, SharedResourceReferenceT* out)
-		{
-			SharedResourceReferenceT::InitializeObject( resourceID, RequestResourceReference<ResourceProcessorT>, out);
-		}
 
-		template<class U>
-		static ResourceReference<U>* RequestResourceReference( UniqueID resourceID, ResourceSystemBase* resSys )
-		{
-			ResourceSystem<ResourceProcessorsTs ...>* _this = (ResourceSystem<ResourceProcessorsTs ...>*)resSys;
+		template
+			< class SharedResourceReferenceT
+			, class ResourceProcessorT >
+		void 				InitializeResource( UniqueID resourceID
+											, SharedResourceReferenceT* out);
 
-			auto& resourceTypeContainer = std::get< std::map< UniqueID, ResourceReference<U>*  > >( _this->m_resources );
 
-			auto it_resourceSearchResoult = resourceTypeContainer.find( resourceID );
-			if( it_resourceSearchResoult != resourceTypeContainer.end() ) // resource already loaded
-			{
-				return it_resourceSearchResoult->second;
-			}
-			else //resource not used so far
-			{
-				resourceTypeContainer.emplace( std::make_pair(resourceID, new ResourceReference<U>( resourceID ) ) );
+		template
+			<class U>
+		static ResourceReference<U>* RequestResourceReference( UniqueID resourceID, ResourceSystemBase* resSys );
 
-				//auto& resourceTypeContainer = std::get< std::map< UniqueID, ResourceReference<U>*  > >( _this->m_resources );
-
-				auto it = resourceTypeContainer.find( resourceID );
-				
-				if( it != resourceTypeContainer.end() ) // resource loaded
-				{
-					return it->second;
-				}
-			}
-
-			log::warning << "Could not find resource: " << resourceID.ID() << std::endl;
-			return nullptr;
-		}
-
-		virtual BinaryResourceTracker* RequestBinaryResourceTracker( const UniqueID& id ) override
-		{
-			BinaryResourceTracker* ret = nullptr;
-
-			constexpr int tupleSize = std::tuple_size<std::tuple<ResourceProcessorsTs ...> >();
-			RequestBinaryResourceTracker_Is(std::make_integer_sequence<int, tupleSize>{}, id, ret );
-
-			return ret;
-		}
+		virtual BinaryResourceTracker* RequestBinaryResourceTracker( const UniqueID& id ) override;
 
 		template<int K>
-		void PrintResourceReferencesInUse( bfu::stream& st ) const
-		{
-			auto resourceTypeContainer = std::get<K>( m_resources );
-			const char* resourceExtension = std::tuple_element_t<K, std::tuple<ResourceProcessorsTs ...>>::GetSuportedResourceFileExtension();
-
-			st << "\n\tResource printout for resource type :";
-			st << resourceExtension;
-			st << ":";
-			for(auto it = resourceTypeContainer.begin(); it!=resourceTypeContainer.end(); it++)
-			{
-				st << "\n\t\t" << it->first.ID();
-			}
-		}
+		void 						PrintResourceReferencesInUse( bfu::stream& st ) const;
 
 		template<int K>
 		void PrintBinaryResourceTracker( bfu::stream& st ) const
@@ -220,13 +122,249 @@ namespace asapi
 		}
 
 		#ifdef IS_EDITOR
-		void OnGUI(){};
+		template<int I>
+		inline void 		OnGUI_I();
+
+		template<int... Is>
+		inline void 		OnGUI_Is( std::integer_sequence<int, Is...> const & );
+
+		void OnGUI();
 		#endif
 
 
 		template<class... Ts>
 		friend bfu::stream& operator<<(bfu::stream&, const ResourceSystem<Ts ...>& );
 	};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	template<class... ResourceProcessorsTs>
+	template<int I>
+	void ResourceSystem<ResourceProcessorsTs ...>::RefreshBinaryResourceTrackers_I()
+	{
+		auto& resourceTypeContainer = std::get<I>( m_binaryResourceTrackers );
+		const char* typeExt = std::tuple_element_t<I, std::tuple<ResourceProcessorsTs ...>>::GetBinaryOutputFileExtension();
+		std::vector<std::string> paths;
+		std::string binaryDir = s_projectPath + RESOURCE_BINARIES_DIR;
+
+		resourceTypeContainer.second.clear();
+		
+		ListFiles( paths, {typeExt}, ListingStrategy::whitelist, binaryDir.c_str() );
+
+		resourceTypeContainer.second.reserve( paths.size() );
+
+		for(int i=0; i<paths.size(); i++)
+		{
+			UniqueID resourcetrackerID( (uint64_t)0 );
+			UniqueID subResourcetrackerID( (uint64_t)0 );
+			std::string displayName;
+
+			m_resourceTrackerManager.GetBinaryResourceData( paths[i].c_str(), &resourcetrackerID, &subResourcetrackerID, &displayName );
+
+			resourceTypeContainer.second.emplace_back( resourcetrackerID, subResourcetrackerID, displayName );
+		}
+	}
+
+
+	template<class... ResourceProcessorsTs>
+	template<int... Is>
+	void ResourceSystem<ResourceProcessorsTs ...>::RefreshBinaryResourceTrackers_Is( std::integer_sequence<int, Is...> const & )
+	{
+		RefreshBinaryResourceTrackers_I<Is...>();
+	}
+
+
+	template<class... ResourceProcessorsTs>
+	template<int K>
+	void ResourceSystem<ResourceProcessorsTs ...>::RequestBinaryResourceTracker_K( const UniqueID& id, BinaryResourceTracker* out )
+	{
+		auto resourceTypeContainer = std::get<K>( m_binaryResourceTrackers );			
+
+		for(auto it = resourceTypeContainer.second.begin(); it!=resourceTypeContainer.second.end(); it++)
+		{
+			if( it->m_binaryResourceID == id )
+			{
+				out = &(*it);
+				return;
+			}
+		}
+	}
+
+
+	template<class... ResourceProcessorsTs>
+	template<int... Is>
+	void ResourceSystem<ResourceProcessorsTs ...>::RequestBinaryResourceTracker_Is( std::integer_sequence<int, Is...> const &, const UniqueID& id, BinaryResourceTracker* out )
+	{
+		if( out!=nullptr )
+			return;
+
+		RequestBinaryResourceTracker_K<Is...>( id, out );
+	}
+
+	template<class... ResourceProcessorsTs>
+	void ResourceSystem<ResourceProcessorsTs ...>::SetProjectPath(const char* projectPath)
+	{
+		m_resourceTrackerManager.SetProjectPath( projectPath );
+		ResourceSystemBase::SetProjectPath( projectPath );
+
+		RefreshResources();
+	}
+
+	template<class... ResourceProcessorsTs>
+	template<class SharedResourceReferenceT, class ResourceProcessorT>
+	void ResourceSystem<ResourceProcessorsTs ...>::InitializeResource( UniqueID resourceID, SharedResourceReferenceT* out)
+	{
+		SharedResourceReferenceT::InitializeObject( resourceID, RequestResourceReference<ResourceProcessorT>, out);
+	}
+
+
+	template<class... ResourceProcessorsTs>
+	template<class U>
+	ResourceReference<U>* ResourceSystem<ResourceProcessorsTs ...>::RequestResourceReference( UniqueID resourceID, ResourceSystemBase* resSys )
+	{
+		ResourceSystem<ResourceProcessorsTs ...>* _this = (ResourceSystem<ResourceProcessorsTs ...>*)resSys;
+
+		auto& resourceTypeContainer = std::get< std::map< UniqueID, ResourceReference<U>*  > >( _this->m_resources );
+
+		auto it_resourceSearchResoult = resourceTypeContainer.find( resourceID );
+		if( it_resourceSearchResoult != resourceTypeContainer.end() ) // resource already loaded
+		{
+			return it_resourceSearchResoult->second;
+		}
+		else //resource not used so far
+		{
+			resourceTypeContainer.emplace( std::make_pair(resourceID, new ResourceReference<U>( resourceID ) ) );
+
+			//auto& resourceTypeContainer = std::get< std::map< UniqueID, ResourceReference<U>*  > >( _this->m_resources );
+
+			auto it = resourceTypeContainer.find( resourceID );
+			
+			if( it != resourceTypeContainer.end() ) // resource loaded
+			{
+				return it->second;
+			}
+		}
+
+		log::warning << "Could not find resource: " << resourceID.ID() << std::endl;
+		return nullptr;
+	}
+
+	template<class... ResourceProcessorsTs>
+	BinaryResourceTracker* ResourceSystem<ResourceProcessorsTs ...>::RequestBinaryResourceTracker( const UniqueID& id )
+	{
+		BinaryResourceTracker* ret = nullptr;
+
+		constexpr int tupleSize = std::tuple_size<std::tuple<ResourceProcessorsTs ...> >();
+		RequestBinaryResourceTracker_Is(std::make_integer_sequence<int, tupleSize>{}, id, ret );
+
+		return ret;
+	}
+
+
+	template<class... ResourceProcessorsTs>
+	template<int K>
+	void ResourceSystem<ResourceProcessorsTs ...>::PrintResourceReferencesInUse( bfu::stream& st ) const
+	{
+		auto resourceTypeContainer = std::get<K>( m_resources );
+		const char* resourceExtension = std::tuple_element_t<K, std::tuple<ResourceProcessorsTs ...>>::GetSuportedResourceFileExtension();
+
+		st << "\n\tResource printout for resource type :";
+		st << resourceExtension;
+		st << ":";
+		for(auto it = resourceTypeContainer.begin(); it!=resourceTypeContainer.end(); it++)
+		{
+			st << "\n\t\t" << it->first.ID();
+		}
+	}
+
+
+	#ifdef IS_EDITOR
+
+	template<class... ResourceProcessorsTs>
+	template<int I>
+	void ResourceSystem<ResourceProcessorsTs ...>::OnGUI_I()
+	{
+		auto& resourceTypeContainer = std::get<I>( m_binaryResourceTrackers );
+		const char* typeExt = std::tuple_element_t<I, std::tuple<ResourceProcessorsTs ...>>::GetBinaryOutputFileExtension();
+		char resourceType[128];
+		static ImGuiTableFlags flags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable;
+
+		sprintf(resourceType, "Resources found for resource type: %s", typeExt);
+
+		if (ImGui::CollapsingHeader(resourceType))
+		{
+			if (ImGui::BeginTable("Resources:", 4, flags))
+			{
+				ImGui::TableSetupColumn("#", ImGuiTableColumnFlags_NoResize);
+				ImGui::TableSetupColumn("Input Resource ID", ImGuiTableColumnFlags_NoResize);
+				ImGui::TableSetupColumn("Binary Resource ID", ImGuiTableColumnFlags_NoResize);
+				ImGui::TableSetupColumn("Resource Display Name", ImGuiTableColumnFlags_WidthStretch);
+				ImGui::TableHeadersRow();
+
+
+				int i=0;
+				for(auto it = resourceTypeContainer.second.begin(); it!=resourceTypeContainer.second.end(); it++)
+				{
+					ImGui::TableNextRow();
+
+                    ImGui::TableSetColumnIndex(0);
+					ImGui::Text("%d", i);
+					
+                    ImGui::TableSetColumnIndex(1);
+					ImGui::Text("%llu", it->m_resourceTrackerID.ID() );
+					
+                    ImGui::TableSetColumnIndex(2);
+					ImGui::Text("%llu", it->m_binaryResourceID.ID() );
+
+                    ImGui::TableSetColumnIndex(3);
+                    char buff[128];
+                    strncpy(buff, it->m_displayedName.c_str(), 128);
+					//ImGui::Text("%llu", it->m_binaryResourceID);
+					if( ImGui::InputText("", buff, 128) )
+					{
+						it->m_displayedName = buff;
+					}
+
+
+					++i;
+				}
+
+
+				ImGui::EndTable();
+			}
+		}
+	}
+
+	template<class... ResourceProcessorsTs>
+	template<int... Is>
+	void ResourceSystem<ResourceProcessorsTs ...>::OnGUI_Is( std::integer_sequence<int, Is...> const & )
+	{
+		OnGUI_I<Is...>();
+	}
+
+	template<class... ResourceProcessorsTs>
+	void ResourceSystem<ResourceProcessorsTs ...>::OnGUI()
+	{
+		constexpr int tupleSize = std::tuple_size<std::tuple<ResourceProcessorsTs ...> >();
+		OnGUI_Is( std::make_integer_sequence<int, tupleSize>{} );
+	}
+	#endif
+
+
 
 	template<class... Ts>
 	bfu::stream& operator<<(bfu::stream& st, const ResourceSystem<Ts ...>& obj)
