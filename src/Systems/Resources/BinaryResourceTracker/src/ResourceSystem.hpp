@@ -341,8 +341,10 @@ namespace asapi
 
                     ImGui::TableSetColumnIndex(3);
                     char buff[128];
+                    char tagbuff[64];
+                    snprintf( tagbuff, 64, "%d##<-Resource Name", i);
                     strncpy(buff, it->GetDisplayName(), 128);
-					if( ImGui::InputText("", buff, 128) )
+					if( ImGui::InputText(tagbuff, buff, 128) )
 					{
 						it->SetDisplayName( buff );
 					}
