@@ -2,6 +2,7 @@
 #include <string>
 #include "ResourceTrackerManager.hpp"
 #include "ResourceSharedReference.hpp"
+#include "imgui.h"
 
 namespace asapi
 {
@@ -23,6 +24,13 @@ namespace asapi
 		static const char* GetBinaryOutputFileExtension();
 
 		friend bfu::stream& operator<<(bfu::stream&, const ResourceTXTProcessor& );	
+
+
+		static void OnGUI(void* handle)
+		{
+			//ImGui::Text( data[0].c_str() );
+			//ImGui::Text( "data[0].c_str()" );
+		}
 	};
 
 
@@ -37,4 +45,5 @@ namespace asapi
 			cp.m_resourcePtr = nullptr;
 		}
 	};
+
 }

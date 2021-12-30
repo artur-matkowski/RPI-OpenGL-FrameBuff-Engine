@@ -27,22 +27,6 @@ namespace asapi
 		ResourceReference<ResourceProcessorT>*			m_resourcePtr = nullptr;
 		RequestCallbackT 								m_callback;
 
-/*
-		ResourceSharedReferenceBase(IResourceReferenceBase* resourcePtr) // used by resourceSystem
-		{
-			//TODO
-			m_resourcePtr = resourcePtr;
-			m_resourcePtr->IncreaseReferenceCounter();
-		}
-
-		ResourceSharedReferenceBase(UniqueID binaryResourceID, RequestCallbackT callback) // used by resourceSystem
-		{
-			//TODO
-			m_binaryResourceID = binaryResourceID;
-			m_callback = callback;
-			m_resourcePtr = m_callback(m_binaryResourceID, s_resourceSystem);
-			m_resourcePtr->IncreaseReferenceCounter();
-		}*/
 
 	public:
 		static void InitializeObject(UniqueID binaryResourceID, RequestCallbackT callback, T* out)
@@ -78,9 +62,9 @@ namespace asapi
 		#ifdef IS_EDITOR
 		void OnGUI()
 		{
-			/*
-			ImGUI.Label("Resource type: %s", m_resourceType);
+			//ImGUI.Label("Resource type: %s", m_resourceType);
 			
+			/*
 			UniqueID resourceID;
 			//TODO
 			if( rendererResource.OnGUI( &resourceID, m_resourceType ) ) //changed resourceID

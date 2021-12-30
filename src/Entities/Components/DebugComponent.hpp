@@ -6,11 +6,14 @@
 
 namespace asapi
 {
+	using bfu::string;
 	class DebugComponent: public ComponentBase<DebugComponent>
 	{
 	protected:
+		//ResourceTXTSharedReference m_txtResourceRef;
 
-		Mesh_old mesh;
+		SERIALIZABLE_VAR(DebugComponent, string, m_meshName );
+
 	public:
 		DebugComponent(bfu::MemBlockBase* mBlock);
 		DebugComponent(const DebugComponent&) = delete;
@@ -20,10 +23,9 @@ namespace asapi
 		//virtual void OnAttach() override;
 		virtual void OnIsDirty() override;
 		#ifdef IS_EDITOR
-		virtual void OnGUI() override;
+		//virtual void OnGUI() override;
 		#endif
 
-		void Render();
 	};
 }
 
