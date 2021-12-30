@@ -13,10 +13,10 @@ namespace asapi
 		char buff[MAX_PATH_SIZE];
 		SYSTEMS::IO::MMAP vert, frag;
 
-		snprintf(buff, MAX_PATH_SIZE, "%s/assets_int/shaders/%s.vert.glsl", SYSTEMS::GetObject().RESOURCES.GetProjectPath(), filename);
+		snprintf(buff, MAX_PATH_SIZE, "%s/assets_int/shaders/%s.vert.glsl", SYSTEMS::GetObject().ASSETS.GetProjectPath(), filename);
 		vert.InitForRead(buff);
 
-		snprintf(buff, MAX_PATH_SIZE, "%s/assets_int/shaders/%s.frag.glsl", SYSTEMS::GetObject().RESOURCES.GetProjectPath(), filename);
+		snprintf(buff, MAX_PATH_SIZE, "%s/assets_int/shaders/%s.frag.glsl", SYSTEMS::GetObject().ASSETS.GetProjectPath(), filename);
 		frag.InitForRead(buff);
 
 		return RendererSystem::ProcessShader((char*)vert.Data(), (char*)frag.Data(), filename);
@@ -29,7 +29,7 @@ namespace asapi
 
 	void Shader::Compile(const char* dest, const char* source)
 	{
-		FILE *src, *dst;
+		::FILE *src, *dst;
 		long int srcSize, dstSize;
 
 		src = fopen (source,"rb");

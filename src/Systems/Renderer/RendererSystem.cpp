@@ -9,9 +9,12 @@
 #include "Systems.hpp"
 
 #include "RendererComponent.hpp"
+#include "DebugComponent.hpp"
+
+
 #include "Texture.hpp"
 #include "Shader.hpp"
-#include "Mesh.hpp"
+#include "Mesh_old.hpp"
 
 
 #define ATTR_LOC_position 	0
@@ -81,6 +84,13 @@ namespace asapi{
 			{
 				(*it)->Render(&m_projectionMatrix, &viewMatrix);
 			}
+/*
+			if( debugComponent!=0 )
+			{
+				DebugComponent* dc = (DebugComponent*)debugComponent;
+				dc->Render();
+			}
+			*/
 		}
 
 	}
@@ -117,14 +127,14 @@ namespace asapi{
 //                                                                                                            //
 //                                                                                                            //
 //                                                                                                            //
-// Mesh processing section                                                                                    //
+// Mesh_old processing section                                                                                    //
 //                                                                                                            //
 //                                                                                                            //
 //                                                                                                            //
 //                                                                                                            //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	void RendererSystem::ProcessMesh(Mesh* mesh, void* data)
+	void RendererSystem::ProcessMesh(Mesh_old* mesh, void* data)
 	{
 		
         bool*       fp_hasPosition = (bool*) data;
@@ -218,7 +228,7 @@ namespace asapi{
         mesh->h_meshHandle = (tMeshHandle)config;
 	}
 
-	void RendererSystem::DispouseMesh(Mesh* mesh)
+	void RendererSystem::DispouseMesh(Mesh_old* mesh)
 	{
 		uint32_t* config = (uint32_t*)mesh->h_meshHandle;
 		if( config != nullptr)

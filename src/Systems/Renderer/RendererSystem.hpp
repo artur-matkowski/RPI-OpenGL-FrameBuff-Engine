@@ -17,7 +17,7 @@ namespace asapi{
 	struct _ShaderHandle: public _RendererHandle{};
 	typedef _ShaderHandle* tShaderHandle;
 
-	class Mesh;
+	class Mesh_old;
 	class Shader;
 
 	class RendererSystem: public object
@@ -38,8 +38,8 @@ namespace asapi{
 		void Render();
 
 
-		static void ProcessMesh(Mesh*, void*);
-		static void DispouseMesh(Mesh*);
+		static void ProcessMesh(Mesh_old*, void*);
+		static void DispouseMesh(Mesh_old*);
 
 		static Shader* ProcessShader(const char* vertex_source, const char* gragment_source, const char* shader_name);
 		static void DispouseShader(Shader*);
@@ -53,6 +53,9 @@ namespace asapi{
 		void GetResolution(glm::ivec2& out){ out = m_resolution; }
 		void UpdateProjectionMatrix(glm::mat4 projectionMatrix) { m_projectionMatrix = projectionMatrix; }
 		void UpdateViewMatrix(glm::mat4* viewMatrix) { m_viewMatrix = viewMatrix; }
+
+
+		void * debugComponent = 0;
 	};
 
 }

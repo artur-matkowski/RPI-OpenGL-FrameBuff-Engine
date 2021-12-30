@@ -41,10 +41,6 @@ namespace asapi
 #endif
 
 
-void* operator new(std::size_t size);
-void operator delete(void* p) noexcept;
-void SetNewAllocator(bfu::MemBlockBase* allocator);
-
 #define PROTECTED(x) protected: x; public:
 #define MAX_PATH_SIZE 1024
 #define MAX_FILENAME_SIZE 256

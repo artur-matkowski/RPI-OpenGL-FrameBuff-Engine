@@ -1,4 +1,4 @@
-#include "Mesh.hpp"
+#include "Mesh_old.hpp"
 #include <cstring>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -7,7 +7,7 @@
 
 namespace asapi
 {
-	Mesh::Mesh(const char* path)
+	Mesh_old::Mesh_old(const char* path)
 	{
         char buff[MAX_PATH_SIZE];
         sprintf(buff, "%s", path);
@@ -21,7 +21,7 @@ namespace asapi
         }
 	}
 
-	Mesh::~Mesh()
+	Mesh_old::~Mesh_old()
 	{
         RendererSystem::DispouseMesh(this);
 	}
@@ -58,7 +58,7 @@ namespace asapi
 
         char buff[1024];
         sprintf(buff, "%s/assets_int/meshes/%s.mmp"
-            , SYSTEMS::GetObject().RESOURCES.GetProjectPath()
+            , SYSTEMS::GetObject().ASSETS.GetProjectPath()
             , mesh->mName.C_Str());
 
         //allocte memory maped file to convert the data
@@ -138,7 +138,7 @@ namespace asapi
 
         #ifndef IS_TARGET
 
-        log::debug << "Mesh " << mesh->mName.C_Str() << " has " << *fp_arraySize << " floats:" << std::endl;
+        log::debug << "Mesh_old " << mesh->mName.C_Str() << " has " << *fp_arraySize << " floats:" << std::endl;
         for(int i=0; i<mesh->mNumVertices; ++i)
         {
             int index = i * vertexfields;
@@ -203,7 +203,7 @@ namespace asapi
 		processNode(scene->mRootNode, scene);
 	}  
 
-	void Mesh::Compile(const char* dest, const char* source)
+	void Mesh_old::Compile(const char* dest, const char* source)
 	{
 		loadModel(std::string(source));
 

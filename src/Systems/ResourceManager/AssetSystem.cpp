@@ -1,4 +1,4 @@
-#include "ResourceSystem.hpp"
+#include "AssetSystem.hpp"
 #include <dirent.h> 
 #include <sys/stat.h>
 #include "Systems.hpp"
@@ -9,7 +9,7 @@
 
 namespace asapi{
 
-	void ResourceSystem::Init(const int argc, const char** argv)
+	void AssetSystem::Init(const int argc, const char** argv)
 	{
 		p_materialsMemBlock = SYSTEMS::GetObject().RENDERER.GetMaterialsMemBlock();
 
@@ -39,7 +39,7 @@ namespace asapi{
 		}
 		#endif
 	}
-	void ResourceSystem::SetProjectPath(const char* path)
+	void AssetSystem::SetProjectPath(const char* path)
 	{
 		strncpy(m_ProjectPath, path, MAX_PATH_SIZE );
 		m_ProjectPath[MAX_PATH_SIZE-1] = '\0';
@@ -201,7 +201,7 @@ namespace asapi{
     	return ret;
 	}
 
-	void ResourceSystem::BuildDirectoryStructure()
+	void AssetSystem::BuildDirectoryStructure()
 	{
 		char dir_path[MAX_PATH_SIZE];
 		
@@ -226,56 +226,12 @@ namespace asapi{
 		mkdir(dir_path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 	}
 
-	void ResourceSystem::RefreshAssets()
+
+
+
+
+	void AssetSystem::RefreshResources()
 	{
-		char dir_path[MAX_PATH_SIZE];
-
-		std::vector<std::string> assetsPaths;
-		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
-		strncat(dir_path, "/assets", MAX_PATH_SIZE-1);
-		ListFiles(assetsPaths, dir_path);
-
-		for(int i=0; i<assetsPaths.size(); ++i)
-		{
-			std::string hash = AssetMetaDataSocket::GetHash( assetsPaths[i].c_str() );
-			eAssetImportType importState = AssetMetaDataSocket::AssetImportState( assetsPaths[i].c_str(), hash );
-
-			switch(importState)
-			{
-				case New:
-					{
-						AssetMetaDataSocket asset = AssetMetaDataSocket::OnAssetAdded( assetsPaths[i].c_str(), hash );
-						m_assetsMap[hash] = asset;
-					}
-					break;
-				case Moved:
-					{
-						auto resoult = m_assetsMap.find( hash );
-						AssetMetaDataSocket::OnAssetMoved( assetsPaths[i].c_str(), &resoult->second );
-					}
-					break;
-			}
-		}
-	}
-
-	AssetMetaDataSocket* ResourceSystem::GetAssetMetaDataSocketByHash(const std::string& hash)
-	{
-		AssetMetaDataSocket* ret = nullptr;
-
-		auto it = m_assetsMap.find(hash);
-
-		if( it!=m_assetsMap.end() )
-		{
-			ret = &it->second;
-		}
-
-		return ret;
-	}
-
-	void ResourceSystem::RefreshResources()
-	{
-		RefreshAssets();
-
 		char buff[MAX_PATH_SIZE];
 
 		if(strcmp(m_ProjectPath, ".")==0)
@@ -334,7 +290,7 @@ namespace asapi{
 		{
 			if( ! IsInternalAssetUpToDate(MeshesPaths[i].c_str(), buff) )
 			{
-				Mesh::Compile(buff, MeshesPaths[i].c_str());
+				Mesh_old::Compile(buff, MeshesPaths[i].c_str());
 			}
 		}
 
@@ -362,7 +318,7 @@ namespace asapi{
 		ScanDirForPaths(v_MeshesPaths, dir_path, ".mmp");
 	}
 
-	void ResourceSystem::OnGUI()
+	void AssetSystem::OnGUI()
 	{
 		static char  namebuff[MATERIAL_MAX_NAME_LENGTH] = {'\0'};
 		bool doRefreshResources = false;
@@ -385,7 +341,7 @@ namespace asapi{
 		    			strncpy((char*)it->second->GetMaterialName(), namebuff, MATERIAL_MAX_NAME_LENGTH-1);
 		    			it->second->OnIsDirty();
 		    			doRefreshResources = true;
-						SYSTEMS::GetObject().RESOURCES.OnRenderersDirty();
+						SYSTEMS::GetObject().ASSETS.OnRenderersDirty();
 	    			}
 		        	ImGui::TreePop();		    		
 		    	}
@@ -400,11 +356,11 @@ namespace asapi{
 		// if(doRefreshResources)
 		//     RefreshResources();
 	}
-	void ResourceSystem::RegisterRendererComponent(RendererComponent* obj)
+	void AssetSystem::RegisterRendererComponent(RendererComponent* obj)
 	{
 		v_rendererComponentsOnScene.push_back(obj);
 	}
-	void ResourceSystem::UnRegisterRendererComponent(RendererComponent* obj)
+	void AssetSystem::UnRegisterRendererComponent(RendererComponent* obj)
 	{
 		for(auto it = v_rendererComponentsOnScene.begin(); it!=v_rendererComponentsOnScene.end(); ++it)
 		{
@@ -415,7 +371,7 @@ namespace asapi{
 			}
 		}
 	}
-	void ResourceSystem::OnRenderersDirty()
+	void AssetSystem::OnRenderersDirty()
 	{
 		for(int i=0; i<v_rendererComponentsOnScene.size(); ++i)
 		{

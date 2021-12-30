@@ -6,25 +6,23 @@
 #include "Texture.hpp"
 #include "Shader.hpp"
 #include "MaterialType.hpp"
-#include "Mesh.hpp"
-#include "AssetMetaDataSocket.hpp"
+#include "Mesh_old.hpp"
 
 namespace asapi
 {
 
-	class ResourceSystem
+	class AssetSystem
 	{
 		bfu::MemBlockBase* 									p_materialsMemBlock;
 
 		std::map<bfu::string, ResourcePtr<Texture> > 		m_textures;
 		std::map<bfu::string, ResourcePtr<Shader> > 		m_shaders;
 		std::map<bfu::string, ResourcePtr<MaterialType> > 	m_materials;
-		std::map<bfu::string, ResourcePtr<Mesh> > 			m_meshes;
+		std::map<bfu::string, ResourcePtr<Mesh_old> > 			m_meshes;
 
 		char 												m_ProjectPath[MAX_PATH_SIZE] = ".";
 
 		#ifdef IS_EDITOR
-		std::map<std::string, AssetMetaDataSocket>			m_assetsMap;
 
 		std::vector<std::string>							v_TexturesPaths;
 		std::vector<std::string>							v_MaterialsPaths;
@@ -42,8 +40,6 @@ namespace asapi
 		const char* GetProjectPath(){ return m_ProjectPath; }
 
 		#ifdef IS_EDITOR
-		void RefreshAssets();
-		AssetMetaDataSocket* GetAssetMetaDataSocketByHash(const std::string& hash);
 
 
 		void RefreshResources();
@@ -175,17 +171,17 @@ namespace asapi
 			}
 		}
 
-		bool requestResource(ResourcePtr<Mesh>* res, const char* str)
+		bool requestResource(ResourcePtr<Mesh_old>* res, const char* str)
 		{
 			bfu::string id(str);
 
-			std::map<bfu::string, ResourcePtr<Mesh> >::iterator it = m_meshes.find(id);
+			std::map<bfu::string, ResourcePtr<Mesh_old> >::iterator it = m_meshes.find(id);
 
 			if( it==m_meshes.end() )
 			{
 				char buff[MAX_PATH_SIZE];
 				snprintf(buff, MAX_PATH_SIZE, "%s/assets_int/meshes/%s", m_ProjectPath, str);
-				res->Rebuild( new Mesh(buff) );
+				res->Rebuild( new Mesh_old(buff) );
 				m_meshes[id] = *res;
 			}
 			else
@@ -196,9 +192,9 @@ namespace asapi
 			return true;
 		}
 
-		void dispouseResource(ResourcePtr<Mesh>* res)
+		void dispouseResource(ResourcePtr<Mesh_old>* res)
 		{
-			for(std::map<bfu::string, ResourcePtr<Mesh> >::iterator it = m_meshes.begin() ;
+			for(std::map<bfu::string, ResourcePtr<Mesh_old> >::iterator it = m_meshes.begin() ;
 				it!=m_meshes.end();
 				++it)
 			{

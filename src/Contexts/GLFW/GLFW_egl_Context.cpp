@@ -395,8 +395,8 @@ namespace asapi
 		#ifdef IS_EDITOR
 		if(focused)
 		{
+			SYSTEMS::GetObject().ASSETS.RefreshResources();
 			SYSTEMS::GetObject().RESOURCES.RefreshResources();
-			SYSTEMS::GetObject().ASSETS.RefreshAssets();
 		}
 		#endif
 	}

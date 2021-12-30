@@ -43,7 +43,7 @@ namespace asapi
 	protected:
 
 	public:	
-		ComponentBase(bfu::MemBlockBase* mBlock)
+		ComponentBase(bfu::MemBlockBase* mBlock /*= bfu::StdAllocatorMemBlock::GetMemBlock()*/ )
 			:ComponentInterface(mBlock)
 		{
 		};

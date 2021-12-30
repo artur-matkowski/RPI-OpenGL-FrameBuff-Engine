@@ -2,7 +2,7 @@
 #define _H_EditorSystem
 #ifdef IS_EDITOR
 #include "glm.hpp"
-#include "Mesh.hpp"
+#include "Mesh_old.hpp"
 #include "MaterialType.hpp"
 #include "UniformBase.hpp"
 
