@@ -12,7 +12,9 @@ namespace asapi
 	protected:
 		//ResourceTXTSharedReference m_txtResourceRef;
 
-		SERIALIZABLE_VAR(DebugComponent, string, m_meshName );
+		SERIALIZABLE_VAR_VEC(DebugComponent, string, m_meshName );
+		SERIALIZABLE_OBJ(DebugComponent, UniqueID, m_test );
+		SERIALIZABLE_VAR_VEC(DebugComponent, bool, m_boolV );
 
 	public:
 		DebugComponent(bfu::MemBlockBase* mBlock);

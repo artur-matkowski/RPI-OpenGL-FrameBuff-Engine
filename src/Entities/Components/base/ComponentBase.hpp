@@ -4,6 +4,7 @@
 #include <cxxabi.h>
 #include <vector>
 #include "bfu.hpp"
+#include "ImGUI_Serializer.hpp"
 
 namespace asapi
 {
@@ -70,6 +71,16 @@ namespace asapi
 			T* _obj = (T*)this;
 			bfu::MemBlockBase::DeallocateUnknown(_obj);
 		}
+
+		
+		#ifdef IS_EDITOR
+		virtual void OnGUI()
+		{
+			ImGUI_Serializer imgui_serializer;
+
+			imgui_serializer.Serialize( this );
+		}
+		#endif
 	};
 
 	template<class T>
