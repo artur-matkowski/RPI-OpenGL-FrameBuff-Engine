@@ -71,7 +71,9 @@ namespace asapi
 
 	#ifdef IS_EDITOR
 	void ComponentInterface::OnGUI()
-	{}
+	{
+		ImGui::Text("ComponentInterface::OnGUI()");
+	}
 	#endif
 
 }
