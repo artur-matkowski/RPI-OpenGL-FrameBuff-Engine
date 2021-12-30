@@ -8,9 +8,6 @@
 
 namespace asapi
 {
-
-
-
 	template<class T>
 	static void AllocateAndInit( bfu::MemBlockBase* mBlock, ComponentTranslatePointers& ret )
 	{

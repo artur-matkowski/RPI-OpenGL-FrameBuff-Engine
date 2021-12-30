@@ -67,7 +67,6 @@ namespace asapi
 		}
 
 
-
 		virtual void PostDeserializationCallback() override
 		{
 			if( m_resourcePtr!=0 )
