@@ -41,13 +41,6 @@ namespace asapi
 	\
 	buff = *_data;\
 
-	struct ARGS
-	{
-		bfu::SerializableClassInterface* 	data = nullptr;
-		bfu::ClassInfo* 					it = nullptr;
-		void* 								dataPtr = nullptr;
-		const char*							name = nullptr;
-	};
 
 
 		void ImGUI_Serializer::Serialize( bfu::SerializableClassInterface* data )

@@ -1,3 +1,5 @@
+#ifndef H_ResourceTXTSharedReference
+#define H_ResourceTXTSharedReference
 #include <vector>
 #include <string>
 #include "ResourceTrackerManager.hpp"
@@ -47,3 +49,5 @@ namespace asapi
 	};
 
 }
+
+#endif

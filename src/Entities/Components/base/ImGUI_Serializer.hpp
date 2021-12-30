@@ -1,7 +1,18 @@
+#ifndef H_ImGUI_Serializer
+#define H_ImGUI_Serializer
+
 #include "bfu.hpp"
 
 namespace asapi
 {
+	struct ARGS
+	{
+		bfu::SerializableClassInterface* 	data = nullptr;
+		bfu::ClassInfo* 					it = nullptr;
+		void* 								dataPtr = nullptr;
+		const char*							name = nullptr;
+	};
+
 	class ImGUI_Serializer: public bfu::SerializerBase
 	{
 	public:
@@ -81,3 +92,5 @@ namespace asapi
 		virtual void DESERIALIZER_SECTION Deserialize( bfu::SerializableVector<int64_t>* data ) override{};
 	};
 }
+
+#endif

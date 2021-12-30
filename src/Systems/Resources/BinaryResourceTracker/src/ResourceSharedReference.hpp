@@ -2,6 +2,10 @@
 #define H_ResourceSharedReference
 #include "bfu.hpp"
 #include "ResourceReference.hpp"
+#ifdef IS_EDITOR
+#include "imgui.h"
+#endif
+#include "ImGUI_Serializer.hpp"
 
 namespace asapi
 {
@@ -19,7 +23,10 @@ namespace asapi
 	class ResourceSharedReferenceBase: public bfu::SerializableClassBase<T>, public ResourceSharedReferenceInterface
 	{
 	protected:
-		SERIALIZABLE_OBJ( ResourceSharedReferenceBase, UniqueID, m_binaryResourceID );
+		SERIALIZABLE_OBJ( T, UniqueID, m_binaryResourceID );
+
+
+
 
 		typedef ResourceReference<ResourceProcessorT>* (*RequestCallbackT)( UniqueID, ResourceSystemBase* );
 
@@ -59,26 +66,6 @@ namespace asapi
 				m_resourcePtr->DecreaseReferenceCounter();
 		}
 
-		#ifdef IS_EDITOR
-		void OnGUI()
-		{
-			//ImGUI.Label("Resource type: %s", m_resourceType);
-			
-			/*
-			UniqueID resourceID;
-			//TODO
-			if( rendererResource.OnGUI( &resourceID, m_resourceType ) ) //changed resourceID
-			{
-				m_binaryResourceID = resourceID;
-				rendererResource = requestConsumerResourceReference(resourceID);
-				rendererResource.OnUnload2Renderer();
-				rendererResource.OnLoad2Renderer();
-			}
-
-			//optional
-			RenderTYPEpreview();*/
-		};
-		#endif
 
 
 		virtual void PostDeserializationCallback() override

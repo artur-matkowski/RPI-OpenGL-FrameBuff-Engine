@@ -3,6 +3,7 @@
 #include "ComponentBase.hpp"
 #include "glm.hpp"
 #include "Mesh_old.hpp"
+#include "ResourceTXTProcessor.hpp"
 
 namespace asapi
 {
@@ -14,6 +15,7 @@ namespace asapi
 
 		SERIALIZABLE_VAR_VEC(DebugComponent, string, m_meshName );
 		SERIALIZABLE_OBJ(DebugComponent, UniqueID, m_test );
+		SERIALIZABLE_OBJ(DebugComponent, ResourceTXTSharedReference, m_testResource );
 		SERIALIZABLE_VAR_VEC(DebugComponent, bool, m_boolV );
 
 	public:
