@@ -104,7 +104,7 @@ namespace asapi
 		void 						PrintResourceReferencesInUse( bfu::stream& st ) const;
 
 		template<int K>
-		void PrintBinaryResourceTracker( bfu::stream& st ) const
+		void 						PrintBinaryResourceTracker( bfu::stream& st ) const
 		{
 			auto resourceTypeContainer = std::get<K>( m_binaryResourceTrackers );
 			const char* resourceExtension = std::tuple_element_t<K, std::tuple<ResourceProcessorsTs ...>>::GetSuportedResourceFileExtension();
@@ -149,6 +149,12 @@ namespace asapi
 
 		template<class... Ts>
 		friend bfu::stream& operator<<(bfu::stream&, const ResourceSystem<Ts ...>& );
+
+
+		#ifdef IS_EDITOR
+		template<class ResourceProcessorT>
+		static void OnGUI_SelectResource( const UniqueID& in_resourceID, UniqueID* out_newResourceID );
+		#endif
 	};
 
 
@@ -185,10 +191,15 @@ namespace asapi
 	{
 		auto& resourceTypeContainer = std::get<I>( m_binaryResourceTrackers );
 		using ResourceProcessorT = std::tuple_element_t<I, std::tuple<ResourceProcessorsTs ...>>;
+
 		using RequestCallbackT = typename ResourceProcessorBase<ResourceProcessorT>::RequestCallbackT;
 		RequestCallbackT requestCallback = (RequestCallbackT) &ResourceSystem<ResourceProcessorsTs ...>::sRequestResourceReference<ResourceProcessorT>;
-		ResourceProcessorT::Initialize( requestCallback );
 		
+		using SelectCallbackT = typename ResourceProcessorBase<ResourceProcessorT>::OnGUI_SelectResourceCallbackT;
+		SelectCallbackT selectCallback = (SelectCallbackT) &ResourceSystem<ResourceProcessorsTs ...>::OnGUI_SelectResource<ResourceProcessorT>;
+		
+
+		ResourceProcessorT::Initialize( requestCallback, selectCallback );
 	}
 
 	template<class... ResourceProcessorsTs>
@@ -435,6 +446,17 @@ namespace asapi
 		
 		return st;
 	}
+
+
+
+	#ifdef IS_EDITOR
+	template<class... ResourceProcesorTs>
+	template<class ResourceProcessorT>
+	void ResourceSystem<ResourceProcesorTs ...>::OnGUI_SelectResource( const UniqueID& in_resourceID, UniqueID* out_newResourceID )
+	{
+		ImGui::Text("ResourceSystem<ResourceProcesorTs>::OnGUI_SelectResource");
+	}
+	#endif
 }
 
 #endif

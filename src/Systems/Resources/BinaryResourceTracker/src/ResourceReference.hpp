@@ -4,6 +4,7 @@
 #include "ResourceTrackerManager.hpp"
 #include "object.hpp"
 
+
 namespace asapi
 {
 	class ResourceSystemBase;
@@ -28,11 +29,6 @@ namespace asapi
 		void DecreaseReferenceCounter();
 
 		int GetReferenceCount() const { return m_referenceCounter; }
-
-
-		#ifdef IS_EDITOR
-		virtual bool OnGUI( UniqueID* out_newResource ) = 0;
-		#endif
 	};
 
 	template<class T>
@@ -95,15 +91,6 @@ namespace asapi
 		{
 			T::GetSuportedFilesExtensions( out_suportedFileExtensions );
 		}
-		
-		#ifdef IS_EDITOR
-		virtual bool OnGUI( UniqueID* out_newResource ) override
-		{
-			//return T::OnGUI( out_newResource );
-			return false;
-		}
-		#endif
-
 	};
 }
 

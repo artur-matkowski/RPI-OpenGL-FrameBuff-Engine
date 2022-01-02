@@ -5,7 +5,9 @@
 #include "ResourceTrackerManager.hpp"
 #include "ResourceSharedReference.hpp"
 #include "ResourceProcessorBase.hpp"
+#ifdef IS_EDITOR
 #include "imgui.h"
+#endif
 
 namespace asapi
 {
@@ -28,12 +30,14 @@ namespace asapi
 
 		friend bfu::stream& operator<<(bfu::stream&, const ResourceTXTProcessor& );	
 
-
+		#ifdef IS_EDITOR
 		static void OnGUI(void* handle)
 		{
-			//ImGui::Text( data[0].c_str() );
+			for(int i=0; i<data.size(); i++)
+				ImGui::Text( data[i].c_str() );
 			//ImGui::Text( "data[0].c_str()" );
 		}
+		#endif
 	};
 
 

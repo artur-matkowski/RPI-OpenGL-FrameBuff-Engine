@@ -66,7 +66,15 @@ namespace asapi
 		#ifdef IS_EDITOR
 		virtual void OnGUI()
 		{
-			ImGui::Text("ResourceSharedReferenceBase::OnGui() %llu", m_binaryResourceID);
+			UniqueID newID;
+			
+			ResourceProcessorT::OnGUI_SelectResourceByProxy( m_binaryResourceID, &newID );
+
+			if( m_binaryResourceID != newID )
+			{
+				m_binaryResourceID = newID;
+				PostDeserializationCallback();
+			}
 		}
 		#endif
 
