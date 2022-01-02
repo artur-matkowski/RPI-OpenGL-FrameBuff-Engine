@@ -4,11 +4,12 @@
 #include <string>
 #include "ResourceTrackerManager.hpp"
 #include "ResourceSharedReference.hpp"
+#include "ResourceProcessorBase.hpp"
 #include "imgui.h"
 
 namespace asapi
 {
-	class ResourceTXTProcessor
+	class ResourceTXTProcessor: public ResourceProcessorBase<ResourceTXTProcessor>
 	{
 		static std::vector<std::string> data;
 	public:

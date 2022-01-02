@@ -4,6 +4,7 @@
 #include <map>
 #include "ResourceTrackerManager.hpp"
 #include "ResourceSharedReference.hpp"
+#include "ResourceProcessorBase.hpp"
 #include "imgui.h"
 
 namespace asapi
@@ -21,7 +22,7 @@ namespace asapi
 		inline const char* GetProjectPath() const { return s_projectPath.c_str(); }
 
 		virtual BinaryResourceTracker* RequestBinaryResourceTracker( const UniqueID& ) = 0;
-		inline void ScheduleGarbageCollection() { m_needGarbageCollection = true; }
+		inline void ScheduleGarbageCollection() { m_needGarbageCollection = true; }		
 	};
 
 
@@ -42,6 +43,15 @@ namespace asapi
 		ResourceTrackerManager<ResourceProcessorsTs ...>					m_resourceTrackerManager;
 		std::tuple< std::pair< ResourceProcessorsTs ..., std::vector< BinaryResourceTracker > > >
 																			m_binaryResourceTrackers;
+
+
+		template<int I>
+		inline void 		InitializeResourceProcessorT_I();
+
+		template<int... Is>
+		inline void 		InitializeResourceProcessorT_Is( std::integer_sequence<int, Is...> const & );
+
+
 
 
 		template<int I>
@@ -67,7 +77,7 @@ namespace asapi
 		
 		ResourceTracker* 	GetResourceTrackerByIndex(int i) 		{ return m_resourceTrackerManager.GetResourceTrackerByIndex(i); }
 
-		void 				Init()									{ ResourceSystemBase::Init(); }
+		void 				Init();
 		void 				SetProjectPath(const char* projectPath);
 
 
@@ -79,8 +89,14 @@ namespace asapi
 
 
 		template
-			<class U>
-		static ResourceReference<U>* RequestResourceReference( UniqueID resourceID, ResourceSystemBase* resSys );
+			<class ResourceProcessorT>
+		ResourceReference<ResourceProcessorT>* RequestResourceReference( UniqueID resourceID );
+
+
+		template
+			<class ResourceProcessorT>
+		static ResourceReference<ResourceProcessorT>* sRequestResourceReference( ResourceSystemBase* system, UniqueID resourceID );
+
 
 		virtual BinaryResourceTracker* RequestBinaryResourceTracker( const UniqueID& id ) override;
 
@@ -149,6 +165,38 @@ namespace asapi
 
 
 
+
+
+
+	template<class... ResourceProcessorsTs>
+	void ResourceSystem<ResourceProcessorsTs ...>::Init() 
+	{ 
+		ResourceSystemBase::Init(); 
+
+
+		constexpr int tupleSize = std::tuple_size<std::tuple<ResourceProcessorsTs ...> >();
+		InitializeResourceProcessorT_Is( std::make_integer_sequence<int, tupleSize>{} );
+	}
+
+
+	template<class... ResourceProcessorsTs>
+	template<int I>
+	void ResourceSystem<ResourceProcessorsTs ...>::InitializeResourceProcessorT_I()
+	{
+		auto& resourceTypeContainer = std::get<I>( m_binaryResourceTrackers );
+		using ResourceProcessorT = std::tuple_element_t<I, std::tuple<ResourceProcessorsTs ...>>;
+		using RequestCallbackT = typename ResourceProcessorBase<ResourceProcessorT>::RequestCallbackT;
+		RequestCallbackT requestCallback = (RequestCallbackT) &ResourceSystem<ResourceProcessorsTs ...>::sRequestResourceReference<ResourceProcessorT>;
+		ResourceProcessorT::Initialize( requestCallback );
+		
+	}
+
+	template<class... ResourceProcessorsTs>
+	template<int... Is>
+	void ResourceSystem<ResourceProcessorsTs ...>::InitializeResourceProcessorT_Is( std::integer_sequence<int, Is...> const & )
+	{
+		InitializeResourceProcessorT_I<Is...>();
+	}
 
 
 	template<class... ResourceProcessorsTs>
@@ -237,17 +285,15 @@ namespace asapi
 	template<class SharedResourceReferenceT, class ResourceProcessorT>
 	void ResourceSystem<ResourceProcessorsTs ...>::InitializeResource( UniqueID resourceID, SharedResourceReferenceT* out)
 	{
-		SharedResourceReferenceT::InitializeObject( resourceID, RequestResourceReference<ResourceProcessorT>, out);
+		SharedResourceReferenceT::InitializeObject( resourceID, out);
 	}
 
 
 	template<class... ResourceProcessorsTs>
 	template<class U>
-	ResourceReference<U>* ResourceSystem<ResourceProcessorsTs ...>::RequestResourceReference( UniqueID resourceID, ResourceSystemBase* resSys )
+	ResourceReference<U>* ResourceSystem<ResourceProcessorsTs ...>::RequestResourceReference( UniqueID resourceID )
 	{
-		ResourceSystem<ResourceProcessorsTs ...>* _this = (ResourceSystem<ResourceProcessorsTs ...>*)resSys;
-
-		auto& resourceTypeContainer = std::get< std::map< UniqueID, ResourceReference<U>*  > >( _this->m_resources );
+		auto& resourceTypeContainer = std::get< std::map< UniqueID, ResourceReference<U>* > >( this->m_resources );
 
 		auto it_resourceSearchResoult = resourceTypeContainer.find( resourceID );
 		if( it_resourceSearchResoult != resourceTypeContainer.end() ) // resource already loaded
@@ -257,8 +303,6 @@ namespace asapi
 		else //resource not used so far
 		{
 			resourceTypeContainer.emplace( std::make_pair(resourceID, new ResourceReference<U>( resourceID ) ) );
-
-			//auto& resourceTypeContainer = std::get< std::map< UniqueID, ResourceReference<U>*  > >( _this->m_resources );
 
 			auto it = resourceTypeContainer.find( resourceID );
 			
@@ -270,6 +314,15 @@ namespace asapi
 
 		log::warning << "Could not find resource: " << resourceID.ID() << std::endl;
 		return nullptr;
+	}
+
+	template<class... ResourceProcessorsTs>
+	template<class U>
+	ResourceReference<U>* ResourceSystem<ResourceProcessorsTs ...>::sRequestResourceReference( ResourceSystemBase* system, UniqueID resourceID )
+	{
+		ResourceSystem<ResourceProcessorsTs ...>* _this = (ResourceSystem<ResourceProcessorsTs ...>*)system;
+
+		return _this->RequestResourceReference<U>(resourceID);
 	}
 
 	template<class... ResourceProcessorsTs>

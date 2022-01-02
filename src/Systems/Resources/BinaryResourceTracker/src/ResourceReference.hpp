@@ -38,6 +38,7 @@ namespace asapi
 	template<class T>
 	class ResourceReference: public IResourceReferenceBase
 	{
+	protected:
 		#ifdef IS_EDITOR
 		BinaryResourceTracker* m_binrestracker = nullptr;
 		#endif
@@ -46,7 +47,7 @@ namespace asapi
 		ResourceReference( const UniqueID& id)
 		{
 			#ifdef IS_EDITOR
-			if( m_binrestracker!=0 && id==m_binrestracker->m_binaryResourceID )
+			if( m_binrestracker!=0 && id==m_binrestracker->GetSubResourceID() )
 			{
 				log::warning << "Traying to reaply the same resource. That makes no sense, check your code." << std::endl;
 				return;

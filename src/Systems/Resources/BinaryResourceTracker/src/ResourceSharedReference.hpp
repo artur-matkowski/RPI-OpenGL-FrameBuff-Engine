@@ -6,15 +6,17 @@
 #include "imgui.h"
 #endif
 #include "ImGUI_Serializer.hpp"
+#include "ResourceSystem.hpp"
 
 namespace asapi
 {
-	class ResourceSystemBase;
+	//class ResourceSystemBase;
 
 	class ResourceSharedReferenceInterface
 	{
 	protected:
 		static ResourceSystemBase* 							s_resourceSystem;
+		static void* 										fs_callback;
 	public:
 		inline static void SetResourceSystemReference(ResourceSystemBase* resourceSystem) { s_resourceSystem = resourceSystem; }
 	};
@@ -26,21 +28,16 @@ namespace asapi
 		SERIALIZABLE_OBJ( T, UniqueID, m_binaryResourceID );
 
 
-
-
-		typedef ResourceReference<ResourceProcessorT>* (*RequestCallbackT)( UniqueID, ResourceSystemBase* );
-
-
 		ResourceReference<ResourceProcessorT>*			m_resourcePtr = nullptr;
-		RequestCallbackT 								m_callback;
 
 
 	public:
-		static void InitializeObject(UniqueID binaryResourceID, RequestCallbackT callback, T* out)
+
+
+		static void InitializeObject(UniqueID binaryResourceID, T* out)
 		{
 			out->m_binaryResourceID = std::move( binaryResourceID );
-			out->m_callback = callback;
-			out->m_resourcePtr = out->m_callback(out->m_binaryResourceID, s_resourceSystem);
+			out->m_resourcePtr = ResourceProcessorT::RequestResourceByProxy( s_resourceSystem, binaryResourceID );
 			out->m_resourcePtr->IncreaseReferenceCounter();
 		}
 
@@ -66,17 +63,26 @@ namespace asapi
 				m_resourcePtr->DecreaseReferenceCounter();
 		}
 
+		#ifdef IS_EDITOR
+		virtual void OnGUI()
+		{
+			ImGui::Text("ResourceSharedReferenceBase::OnGui() %llu", m_binaryResourceID);
+		}
+		#endif
+
 
 		virtual void PostDeserializationCallback() override
 		{
 			if( m_resourcePtr!=0 )
 					m_resourcePtr->DecreaseReferenceCounter();
 
-			m_resourcePtr = m_callback(m_binaryResourceID, s_resourceSystem);
+			m_resourcePtr = ResourceProcessorT::RequestResourceByProxy( s_resourceSystem, m_binaryResourceID );
 			m_resourcePtr->IncreaseReferenceCounter();
 		}
 		
 	};
+
+
 }
 
 #endif

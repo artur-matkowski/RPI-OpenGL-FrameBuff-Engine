@@ -49,5 +49,19 @@
 \"m_orthoTop\": 3.000000, 
 \"m_isMainCamera\": true
 }"
+}, {
+"m_componentTypeName": "asapi::DebugComponent", 
+"m_recreationString": "{
+\"m_meshName\": [], 
+\"m_test\": {
+\"m_ID\": 7811228912315150203
+}, 
+\"m_testResource\": {
+\"m_binaryResourceID\": {
+\"m_ID\": 7057066744292978555
+}
+}, 
+\"m_boolV\": []
+}"
 }]
 }]
