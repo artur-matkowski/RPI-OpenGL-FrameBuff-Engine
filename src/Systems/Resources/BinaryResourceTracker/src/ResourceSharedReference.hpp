@@ -26,8 +26,6 @@ namespace asapi
 	{
 	protected:
 		SERIALIZABLE_OBJ( T, UniqueID, m_binaryResourceID );
-
-
 		ResourceReference<ResourceProcessorT>*			m_resourcePtr = nullptr;
 
 
@@ -42,19 +40,24 @@ namespace asapi
 		}
 
 
-		ResourceSharedReferenceBase(){};
+		ResourceSharedReferenceBase()
+		{
+			m_resourcePtr = nullptr;
+			m_binaryResourceID = 0;
+		};
 	
 		ResourceSharedReferenceBase( const ResourceSharedReferenceBase& cp )
 		{
-			//TODO
+			m_resourcePtr->DecreaseReferenceCounter();
 			m_resourcePtr = cp.m_resourcePtr;
+			m_binaryResourceID = cp.m_binaryResourceID;
 			m_resourcePtr->IncreaseReferenceCounter();
 		}
 
 		ResourceSharedReferenceBase( ResourceSharedReferenceBase&& cp )
 		{
-			//TODO
 			m_resourcePtr = cp.m_resourcePtr;
+			m_binaryResourceID = std::move( cp.m_binaryResourceID );
 			cp.m_resourcePtr = nullptr;
 		}
 		~ResourceSharedReferenceBase()
@@ -75,6 +78,9 @@ namespace asapi
 				m_binaryResourceID = newID;
 				PostDeserializationCallback();
 			}
+
+			if( m_resourcePtr!=nullptr )
+				ResourceProcessorT::OnGUI( m_resourcePtr->GetRawHandle() );
 		}
 		#endif
 

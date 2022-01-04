@@ -39,6 +39,7 @@ namespace asapi
 	{
 		using ResourceTuple_t = std::tuple< std::map< UniqueID, ResourceReference<ResourceProcessorsTs ...>* > >;
 		
+		static ResourceSystem<ResourceProcessorsTs ...>*					s_this;
 		ResourceTuple_t														m_resources;
 		ResourceTrackerManager<ResourceProcessorsTs ...>					m_resourceTrackerManager;
 		std::tuple< std::pair< ResourceProcessorsTs ..., std::vector< BinaryResourceTracker > > >
@@ -79,6 +80,7 @@ namespace asapi
 
 		void 				Init();
 		void 				SetProjectPath(const char* projectPath);
+		void 				Update();
 
 
 		template
@@ -154,6 +156,9 @@ namespace asapi
 		#ifdef IS_EDITOR
 		template<class ResourceProcessorT>
 		static void OnGUI_SelectResource( const UniqueID& in_resourceID, UniqueID* out_newResourceID );
+
+		template<class ResourceProcessorT>
+		static bool ResourceComboGetter(void* data, int idx, const char** out_text);
 		#endif
 	};
 
@@ -175,13 +180,27 @@ namespace asapi
 
 
 	template<class... ResourceProcessorsTs>
+	ResourceSystem<ResourceProcessorsTs ...>* ResourceSystem<ResourceProcessorsTs ...>::s_this = nullptr;
+
+
+	template<class... ResourceProcessorsTs>
 	void ResourceSystem<ResourceProcessorsTs ...>::Init() 
 	{ 
+		s_this = this;
 		ResourceSystemBase::Init(); 
 
 
 		constexpr int tupleSize = std::tuple_size<std::tuple<ResourceProcessorsTs ...> >();
 		InitializeResourceProcessorT_Is( std::make_integer_sequence<int, tupleSize>{} );
+	}
+
+	template<class... ResourceProcessorsTs>
+	void ResourceSystem<ResourceProcessorsTs ...>::Update() 
+	{ 
+		if( m_needGarbageCollection )
+		{
+			//TODO
+		}
 	}
 
 
@@ -454,7 +473,43 @@ namespace asapi
 	template<class ResourceProcessorT>
 	void ResourceSystem<ResourceProcesorTs ...>::OnGUI_SelectResource( const UniqueID& in_resourceID, UniqueID* out_newResourceID )
 	{
+		ResourceSystem<ResourceProcesorTs ...>* _this = s_this;
+		*out_newResourceID = in_resourceID;
+
+		std::vector< BinaryResourceTracker >& resourceContainer = std::get< std::pair< ResourceProcessorT, std::vector< BinaryResourceTracker > > >( _this->m_binaryResourceTrackers ).second;
+		int currentIndex = 0;
+
+		for(int i=0; i<resourceContainer.size(); i++)
+		{
+			if( in_resourceID==resourceContainer[i].GetSubResourceID() )
+			{
+				currentIndex = i;
+				break;
+			}
+		}
+
+		if( ImGui::Combo("Select Resource"
+						, &currentIndex
+						, &ResourceComboGetter<ResourceProcessorT>
+						, _this
+						, resourceContainer.size() ) )
+		{
+			*out_newResourceID = resourceContainer[currentIndex].GetSubResourceID();			
+		}
 		ImGui::Text("ResourceSystem<ResourceProcesorTs>::OnGUI_SelectResource");
+	}
+
+	template<class... ResourceProcesorTs>
+	template<class ResourceProcessorT>
+	bool ResourceSystem<ResourceProcesorTs ...>::ResourceComboGetter(void* data, int idx, const char** out_text)
+	{
+		ResourceSystem<ResourceProcesorTs ...>* _this = (ResourceSystem<ResourceProcesorTs ...>*)data;
+
+		std::vector< BinaryResourceTracker >& resourceContainer = std::get< std::pair< ResourceProcessorT, std::vector< BinaryResourceTracker > > >( _this->m_binaryResourceTrackers ).second;
+		
+		*out_text = resourceContainer[idx].GetDisplayName();
+
+		return true;
 	}
 	#endif
 }

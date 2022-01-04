@@ -45,6 +45,7 @@ namespace asapi
 		#endif
 
 		bool init(const int argc, const char** argv);
+		void SystemsUpdate();
 		void cloaseApp();
 		void mainAppLoop();
 

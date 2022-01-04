@@ -18,10 +18,11 @@ namespace asapi
 		inline static void SetProjectPath(const char* path) { s_projectPath = path; }
 		inline static void SetResourceSystemReference( ResourceSystemBase* input ) { s_resourceSystem = input; }
 		static BinaryResourceTracker* RequestBinaryResourceTracker( UniqueID );
+		inline void* GetRawHandle() const { return m_rawHandle; }
 
 
 	protected:
-		void * 					m_rendererHandle = nullptr;
+		void * 					m_rawHandle = nullptr;
 		uint16_t 				m_referenceCounter = 0;
 
 	public:
@@ -54,12 +55,12 @@ namespace asapi
 			char buff[MAX_PATH_SIZE];
 			snprintf(buff, MAX_PATH_SIZE, "%s" RESOURCE_BINARIES_DIR "/%llu%s.bin", s_projectPath.c_str(), id.ID(), T::GetBinaryOutputFileExtension());
 			
-			m_rendererHandle = T::LoadResource( buff );
+			m_rawHandle = T::LoadResource( buff );
 		}
 
 		ResourceReference(ResourceReference&& cp)
 		{
-			m_rendererHandle = cp.m_rendererHandle;
+			m_rawHandle = cp.m_rawHandle;
 			m_referenceCounter = cp.m_referenceCounter;
 			cp.m_referenceCounter = -1;
 
@@ -76,7 +77,7 @@ namespace asapi
 				log::error << "Destroying ResourceReference while resource still in use. Program might soon crash." << std::endl;
 			}
 			if( m_referenceCounter==0 ) 
-				T::UnloadResource( m_rendererHandle );
+				T::UnloadResource( m_rawHandle );
 		}
 
 		static inline bool ProcessResource2Binary(const asapi::ResourceTracker& in_currentResource
