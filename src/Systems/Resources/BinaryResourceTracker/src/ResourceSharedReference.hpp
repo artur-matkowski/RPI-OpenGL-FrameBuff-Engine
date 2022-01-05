@@ -10,8 +10,6 @@
 
 namespace asapi
 {
-	//class ResourceSystemBase;
-
 	class ResourceSharedReferenceInterface
 	{
 	protected:
@@ -20,6 +18,10 @@ namespace asapi
 	public:
 		inline static void SetResourceSystemReference(ResourceSystemBase* resourceSystem) { s_resourceSystem = resourceSystem; }
 	};
+
+
+
+
 
 	template<class T, class ResourceProcessorT>
 	class ResourceSharedReferenceBase: public bfu::SerializableClassBase<T>, public ResourceSharedReferenceInterface
@@ -67,7 +69,8 @@ namespace asapi
 		}
 
 		#ifdef IS_EDITOR
-		virtual void OnGUI()
+		virtual void OnGUI(){}
+		void OnGUI_caller()
 		{
 			UniqueID newID;
 			
@@ -82,6 +85,7 @@ namespace asapi
 			if( m_resourcePtr!=nullptr )
 			{
 				ResourceProcessorT::OnGUI( m_resourcePtr->GetRawHandle() );
+				this->OnGUI();
 				m_resourcePtr->OnGUI();
 			}
 		}

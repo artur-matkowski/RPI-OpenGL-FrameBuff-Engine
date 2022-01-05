@@ -28,7 +28,7 @@ namespace asapi
 		{ \
 			ARGS* args = (ARGS*)data;\
 			T* _data = (T*)args->dataPtr;\
-			_data->OnGUI();\
+			_data->OnGUI_caller();\
 		} \
 		else \
 		{ \
