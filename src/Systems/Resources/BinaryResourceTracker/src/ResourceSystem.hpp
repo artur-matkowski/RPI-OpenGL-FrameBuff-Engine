@@ -9,6 +9,11 @@
 
 namespace asapi
 {
+
+
+
+
+
 	class ResourceSystemBase
 	{
 	protected:
@@ -80,6 +85,14 @@ namespace asapi
 
 		void 				Init();
 		void 				SetProjectPath(const char* projectPath);
+
+
+		template<int I>
+		inline void 		Update_I();
+
+		template<int... Is>
+		inline void 		Update_Is( std::integer_sequence<int, Is...> const & );
+
 		void 				Update();
 
 
@@ -195,11 +208,43 @@ namespace asapi
 	}
 
 	template<class... ResourceProcessorsTs>
+	template<int I>
+	void ResourceSystem<ResourceProcessorsTs ...>::Update_I()
+	{
+		{
+			auto& resourceTypeContainer = std::get<I>( m_resources );
+
+			for(auto it = resourceTypeContainer.begin(); it!=resourceTypeContainer.end(); )
+			{
+				if( it->second->GetReferenceCounter() <= 0)
+				{
+					delete it->second;
+					it = resourceTypeContainer.erase( it );
+				}
+				else
+				{
+					it++;
+				}
+			}
+		}
+	}
+
+
+	template<class... ResourceProcessorsTs>
+	template<int... Is>
+	void ResourceSystem<ResourceProcessorsTs ...>::Update_Is( std::integer_sequence<int, Is...> const & )
+	{
+		Update_I<Is...>();
+	}
+
+	template<class... ResourceProcessorsTs>
 	void ResourceSystem<ResourceProcessorsTs ...>::Update() 
 	{ 
 		if( m_needGarbageCollection )
 		{
 			//TODO
+			constexpr int tupleSize = std::tuple_size<std::tuple<ResourceProcessorsTs ...> >();
+			Update_Is( std::make_integer_sequence<int, tupleSize>{} );
 		}
 	}
 
@@ -371,7 +416,7 @@ namespace asapi
 	template<int K>
 	void ResourceSystem<ResourceProcessorsTs ...>::PrintResourceReferencesInUse( bfu::stream& st ) const
 	{
-		auto resourceTypeContainer = std::get<K>( m_resources );
+		auto& resourceTypeContainer = std::get<K>( m_resources );
 		const char* resourceExtension = std::tuple_element_t<K, std::tuple<ResourceProcessorsTs ...>>::GetSuportedResourceFileExtension();
 
 		st << "\n\tResource printout for resource type :";

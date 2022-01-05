@@ -32,6 +32,15 @@ namespace asapi
 		int GetReferenceCount() const { return m_referenceCounter; }
 	};
 
+
+
+
+
+
+
+
+
+
 	template<class T>
 	class ResourceReference: public IResourceReferenceBase
 	{
@@ -91,6 +100,11 @@ namespace asapi
 		static inline void GetSuportedFilesExtensions( std::vector<std::string>* out_suportedFileExtensions )
 		{
 			T::GetSuportedFilesExtensions( out_suportedFileExtensions );
+		}
+
+		inline uint16_t GetReferenceCounter()
+		{
+			return m_referenceCounter;
 		}
 	};
 }

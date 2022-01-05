@@ -13,7 +13,7 @@ namespace asapi
 {
 	class ResourceTXTProcessor: public ResourceProcessorBase<ResourceTXTProcessor>
 	{
-		static std::vector<std::string> data;
+		static std::vector<std::string*> data;
 	public:
 		static void* LoadResource(const char* path);
 
@@ -33,8 +33,10 @@ namespace asapi
 		#ifdef IS_EDITOR
 		static void OnGUI(void* handle)
 		{
+			ImGui::Text( "Referenced Test Resource: %s", (char*)handle );
+
 			for(int i=0; i<data.size(); i++)
-				ImGui::Text( data[i].c_str() );
+				ImGui::Text( data[i]->c_str() );
 			//ImGui::Text( "data[0].c_str()" );
 		}
 		#endif
