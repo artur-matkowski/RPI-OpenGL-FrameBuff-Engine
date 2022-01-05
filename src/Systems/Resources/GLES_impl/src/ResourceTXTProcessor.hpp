@@ -1,14 +1,19 @@
+#ifndef H_ResourceTXTSharedReference
+#define H_ResourceTXTSharedReference
 #include <vector>
 #include <string>
 #include "ResourceTrackerManager.hpp"
 #include "ResourceSharedReference.hpp"
+#include "ResourceProcessorBase.hpp"
+#ifdef IS_EDITOR
 #include "imgui.h"
+#endif
 
 namespace asapi
 {
-	class ResourceTXTProcessor
+	class ResourceTXTProcessor: public ResourceProcessorBase<ResourceTXTProcessor>
 	{
-		static std::vector<std::string> data;
+		static std::vector<std::string*> data;
 	public:
 		static void* LoadResource(const char* path);
 
@@ -25,12 +30,15 @@ namespace asapi
 
 		friend bfu::stream& operator<<(bfu::stream&, const ResourceTXTProcessor& );	
 
-
+		#ifdef IS_EDITOR
 		static void OnGUI(void* handle)
 		{
-			//ImGui::Text( data[0].c_str() );
-			//ImGui::Text( "data[0].c_str()" );
+			ImGui::Text( "Referenced Test Resource: %s", (char*)handle );
+
+			for(int i=0; i<data.size(); i++)
+				ImGui::Text( data[i]->c_str() );
 		}
+		#endif
 	};
 
 
@@ -47,3 +55,5 @@ namespace asapi
 	};
 
 }
+
+#endif

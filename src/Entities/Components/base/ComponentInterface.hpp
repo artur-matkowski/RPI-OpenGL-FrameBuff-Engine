@@ -48,6 +48,10 @@ namespace asapi
 		}
 
 		#ifdef IS_EDITOR
+		void OnGUI_caller()
+		{
+			OnGUI();
+		}
 		virtual void OnGUI();
 		#endif
 

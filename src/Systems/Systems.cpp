@@ -112,6 +112,10 @@ namespace asapi
 	{
 		CONTEXT->MainLoop();
 	}
+	void SYSTEMS::SystemsUpdate()
+	{
+		RESOURCES.Update();
+	}
 
 	void SYSTEMS::IO::MMAP::InitForRead(const char* filename)
 	{

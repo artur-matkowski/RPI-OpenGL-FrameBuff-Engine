@@ -2,15 +2,21 @@
 #define H_ResourceSharedReference
 #include "bfu.hpp"
 #include "ResourceReference.hpp"
+#ifdef IS_EDITOR
+#include "imgui.h"
+#endif
+#include "ImGUI_Serializer.hpp"
+#include "ResourceSystem.hpp"
 
 namespace asapi
 {
-	class ResourceSystemBase;
+	//class ResourceSystemBase;
 
 	class ResourceSharedReferenceInterface
 	{
 	protected:
 		static ResourceSystemBase* 							s_resourceSystem;
+		static void* 										fs_callback;
 	public:
 		inline static void SetResourceSystemReference(ResourceSystemBase* resourceSystem) { s_resourceSystem = resourceSystem; }
 	};
@@ -19,38 +25,39 @@ namespace asapi
 	class ResourceSharedReferenceBase: public bfu::SerializableClassBase<T>, public ResourceSharedReferenceInterface
 	{
 	protected:
-		SERIALIZABLE_OBJ( ResourceSharedReferenceBase, UniqueID, m_binaryResourceID );
-
-		typedef ResourceReference<ResourceProcessorT>* (*RequestCallbackT)( UniqueID, ResourceSystemBase* );
-
-
+		SERIALIZABLE_OBJ( T, UniqueID, m_binaryResourceID );
 		ResourceReference<ResourceProcessorT>*			m_resourcePtr = nullptr;
-		RequestCallbackT 								m_callback;
 
 
 	public:
-		static void InitializeObject(UniqueID binaryResourceID, RequestCallbackT callback, T* out)
+
+
+		static void InitializeObject(UniqueID binaryResourceID, T* out)
 		{
 			out->m_binaryResourceID = std::move( binaryResourceID );
-			out->m_callback = callback;
-			out->m_resourcePtr = out->m_callback(out->m_binaryResourceID, s_resourceSystem);
+			out->m_resourcePtr = ResourceProcessorT::RequestResourceByProxy( s_resourceSystem, binaryResourceID );
 			out->m_resourcePtr->IncreaseReferenceCounter();
 		}
 
 
-		ResourceSharedReferenceBase(){};
+		ResourceSharedReferenceBase()
+		{
+			m_resourcePtr = nullptr;
+			m_binaryResourceID = 0;
+		};
 	
 		ResourceSharedReferenceBase( const ResourceSharedReferenceBase& cp )
 		{
-			//TODO
+			m_resourcePtr->DecreaseReferenceCounter();
 			m_resourcePtr = cp.m_resourcePtr;
+			m_binaryResourceID = cp.m_binaryResourceID;
 			m_resourcePtr->IncreaseReferenceCounter();
 		}
 
 		ResourceSharedReferenceBase( ResourceSharedReferenceBase&& cp )
 		{
-			//TODO
 			m_resourcePtr = cp.m_resourcePtr;
+			m_binaryResourceID = std::move( cp.m_binaryResourceID );
 			cp.m_resourcePtr = nullptr;
 		}
 		~ResourceSharedReferenceBase()
@@ -60,24 +67,24 @@ namespace asapi
 		}
 
 		#ifdef IS_EDITOR
-		void OnGUI()
+		virtual void OnGUI()
 		{
-			//ImGUI.Label("Resource type: %s", m_resourceType);
+			UniqueID newID;
 			
-			/*
-			UniqueID resourceID;
-			//TODO
-			if( rendererResource.OnGUI( &resourceID, m_resourceType ) ) //changed resourceID
+			ResourceProcessorT::OnGUI_SelectResourceByProxy( m_binaryResourceID, &newID );
+
+			if( m_binaryResourceID != newID )
 			{
-				m_binaryResourceID = resourceID;
-				rendererResource = requestConsumerResourceReference(resourceID);
-				rendererResource.OnUnload2Renderer();
-				rendererResource.OnLoad2Renderer();
+				m_binaryResourceID = newID;
+				PostDeserializationCallback();
 			}
 
-			//optional
-			RenderTYPEpreview();*/
-		};
+			if( m_resourcePtr!=nullptr )
+			{
+				ResourceProcessorT::OnGUI( m_resourcePtr->GetRawHandle() );
+				m_resourcePtr->OnGUI();
+			}
+		}
 		#endif
 
 
@@ -86,11 +93,13 @@ namespace asapi
 			if( m_resourcePtr!=0 )
 					m_resourcePtr->DecreaseReferenceCounter();
 
-			m_resourcePtr = m_callback(m_binaryResourceID, s_resourceSystem);
+			m_resourcePtr = ResourceProcessorT::RequestResourceByProxy( s_resourceSystem, m_binaryResourceID );
 			m_resourcePtr->IncreaseReferenceCounter();
 		}
 		
 	};
+
+
 }
 
 #endif

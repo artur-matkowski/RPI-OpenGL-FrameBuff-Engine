@@ -4,10 +4,37 @@
 #include <cxxabi.h>
 #include <vector>
 #include "bfu.hpp"
+#include "ImGUI_Serializer.hpp"
 
 namespace asapi
 {
-
+#define SERIALIZABLE_GUI_OBJ(C, T, i) \
+	T i; \
+	static inline void initVar_##i() __attribute__((constructor, used)) \
+	{ \
+		static bool isRegistered = false; \
+		if( isRegistered==false ) \
+		{ \
+			/*printf("%s offset: %d in class %s hash: %zu\n", #i, offsetOf(&C::i), #C, typeid(T).hash_code());*/ \
+			FeedInfo(#i, offsetOf(&C::i), typeid(T).hash_code(), &C::sp_first, \
+			OnGUI_caller_##i, \
+			bfu::SerializerBase::Deserialize_SerializableClassInterface); \
+			isRegistered = true; \
+		} \
+	} \
+	static inline void OnGUI_caller_##i(bfu::SerializerBase* serializer, void* data) \
+	{ \
+		if( dynamic_cast<ImGUI_Serializer*>(serializer) != nullptr ) \
+		{ \
+			ARGS* args = (ARGS*)data;\
+			T* _data = (T*)args->dataPtr;\
+			_data->OnGUI();\
+		} \
+		else \
+		{ \
+			bfu::SerializerBase::Serialize_SerializableClassInterface( serializer, data ); \
+		} \
+	} \
 
 
 	template<class T>
@@ -70,6 +97,16 @@ namespace asapi
 			T* _obj = (T*)this;
 			bfu::MemBlockBase::DeallocateUnknown(_obj);
 		}
+
+		
+		#ifdef IS_EDITOR
+		virtual void OnGUI()
+		{
+			ImGUI_Serializer imgui_serializer;
+
+			imgui_serializer.Serialize( this );
+		}
+		#endif
 	};
 
 	template<class T>

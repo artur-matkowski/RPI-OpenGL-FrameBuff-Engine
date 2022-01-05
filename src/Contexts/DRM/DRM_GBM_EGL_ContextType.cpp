@@ -280,9 +280,9 @@ namespace asapi
 
 	void DRM_GBM_EGL_ContextType::MainLoop()
 	{
-		SYSTEMS& system = SYSTEMS::GetObject();
-		bfu::EventSystem& events = system.EVENTS;
-		RendererSystem& rendererSystem = system.RENDERER;
+		SYSTEMS& systems = SYSTEMS::GetObject();
+		bfu::EventSystem& events = systems.EVENTS;
+		RendererSystem& rendererSystem = systems.RENDERER;
 		auto frameEnd =  std::chrono::system_clock::now();
 		auto frameStart = std::chrono::high_resolution_clock::now();
 		std::chrono::duration<double> frameDeltaTime( m_frameDelay );
@@ -301,6 +301,8 @@ namespace asapi
 				rendererSystem.Render();
 
 				(this->*p_postRenderCallback)();
+
+				systems.SystemsUpdate();
 			}
 
 

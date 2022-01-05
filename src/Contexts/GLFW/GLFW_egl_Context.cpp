@@ -548,9 +548,9 @@ namespace asapi
 	}
 	void GLFW_egl_Context::MainLoop() 
 	{
-		SYSTEMS& system = SYSTEMS::GetObject();
-		bfu::EventSystem& events = system.EVENTS;
-		RendererSystem& rendererSystem = system.RENDERER;
+		SYSTEMS& systems = SYSTEMS::GetObject();
+		bfu::EventSystem& events = systems.EVENTS;
+		RendererSystem& rendererSystem = systems.RENDERER;
 
 		auto frameEnd =  std::chrono::system_clock::now();
 		auto frameStart = std::chrono::high_resolution_clock::now();
@@ -570,6 +570,8 @@ namespace asapi
 				rendererSystem.Render();
 
 				(this->*p_postRenderCallback)();
+				
+				systems.SystemsUpdate();
 			}
 
 			std::chrono::duration<double> calculationTime = std::chrono::high_resolution_clock::now() - frameStart;

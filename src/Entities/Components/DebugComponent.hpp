@@ -3,6 +3,7 @@
 #include "ComponentBase.hpp"
 #include "glm.hpp"
 #include "Mesh_old.hpp"
+#include "ResourceTXTProcessor.hpp"
 
 namespace asapi
 {
@@ -12,7 +13,10 @@ namespace asapi
 	protected:
 		//ResourceTXTSharedReference m_txtResourceRef;
 
-		SERIALIZABLE_VAR(DebugComponent, string, m_meshName );
+		SERIALIZABLE_VAR_VEC(DebugComponent, string, m_meshName );
+		SERIALIZABLE_OBJ(DebugComponent, UniqueID, m_test );
+		SERIALIZABLE_GUI_OBJ(DebugComponent, ResourceTXTSharedReference, m_testResource );
+		SERIALIZABLE_VAR_VEC(DebugComponent, bool, m_boolV );
 
 	public:
 		DebugComponent(bfu::MemBlockBase* mBlock);

@@ -44,14 +44,6 @@ namespace asapi
 						void SetDisplayName(const char* name);
 		static inline 	void SetProjectPath(const char* path) { s_projectPath = path; }
 
-		#ifdef IS_EDITOR
-		bool OnGUI( UniqueID* out_newResource, const char* typeFilter )
-		{
-			//Render resource selector with type restriction
-			//return true if resourcewas changes
-			return false;
-		}
-		#endif
 
 	protected:
 		friend bfu::stream& operator<<(bfu::stream&, const BinaryResourceTracker& );

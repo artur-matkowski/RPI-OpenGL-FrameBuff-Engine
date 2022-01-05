@@ -4,7 +4,7 @@
 
 namespace asapi
 {
-	std::vector<std::string> ResourceTXTProcessor::data;
+	std::vector<std::string*> ResourceTXTProcessor::data;
 	
 	void* ResourceTXTProcessor::LoadResource(const char* path)
 	{
@@ -18,17 +18,18 @@ namespace asapi
 			return 0;
 		}
 
-		data.emplace_back( (const char*)file.Data() );
+		data.emplace_back( new std::string( (const char*)file.Data()) );
 
-		return (void*)data.back().c_str();
+		return (void*)data.back()->c_str();
 	}
 
 	void ResourceTXTProcessor::UnloadResource(void* handle)
 	{
 		for(auto it = data.begin(); it!=data.end(); it++)
 		{
-			if( it->c_str() == handle )
+			if( (*it)->c_str() == handle )
 			{
+				delete *it;
 				data.erase( it );
 				break;
 			}
@@ -116,7 +117,7 @@ namespace asapi
 
 		for(int i=0; i<ResourceTXTProcessor::data.size(); i++)
 		{
-			st << "\n\t\t" << ResourceTXTProcessor::data[i].c_str();
+			st << "\n\t\t" << ResourceTXTProcessor::data[i]->c_str();
 		}
 
 		return st;

@@ -4,6 +4,7 @@
 namespace asapi
 {
 	ResourceSystemBase* ResourceSharedReferenceInterface::s_resourceSystem = nullptr;
+	void* ResourceSharedReferenceInterface::fs_callback = nullptr;
 
 
 }

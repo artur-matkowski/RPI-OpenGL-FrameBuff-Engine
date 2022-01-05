@@ -90,7 +90,7 @@ namespace asapi
 		ImGui::PopID();
 		ImGui::PopItemWidth();
 
-		obj->OnGUI();
+		obj->OnGUI_caller();
 	}
 
 	void EditorWindow::OnGUI(GameObject* obj)
