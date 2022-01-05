@@ -3,7 +3,9 @@
 #include "BinaryResourceTracker.hpp"
 #include "ResourceTrackerManager.hpp"
 #include "object.hpp"
-
+#ifdef IS_EDITOR
+#include "imgui.h"
+#endif
 
 namespace asapi
 {
@@ -30,6 +32,15 @@ namespace asapi
 		void DecreaseReferenceCounter();
 
 		int GetReferenceCount() const { return m_referenceCounter; }
+
+		#ifdef IS_EDITOR
+		void OnGUI()
+		{
+			ImGui::Text("\tResource stats:");
+			ImGui::Text("\tReference counter: %d", m_referenceCounter);
+			ImGui::Text("\tRawHandle: %llu", (uint64_t)m_rawHandle);
+		}
+		#endif
 	};
 
 

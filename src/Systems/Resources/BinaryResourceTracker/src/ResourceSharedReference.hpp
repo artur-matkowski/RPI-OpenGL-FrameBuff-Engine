@@ -80,7 +80,10 @@ namespace asapi
 			}
 
 			if( m_resourcePtr!=nullptr )
+			{
 				ResourceProcessorT::OnGUI( m_resourcePtr->GetRawHandle() );
+				m_resourcePtr->OnGUI();
+			}
 		}
 		#endif
 

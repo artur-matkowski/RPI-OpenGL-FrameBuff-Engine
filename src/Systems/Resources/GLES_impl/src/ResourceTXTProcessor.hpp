@@ -37,7 +37,6 @@ namespace asapi
 
 			for(int i=0; i<data.size(); i++)
 				ImGui::Text( data[i]->c_str() );
-			//ImGui::Text( "data[0].c_str()" );
 		}
 		#endif
 	};

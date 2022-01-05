@@ -522,7 +522,7 @@ namespace asapi
 		*out_newResourceID = in_resourceID;
 
 		std::vector< BinaryResourceTracker >& resourceContainer = std::get< std::pair< ResourceProcessorT, std::vector< BinaryResourceTracker > > >( _this->m_binaryResourceTrackers ).second;
-		int currentIndex = 0;
+		int currentIndex = -1;
 
 		for(int i=0; i<resourceContainer.size(); i++)
 		{
@@ -532,8 +532,11 @@ namespace asapi
 				break;
 			}
 		}
+		char text[512];
 
-		if( ImGui::Combo("Select Resource"
+		snprintf(text, 512, "Select \"%s\" resource", ResourceProcessorT::GetBinaryOutputFileExtension() );
+
+		if( ImGui::Combo( text
 						, &currentIndex
 						, &ResourceComboGetter<ResourceProcessorT>
 						, _this
@@ -541,7 +544,6 @@ namespace asapi
 		{
 			*out_newResourceID = resourceContainer[currentIndex].GetSubResourceID();			
 		}
-		ImGui::Text("ResourceSystem<ResourceProcesorTs>::OnGUI_SelectResource");
 	}
 
 	template<class... ResourceProcesorTs>
