@@ -34,8 +34,8 @@ namespace asapi
 		ContextBase				*CONTEXT;
 		AssetSystem				ASSETS;
 		ResourceSystem<
-			ResourceTXTProcessor,
-			ResourceFBXProcessor
+			  ResourceTXTProcessor
+			, ResourceFBXProcessor
 			>		 			RESOURCES;
 		TimeSystem				TIME;
 		SceneSystem				SCENE;

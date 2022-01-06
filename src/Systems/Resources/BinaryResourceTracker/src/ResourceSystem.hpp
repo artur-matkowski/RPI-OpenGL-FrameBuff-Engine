@@ -42,12 +42,12 @@ namespace asapi
 	template<class... ResourceProcessorsTs>
 	class ResourceSystem: public ResourceSystemBase
 	{
-		using ResourceTuple_t = std::tuple< std::map< UniqueID, ResourceReference<ResourceProcessorsTs ...>* > >;
+		using ResourceTuple_t = std::tuple< std::map< UniqueID, ResourceReference<ResourceProcessorsTs>* > ...>;
 		
 		static ResourceSystem<ResourceProcessorsTs ...>*					s_this;
 		ResourceTuple_t														m_resources;
 		ResourceTrackerManager<ResourceProcessorsTs ...>					m_resourceTrackerManager;
-		std::tuple< std::pair< ResourceProcessorsTs ..., std::vector< BinaryResourceTracker > > >
+		std::tuple< std::pair< ResourceProcessorsTs, std::vector< BinaryResourceTracker > > ...>
 																			m_binaryResourceTrackers;
 
 
@@ -234,7 +234,8 @@ namespace asapi
 	template<int... Is>
 	void ResourceSystem<ResourceProcessorsTs ...>::Update_Is( std::integer_sequence<int, Is...> const & )
 	{
-		Update_I<Is...>();
+		using unused = int[];
+		(void)unused { 0, (Update_I<Is>(), 0)... };
 	}
 
 	template<class... ResourceProcessorsTs>
@@ -270,7 +271,8 @@ namespace asapi
 	template<int... Is>
 	void ResourceSystem<ResourceProcessorsTs ...>::InitializeResourceProcessorT_Is( std::integer_sequence<int, Is...> const & )
 	{
-		InitializeResourceProcessorT_I<Is...>();
+		using unused = int[];
+		(void)unused { 0, (InitializeResourceProcessorT_I<Is>(), 0)... };
 	}
 
 
@@ -314,7 +316,8 @@ namespace asapi
 	template<int... Is>
 	void ResourceSystem<ResourceProcessorsTs ...>::RefreshBinaryResourceTrackers_Is( std::integer_sequence<int, Is...> const & )
 	{
-		RefreshBinaryResourceTrackers_I<Is...>();
+		using unused = int[];
+		(void)unused { 0, (RefreshBinaryResourceTrackers_I<Is>(), 0)... };
 	}
 
 
@@ -342,7 +345,8 @@ namespace asapi
 		if( out!=nullptr )
 			return;
 
-		RequestBinaryResourceTracker_K<Is...>( id, out );
+		using unused = int[];
+		(void)unused { 0, (RequestBinaryResourceTracker_K<Is>( id, out ), 0)... };
 	}
 
 	template<class... ResourceProcessorsTs>
@@ -489,7 +493,8 @@ namespace asapi
 	template<int... Is>
 	void ResourceSystem<ResourceProcessorsTs ...>::OnGUI_Is( std::integer_sequence<int, Is...> const & )
 	{
-		OnGUI_I<Is...>();
+		using unused = int[];
+		(void)unused { 0, (OnGUI_I<Is>(), 0)... };
 	}
 
 	template<class... ResourceProcessorsTs>
