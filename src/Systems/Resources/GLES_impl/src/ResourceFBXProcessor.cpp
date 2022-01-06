@@ -251,7 +251,7 @@ namespace asapi
 
 		asapi::SubResourceData subresource(
 								subresourceID
-								, std::string( subresourcePath.c_str() ));
+								, std::string( mesh->mName.C_Str() ));
 		out_resourceBinaries->push_back( subresource );
 
 		//Star of actual subresource copmpilation section:

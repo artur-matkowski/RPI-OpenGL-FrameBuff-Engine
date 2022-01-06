@@ -11,9 +11,6 @@ namespace asapi
 {
 
 
-
-
-
 	class ResourceSystemBase
 	{
 	protected:
@@ -280,6 +277,8 @@ namespace asapi
 	template<int I>
 	void ResourceSystem<ResourceProcessorsTs ...>::RefreshBinaryResourceTrackers_I()
 	{
+		log::debug << "RefreshBinaryResourceTrackers_I() " << I << std::endl; 
+
 		auto& resourceTypeContainer = std::get<I>( m_binaryResourceTrackers );
 		const char* typeExt = std::tuple_element_t<I, std::tuple<ResourceProcessorsTs ...>>::GetBinaryOutputFileExtension();
 		char typeExtBuff[64];
