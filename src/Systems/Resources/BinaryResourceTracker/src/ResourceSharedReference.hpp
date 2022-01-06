@@ -68,6 +68,8 @@ namespace asapi
 				m_resourcePtr->DecreaseReferenceCounter();
 		}
 
+		inline void* GetRawHandle() { return m_resourcePtr==nullptr ? nullptr : m_resourcePtr->GetRawHandle(); }
+
 		#ifdef IS_EDITOR
 		virtual void OnGUI(){}
 		void OnGUI_caller()

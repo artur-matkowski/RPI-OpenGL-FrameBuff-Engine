@@ -49,7 +49,10 @@ namespace asapi
 
 		p_meshComponent = (MeshComponent*)m_owner->GET_COMPONENT(MeshComponent);
 
-		if( m_material.GetRawPtr() != nullptr && m_material->IsValid() && p_meshComponent != nullptr)
+		if( m_material.GetRawPtr() != nullptr 
+			&& m_material->IsValid() 
+			&& p_meshComponent != nullptr
+			&& p_meshComponent->GetMeshHandle() != nullptr )
 		{
 			//if you would ever try to update renderer component on the fly, you need to first unregister it from 
 			//renderer system, to unbound mesh from material render queue.
@@ -62,7 +65,7 @@ namespace asapi
 		m_material->GetModelViewMatrix()->SetUniform( *projectionMatrix * *viewMatrix * *p_modelViewMat );
 		m_material->BindMaterial();
 
-		uint32_t* config = (uint32_t*)p_meshComponent->GetMeshResource()->GetRawHandle();
+		uint32_t* config = (uint32_t*)p_meshComponent->GetMeshHandle();
 
 		// //Render
 		glBindBuffer(GL_ARRAY_BUFFER, config[0]);

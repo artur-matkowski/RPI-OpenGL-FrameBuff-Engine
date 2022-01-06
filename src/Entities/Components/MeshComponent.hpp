@@ -3,6 +3,7 @@
 #include "ComponentBase.hpp"
 #include "ResourcePtr.hpp"
 #include "Mesh_old.hpp"
+#include "ResourceFBXProcessor.hpp"
 #include "glm.hpp"
 
 
@@ -17,6 +18,8 @@ namespace asapi
 		SERIALIZABLE_VAR(MeshComponent, stream, m_meshName );
 		ResourcePtr< Mesh_old >		 		m_mesh;
 		char buffMesh[255];
+
+		SERIALIZABLE_GUI_OBJ(MeshComponent, ResourceFBXSharedReference, m_meshReference );
 		
 	public:
 		MeshComponent(bfu::MemBlockBase* mBlock);
@@ -24,6 +27,8 @@ namespace asapi
 		~MeshComponent(){};
 
 		Mesh_old* GetMeshResource(){ return (Mesh_old*)m_mesh.GetRawPtr(); }
+
+		inline void* GetMeshHandle() { return m_meshReference.GetRawHandle(); }
 
 
 		//virtual void OnAttach() override;

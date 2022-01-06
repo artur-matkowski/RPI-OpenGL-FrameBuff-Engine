@@ -59,6 +59,8 @@ namespace asapi
 		{
 			ImGui::Text("Mesh_old is invalid");
 		}
+		
+		ComponentBase<MeshComponent>::OnGUI();
 	}
 	#endif
 }
