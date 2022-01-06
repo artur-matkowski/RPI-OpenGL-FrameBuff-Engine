@@ -4,6 +4,19 @@
 
 
 
+#define ATTR_LOC_position 	0
+#define ATTR_LOC_normal 	1
+#define ATTR_LOC_uv0 		2
+#define ATTR_LOC_uv1 		3
+#define ATTR_LOC_uv2 		4
+#define ATTR_LOC_uv3 		5
+#define ATTR_LOC_color0		6
+#define ATTR_LOC_color1		7
+#define ATTR_LOC_color2		8
+#define ATTR_LOC_color3		9
+
+
+
 namespace asapi{
 
 	class RendererComponent;

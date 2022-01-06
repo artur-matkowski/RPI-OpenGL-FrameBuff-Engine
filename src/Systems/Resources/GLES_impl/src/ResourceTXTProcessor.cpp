@@ -59,7 +59,6 @@ namespace asapi
 		while (std::getline(iss, line))
 		{
 			asapi::FILE::MMAP _out;
-			std::string binaryFilename;
 			asapi::UniqueID subresourceID;
 			std::string binaryResource;
 

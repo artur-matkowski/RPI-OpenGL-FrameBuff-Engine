@@ -10,7 +10,7 @@
 #include "AssetSystem.hpp"
 
 #include "ResourceSystem.hpp"
-#include "ResourceTXTProcessor.hpp"
+#include "_ResourceProcessorsInclude.hpp"
 
 #include "ResourceTrackerManager.hpp"
 #include "TimeSystem.hpp"
@@ -34,7 +34,8 @@ namespace asapi
 		ContextBase				*CONTEXT;
 		AssetSystem				ASSETS;
 		ResourceSystem<
-			ResourceTXTProcessor
+			ResourceTXTProcessor,
+			ResourceFBXProcessor
 			>		 			RESOURCES;
 		TimeSystem				TIME;
 		SceneSystem				SCENE;
