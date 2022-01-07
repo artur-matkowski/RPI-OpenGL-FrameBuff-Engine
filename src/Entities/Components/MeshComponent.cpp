@@ -10,5 +10,4 @@ namespace asapi
 		:ComponentBase<MeshComponent>(mBlock)
 	{
 	};
-
 }

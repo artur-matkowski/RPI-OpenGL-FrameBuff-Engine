@@ -64,8 +64,10 @@ namespace asapi
 			    }
 			    ImGui::Separator();
 
-			    if (ImGui::MenuItem("Compile to .mmp")) {}
-			    if (ImGui::MenuItem("Load from .mmp")) {}
+			    if (ImGui::MenuItem("Rebuild binary subresources")) 
+			    {
+			    	SYSTEMS::GetObject().RESOURCES.ForceRebuildSubresources();
+			    }
 			    ImGui::Separator();
 
 			    if (ImGui::MenuItem("Quit")) { SYSTEMS::GetObject().cloaseApp(); }

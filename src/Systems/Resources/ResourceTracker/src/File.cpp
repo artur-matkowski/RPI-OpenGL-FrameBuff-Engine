@@ -193,6 +193,36 @@ namespace asapi
 			log::error << "Failed to mmap file: " << filename << std::endl;		
 	}
 
+
+	bool FILE::MMAP::TryInitForRead(const char* filename)
+	{
+
+		fd = open(filename, O_RDONLY );
+		if (fd == -1)
+		{
+			return false;
+		}
+
+		if (fstat(fd, &sb) == -1) 
+		{
+			return false;
+		}
+
+		if( sb.st_size==0 )
+		{
+			return false;
+		}
+
+		data = mmap(NULL, sb.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+
+		if (data == MAP_FAILED)
+		{
+			return false;
+		}
+		
+		return true;	
+	}
+
 	void FILE::MMAP::InitForWrite(const char* filename, size_t size)
 	{
 		unlink(filename);

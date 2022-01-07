@@ -67,10 +67,19 @@ namespace asapi
 
 
 		template<int K>
-		void 				RequestBinaryResourceTracker_K( const UniqueID& id, BinaryResourceTracker* out );
+		inline void			RequestBinaryResourceTracker_K( const UniqueID& id, BinaryResourceTracker* out );
 
 		template<int... Is>
-		void 				RequestBinaryResourceTracker_Is( std::integer_sequence<int, Is...> const &, const UniqueID& id, BinaryResourceTracker* out );
+		inline void 		RequestBinaryResourceTracker_Is( std::integer_sequence<int, Is...> const &, const UniqueID& id, BinaryResourceTracker* out );
+
+
+
+
+		template<int I>
+		inline void 		Update_I();
+
+		template<int... Is>
+		inline void 		Update_Is( std::integer_sequence<int, Is...> const & );
 
 
 	public:
@@ -82,15 +91,10 @@ namespace asapi
 
 		void 				Init();
 		void 				SetProjectPath(const char* projectPath);
-
-
-		template<int I>
-		inline void 		Update_I();
-
-		template<int... Is>
-		inline void 		Update_Is( std::integer_sequence<int, Is...> const & );
-
 		void 				Update();
+		void 				ForceRebuildSubresources()				{ m_resourceTrackerManager.ForceRebuildSubresources(); }
+
+
 
 
 		template
@@ -208,20 +212,18 @@ namespace asapi
 	template<int I>
 	void ResourceSystem<ResourceProcessorsTs ...>::Update_I()
 	{
-		{
-			auto& resourceTypeContainer = std::get<I>( m_resources );
+		auto& resourceTypeContainer = std::get<I>( m_resources );
 
-			for(auto it = resourceTypeContainer.begin(); it!=resourceTypeContainer.end(); )
+		for(auto it = resourceTypeContainer.begin(); it!=resourceTypeContainer.end(); )
+		{
+			if( it->second->GetReferenceCounter() <= 0)
 			{
-				if( it->second->GetReferenceCounter() <= 0)
-				{
-					delete it->second;
-					it = resourceTypeContainer.erase( it );
-				}
-				else
-				{
-					it++;
-				}
+				delete it->second;
+				it = resourceTypeContainer.erase( it );
+			}
+			else
+			{
+				it++;
 			}
 		}
 	}
@@ -240,9 +242,10 @@ namespace asapi
 	{ 
 		if( m_needGarbageCollection )
 		{
-			//TODO
 			constexpr int tupleSize = std::tuple_size<std::tuple<ResourceProcessorsTs ...> >();
 			Update_Is( std::make_integer_sequence<int, tupleSize>{} );
+
+			m_needGarbageCollection = false;
 		}
 	}
 
@@ -277,8 +280,6 @@ namespace asapi
 	template<int I>
 	void ResourceSystem<ResourceProcessorsTs ...>::RefreshBinaryResourceTrackers_I()
 	{
-		log::debug << "RefreshBinaryResourceTrackers_I() " << I << std::endl; 
-
 		auto& resourceTypeContainer = std::get<I>( m_binaryResourceTrackers );
 		const char* typeExt = std::tuple_element_t<I, std::tuple<ResourceProcessorsTs ...>>::GetBinaryOutputFileExtension();
 		char typeExtBuff[64];
@@ -291,6 +292,7 @@ namespace asapi
 		ListFiles( paths, {typeExtBuff}, ListingStrategy::whitelist, binaryDir.c_str() );
 
 		resourceTypeContainer.second.reserve( paths.size() );
+
 
 		for(int i=0; i<paths.size(); i++)
 		{

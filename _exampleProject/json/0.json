@@ -18,10 +18,9 @@
 }, {
 "m_componentTypeName": "asapi::MeshComponent", 
 "m_recreationString": "{
-\"m_meshName\": \"Plane.mmp\", 
 \"m_meshReference\": {
 \"m_binaryResourceID\": {
-\"m_ID\": 8999549077814715050
+\"m_ID\": 6515747560434963574
 }
 }
 }"
@@ -63,7 +62,7 @@
 }, 
 \"m_testResource\": {
 \"m_binaryResourceID\": {
-\"m_ID\": 7923917579873624746
+\"m_ID\": 8465536973356405878
 }
 }, 
 \"m_boolV\": []

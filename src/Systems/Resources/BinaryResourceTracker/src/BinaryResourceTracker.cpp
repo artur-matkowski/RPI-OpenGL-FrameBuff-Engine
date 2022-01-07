@@ -38,9 +38,7 @@ namespace asapi
 								+ ".json";
 
 
-		file.InitForRead( filepath.c_str() );
-
-		if( !file.IsValid() )
+		if( !file.TryInitForRead( filepath.c_str() ) )
 		{
 			return false;
 		}

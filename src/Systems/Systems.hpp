@@ -36,6 +36,7 @@ namespace asapi
 		ResourceSystem<
 			  ResourceTXTProcessor
 			, ResourceFBXProcessor
+			, ResourceGLSLProcessor
 			>		 			RESOURCES;
 		TimeSystem				TIME;
 		SceneSystem				SCENE;
@@ -71,6 +72,7 @@ namespace asapi
 				~MMAP();
 
 				void InitForRead(const char* filename);
+				bool TryInitForRead(const char* filename);
 				void InitForWrite(const char* filename, size_t size);
 
 				void Close();

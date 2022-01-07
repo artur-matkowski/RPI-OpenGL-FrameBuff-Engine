@@ -3,7 +3,7 @@
 #include "ComponentBase.hpp"
 #include "glm.hpp"
 #include "Mesh_old.hpp"
-#include "ResourceTXTProcessor.hpp"
+#include "_ResourceProcessorsInclude.hpp"
 
 namespace asapi
 {
@@ -18,6 +18,7 @@ namespace asapi
 		SERIALIZABLE_GUI_OBJ(DebugComponent, ResourceTXTSharedReference, m_testResource );
 		SERIALIZABLE_VAR_VEC(DebugComponent, bool, m_boolV );
 
+		SERIALIZABLE_GUI_OBJ(DebugComponent, ResourceGLSLSharedReference, m_testShader );
 	public:
 		DebugComponent(bfu::MemBlockBase* mBlock);
 		DebugComponent(const DebugComponent&) = delete;

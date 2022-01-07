@@ -46,6 +46,7 @@ namespace asapi
 
 		//resoruces:
 		void RefreshResources();
+		void ForceRebuildSubresources();
 		ResourceTracker* FindResourceByContentHash(const std::string& content_hash);
 		ResourceTracker* FindResourceByFilename(const std::string& filename);
 		ResourceTracker* FindResourceByResourceID(const uint64_t& resourceID);

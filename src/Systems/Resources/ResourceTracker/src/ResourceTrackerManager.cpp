@@ -227,6 +227,25 @@ namespace asapi
 		}
 	}
 
+	void ResourceTrackerManagerBase::ForceRebuildSubresources()
+	{
+		for(int i=0; i<v_ResourceTrackers.size(); i++)
+		{
+			std::vector<SubResourceData> tmpVec;
+			asapi::FILE::MMAP _in;
+			_in.InitForRead( v_ResourceTrackers[i].GetFullPath().c_str() );
+			
+			const bool resourceBinaryChanged = ProcessResource( v_ResourceTrackers[i]
+															, &_in
+															, s_projectDirectoryPath.c_str()
+															, &tmpVec );
+
+			v_ResourceTrackers[i].MoveSubresources( &tmpVec );
+
+			v_ResourceTrackers[i].SetContentDirty( !resourceBinaryChanged );  //if processet succesfully then is NOT dirty
+		}
+	}
+
 	void ResourceTrackerManagerBase::CleanResourceTrackersContainer()
 	{
 		for(int i=0; i<v_ResourceTrackers.size(); ++i)

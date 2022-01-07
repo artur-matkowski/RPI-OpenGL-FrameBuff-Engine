@@ -73,13 +73,6 @@ namespace asapi{
 			{
 				(*it)->Render(&m_projectionMatrix, &viewMatrix);
 			}
-/*
-			if( debugComponent!=0 )
-			{
-				DebugComponent* dc = (DebugComponent*)debugComponent;
-				dc->Render();
-			}
-			*/
 		}
 
 	}

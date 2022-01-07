@@ -261,7 +261,6 @@ namespace asapi
 			if( strcmp( (*(SerializableSubResourceData*)*(v_subresources.begin()+i)).m_internalID.c_str(), in_id.c_str()) == 0 )
 			{
 				out_ID = (*(SerializableSubResourceData*)*(v_subresources.begin()+i)).m_resourceID;
-				log::debug << "------------------------founded " << out_ID << std::endl;
 				return true;
 			}
 		}
