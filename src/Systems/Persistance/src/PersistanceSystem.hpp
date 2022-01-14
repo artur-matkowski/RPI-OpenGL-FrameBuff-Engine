@@ -26,7 +26,7 @@ namespace asapi
 
 	class PersistanceSystem
 	{
-		static std::string  m_projectPath;
+		std::string  m_projectPath;
 		const char* 		m_assetExtension = ".json.asset";
 
 		std::map< std::string, std::vector<AssetInfo> > m_assetsTypeToAssetInfoMap;
@@ -34,7 +34,7 @@ namespace asapi
 		int FindAssetByName(const char* assetType, const char* displayname);
 
 	public:
-		static void SetProjectPath( const char* path ) { m_projectPath = path; }
+		void SetProjectPath( const char* path );
 
 		bool LoadAsset(const char* assetType, const UniqueID& id, bfu::SerializerBase* out);
 

@@ -29,8 +29,6 @@ namespace asapi
 		m_assetDisplayName = displayNameBuff;
 	}
 
-	std::string PersistanceSystem::m_projectPath;
-
 	bool PersistanceSystem::LoadAsset(const char* assetType, const UniqueID& id, bfu::SerializerBase* out)
 	{
 		return false;
@@ -38,9 +36,15 @@ namespace asapi
 
 	void PersistanceSystem::CleanUp()
 	{
-
+		m_assetsTypeToAssetInfoMap.clear();
 	}
 
+	void PersistanceSystem::SetProjectPath( const char* path ) 
+	{ 
+		m_projectPath = path;
+		CleanUp();
+		RefreshResources();;
+	}
 
 	int PersistanceSystem::FindAssetByName(const char* assetType, const char* displayName)
 	{
