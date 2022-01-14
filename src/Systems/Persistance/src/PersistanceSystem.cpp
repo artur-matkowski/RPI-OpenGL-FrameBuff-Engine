@@ -226,7 +226,6 @@ namespace asapi
 
 	void PersistanceSystem::OnGUI()
 	{
-
 		ImGui::Text("PersistanceSystem:");
 
 		for(auto it = m_assetsTypeToAssetInfoMap.begin(); it!=m_assetsTypeToAssetInfoMap.end(); it++)
@@ -246,7 +245,7 @@ namespace asapi
 	}
 	void PersistanceSystem::OnGUI_select(const char* assetType, const UniqueID& currentID, UniqueID* newID)
 	{
-
+		ImGui::Text("PersistanceSystem::OnGUI_select");
 	}
 	#endif
 }
