@@ -111,7 +111,7 @@ namespace asapi
 					}
 				}
 
-				if( !skipfile )
+				if( !skipfile || (entry->d_type == DT_DIR) )
 				{
 					bzero(path, MAX_PATH_SIZE);
 					if( subdirname!=0 )
@@ -122,13 +122,14 @@ namespace asapi
 					strncat(path, entry->d_name, MAX_PATH_SIZE-1);
 
 					/* If it's a directory print it's name and recurse into it */
+
 					if (entry->d_type == DT_DIR) 
 					{
 						ListFiles(out, extensions, strategy, dirname, path);
 					}
 					else //if not dir
 					{
-						out.emplace_back(path);
+						out.emplace_back( path );
 					}
 				}
 
