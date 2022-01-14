@@ -357,8 +357,6 @@ namespace asapi
 		BinaryResourceTracker::SetProjectPath( projectPath );
 		IResourceReferenceBase::SetProjectPath( projectPath );		
 		s_projectPath = projectPath;
-
-		RefreshResources();
 	}
 
 	template<class... ResourceProcessorsTs>

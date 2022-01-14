@@ -332,4 +332,52 @@ namespace asapi
 	{
 		unlink(filename);
 	}
+
+	bool FILE::Move(const char* src, const char* dest)
+	{
+		return 0==rename(src, dest);
+	}
+
+	bool FILE::GetFileNameWithExtension(char* out_filename, const int filename_size, const char* buff, const int buff_size)
+	{
+		const char* start;
+		int nameSize = 0;
+
+		for(start = buff+buff_size; (*start!='/') && (start!=buff); start--);
+
+		if( start==buff )
+			return false;
+
+		start++;
+
+		nameSize = buff_size - (start-buff);
+
+		memcpy(out_filename, start, nameSize<filename_size ? nameSize : filename_size);
+
+		return nameSize<filename_size;
+	}
+
+	bool FILE::GetFileNameWithoutExtension(char* out_filename, const int filename_size, const char* buff, const int buff_size)
+	{
+		const char* start;
+		int nameSize = 0;
+
+		for(start = buff+buff_size; (*start!='/') && (start!=buff); start--);
+
+		if( start==buff )
+			return false;
+
+		start++;
+
+		for(; (*(start+nameSize)!='.') && ((start+nameSize)!=(buff+buff_size)); nameSize++);
+
+		if((start+nameSize)==(buff+buff_size))
+			return false;
+
+
+		memcpy(out_filename, start, nameSize<filename_size ? nameSize : filename_size);
+		out_filename[nameSize] = '\0';
+
+		return (nameSize+1)<filename_size;
+	}
 }

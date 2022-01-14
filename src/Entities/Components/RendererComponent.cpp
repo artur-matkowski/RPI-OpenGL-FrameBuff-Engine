@@ -103,6 +103,11 @@ namespace asapi
 	#ifdef IS_EDITOR
 	void RendererComponent::OnGUI()
 	{
+        if( ImGui::Button("Create new material") )
+        {
+        	SYSTEMS::GetObject().PERSISTANCE.CreateAsset(".mat", "New Material");
+        }
+
 		std::vector<std::string>* items = SYSTEMS::GetObject().ASSETS.GetMaterialsPaths();
         bool isAltered = false;
 
@@ -141,6 +146,7 @@ namespace asapi
             }
             ImGui::EndCombo();
         }
+
 
 
 

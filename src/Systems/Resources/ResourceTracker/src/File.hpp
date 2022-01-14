@@ -63,6 +63,9 @@ namespace asapi
 		};
 
 		static void Remove(const char*);
+		static bool Move(const char* dest, const char* src);
+		static bool GetFileNameWithExtension(char* out_filename, const int filename_size, const char* buff, const int buff_size);
+		static bool GetFileNameWithoutExtension(char* out_filename, const int filename_size, const char* buff, const int buff_size);
 	};
 }
 

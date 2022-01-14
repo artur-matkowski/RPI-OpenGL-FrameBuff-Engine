@@ -86,7 +86,7 @@ namespace asapi
 		RESOURCES.Init();
 		if( projectPath!=0 )
 		{
-			RESOURCES.SetProjectPath( projectPath );
+			SetProjectPath( projectPath );
 		}
 
 
@@ -115,6 +115,20 @@ namespace asapi
 	void SYSTEMS::SystemsUpdate()
 	{
 		RESOURCES.Update();
+	}
+	
+	void SYSTEMS::SetProjectPath(const char* path)
+	{
+		ASSETS.SetProjectPath( path );
+		RESOURCES.SetProjectPath( path );
+		PERSISTANCE.SetProjectPath( path );
+	}
+
+	void SYSTEMS::RefreshResources()
+	{		
+		ASSETS.RefreshResources();
+		RESOURCES.RefreshResources();
+		PERSISTANCE.RefreshResources();
 	}
 
 	void SYSTEMS::IO::MMAP::InitForRead(const char* filename)

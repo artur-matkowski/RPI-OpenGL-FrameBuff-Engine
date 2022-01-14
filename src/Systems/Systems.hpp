@@ -11,6 +11,7 @@
 
 #include "ResourceSystem.hpp"
 #include "_ResourceProcessorsInclude.hpp"
+#include "PersistanceSystem.hpp"
 
 #include "ResourceTrackerManager.hpp"
 #include "TimeSystem.hpp"
@@ -38,6 +39,7 @@ namespace asapi
 			, ResourceFBXProcessor
 			, ResourceGLSLProcessor
 			>		 			RESOURCES;
+		PersistanceSystem 		PERSISTANCE;
 		TimeSystem				TIME;
 		SceneSystem				SCENE;
 
@@ -55,6 +57,9 @@ namespace asapi
 		{
 			return _this;
 		}
+
+		void SetProjectPath(const char* path);
+		void RefreshResources();
 
 
 		

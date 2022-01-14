@@ -107,6 +107,11 @@ namespace asapi
                 SYSTEMS::GetObject().RESOURCES.OnGUI();
                 ImGui::EndTabItem();
             }
+            if (ImGui::BeginTabItem("Persistance System"))
+            {
+                SYSTEMS::GetObject().PERSISTANCE.OnGUI();
+                ImGui::EndTabItem();
+            }
             ImGui::EndTabBar();
         }
 
@@ -117,8 +122,7 @@ namespace asapi
 
 	bool StatsWindow::OpenProject(const char* path)
 	{
-		SYSTEMS::GetObject().ASSETS.SetProjectPath(path);
-		SYSTEMS::GetObject().RESOURCES.SetProjectPath(path);
+		SYSTEMS::GetObject().SetProjectPath(path);
 
 		if ( SYSTEMS::GetObject().SCENE.OpenProject() )
 		{
