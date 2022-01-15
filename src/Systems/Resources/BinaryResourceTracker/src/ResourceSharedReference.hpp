@@ -90,7 +90,12 @@ namespace asapi
 				if( handle!=nullptr )
 					ResourceProcessorT::OnGUI( m_resourcePtr->GetRawHandle() );
 				else
-					ImGui::Text("Handle invalid");
+				{
+					ImGui::TextColored(
+						ImVec4(1.0f, 1.0f, 0.0f, 1.0f)
+						, "No valid reference for %s resource"
+						, ResourceProcessorT::GetSuportedResourceFileExtension() );
+				}
 				
 				this->OnGUI();
 				m_resourcePtr->OnGUI();

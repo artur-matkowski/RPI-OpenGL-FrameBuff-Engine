@@ -285,7 +285,6 @@ namespace asapi
 		CombaData combodata;
 
 		*out_newID = in_oldId;
-		ImGui::Text("PersistanceSystem::OnGUI_select");
 
 		int currentIndex = FindAssetByID( asset_type, in_oldId );
 		char text[512];

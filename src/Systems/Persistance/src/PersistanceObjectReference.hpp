@@ -27,26 +27,34 @@ namespace asapi
 		InstanceT* 								mp_instance = nullptr;
 		uint16_t*								mp_referenceCounter = nullptr;
 		SERIALIZABLE_OBJ(ReferenceT, UniqueID, m_PersistanceObjectID );
-		int postdeserializationcalls = 0;
+
+		void CleanUp();
 
 	public:
 		PersistanceObjectReference(){};
 		PersistanceObjectReference(const PersistanceObjectReference& cp);
 		~PersistanceObjectReference();
 
-		inline InstanceT* GetObjectInstance(){ return mp_instance; }
+		PersistanceObjectReference<InstanceT, ReferenceT>& operator=(const PersistanceObjectReference& cp);
 
-		static PersistanceObjectReference<InstanceT, ReferenceT> RequestPersistanceObjectReference(const UniqueID& id);
+		inline InstanceT* GetObjectInstance(){ return mp_instance; }
 
 		inline void OnGUI();
 
 
 		virtual void PostDeserializationCallback()		override;
+
+
 	};
 
 
+
+
+
+
+
 	template<class InstanceT, class ReferenceT>
-	PersistanceObjectReference< InstanceT, ReferenceT >::PersistanceObjectReference(const PersistanceObjectReference& cp)
+	void PersistanceObjectReference< InstanceT, ReferenceT >::CleanUp()
 	{
 		if( mp_referenceCounter!=nullptr )
 		{
@@ -54,57 +62,38 @@ namespace asapi
 			if( (*mp_referenceCounter==0) && (mp_instance!=nullptr) )
 			{
 				delete mp_instance;
+				mp_instance = nullptr;
 			}
+			mp_referenceCounter = nullptr;
 		}
+	}
 
-		mp_instance = cp.mp_instance;
-		mp_referenceCounter = cp.mp_referenceCounter;
-
-		mp_referenceCounter++;
+	template<class InstanceT, class ReferenceT>
+	PersistanceObjectReference< InstanceT, ReferenceT >::PersistanceObjectReference(const PersistanceObjectReference& cp)
+	{
+		*this = cp;
 	}
 
 	template<class InstanceT, class ReferenceT>
 	PersistanceObjectReference< InstanceT, ReferenceT >::~PersistanceObjectReference()
 	{
-		if( mp_referenceCounter!=nullptr )
-		{
-			*mp_referenceCounter--;
-			if( (*mp_referenceCounter==0) && (mp_instance!=nullptr) )
-			{
-				delete mp_instance;
-			}
-		}
+		CleanUp();
 	}
 
 	template<class InstanceT, class ReferenceT>
-	PersistanceObjectReference<InstanceT, ReferenceT> PersistanceObjectReference< InstanceT, ReferenceT >::RequestPersistanceObjectReference(const UniqueID& id)
+	PersistanceObjectReference<InstanceT, ReferenceT>& PersistanceObjectReference< InstanceT, ReferenceT >::operator=(const PersistanceObjectReference& cp)
 	{
-		auto it = s_persistanceObjectsMap.find( id );
+		CleanUp();
 
-		PersistanceObjectReference<InstanceT, ReferenceT> ret;
+		mp_instance = cp.mp_instance;
+		mp_referenceCounter = cp.mp_referenceCounter;
 
-		if( it==s_persistanceObjectsMap.end() )
-		{
-			std::string path = s_projectPath + RESOURCE_BINARIES_DIR "/";
-			path += std::to_string( id.ID() ) + InstanceT::GetPersistanceType();
-			path += ".json";
+		if( mp_referenceCounter!=nullptr)
+			(*mp_referenceCounter)++;
 
-			ret.mp_instance = new InstanceT();
-			ret.mp_referenceCounter = new uint16_t;
-			*(ret.mp_referenceCounter) = 1;
-
-			PersistanceSystem::Deserialize( path.c_str(), ret.mp_instance );
-
-			s_persistanceObjectsMap[ id ] = ret;
-		}
-		else
-		{
-			ret = it->second;
-			*(ret.mp_referenceCounter)++;
-		}
-
-		return ret;
+		return *this;
 	}
+
 
 	template<class InstanceT, class ReferenceT>
 	void PersistanceObjectReference< InstanceT, ReferenceT >::OnGUI()
@@ -112,7 +101,6 @@ namespace asapi
 		UniqueID newID;
 
 		ImGui::Text("Persistance asset \"%s\" instance select:", ReferenceT::s_className );
-		ImGui::Text("PostDeserializationCallback \"%d\" ", postdeserializationcalls );
 		OnGUI_select( &newID, m_PersistanceObjectID, ReferenceT::GetPersistanceType() );
 
 		if( newID.ID() != m_PersistanceObjectID.ID() )
@@ -120,13 +108,53 @@ namespace asapi
 			m_PersistanceObjectID = newID;
 			PostDeserializationCallback();
 		}
+
+		if( ImGui::Button("Serialize Asset Instance") && mp_instance!=nullptr )
+		{
+			std::string path = s_projectPath + RESOURCE_BINARIES_DIR "/";
+			path += std::to_string( m_PersistanceObjectID.ID() ) + ReferenceT::GetPersistanceType();
+			path += ".json";
+
+			PersistanceSystem::Serialize( path.c_str(), mp_instance );
+		}
+
+		if( mp_instance!=nullptr )
+		{
+			mp_instance->OnGUI();
+		}
+		else
+		{
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "No valid reference for %s asset", ReferenceT::GetPersistanceType() );
+		}
 	}
 
 
 	template<class InstanceT, class ReferenceT>
 	void PersistanceObjectReference< InstanceT, ReferenceT >::PostDeserializationCallback()
 	{
-		postdeserializationcalls++;
+		CleanUp();
+
+		auto it = s_persistanceObjectsMap.find( m_PersistanceObjectID );
+
+		if( it==s_persistanceObjectsMap.end() )
+		{
+			std::string path = s_projectPath + RESOURCE_BINARIES_DIR "/";
+			path += std::to_string( m_PersistanceObjectID.ID() ) + ReferenceT::GetPersistanceType();
+			path += ".json";
+
+			mp_instance = new InstanceT();
+			mp_referenceCounter = new uint16_t;
+			*mp_referenceCounter = 1;
+
+			PersistanceSystem::Deserialize( path.c_str(), mp_instance );
+
+			s_persistanceObjectsMap[ m_PersistanceObjectID ] = this;
+		}
+		else
+		{
+			PersistanceObjectReference< InstanceT, ReferenceT >* ptr = (PersistanceObjectReference< InstanceT, ReferenceT >*)it->second;
+			*this = *ptr;
+		}
 	}
 }
 

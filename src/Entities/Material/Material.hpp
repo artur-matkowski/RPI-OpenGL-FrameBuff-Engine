@@ -10,7 +10,7 @@ namespace asapi
 	{
 		SERIALIZABLE_VAR(Material, bool, m_boolV_inMaterialInstance );
 	public:
-
+		void OnGUI(){};
 	};
 
 	class MaterialReference: public PersistanceObjectReference<Material, MaterialReference>
