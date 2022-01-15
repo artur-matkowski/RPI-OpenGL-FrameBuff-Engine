@@ -86,7 +86,12 @@ namespace asapi
 
 			if( m_resourcePtr!=nullptr )
 			{
-				ResourceProcessorT::OnGUI( m_resourcePtr->GetRawHandle() );
+				void* handle = m_resourcePtr->GetRawHandle();
+				if( handle!=nullptr )
+					ResourceProcessorT::OnGUI( m_resourcePtr->GetRawHandle() );
+				else
+					ImGui::Text("Handle invalid");
+				
 				this->OnGUI();
 				m_resourcePtr->OnGUI();
 			}

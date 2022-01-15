@@ -33,6 +33,7 @@ namespace asapi
 	void RendererComponent::OnIsDirty()
 	{
 		SYSTEMS& systems = SYSTEMS::GetObject();
+		m_materialReference.PostDeserializationCallback();
 		
 		if( m_material.IsValid() )
 		{
@@ -107,6 +108,8 @@ namespace asapi
         {
         	SYSTEMS::GetObject().PERSISTANCE.CreateAsset(".mat", "New Material");
         }
+
+        m_materialReference.OnGUI();
 
 		std::vector<std::string>* items = SYSTEMS::GetObject().ASSETS.GetMaterialsPaths();
         bool isAltered = false;
