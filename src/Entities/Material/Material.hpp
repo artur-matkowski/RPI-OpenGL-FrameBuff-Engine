@@ -11,7 +11,7 @@ namespace asapi
 	{
 		SERIALIZABLE_GUI_OBJ(Material, ResourceGLSLSharedReference, m_shader );
 	public:
-		void OnGUI(){};
+		void OnGUI();
 	};
 
 	class MaterialReference: public PersistanceObjectReference<Material, MaterialReference>

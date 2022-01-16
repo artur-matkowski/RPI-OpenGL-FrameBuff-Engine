@@ -58,13 +58,20 @@ namespace asapi
 	{
 		if( mp_referenceCounter!=nullptr )
 		{
-			*mp_referenceCounter--;
-			if( (*mp_referenceCounter==0) && (mp_instance!=nullptr) )
+			(*mp_referenceCounter)--;
+			if( (*mp_referenceCounter)==0 )
 			{
-				delete mp_instance;
-				mp_instance = nullptr;
+				if(mp_instance!=nullptr)
+				{
+					delete mp_instance;
+					mp_instance = nullptr;
+				}
+
+				delete mp_referenceCounter;
+				mp_referenceCounter = nullptr;
+
+				s_persistanceObjectsMap.erase( m_PersistanceObjectID );
 			}
-			mp_referenceCounter = nullptr;
 		}
 	}
 
@@ -144,7 +151,7 @@ namespace asapi
 
 			mp_instance = new InstanceT();
 			mp_referenceCounter = new uint16_t;
-			*mp_referenceCounter = 1;
+			(*mp_referenceCounter) = 1;
 
 			PersistanceSystem::Deserialize( path.c_str(), mp_instance );
 
