@@ -197,6 +197,9 @@ namespace asapi
 
 	void PersistanceSystem::RefreshResources()
 	{
+		if( m_projectPath.size()==0 )
+			return;
+
 		std::vector< std::string > paths;
 
 		ListFiles( paths

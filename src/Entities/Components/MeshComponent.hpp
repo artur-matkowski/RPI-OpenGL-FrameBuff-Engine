@@ -3,7 +3,7 @@
 #include "ComponentBase.hpp"
 #include "ResourcePtr.hpp"
 #include "Mesh_old.hpp"
-#include "ResourceFBXProcessor.hpp"
+#include "_ResourceProcessorsInclude.hpp"
 #include "glm.hpp"
 
 

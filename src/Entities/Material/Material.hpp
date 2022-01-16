@@ -1,6 +1,7 @@
 #ifndef _H_Material
 #define _H_Material
 #include "PersistanceObjectReference.hpp"
+#include "_ResourceProcessorsInclude.hpp"
 
 
 
@@ -8,7 +9,7 @@ namespace asapi
 {
 	class Material: public bfu::SerializableClassBase<Material>
 	{
-		SERIALIZABLE_VAR(Material, bool, m_boolV_inMaterialInstance );
+		SERIALIZABLE_GUI_OBJ(Material, ResourceGLSLSharedReference, m_shader );
 	public:
 		void OnGUI(){};
 	};

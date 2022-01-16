@@ -146,6 +146,9 @@ namespace asapi
 
 		inline void RefreshResources()
 		{
+			if( s_projectPath.size()==0 )
+				return;
+
 			m_resourceTrackerManager.RefreshResources();
 
 			constexpr int tupleSize = std::tuple_size<std::tuple<ResourceProcessorsTs ...> >();
