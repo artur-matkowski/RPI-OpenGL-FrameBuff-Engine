@@ -17,6 +17,8 @@ namespace asapi
 	public:
 		static void SetProjectPath(const char* path);
 		static void CleanUp();
+
+		virtual ~PersistanceObjectBase() {};
 	};
 
 
@@ -33,7 +35,7 @@ namespace asapi
 	public:
 		PersistanceObjectReference(){};
 		PersistanceObjectReference(const PersistanceObjectReference& cp);
-		~PersistanceObjectReference();
+		virtual ~PersistanceObjectReference() override;
 
 		PersistanceObjectReference<InstanceT, ReferenceT>& operator=(const PersistanceObjectReference& cp);
 

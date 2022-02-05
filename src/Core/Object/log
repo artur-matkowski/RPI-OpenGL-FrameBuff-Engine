@@ -1,0 +1,1541 @@
+g++ -std=c++14 -g -DIS_EDITOR -Itests -I/home/artur/Dokumenty/asapi/vendor/hash-library/ -I/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc -I/home/artur/Dokumenty/asapi/vendor/glm/glm/  -I/home/artur/Dokumenty/asapi/src  -I/home/artur/Dokumenty/asapi/src/Systems  -I/home/artur/Dokumenty/asapi/src/Systems/Persistance  -I/home/artur/Dokumenty/asapi/src/Systems/Persistance/tests  -I/home/artur/Dokumenty/asapi/src/Systems/Persistance/src  -I/home/artur/Dokumenty/asapi/src/Systems/Renderer  -I/home/artur/Dokumenty/asapi/src/Systems/Resources  -I/home/artur/Dokumenty/asapi/src/Systems/Resources/GLES_impl  -I/home/artur/Dokumenty/asapi/src/Systems/Resources/GLES_impl/src  -I/home/artur/Dokumenty/asapi/src/Systems/Resources/BinaryResourceTracker  -I/home/artur/Dokumenty/asapi/src/Systems/Resources/BinaryResourceTracker/tests  -I/home/artur/Dokumenty/asapi/src/Systems/Resources/BinaryResourceTracker/src  -I/home/artur/Dokumenty/asapi/src/Systems/Resources/ResourceTracker  -I/home/artur/Dokumenty/asapi/src/Systems/Resources/ResourceTracker/tests  -I/home/artur/Dokumenty/asapi/src/Systems/Resources/ResourceTracker/src  -I/home/artur/Dokumenty/asapi/src/Systems/Memory  -I/home/artur/Dokumenty/asapi/src/Systems/ResourceManager  -I/home/artur/Dokumenty/asapi/src/Systems/Studio  -I/home/artur/Dokumenty/asapi/src/Systems/Studio/imguiImpl  -I/home/artur/Dokumenty/asapi/src/Entities  -I/home/artur/Dokumenty/asapi/src/Entities/Material  -I/home/artur/Dokumenty/asapi/src/Entities/Components  -I/home/artur/Dokumenty/asapi/src/Entities/Components/base  -I/home/artur/Dokumenty/asapi/src/Modules  -I/home/artur/Dokumenty/asapi/src/DesignPatterns  -I/home/artur/Dokumenty/asapi/src/DesignPatterns/Profiler  -I/home/artur/Dokumenty/asapi/src/Core  -I/home/artur/Dokumenty/asapi/src/Core/Object  -I/home/artur/Dokumenty/asapi/src/Core/Object/tests  -I/home/artur/Dokumenty/asapi/src/Core/Object/src  -I/home/artur/Dokumenty/asapi/src/Contexts  -I/home/artur/Dokumenty/asapi/src/Contexts/DRM  -I/home/artur/Dokumenty/asapi/src/Contexts/base  -I/home/artur/Dokumenty/asapi/src/Contexts/GLFW /home/artur/Dokumenty/asapi/vendor/bitforgeutils/build/amd64/dbg/*.o /home/artur/Dokumenty/asapi/vendor/hash-library/sha256.cpp src/SerializableObject.cpp src/object.cpp src/ImGuiSerializer.cpp tests/*.cxx main.cxx
+In file included from src/SerializableObject.hpp:5,
+                 from src/SerializableObject.cpp:1:
+src/ImGuiSerializer.hpp:9:14: error: using-declaration for non-member at class scope
+   using bfu::SerializableClassInterface;
+              ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:10:14: error: using-declaration for non-member at class scope
+   using bfu::SerializableVector;
+              ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:18:46: error: ‘SerializableClassInterface’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableClassInterface* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:19:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:19:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                                                ^
+src/ImGuiSerializer.hpp:21:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<float>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:21:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<float>* data ) override;
+                                                                ^
+src/ImGuiSerializer.hpp:21:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<float>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:23:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<bool>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:23:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<bool>* data ) override;
+                                                                ^
+src/ImGuiSerializer.hpp:23:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<bool>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:25:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<bfu::stream>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:25:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<bfu::stream>* data ) override;
+                                                                ^
+src/ImGuiSerializer.hpp:25:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<bfu::stream>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:27:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<bfu::string>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:27:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<bfu::string>* data ) override;
+                                                                ^
+src/ImGuiSerializer.hpp:27:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<bfu::string>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:30:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint8_t>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:30:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint8_t>* data ) override;
+                                                                ^
+src/ImGuiSerializer.hpp:30:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint8_t>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:32:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint16_t>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:32:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint16_t>* data ) override;
+                                                                ^
+src/ImGuiSerializer.hpp:32:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint16_t>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:34:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint32_t>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:34:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint32_t>* data ) override;
+                                                                ^
+src/ImGuiSerializer.hpp:34:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint32_t>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:36:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint64_t>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:36:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint64_t>* data ) override;
+                                                                ^
+src/ImGuiSerializer.hpp:36:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint64_t>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:39:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int8_t>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:39:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int8_t>* data ) override;
+                                                                ^
+src/ImGuiSerializer.hpp:39:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int8_t>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:41:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int16_t>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:41:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int16_t>* data ) override;
+                                                                ^
+src/ImGuiSerializer.hpp:41:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int16_t>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:42:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int32_t*)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int*)’
+   virtual void SERIALIZER_SECTION Serialize( int32_t* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:18:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int*)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableClassInterface* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:43:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int32_t>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:43:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int32_t>* data ) override;
+                                                                ^
+src/ImGuiSerializer.hpp:43:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int32_t>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:45:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int64_t>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:45:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int64_t>* data ) override;
+                                                                ^
+src/ImGuiSerializer.hpp:45:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int64_t>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:56:50: error: ‘SerializableClassInterface’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableClassInterface* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:57:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:57:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                                                    ^
+src/ImGuiSerializer.hpp:59:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<float>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:59:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<float>* data ) override;
+                                                                    ^
+src/ImGuiSerializer.hpp:59:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<float>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:61:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<bool>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:61:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<bool>* data ) override;
+                                                                    ^
+src/ImGuiSerializer.hpp:61:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<bool>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:63:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<bfu::stream>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:63:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<bfu::stream>* data ) override;
+                                                                    ^
+src/ImGuiSerializer.hpp:63:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<bfu::stream>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:65:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<bfu::string>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:65:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<bfu::string>* data ) override;
+                                                                    ^
+src/ImGuiSerializer.hpp:65:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<bfu::string>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:68:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint8_t>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:68:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint8_t>* data ) override;
+                                                                    ^
+src/ImGuiSerializer.hpp:68:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint8_t>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:70:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint16_t>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:70:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint16_t>* data ) override;
+                                                                    ^
+src/ImGuiSerializer.hpp:70:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint16_t>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:72:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint32_t>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:72:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint32_t>* data ) override;
+                                                                    ^
+src/ImGuiSerializer.hpp:72:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint32_t>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:74:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint64_t>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:74:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint64_t>* data ) override;
+                                                                    ^
+src/ImGuiSerializer.hpp:74:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint64_t>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:77:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int8_t>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:77:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int8_t>* data ) override;
+                                                                    ^
+src/ImGuiSerializer.hpp:77:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int8_t>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:79:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int16_t>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:79:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int16_t>* data ) override;
+                                                                    ^
+src/ImGuiSerializer.hpp:79:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int16_t>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:80:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int32_t*)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int*)’
+   virtual void DESERIALIZER_SECTION Deserialize( int32_t* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:56:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int*)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableClassInterface* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:81:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int32_t>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:81:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int32_t>* data ) override;
+                                                                    ^
+src/ImGuiSerializer.hpp:81:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int32_t>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:83:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int64_t>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:83:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int64_t>* data ) override;
+                                                                    ^
+src/ImGuiSerializer.hpp:83:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int64_t>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:19:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ marked ‘override’, but does not override
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:57:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ marked ‘override’, but does not override
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+In file included from src/ImGuiSerializer.cpp:1:
+src/ImGuiSerializer.hpp:9:14: error: using-declaration for non-member at class scope
+   using bfu::SerializableClassInterface;
+              ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:10:14: error: using-declaration for non-member at class scope
+   using bfu::SerializableVector;
+              ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:18:46: error: ‘SerializableClassInterface’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableClassInterface* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:19:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:19:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                                                ^
+src/ImGuiSerializer.hpp:21:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<float>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:21:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<float>* data ) override;
+                                                                ^
+src/ImGuiSerializer.hpp:21:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<float>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:23:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<bool>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:23:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<bool>* data ) override;
+                                                                ^
+src/ImGuiSerializer.hpp:23:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<bool>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:25:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<bfu::stream>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:25:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<bfu::stream>* data ) override;
+                                                                ^
+src/ImGuiSerializer.hpp:25:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<bfu::stream>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:27:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<bfu::string>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:27:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<bfu::string>* data ) override;
+                                                                ^
+src/ImGuiSerializer.hpp:27:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<bfu::string>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:30:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint8_t>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:30:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint8_t>* data ) override;
+                                                                ^
+src/ImGuiSerializer.hpp:30:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint8_t>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:32:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint16_t>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:32:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint16_t>* data ) override;
+                                                                ^
+src/ImGuiSerializer.hpp:32:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint16_t>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:34:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint32_t>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:34:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint32_t>* data ) override;
+                                                                ^
+src/ImGuiSerializer.hpp:34:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint32_t>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:36:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint64_t>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:36:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint64_t>* data ) override;
+                                                                ^
+src/ImGuiSerializer.hpp:36:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint64_t>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:39:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int8_t>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:39:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int8_t>* data ) override;
+                                                                ^
+src/ImGuiSerializer.hpp:39:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int8_t>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:41:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int16_t>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:41:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int16_t>* data ) override;
+                                                                ^
+src/ImGuiSerializer.hpp:41:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int16_t>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:42:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int32_t*)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int*)’
+   virtual void SERIALIZER_SECTION Serialize( int32_t* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:18:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int*)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableClassInterface* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:43:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int32_t>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:43:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int32_t>* data ) override;
+                                                                ^
+src/ImGuiSerializer.hpp:43:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int32_t>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:45:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int64_t>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:45:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int64_t>* data ) override;
+                                                                ^
+src/ImGuiSerializer.hpp:45:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int64_t>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:56:50: error: ‘SerializableClassInterface’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableClassInterface* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:57:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:57:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                                                    ^
+src/ImGuiSerializer.hpp:59:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<float>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:59:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<float>* data ) override;
+                                                                    ^
+src/ImGuiSerializer.hpp:59:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<float>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:61:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<bool>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:61:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<bool>* data ) override;
+                                                                    ^
+src/ImGuiSerializer.hpp:61:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<bool>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:63:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<bfu::stream>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:63:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<bfu::stream>* data ) override;
+                                                                    ^
+src/ImGuiSerializer.hpp:63:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<bfu::stream>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:65:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<bfu::string>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:65:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<bfu::string>* data ) override;
+                                                                    ^
+src/ImGuiSerializer.hpp:65:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<bfu::string>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:68:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint8_t>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:68:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint8_t>* data ) override;
+                                                                    ^
+src/ImGuiSerializer.hpp:68:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint8_t>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:70:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint16_t>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:70:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint16_t>* data ) override;
+                                                                    ^
+src/ImGuiSerializer.hpp:70:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint16_t>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:72:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint32_t>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:72:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint32_t>* data ) override;
+                                                                    ^
+src/ImGuiSerializer.hpp:72:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint32_t>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:74:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint64_t>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:74:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint64_t>* data ) override;
+                                                                    ^
+src/ImGuiSerializer.hpp:74:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint64_t>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:77:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int8_t>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:77:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int8_t>* data ) override;
+                                                                    ^
+src/ImGuiSerializer.hpp:77:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int8_t>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:79:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int16_t>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:79:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int16_t>* data ) override;
+                                                                    ^
+src/ImGuiSerializer.hpp:79:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int16_t>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:80:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int32_t*)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int*)’
+   virtual void DESERIALIZER_SECTION Deserialize( int32_t* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:56:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int*)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableClassInterface* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:81:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int32_t>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:81:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int32_t>* data ) override;
+                                                                    ^
+src/ImGuiSerializer.hpp:81:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int32_t>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:83:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int64_t>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.hpp:83:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int64_t>* data ) override;
+                                                                    ^
+src/ImGuiSerializer.hpp:83:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int64_t>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.hpp:19:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ marked ‘override’, but does not override
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+src/ImGuiSerializer.hpp:57:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ marked ‘override’, but does not override
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+src/ImGuiSerializer.cpp:8:30: error: two or more data types in declaration of ‘data’
+  char* ImGUISerializer::data()
+                              ^
+src/ImGuiSerializer.cpp: In member function ‘virtual int asapi::ImGUISerializer::size()’:
+src/ImGuiSerializer.cpp:15:10: error: expected primary-expression before ‘=’ token
+   return = 0;
+          ^
+src/ImGuiSerializer.cpp: At global scope:
+src/ImGuiSerializer.cpp:29:35: error: variable or field ‘Serialize’ declared void
+  void ImGUISerializer::Serialize( SerializableClassInterface* data )
+                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:29:35: error: ‘SerializableClassInterface’ was not declared in this scope
+src/ImGuiSerializer.cpp:29:35: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:5,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/ObjectSerializableClassBase.hpp:112:8: note:   ‘bfu::SerializableClassInterface’
+  class SerializableClassInterface
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:29:63: error: ‘data’ was not declared in this scope
+  void ImGUISerializer::Serialize( SerializableClassInterface* data )
+                                                               ^~~~
+src/ImGuiSerializer.cpp:34:35: error: variable or field ‘Serialize’ declared void
+  void ImGUISerializer::Serialize( SerializableVector<SerializableClassInterface>* data )
+                                   ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:34:35: error: ‘SerializableVector’ was not declared in this scope
+src/ImGuiSerializer.cpp:34:35: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:30:8: note:   ‘bfu::SerializableVector’
+  class SerializableVector: public std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>
+        ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:34:54: error: ‘SerializableClassInterface’ was not declared in this scope
+  void ImGUISerializer::Serialize( SerializableVector<SerializableClassInterface>* data )
+                                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:34:54: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:5,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/ObjectSerializableClassBase.hpp:112:8: note:   ‘bfu::SerializableClassInterface’
+  class SerializableClassInterface
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:34:83: error: ‘data’ was not declared in this scope
+  void ImGUISerializer::Serialize( SerializableVector<SerializableClassInterface>* data )
+                                                                                   ^~~~
+src/ImGuiSerializer.cpp:44:35: error: variable or field ‘Serialize’ declared void
+  void ImGUISerializer::Serialize( SerializableVector<float>* data )
+                                   ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:44:35: error: ‘SerializableVector’ was not declared in this scope
+src/ImGuiSerializer.cpp:44:35: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:30:8: note:   ‘bfu::SerializableVector’
+  class SerializableVector: public std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>
+        ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:44:54: error: expected primary-expression before ‘float’
+  void ImGUISerializer::Serialize( SerializableVector<float>* data )
+                                                      ^~~~~
+src/ImGuiSerializer.cpp:54:35: error: variable or field ‘Serialize’ declared void
+  void ImGUISerializer::Serialize( SerializableVector<bool>* data )
+                                   ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:54:35: error: ‘SerializableVector’ was not declared in this scope
+src/ImGuiSerializer.cpp:54:35: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:30:8: note:   ‘bfu::SerializableVector’
+  class SerializableVector: public std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>
+        ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:54:54: error: expected primary-expression before ‘bool’
+  void ImGUISerializer::Serialize( SerializableVector<bool>* data )
+                                                      ^~~~
+src/ImGuiSerializer.cpp:64:35: error: variable or field ‘Serialize’ declared void
+  void ImGUISerializer::Serialize( SerializableVector<bfu::stream>* data )
+                                   ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:64:35: error: ‘SerializableVector’ was not declared in this scope
+src/ImGuiSerializer.cpp:64:35: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:30:8: note:   ‘bfu::SerializableVector’
+  class SerializableVector: public std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>
+        ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:64:65: error: expected primary-expression before ‘>’ token
+  void ImGUISerializer::Serialize( SerializableVector<bfu::stream>* data )
+                                                                 ^
+src/ImGuiSerializer.cpp:64:68: error: ‘data’ was not declared in this scope
+  void ImGUISerializer::Serialize( SerializableVector<bfu::stream>* data )
+                                                                    ^~~~
+src/ImGuiSerializer.cpp:74:35: error: variable or field ‘Serialize’ declared void
+  void ImGUISerializer::Serialize( SerializableVector<bfu::string>* data )
+                                   ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:74:35: error: ‘SerializableVector’ was not declared in this scope
+src/ImGuiSerializer.cpp:74:35: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:30:8: note:   ‘bfu::SerializableVector’
+  class SerializableVector: public std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>
+        ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:74:65: error: expected primary-expression before ‘>’ token
+  void ImGUISerializer::Serialize( SerializableVector<bfu::string>* data )
+                                                                 ^
+src/ImGuiSerializer.cpp:74:68: error: ‘data’ was not declared in this scope
+  void ImGUISerializer::Serialize( SerializableVector<bfu::string>* data )
+                                                                    ^~~~
+src/ImGuiSerializer.cpp:85:35: error: variable or field ‘Serialize’ declared void
+  void ImGUISerializer::Serialize( SerializableVector<uint8_t>* data )
+                                   ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:85:35: error: ‘SerializableVector’ was not declared in this scope
+src/ImGuiSerializer.cpp:85:35: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:30:8: note:   ‘bfu::SerializableVector’
+  class SerializableVector: public std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>
+        ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:85:61: error: expected primary-expression before ‘>’ token
+  void ImGUISerializer::Serialize( SerializableVector<uint8_t>* data )
+                                                             ^
+src/ImGuiSerializer.cpp:85:64: error: ‘data’ was not declared in this scope
+  void ImGUISerializer::Serialize( SerializableVector<uint8_t>* data )
+                                                                ^~~~
+src/ImGuiSerializer.cpp:95:35: error: variable or field ‘Serialize’ declared void
+  void ImGUISerializer::Serialize( SerializableVector<uint16_t>* data )
+                                   ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:95:35: error: ‘SerializableVector’ was not declared in this scope
+src/ImGuiSerializer.cpp:95:35: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:30:8: note:   ‘bfu::SerializableVector’
+  class SerializableVector: public std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>
+        ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:95:62: error: expected primary-expression before ‘>’ token
+  void ImGUISerializer::Serialize( SerializableVector<uint16_t>* data )
+                                                              ^
+src/ImGuiSerializer.cpp:95:65: error: ‘data’ was not declared in this scope
+  void ImGUISerializer::Serialize( SerializableVector<uint16_t>* data )
+                                                                 ^~~~
+src/ImGuiSerializer.cpp:105:35: error: variable or field ‘Serialize’ declared void
+  void ImGUISerializer::Serialize( SerializableVector<uint32_t>* data )
+                                   ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:105:35: error: ‘SerializableVector’ was not declared in this scope
+src/ImGuiSerializer.cpp:105:35: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:30:8: note:   ‘bfu::SerializableVector’
+  class SerializableVector: public std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>
+        ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:105:62: error: expected primary-expression before ‘>’ token
+  void ImGUISerializer::Serialize( SerializableVector<uint32_t>* data )
+                                                              ^
+src/ImGuiSerializer.cpp:105:65: error: ‘data’ was not declared in this scope
+  void ImGUISerializer::Serialize( SerializableVector<uint32_t>* data )
+                                                                 ^~~~
+src/ImGuiSerializer.cpp:115:35: error: variable or field ‘Serialize’ declared void
+  void ImGUISerializer::Serialize( SerializableVector<uint64_t>* data )
+                                   ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:115:35: error: ‘SerializableVector’ was not declared in this scope
+src/ImGuiSerializer.cpp:115:35: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:30:8: note:   ‘bfu::SerializableVector’
+  class SerializableVector: public std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>
+        ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:115:62: error: expected primary-expression before ‘>’ token
+  void ImGUISerializer::Serialize( SerializableVector<uint64_t>* data )
+                                                              ^
+src/ImGuiSerializer.cpp:115:65: error: ‘data’ was not declared in this scope
+  void ImGUISerializer::Serialize( SerializableVector<uint64_t>* data )
+                                                                 ^~~~
+src/ImGuiSerializer.cpp:126:35: error: variable or field ‘Serialize’ declared void
+  void ImGUISerializer::Serialize( SerializableVector<int8_t>* data )
+                                   ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:126:35: error: ‘SerializableVector’ was not declared in this scope
+src/ImGuiSerializer.cpp:126:35: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:30:8: note:   ‘bfu::SerializableVector’
+  class SerializableVector: public std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>
+        ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:126:60: error: expected primary-expression before ‘>’ token
+  void ImGUISerializer::Serialize( SerializableVector<int8_t>* data )
+                                                            ^
+src/ImGuiSerializer.cpp:126:63: error: ‘data’ was not declared in this scope
+  void ImGUISerializer::Serialize( SerializableVector<int8_t>* data )
+                                                               ^~~~
+src/ImGuiSerializer.cpp:136:35: error: variable or field ‘Serialize’ declared void
+  void ImGUISerializer::Serialize( SerializableVector<int16_t>* data )
+                                   ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:136:35: error: ‘SerializableVector’ was not declared in this scope
+src/ImGuiSerializer.cpp:136:35: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:30:8: note:   ‘bfu::SerializableVector’
+  class SerializableVector: public std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>
+        ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:136:61: error: expected primary-expression before ‘>’ token
+  void ImGUISerializer::Serialize( SerializableVector<int16_t>* data )
+                                                             ^
+src/ImGuiSerializer.cpp:136:64: error: ‘data’ was not declared in this scope
+  void ImGUISerializer::Serialize( SerializableVector<int16_t>* data )
+                                                                ^~~~
+src/ImGuiSerializer.cpp:146:35: error: variable or field ‘Serialize’ declared void
+  void ImGUISerializer::Serialize( SerializableVector<int32_t>* data )
+                                   ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:146:35: error: ‘SerializableVector’ was not declared in this scope
+src/ImGuiSerializer.cpp:146:35: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:30:8: note:   ‘bfu::SerializableVector’
+  class SerializableVector: public std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>
+        ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:146:61: error: expected primary-expression before ‘>’ token
+  void ImGUISerializer::Serialize( SerializableVector<int32_t>* data )
+                                                             ^
+src/ImGuiSerializer.cpp:146:64: error: ‘data’ was not declared in this scope
+  void ImGUISerializer::Serialize( SerializableVector<int32_t>* data )
+                                                                ^~~~
+src/ImGuiSerializer.cpp:156:35: error: variable or field ‘Serialize’ declared void
+  void ImGUISerializer::Serialize( SerializableVector<int64_t>* data )
+                                   ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:156:35: error: ‘SerializableVector’ was not declared in this scope
+src/ImGuiSerializer.cpp:156:35: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:30:8: note:   ‘bfu::SerializableVector’
+  class SerializableVector: public std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>
+        ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:156:61: error: expected primary-expression before ‘>’ token
+  void ImGUISerializer::Serialize( SerializableVector<int64_t>* data )
+                                                             ^
+src/ImGuiSerializer.cpp:156:64: error: ‘data’ was not declared in this scope
+  void ImGUISerializer::Serialize( SerializableVector<int64_t>* data )
+                                                                ^~~~
+src/ImGuiSerializer.cpp:163:37: error: variable or field ‘Deserialize’ declared void
+  void ImGUISerializer::Deserialize( SerializableClassInterface* data ) {}
+                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:163:37: error: ‘SerializableClassInterface’ was not declared in this scope
+src/ImGuiSerializer.cpp:163:37: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:5,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/ObjectSerializableClassBase.hpp:112:8: note:   ‘bfu::SerializableClassInterface’
+  class SerializableClassInterface
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:163:65: error: ‘data’ was not declared in this scope
+  void ImGUISerializer::Deserialize( SerializableClassInterface* data ) {}
+                                                                 ^~~~
+src/ImGuiSerializer.cpp:164:37: error: variable or field ‘Deserialize’ declared void
+  void ImGUISerializer::Deserialize( SerializableVector<SerializableClassInterface>* data ) {}
+                                     ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:164:37: error: ‘SerializableVector’ was not declared in this scope
+src/ImGuiSerializer.cpp:164:37: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:30:8: note:   ‘bfu::SerializableVector’
+  class SerializableVector: public std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>
+        ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:164:56: error: ‘SerializableClassInterface’ was not declared in this scope
+  void ImGUISerializer::Deserialize( SerializableVector<SerializableClassInterface>* data ) {}
+                                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:164:56: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:5,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/ObjectSerializableClassBase.hpp:112:8: note:   ‘bfu::SerializableClassInterface’
+  class SerializableClassInterface
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:164:85: error: ‘data’ was not declared in this scope
+  void ImGUISerializer::Deserialize( SerializableVector<SerializableClassInterface>* data ) {}
+                                                                                     ^~~~
+src/ImGuiSerializer.cpp:166:37: error: variable or field ‘Deserialize’ declared void
+  void ImGUISerializer::Deserialize( SerializableVector<float>* data ) {}
+                                     ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:166:37: error: ‘SerializableVector’ was not declared in this scope
+src/ImGuiSerializer.cpp:166:37: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:30:8: note:   ‘bfu::SerializableVector’
+  class SerializableVector: public std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>
+        ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:166:56: error: expected primary-expression before ‘float’
+  void ImGUISerializer::Deserialize( SerializableVector<float>* data ) {}
+                                                        ^~~~~
+src/ImGuiSerializer.cpp:168:37: error: variable or field ‘Deserialize’ declared void
+  void ImGUISerializer::Deserialize( SerializableVector<bool>* data ) {}
+                                     ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:168:37: error: ‘SerializableVector’ was not declared in this scope
+src/ImGuiSerializer.cpp:168:37: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:30:8: note:   ‘bfu::SerializableVector’
+  class SerializableVector: public std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>
+        ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:168:56: error: expected primary-expression before ‘bool’
+  void ImGUISerializer::Deserialize( SerializableVector<bool>* data ) {}
+                                                        ^~~~
+src/ImGuiSerializer.cpp:170:37: error: variable or field ‘Deserialize’ declared void
+  void ImGUISerializer::Deserialize( SerializableVector<bfu::stream>* data ) {}
+                                     ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:170:37: error: ‘SerializableVector’ was not declared in this scope
+src/ImGuiSerializer.cpp:170:37: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:30:8: note:   ‘bfu::SerializableVector’
+  class SerializableVector: public std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>
+        ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:170:67: error: expected primary-expression before ‘>’ token
+  void ImGUISerializer::Deserialize( SerializableVector<bfu::stream>* data ) {}
+                                                                   ^
+src/ImGuiSerializer.cpp:170:70: error: ‘data’ was not declared in this scope
+  void ImGUISerializer::Deserialize( SerializableVector<bfu::stream>* data ) {}
+                                                                      ^~~~
+src/ImGuiSerializer.cpp:172:37: error: variable or field ‘Deserialize’ declared void
+  void ImGUISerializer::Deserialize( SerializableVector<bfu::string>* data ) {}
+                                     ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:172:37: error: ‘SerializableVector’ was not declared in this scope
+src/ImGuiSerializer.cpp:172:37: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:30:8: note:   ‘bfu::SerializableVector’
+  class SerializableVector: public std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>
+        ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:172:67: error: expected primary-expression before ‘>’ token
+  void ImGUISerializer::Deserialize( SerializableVector<bfu::string>* data ) {}
+                                                                   ^
+src/ImGuiSerializer.cpp:172:70: error: ‘data’ was not declared in this scope
+  void ImGUISerializer::Deserialize( SerializableVector<bfu::string>* data ) {}
+                                                                      ^~~~
+src/ImGuiSerializer.cpp:175:37: error: variable or field ‘Deserialize’ declared void
+  void ImGUISerializer::Deserialize( SerializableVector<uint8_t>* data ) {}
+                                     ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:175:37: error: ‘SerializableVector’ was not declared in this scope
+src/ImGuiSerializer.cpp:175:37: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:30:8: note:   ‘bfu::SerializableVector’
+  class SerializableVector: public std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>
+        ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:175:63: error: expected primary-expression before ‘>’ token
+  void ImGUISerializer::Deserialize( SerializableVector<uint8_t>* data ) {}
+                                                               ^
+src/ImGuiSerializer.cpp:175:66: error: ‘data’ was not declared in this scope
+  void ImGUISerializer::Deserialize( SerializableVector<uint8_t>* data ) {}
+                                                                  ^~~~
+src/ImGuiSerializer.cpp:177:37: error: variable or field ‘Deserialize’ declared void
+  void ImGUISerializer::Deserialize( SerializableVector<uint16_t>* data ) {}
+                                     ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:177:37: error: ‘SerializableVector’ was not declared in this scope
+src/ImGuiSerializer.cpp:177:37: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:30:8: note:   ‘bfu::SerializableVector’
+  class SerializableVector: public std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>
+        ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:177:64: error: expected primary-expression before ‘>’ token
+  void ImGUISerializer::Deserialize( SerializableVector<uint16_t>* data ) {}
+                                                                ^
+src/ImGuiSerializer.cpp:177:67: error: ‘data’ was not declared in this scope
+  void ImGUISerializer::Deserialize( SerializableVector<uint16_t>* data ) {}
+                                                                   ^~~~
+src/ImGuiSerializer.cpp:179:37: error: variable or field ‘Deserialize’ declared void
+  void ImGUISerializer::Deserialize( SerializableVector<uint32_t>* data ) {}
+                                     ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:179:37: error: ‘SerializableVector’ was not declared in this scope
+src/ImGuiSerializer.cpp:179:37: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:30:8: note:   ‘bfu::SerializableVector’
+  class SerializableVector: public std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>
+        ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:179:64: error: expected primary-expression before ‘>’ token
+  void ImGUISerializer::Deserialize( SerializableVector<uint32_t>* data ) {}
+                                                                ^
+src/ImGuiSerializer.cpp:179:67: error: ‘data’ was not declared in this scope
+  void ImGUISerializer::Deserialize( SerializableVector<uint32_t>* data ) {}
+                                                                   ^~~~
+src/ImGuiSerializer.cpp:181:37: error: variable or field ‘Deserialize’ declared void
+  void ImGUISerializer::Deserialize( SerializableVector<uint64_t>* data ) {}
+                                     ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:181:37: error: ‘SerializableVector’ was not declared in this scope
+src/ImGuiSerializer.cpp:181:37: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:30:8: note:   ‘bfu::SerializableVector’
+  class SerializableVector: public std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>
+        ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:181:64: error: expected primary-expression before ‘>’ token
+  void ImGUISerializer::Deserialize( SerializableVector<uint64_t>* data ) {}
+                                                                ^
+src/ImGuiSerializer.cpp:181:67: error: ‘data’ was not declared in this scope
+  void ImGUISerializer::Deserialize( SerializableVector<uint64_t>* data ) {}
+                                                                   ^~~~
+src/ImGuiSerializer.cpp:184:37: error: variable or field ‘Deserialize’ declared void
+  void ImGUISerializer::Deserialize( SerializableVector<int8_t>* data ) {}
+                                     ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:184:37: error: ‘SerializableVector’ was not declared in this scope
+src/ImGuiSerializer.cpp:184:37: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:30:8: note:   ‘bfu::SerializableVector’
+  class SerializableVector: public std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>
+        ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:184:62: error: expected primary-expression before ‘>’ token
+  void ImGUISerializer::Deserialize( SerializableVector<int8_t>* data ) {}
+                                                              ^
+src/ImGuiSerializer.cpp:184:65: error: ‘data’ was not declared in this scope
+  void ImGUISerializer::Deserialize( SerializableVector<int8_t>* data ) {}
+                                                                 ^~~~
+src/ImGuiSerializer.cpp:186:37: error: variable or field ‘Deserialize’ declared void
+  void ImGUISerializer::Deserialize( SerializableVector<int16_t>* data ) {}
+                                     ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:186:37: error: ‘SerializableVector’ was not declared in this scope
+src/ImGuiSerializer.cpp:186:37: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:30:8: note:   ‘bfu::SerializableVector’
+  class SerializableVector: public std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>
+        ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:186:63: error: expected primary-expression before ‘>’ token
+  void ImGUISerializer::Deserialize( SerializableVector<int16_t>* data ) {}
+                                                               ^
+src/ImGuiSerializer.cpp:186:66: error: ‘data’ was not declared in this scope
+  void ImGUISerializer::Deserialize( SerializableVector<int16_t>* data ) {}
+                                                                  ^~~~
+src/ImGuiSerializer.cpp:188:37: error: variable or field ‘Deserialize’ declared void
+  void ImGUISerializer::Deserialize( SerializableVector<int32_t>* data ) {}
+                                     ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:188:37: error: ‘SerializableVector’ was not declared in this scope
+src/ImGuiSerializer.cpp:188:37: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:30:8: note:   ‘bfu::SerializableVector’
+  class SerializableVector: public std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>
+        ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:188:63: error: expected primary-expression before ‘>’ token
+  void ImGUISerializer::Deserialize( SerializableVector<int32_t>* data ) {}
+                                                               ^
+src/ImGuiSerializer.cpp:188:66: error: ‘data’ was not declared in this scope
+  void ImGUISerializer::Deserialize( SerializableVector<int32_t>* data ) {}
+                                                                  ^~~~
+src/ImGuiSerializer.cpp:190:37: error: variable or field ‘Deserialize’ declared void
+  void ImGUISerializer::Deserialize( SerializableVector<int64_t>* data ) {}
+                                     ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:190:37: error: ‘SerializableVector’ was not declared in this scope
+src/ImGuiSerializer.cpp:190:37: note: suggested alternative:
+In file included from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/SerializerBase.hpp:4,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/EventSystem.hpp:3,
+                 from /home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/bfu.hpp:5,
+                 from src/ImGuiSerializer.hpp:3,
+                 from src/ImGuiSerializer.cpp:1:
+/home/artur/Dokumenty/asapi/vendor/bitforgeutils/inc/ObjectSerialization/Serializable.hpp:30:8: note:   ‘bfu::SerializableVector’
+  class SerializableVector: public std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>
+        ^~~~~~~~~~~~~~~~~~
+src/ImGuiSerializer.cpp:190:63: error: expected primary-expression before ‘>’ token
+  void ImGUISerializer::Deserialize( SerializableVector<int64_t>* data ) {}
+                                                               ^
+src/ImGuiSerializer.cpp:190:66: error: ‘data’ was not declared in this scope
+  void ImGUISerializer::Deserialize( SerializableVector<int64_t>* data ) {}
+                                                                  ^~~~
+In file included from /home/artur/Dokumenty/asapi/src/Core/Object/src/SerializableObject.hpp:5,
+                 from main.cxx:1:
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:9:14: error: using-declaration for non-member at class scope
+   using bfu::SerializableClassInterface;
+              ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:10:14: error: using-declaration for non-member at class scope
+   using bfu::SerializableVector;
+              ^~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:18:46: error: ‘SerializableClassInterface’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableClassInterface* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:19:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:19:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                                                ^
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:21:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<float>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:21:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<float>* data ) override;
+                                                                ^
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:21:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<float>* data ) override;
+                                   ^~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:23:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<bool>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:23:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<bool>* data ) override;
+                                                                ^
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:23:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<bool>* data ) override;
+                                   ^~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:25:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<bfu::stream>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:25:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<bfu::stream>* data ) override;
+                                                                ^
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:25:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<bfu::stream>* data ) override;
+                                   ^~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:27:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<bfu::string>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:27:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<bfu::string>* data ) override;
+                                                                ^
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:27:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<bfu::string>* data ) override;
+                                   ^~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:30:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint8_t>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:30:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint8_t>* data ) override;
+                                                                ^
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:30:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint8_t>* data ) override;
+                                   ^~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:32:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint16_t>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:32:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint16_t>* data ) override;
+                                                                ^
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:32:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint16_t>* data ) override;
+                                   ^~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:34:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint32_t>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:34:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint32_t>* data ) override;
+                                                                ^
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:34:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint32_t>* data ) override;
+                                   ^~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:36:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint64_t>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:36:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint64_t>* data ) override;
+                                                                ^
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:36:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<uint64_t>* data ) override;
+                                   ^~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:39:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int8_t>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:39:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int8_t>* data ) override;
+                                                                ^
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:39:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int8_t>* data ) override;
+                                   ^~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:41:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int16_t>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:41:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int16_t>* data ) override;
+                                                                ^
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:41:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int16_t>* data ) override;
+                                   ^~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:42:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int32_t*)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int*)’
+   virtual void SERIALIZER_SECTION Serialize( int32_t* data ) override;
+                                   ^~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:18:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int*)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableClassInterface* data ) override;
+                                   ^~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:43:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int32_t>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:43:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int32_t>* data ) override;
+                                                                ^
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:43:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int32_t>* data ) override;
+                                   ^~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:45:46: error: ‘SerializableVector’ has not been declared
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int64_t>* data ) override;
+                                              ^~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:45:64: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int64_t>* data ) override;
+                                                                ^
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:45:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<int64_t>* data ) override;
+                                   ^~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:19:35: note: previous declaration ‘virtual void asapi::ImGUISerializer::Serialize(int)’
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:56:50: error: ‘SerializableClassInterface’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableClassInterface* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:57:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:57:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                                                    ^
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:59:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<float>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:59:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<float>* data ) override;
+                                                                    ^
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:59:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<float>* data ) override;
+                                     ^~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:61:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<bool>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:61:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<bool>* data ) override;
+                                                                    ^
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:61:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<bool>* data ) override;
+                                     ^~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:63:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<bfu::stream>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:63:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<bfu::stream>* data ) override;
+                                                                    ^
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:63:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<bfu::stream>* data ) override;
+                                     ^~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:65:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<bfu::string>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:65:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<bfu::string>* data ) override;
+                                                                    ^
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:65:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<bfu::string>* data ) override;
+                                     ^~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:68:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint8_t>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:68:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint8_t>* data ) override;
+                                                                    ^
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:68:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint8_t>* data ) override;
+                                     ^~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:70:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint16_t>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:70:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint16_t>* data ) override;
+                                                                    ^
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:70:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint16_t>* data ) override;
+                                     ^~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:72:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint32_t>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:72:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint32_t>* data ) override;
+                                                                    ^
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:72:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint32_t>* data ) override;
+                                     ^~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:74:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint64_t>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:74:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint64_t>* data ) override;
+                                                                    ^
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:74:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<uint64_t>* data ) override;
+                                     ^~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:77:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int8_t>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:77:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int8_t>* data ) override;
+                                                                    ^
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:77:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int8_t>* data ) override;
+                                     ^~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:79:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int16_t>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:79:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int16_t>* data ) override;
+                                                                    ^
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:79:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int16_t>* data ) override;
+                                     ^~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:80:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int32_t*)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int*)’
+   virtual void DESERIALIZER_SECTION Deserialize( int32_t* data ) override;
+                                     ^~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:56:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int*)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableClassInterface* data ) override;
+                                     ^~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:81:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int32_t>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:81:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int32_t>* data ) override;
+                                                                    ^
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:81:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int32_t>* data ) override;
+                                     ^~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:83:50: error: ‘SerializableVector’ has not been declared
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int64_t>* data ) override;
+                                                  ^~~~~~~~~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:83:68: error: expected ‘,’ or ‘...’ before ‘<’ token
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int64_t>* data ) override;
+                                                                    ^
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:83:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ cannot be overloaded with ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int64_t>* data ) override;
+                                     ^~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:57:37: note: previous declaration ‘virtual void asapi::ImGUISerializer::Deserialize(int)’
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:19:35: error: ‘virtual void asapi::ImGUISerializer::Serialize(int)’ marked ‘override’, but does not override
+   virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                   ^~~~~~~~~
+/home/artur/Dokumenty/asapi/src/Core/Object/src/ImGuiSerializer.hpp:57:37: error: ‘virtual void asapi::ImGUISerializer::Deserialize(int)’ marked ‘override’, but does not override
+   virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
+                                     ^~~~~~~~~~~
+make: *** [makefile:26: final] Błąd 1
