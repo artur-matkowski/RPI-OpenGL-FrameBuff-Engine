@@ -31,7 +31,7 @@ namespace asapi
 
 	void ImGUISerializer::Serialize( bfu::SerializableVector<bfu::SerializableClassInterface>* data )
 	{
-
+		delete (char*)nullptr; //code should never reach that callback
 	}
 
 	void ImGUISerializer::Serialize( float* data )

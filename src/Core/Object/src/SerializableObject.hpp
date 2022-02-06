@@ -46,21 +46,48 @@ namespace asapi
 
 			for(; it != nullptr; )
 			{
-				SerializableObjectBase* serializableObjectBase = (SerializableObjectBase*) (void*) 
-					((size_t)translator.raw + it->offset + ((size_t)translator.serializableObjectBase - (size_t)translator.raw) );
-					
-
-
 				printf("\n\"%s\": ", it->name );
 
 				
-				if( it->jsonSerializeFunc != bfu::SerializerBase::Serialize_SerializableClassInterface )
+				if( it->jsonSerializeFunc == bfu::SerializerBase::Serialize_SerializableClassInterface )
 				{
-					it->jsonSerializeFunc(&serializer, (void*) ((size_t)translator.raw + it->offset) );
+					SerializableObjectBase* serializableObjectBase = (SerializableObjectBase*) (void*) 
+					((size_t)translator.raw + it->offset + ((size_t)translator.serializableObjectBase - (size_t)translator.raw) );
+					
+					serializableObjectBase->OnGUI_caller();
+				}
+				else if( it->jsonSerializeFunc == bfu::SerializerBase::Serialize_v_SerializableClassInterface )
+				{
+					bfu::SerializableVector<bfu::SerializableClassInterface>* serializableObjectBaseVector = (bfu::SerializableVector<bfu::SerializableClassInterface>*) (void*) 
+					((size_t)translator.raw + it->offset);// + ((size_t)translator.serializableObjectBase - (size_t)translator.raw) );
+
+						//printf("size:%d", serializableObjectBaseVector->size() );
+
+					if( serializableObjectBaseVector->begin() != serializableObjectBaseVector->end() ) 
+					{
+						for(auto it = serializableObjectBaseVector->begin(); ; ) 
+						{
+							SerializableObjectBase* serializableObjectBase = (SerializableObjectBase*) (*it);
+							//some pointer magic to get to corect vtable
+							serializableObjectBase = (SerializableObjectBase*) (((size_t)serializableObjectBase) + sizeof(void*));
+							serializableObjectBase->OnGUI_caller(); 
+			 		 
+							++it; 
+			 		 
+							if( it != serializableObjectBaseVector->end() ) 
+							{ 
+								printf(", "); 
+							} 
+							else 
+							{ 
+								break; 
+							} 
+						} 
+					} 
 				}
 				else 
 				{
-					serializableObjectBase->OnGUI_caller();
+					it->jsonSerializeFunc(&serializer, (void*) ((size_t)translator.raw + it->offset) );
 				}
 
 				it = it->next;
