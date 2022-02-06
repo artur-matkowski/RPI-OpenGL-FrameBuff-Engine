@@ -17,6 +17,7 @@ class TestTT: public SerializableObject<TestTT>
 {
 public:
 	SERIALIZABLE_OBJ_VEC(TestTT, TestT, c);
+//	SERIALIZABLE_GUI_OBJ
 };
 
 int main(int argc, char** argv)

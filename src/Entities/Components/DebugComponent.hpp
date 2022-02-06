@@ -4,9 +4,22 @@
 #include "glm.hpp"
 #include "Mesh_old.hpp"
 #include "_ResourceProcessorsInclude.hpp"
+#include "SerializableObject.hpp"
 
 namespace asapi
 {
+	class TestSerialization: public SerializableObject<TestSerialization>
+	{
+	public:
+		SERIALIZABLE_VAR(TestSerialization, float, b);
+
+		/*virtual void OnGUI() override
+		{
+			printf("b is equal to %f", b);
+		}*/
+	};
+
+
 	using bfu::string;
 	class DebugComponent: public ComponentBase<DebugComponent>
 	{
@@ -17,6 +30,8 @@ namespace asapi
 		SERIALIZABLE_OBJ(DebugComponent, UniqueID, m_test );
 		SERIALIZABLE_GUI_OBJ(DebugComponent, ResourceTXTSharedReference, m_testResource );
 		SERIALIZABLE_VAR_VEC(DebugComponent, bool, m_boolV );
+
+		SERIALIZABLE_OBJ(DebugComponent, TestSerialization, m_testobj );
 
 		SERIALIZABLE_GUI_OBJ(DebugComponent, ResourceGLSLSharedReference, m_testShader );
 	public:

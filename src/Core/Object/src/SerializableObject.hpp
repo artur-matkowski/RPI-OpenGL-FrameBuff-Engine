@@ -10,10 +10,7 @@ namespace asapi
 	{
 	public:
 
-		virtual void OnGUI()
-		{
-
-		}
+		virtual void OnGUI(){}
 
 		virtual void OnGUI_caller() = 0;
 	};
@@ -22,85 +19,101 @@ namespace asapi
 	class SerializableObject: public bfu::SerializableClassBase<CRTP>, public SerializableObjectBase
 	{
 	public:
+		virtual void OnGUI_caller() override;
+	};
 
-		virtual void OnGUI_caller() override
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	template<class CRTP>
+	void SerializableObject<CRTP>::OnGUI_caller()
+	{
+		ImGUISerializer 					serializer;
+		bfu::SerializableClassInterface* 	serializableClassInterface = this;
+		void* 								raw = this;
+		SerializableObjectBase* 			serializableObjectBase = this;
+
+
+		if( &CRTP::OnGUI != &SerializableObjectBase::OnGUI )
 		{
-
-			PointerTranslator translator;
-			ImGUISerializer serializer;
-
-			translator.serializableClassInterface = this;
-			translator.raw = this;
-			translator.serializableObjectBase = this;
+			serializableObjectBase->OnGUI();
+			return;
+		}
 
 
-			if( &CRTP::OnGUI != &SerializableObjectBase::OnGUI )
+		serializableClassInterface->PreSerializationCallback();
+		bfu::ClassInfo* it = serializableClassInterface->GetFirstClassInfo();
+
+		for(; it != nullptr; )
+		{
+			ARGS_new args;
+
+			args.data = (bfu::SerializableClassInterface*) ((size_t)raw + it->offset);
+			args.it = it;
+			args.dataPtr = (void*) ((size_t)raw + it->offset);
+			args.name = it->name;
+
+			it->jsonSerializeFunc(&serializer, (void*) &args );
+
+			if( it->jsonSerializeFunc == bfu::SerializerBase::Serialize_SerializableClassInterface )
 			{
-				translator.serializableObjectBase->OnGUI();
-				return;
-			}
-
-
-			translator.serializableClassInterface->PreSerializationCallback();
-			bfu::ClassInfo* it = translator.serializableClassInterface->GetFirstClassInfo();
-
-			for(; it != nullptr; )
-			{
-				printf("\n\"%s\": ", it->name );
-
+				SerializableObjectBase* serializableObjectBase = (SerializableObjectBase*) (void*) 
+				((size_t)raw + it->offset + ((size_t)serializableObjectBase - (size_t)raw) );
 				
-				if( it->jsonSerializeFunc == bfu::SerializerBase::Serialize_SerializableClassInterface )
-				{
-					SerializableObjectBase* serializableObjectBase = (SerializableObjectBase*) (void*) 
-					((size_t)translator.raw + it->offset + ((size_t)translator.serializableObjectBase - (size_t)translator.raw) );
-					
-					serializableObjectBase->OnGUI_caller();
-				}
-				else if( it->jsonSerializeFunc == bfu::SerializerBase::Serialize_v_SerializableClassInterface )
-				{
-					bfu::SerializableVector<bfu::SerializableClassInterface>* serializableObjectBaseVector = (bfu::SerializableVector<bfu::SerializableClassInterface>*) (void*) 
-					((size_t)translator.raw + it->offset);// + ((size_t)translator.serializableObjectBase - (size_t)translator.raw) );
+				serializableObjectBase->OnGUI_caller();
+			}
+			else if( it->jsonSerializeFunc == bfu::SerializerBase::Serialize_v_SerializableClassInterface )
+			{
+				bfu::SerializableVector<bfu::SerializableClassInterface>* serializableObjectBaseVector = (bfu::SerializableVector<bfu::SerializableClassInterface>*) (void*) 
+				((size_t)raw + it->offset);// + ((size_t)serializableObjectBase - (size_t)raw) );
 
-						//printf("size:%d", serializableObjectBaseVector->size() );
+					//printf("size:%d", serializableObjectBaseVector->size() );
 
-					if( serializableObjectBaseVector->begin() != serializableObjectBaseVector->end() ) 
+				if( serializableObjectBaseVector->begin() != serializableObjectBaseVector->end() ) 
+				{
+					for(auto it = serializableObjectBaseVector->begin(); ; ) 
 					{
-						for(auto it = serializableObjectBaseVector->begin(); ; ) 
-						{
-							SerializableObjectBase* serializableObjectBase = (SerializableObjectBase*) (*it);
-							//some pointer magic to get to corect vtable
-							serializableObjectBase = (SerializableObjectBase*) (((size_t)serializableObjectBase) + sizeof(void*));
-							serializableObjectBase->OnGUI_caller(); 
-			 		 
-							++it; 
-			 		 
-							if( it != serializableObjectBaseVector->end() ) 
-							{ 
-								printf(", "); 
-							} 
-							else 
-							{ 
-								break; 
-							} 
+						SerializableObjectBase* serializableObjectBase = (SerializableObjectBase*) (*it);
+						//some pointer magic to get to corect vtable
+						serializableObjectBase = (SerializableObjectBase*) (((size_t)serializableObjectBase) + sizeof(void*));
+						serializableObjectBase->OnGUI_caller(); 
+		 		 
+						++it; 
+		 		 
+						if( it != serializableObjectBaseVector->end() ) 
+						{ 
+							printf(", "); 
+						} 
+						else 
+						{ 
+							break; 
 						} 
 					} 
-				}
-				else 
-				{
-					it->jsonSerializeFunc(&serializer, (void*) ((size_t)translator.raw + it->offset) );
-				}
-
-				it = it->next;
-
-				if( it != nullptr )
-				{
-					printf(", ");
-				}
+				} 
 			}
 
-			translator.serializableClassInterface->PostSerializationCallback();
+			it = it->next;
 		}
-	};
+
+		serializableClassInterface->PostSerializationCallback();
+	}
 }
 
 #endif

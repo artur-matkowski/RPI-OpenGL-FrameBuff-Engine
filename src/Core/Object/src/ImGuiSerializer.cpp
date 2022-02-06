@@ -1,5 +1,43 @@
 #include "ImGuiSerializer.hpp"
 #include "SerializableObject.hpp"
+#ifndef SERIALIZATIO_NOBJECT_TESTS
+#include "imgui.h"
+#endif
+
+#define GENERATE_VECTOR_SERIALIZE_BODY(T) \
+	ARGS_new* args = (ARGS_new*)data;\
+	bfu::SerializableVector<T>* _data = (bfu::SerializableVector<T>*)args->dataPtr;\
+	\
+	uint32_t size = _data->size();\
+	uint32_t step = 1;\
+	int i = 0;\
+	\
+	ImGui::Text("Vector size:");\
+	\
+	if( ImGui::InputScalar(args->it->name, ImGuiDataType_U32, &size, &step, NULL, "%d") )\
+	{\
+		_data->resize( size );\
+	}\
+	\
+	for(auto it = _data->begin(); it!=_data->end(); it++)\
+	{\
+		char name[512];\
+		snprintf(name, 512, "%s[%d]", args->it->name, i);\
+		args->name = name;\
+		args->dataPtr = &*it;\
+		T* __data = (T*)args;				\
+		this->Serialize( __data );\
+	\
+		++i;\
+	}\
+
+#define GENERATE_SERIALIZE_BODY(T)\
+	ARGS_new* args = (ARGS_new*)data;\
+	T* _data = (T*)args->dataPtr;\
+	T buff;\
+	\
+	buff = *_data;\
+
 
 namespace asapi
 {
@@ -24,19 +62,41 @@ namespace asapi
 	}
 
 
+
+
+
+
+
+
+
+
+
 	void ImGUISerializer::Serialize( bfu::SerializableClassInterface* data )
 	{
-		delete (char*)nullptr; //code should never reach that callback
+		//delete (char*)nullptr; //code should never reach that callback it should be captured in: void SerializableObject<CRTP>::OnGUI_caller()
 	}
 
 	void ImGUISerializer::Serialize( bfu::SerializableVector<bfu::SerializableClassInterface>* data )
 	{
-		delete (char*)nullptr; //code should never reach that callback
+		//delete (char*)nullptr; //code should never reach that callback it should be captured in: void SerializableObject<CRTP>::OnGUI_caller()
 	}
 
 	void ImGUISerializer::Serialize( float* data )
 	{
-		printf("%f", *data);
+		GENERATE_SERIALIZE_BODY(float);
+
+		#ifdef SERIALIZATIO_NOBJECT_TESTS
+
+			printf("\n%s: %f", args->name, buff);
+
+		#else
+
+			if( ImGui::InputScalar(args->name, ImGuiDataType_Float, &buff) )
+			{
+				*_data = buff;
+			}
+
+		#endif
 	}
 
 	void ImGUISerializer::Serialize( bfu::SerializableVector<float>* data )
@@ -155,35 +215,4 @@ namespace asapi
 	{
 
 	}
-
-
-
-	void ImGUISerializer::Deserialize( bfu::SerializableClassInterface* data ) {}
-	void ImGUISerializer::Deserialize( bfu::SerializableVector<bfu::SerializableClassInterface>* data ) {}
-	void ImGUISerializer::Deserialize( float* data ) {}
-	void ImGUISerializer::Deserialize( bfu::SerializableVector<float>* data ) {}
-	void ImGUISerializer::Deserialize( bool* data ) {}
-	void ImGUISerializer::Deserialize( bfu::SerializableVector<bool>* data ) {}
-	void ImGUISerializer::Deserialize( bfu::stream* data ) {}
-	void ImGUISerializer::Deserialize( bfu::SerializableVector<bfu::stream>* data ) {}
-	void ImGUISerializer::Deserialize( bfu::string* data ) {}
-	void ImGUISerializer::Deserialize( bfu::SerializableVector<bfu::string>* data ) {}
-
-	void ImGUISerializer::Deserialize( uint8_t* data ) {}
-	void ImGUISerializer::Deserialize( bfu::SerializableVector<uint8_t>* data ) {}
-	void ImGUISerializer::Deserialize( uint16_t* data ) {}
-	void ImGUISerializer::Deserialize( bfu::SerializableVector<uint16_t>* data ) {}
-	void ImGUISerializer::Deserialize( uint32_t* data ) {}
-	void ImGUISerializer::Deserialize( bfu::SerializableVector<uint32_t>* data ) {}
-	void ImGUISerializer::Deserialize( uint64_t* data ) {}
-	void ImGUISerializer::Deserialize( bfu::SerializableVector<uint64_t>* data ) {}
-
-	void ImGUISerializer::Deserialize( int8_t* data ) {}
-	void ImGUISerializer::Deserialize( bfu::SerializableVector<int8_t>* data ) {}
-	void ImGUISerializer::Deserialize( int16_t* data ) {}
-	void ImGUISerializer::Deserialize( bfu::SerializableVector<int16_t>* data ) {}
-	void ImGUISerializer::Deserialize( int32_t* data ) {}
-	void ImGUISerializer::Deserialize( bfu::SerializableVector<int32_t>* data ) {}
-	void ImGUISerializer::Deserialize( int64_t* data ) {}
-	void ImGUISerializer::Deserialize( bfu::SerializableVector<int64_t>* data ) {}
 }
