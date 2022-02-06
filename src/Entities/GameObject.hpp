@@ -1,7 +1,7 @@
 #ifndef _H_GameObject
 #define _H_GameObject
-#include "EntityBase.hpp"
 #include "_ComponentList.hpp"
+#include "SerializableObject.hpp"
 
 namespace asapi
 {
@@ -18,20 +18,23 @@ namespace asapi
 	using bfu::stream;
 	using bfu::JSONSerializer;
 
-	struct ComponentInfo: public EntityBase<ComponentInfo>
+	class ComponentInfo: public SerializableObject<ComponentInfo>
 	{
+		bfu::MemBlockBase* m_mBlock;
+
+	public:
 		SERIALIZABLE_VAR( ComponentInfo, stream, m_componentTypeName );
 		SERIALIZABLE_VAR( ComponentInfo, stream, m_recreationString );
 
-		ComponentInfo( bfu::MemBlockBase* mBlock )
-			:EntityBase(mBlock)
-			,m_componentTypeName(mBlock)
-			,m_recreationString(mBlock)
+		ComponentInfo( bfu::MemBlockBase* mBlock ):
+			m_mBlock(mBlock),
+			m_componentTypeName(mBlock),
+			m_recreationString(mBlock)
 			{};
-		ComponentInfo( const ComponentInfo& cp )
-			:EntityBase(cp.m_mBlock)
-			,m_componentTypeName(cp.m_mBlock)
-			,m_recreationString(cp.m_mBlock)
+		ComponentInfo( const ComponentInfo& cp ):
+			m_mBlock(cp.m_mBlock),
+			m_componentTypeName(cp.m_mBlock),
+			m_recreationString(cp.m_mBlock)
 			{ 
 				m_componentTypeName = cp.m_componentTypeName; 
 				m_recreationString = cp.m_recreationString;
@@ -39,9 +42,19 @@ namespace asapi
 	};
 
 
-	class GameObject: public EntityBase<GameObject>
+	//class GameObject: public EntityBase<GameObject>
+	class GameObject: public SerializableObject<GameObject>
 	{
 		friend bfu::ConditionalBuilder;
+
+		bfu::MemBlockBase* m_mBlock;
+
+	public:
+
+		bfu::MemBlockBase* GetMemBlock()
+		{
+			return m_mBlock;
+		}
 		
 
 	protected:
@@ -113,6 +126,9 @@ namespace asapi
 		inline ComponentTranslatePointers* GetComponent(int i)	
 														{ return &v_components[i]; 	}
 
+		#ifdef IS_EDITOR
+		virtual void OnGUI() override;
+		#endif
 	};
 }
 

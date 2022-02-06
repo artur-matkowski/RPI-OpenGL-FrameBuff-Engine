@@ -67,7 +67,7 @@ namespace asapi
 	}
 	ComponentInterface::ComponentInterface(bfu::MemBlockBase* mBlock)
 	{};
-
+/*
 
 	#ifdef IS_EDITOR
 	void ComponentInterface::OnGUI()
@@ -75,5 +75,7 @@ namespace asapi
 		ImGui::Text("ComponentInterface::OnGUI()... for some reason Components OnGUI function was not called");
 	}
 	#endif
+*/
+
 
 }

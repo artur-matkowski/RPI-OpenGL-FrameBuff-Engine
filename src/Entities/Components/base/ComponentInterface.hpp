@@ -1,6 +1,8 @@
 #ifndef H_ComponentInterface
 #define H_ComponentInterface
-#include "EntityBase.hpp"
+#include "bfu.hpp"
+#include "SerializableObject.hpp"
+#include "UniqueID.hpp"
 
 namespace asapi
 {
@@ -46,7 +48,7 @@ namespace asapi
 		{
 			TypeInfo::GetTypeInfo(hash)->fPtr(mBlock, ret);
 		}
-
+/*
 		#ifdef IS_EDITOR
 		void OnGUI_caller()
 		{
@@ -54,7 +56,7 @@ namespace asapi
 		}
 		virtual void OnGUI();
 		#endif
-
+*/
 		virtual void OnAttach(){};
 		virtual void OnDetach(){};
 		virtual void OnIsDirty(){};

@@ -1,6 +1,7 @@
 #include "GameObject.hpp"
 #include "Systems.hpp"
 #include "PrefabLoaderComponent.hpp"
+#include "imgui.h"
 
 namespace asapi
 {
@@ -26,13 +27,14 @@ namespace asapi
 		}
 	}
 
-	GameObject::GameObject( bfu::MemBlockBase* mBlock )
-		:EntityBase(mBlock)
-		,m_myName(mBlock)
-		,forwardMemBlock(mBlock)
-		,v_children(&forwardMemBlock)
-		,v_componentsInfo(mBlock)
-		,v_components(mBlock)
+	GameObject::GameObject( bfu::MemBlockBase* mBlock ):
+		//EntityBase(mBlock),
+		m_mBlock(mBlock),
+		m_myName(mBlock),
+		forwardMemBlock(mBlock),
+		v_children(&forwardMemBlock),
+		v_componentsInfo(mBlock),
+		v_components(mBlock)
 	{
 		m_myName = "GameObject";
 
@@ -255,4 +257,20 @@ namespace asapi
 	}
 
 
+	#ifdef IS_EDITOR
+	void GameObject::OnGUI()
+	{
+		ImGui::Spacing();
+		ImGui::Text( GetName() );
+
+		for(int i=0; i<GetComponentsCount(); ++i)
+		{
+			ImGui::Spacing();
+			ImGui::Separator();
+			ImGui::Spacing();
+			//OnGUI( GetComponent(i)->p_ComponentInterface );
+			//GetComponent(i)->p_ComponentInterface->OnGUI_caller();
+		}
+	}
+	#endif
 }
