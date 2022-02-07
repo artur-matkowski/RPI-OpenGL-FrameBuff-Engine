@@ -12,6 +12,7 @@ namespace asapi
 	struct ComponentTranslatePointers
 	{
 		ComponentInterface* 				p_ComponentInterface = nullptr;
+		SerializableObjectBase* 			p_SerializableObject = nullptr;
 		bfu::SerializableClassInterface* 	p_SerializableClassInterface = nullptr;
 	};
 
@@ -33,7 +34,7 @@ namespace asapi
 	};
 
 
-	class ComponentInterface: public object
+	class ComponentInterface
 	{
 	protected:
 		GameObject *m_owner = nullptr;

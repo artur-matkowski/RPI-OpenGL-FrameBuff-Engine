@@ -42,8 +42,8 @@ namespace asapi
 
 		//virtual void OnAttach() override;
 		virtual void OnIsDirty() override;
-		#ifdef IS_EDITOR
-		//virtual void OnGUI() override;
+		#ifndef IS_EDITOR
+		virtual void OnGUI() override;
 		#endif
 
 	};

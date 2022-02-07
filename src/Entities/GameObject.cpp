@@ -268,8 +268,7 @@ namespace asapi
 			ImGui::Spacing();
 			ImGui::Separator();
 			ImGui::Spacing();
-			//OnGUI( GetComponent(i)->p_ComponentInterface );
-			//GetComponent(i)->p_ComponentInterface->OnGUI_caller();
+			GetComponent(i)->p_SerializableObject->OnGUI_caller();
 		}
 	}
 	#endif

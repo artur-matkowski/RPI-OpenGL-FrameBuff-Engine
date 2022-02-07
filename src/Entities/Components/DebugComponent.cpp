@@ -41,13 +41,13 @@ namespace asapi
 	{
 
 	}
-	/*
-	#ifdef IS_EDITOR
+	
+	#ifndef IS_EDITOR
 	void DebugComponent::OnGUI()
 	{
-
+		ImGui::Text("DebugComponent::OnGUI()");
 	}
 	#endif
-*/
+
 
 }

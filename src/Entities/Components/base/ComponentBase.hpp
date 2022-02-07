@@ -1,10 +1,11 @@
 #ifndef _H_ComponentBase
 #define _H_ComponentBase
-#include "ComponentInterface.hpp"
 #include <cxxabi.h>
 #include <vector>
 #include "bfu.hpp"
+#include "SerializableObject.hpp"
 #include "ImGUI_Serializer.hpp"
+#include "ComponentInterface.hpp"
 
 namespace asapi
 {
@@ -16,12 +17,13 @@ namespace asapi
 		obj->Init(mBlock);
 
 		ret.p_ComponentInterface = obj;
+		ret.p_SerializableObject = obj;
 		ret.p_SerializableClassInterface = obj;
 	}
 
 
 	template<class T>
-	class ComponentBase: public bfu::SerializableClassBase<T>, public ComponentInterface
+	class ComponentBase: public SerializableObject<T>, public ComponentInterface
 	{
 		static char ClassName[255];
 
