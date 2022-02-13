@@ -8,11 +8,15 @@ namespace asapi
 {
 	class SerializableObjectBase: public object
 	{
+	#ifdef IS_EDITOR
+	protected:
+		void NextImGUIRow();
 	public:
 
 		virtual void OnGUI(){}
 
 		virtual void OnGUI_caller() = 0;
+	#endif
 	};
 
 	template<class CRTP>
@@ -79,7 +83,10 @@ namespace asapi
 				serializableObjectBase = dynamic_cast<SerializableObjectBase*>(this);
 				serializableObjectBase = (SerializableObjectBase* ) (((size_t)serializableObjectBase) + it->offset);
 				
+				NextImGUIRow();
 				serializableObjectBase->OnGUI_caller();
+
+				it->jsonDeserializeFunc(&serializer, (void*) &args );
 			}
 			else if( it->jsonSerializeFunc == bfu::SerializerBase::Serialize_v_SerializableClassInterface )
 			{
@@ -101,13 +108,14 @@ namespace asapi
 						serializableObjectBase = dynamic_cast<SerializableObjectBase*>(*vec_it);
 						//serializableObjectBase = (SerializableObjectBase* ) (((size_t)serializableObjectBase) + vec_it->offset);
 						
+						NextImGUIRow();
 						serializableObjectBase->OnGUI_caller();
 		 		 
 						++vec_it; 
 		 		 
 						if( vec_it != serializableObjectBaseVector->end() ) 
 						{ 
-							printf(", "); 
+							//printf(", "); 
 						} 
 						else 
 						{ 
@@ -115,6 +123,7 @@ namespace asapi
 						} 
 					} 
 				} 
+				it->jsonDeserializeFunc(&serializer, (void*) &args );
 			}
 
 			it = it->next;

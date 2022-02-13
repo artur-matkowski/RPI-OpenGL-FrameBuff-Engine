@@ -31,7 +31,7 @@ namespace asapi
 		//SERIALIZABLE_OBJ(DebugComponent, ResourceTXTSharedReference, m_testResource );
 		SERIALIZABLE_VAR_VEC(DebugComponent, bool, m_boolV );
 
-		SERIALIZABLE_OBJ(DebugComponent, TestSerialization, m_testobj );
+		SERIALIZABLE_OBJ_VEC(DebugComponent, TestSerialization, m_testobj );
 
 		//SERIALIZABLE_OBJ(DebugComponent, ResourceGLSLSharedReference, m_testShader );
 	public:
