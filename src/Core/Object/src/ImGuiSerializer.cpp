@@ -73,12 +73,30 @@ namespace asapi
 
 	void ImGUISerializer::Serialize( bfu::SerializableClassInterface* data )
 	{
-		//delete (char*)nullptr; //code should never reach that callback it should be captured in: void SerializableObject<CRTP>::OnGUI_caller()
+		ARGS_new* args = (ARGS_new*)data;
+		bfu::SerializableClassInterface* _data = (bfu::SerializableClassInterface*)args->dataPtr;
+
+		#ifdef SERIALIZATIO_NOBJECT_TESTS
+
+			printf( "\n%s:", args->name );
+
+		#else
+
+		#endif
 	}
 
 	void ImGUISerializer::Serialize( bfu::SerializableVector<bfu::SerializableClassInterface>* data )
 	{
-		//delete (char*)nullptr; //code should never reach that callback it should be captured in: void SerializableObject<CRTP>::OnGUI_caller()
+		ARGS_new* args = (ARGS_new*)data;
+		bfu::SerializableClassInterface* _data = (bfu::SerializableClassInterface*)args->dataPtr;
+
+		#ifdef SERIALIZATIO_NOBJECT_TESTS
+
+			printf( "\n%s:", args->name );
+
+		#else
+
+		#endif
 	}
 
 	void ImGUISerializer::Serialize( float* data )

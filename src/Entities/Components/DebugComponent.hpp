@@ -28,12 +28,12 @@ namespace asapi
 
 		SERIALIZABLE_VAR_VEC(DebugComponent, string, m_meshName );
 		SERIALIZABLE_OBJ(DebugComponent, UniqueID, m_test );
-		SERIALIZABLE_GUI_OBJ(DebugComponent, ResourceTXTSharedReference, m_testResource );
+		//SERIALIZABLE_OBJ(DebugComponent, ResourceTXTSharedReference, m_testResource );
 		SERIALIZABLE_VAR_VEC(DebugComponent, bool, m_boolV );
 
 		SERIALIZABLE_OBJ(DebugComponent, TestSerialization, m_testobj );
 
-		SERIALIZABLE_GUI_OBJ(DebugComponent, ResourceGLSLSharedReference, m_testShader );
+		//SERIALIZABLE_OBJ(DebugComponent, ResourceGLSLSharedReference, m_testShader );
 	public:
 		DebugComponent(bfu::MemBlockBase* mBlock);
 		DebugComponent(const DebugComponent&) = delete;
@@ -42,10 +42,12 @@ namespace asapi
 
 		//virtual void OnAttach() override;
 		virtual void OnIsDirty() override;
-		#ifndef IS_EDITOR
+		
+		/*
+		#ifdef IS_EDITOR
 		virtual void OnGUI() override;
 		#endif
-
+		*/
 	};
 }
 

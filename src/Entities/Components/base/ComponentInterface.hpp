@@ -14,6 +14,7 @@ namespace asapi
 		ComponentInterface* 				p_ComponentInterface = nullptr;
 		SerializableObjectBase* 			p_SerializableObject = nullptr;
 		bfu::SerializableClassInterface* 	p_SerializableClassInterface = nullptr;
+		void* 								p_raw = nullptr;
 	};
 
 	typedef void (*InitFuncPtr)(bfu::MemBlockBase*, ComponentTranslatePointers&);

@@ -260,6 +260,8 @@ namespace asapi
 	#ifdef IS_EDITOR
 	void GameObject::OnGUI()
 	{
+		ComponentInterface* p_forRemoval = nullptr;
+		
 		ImGui::Spacing();
 		ImGui::Text( GetName() );
 
@@ -268,7 +270,24 @@ namespace asapi
 			ImGui::Spacing();
 			ImGui::Separator();
 			ImGui::Spacing();
+
+			ImGui::LabelText( "Component", GetComponent(i)->p_ComponentInterface->TypeName() ); 
+			ImGui::SameLine();
+			ImGui::PushItemWidth(-(ImGui::GetWindowContentRegionWidth() - ImGui::CalcItemWidth()));
+			ImGui::PushID( GetComponent(i)->p_ComponentInterface );
+			if( ImGui::Button("Remove Component") )
+			{
+				p_forRemoval = GetComponent(i)->p_ComponentInterface;
+			}
+			ImGui::PopID();
+			ImGui::PopItemWidth();
+
 			GetComponent(i)->p_SerializableObject->OnGUI_caller();
+		}
+
+		if( p_forRemoval!=nullptr )
+		{
+			RemoveComponent( p_forRemoval );
 		}
 	}
 	#endif

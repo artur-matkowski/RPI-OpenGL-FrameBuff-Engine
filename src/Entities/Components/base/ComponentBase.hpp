@@ -4,7 +4,7 @@
 #include <vector>
 #include "bfu.hpp"
 #include "SerializableObject.hpp"
-#include "ImGUI_Serializer.hpp"
+#include "ImGuiSerializer.hpp"
 #include "ComponentInterface.hpp"
 
 namespace asapi
@@ -19,6 +19,7 @@ namespace asapi
 		ret.p_ComponentInterface = obj;
 		ret.p_SerializableObject = obj;
 		ret.p_SerializableClassInterface = obj;
+		ret.p_raw = obj;
 	}
 
 
@@ -71,16 +72,6 @@ namespace asapi
 			T* _obj = (T*)this;
 			bfu::MemBlockBase::DeallocateUnknown(_obj);
 		}
-
-		
-		#ifdef IS_EDITOR
-		virtual void OnGUI()
-		{
-			ImGUI_Serializer imgui_serializer;
-
-			imgui_serializer.Serialize( this );
-		}
-		#endif
 	};
 
 	template<class T>

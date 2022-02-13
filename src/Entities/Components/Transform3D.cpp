@@ -28,6 +28,7 @@ namespace asapi
 
 	void Transform3D::OnIsDirty()
 	{
+
 		//log::debug << "UpdateModelMatrix" << std::endl;1
 		GameObject* parent = m_owner->GetParent();
 

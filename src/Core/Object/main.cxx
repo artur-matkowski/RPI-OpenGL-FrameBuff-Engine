@@ -13,16 +13,23 @@ public:
 	}*/
 };
 
-class TestTT: public SerializableObject<TestTT>
+class TestTvT: public SerializableObject<TestTvT>
 {
 public:
-	SERIALIZABLE_OBJ_VEC(TestTT, TestT, c);
-//	SERIALIZABLE_GUI_OBJ
+	SERIALIZABLE_OBJ_VEC(TestTvT, TestT, c);
+};
+
+
+class TestToT: public SerializableObject<TestToT>
+{
+public:
+	SERIALIZABLE_OBJ(TestToT, TestT, c);
 };
 
 int main(int argc, char** argv)
 {
-	TestTT* a = new TestTT();
+	TestTvT* a = new TestTvT();
+	TestToT* ao = new TestToT();
 	//object* c = a;
 	//SerializableObject<TestT>* d = a;
 
@@ -34,6 +41,8 @@ int main(int argc, char** argv)
 
 	a->c[0].b = 3.14;
 	a->c[1].b = 6.28;
+
+	ao->c.b = 3.28;
 /*
 	printf("testt: %llu serializablebase: %llu object: %llu serializableobject<testt>: %llu\n"
 		, (uint64_t) a
@@ -45,6 +54,10 @@ int main(int argc, char** argv)
 	SerializableObjectBase* c = ptr1;
 
 	a->OnGUI_caller();
+	printf("\n---");
+	ptr1->OnGUI_caller();
+	printf("\n---");
+	ao->OnGUI_caller();
 
 
 	return 0;

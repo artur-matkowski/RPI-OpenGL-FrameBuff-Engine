@@ -22,8 +22,6 @@ namespace asapi
 		EditorWindow();
 		~EditorWindow();
 
-		static void OnGUI(ComponentInterface* obj);
-		static void OnGUI(GameObject* obj);
 	public:
 		static void SetSelectedGameObject( GameObject* );
 		static void OnGUI();

@@ -16,7 +16,7 @@ namespace asapi
 	{
 	protected:
 
-		SERIALIZABLE_GUI_OBJ(MeshComponent, ResourceFBXSharedReference, m_meshReference );
+		SERIALIZABLE_OBJ(MeshComponent, ResourceFBXSharedReference, m_meshReference );
 		
 	public:
 		MeshComponent(bfu::MemBlockBase* mBlock);

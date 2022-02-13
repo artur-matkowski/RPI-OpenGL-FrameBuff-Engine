@@ -74,30 +74,38 @@ namespace asapi
 
 			if( it->jsonSerializeFunc == bfu::SerializerBase::Serialize_SerializableClassInterface )
 			{
-				SerializableObjectBase* serializableObjectBase = (SerializableObjectBase*) (void*) 
-				((size_t)raw + it->offset + ((size_t)serializableObjectBase - (size_t)raw) );
+				SerializableObjectBase* serializableObjectBase;
+				//(((size_t)raw) + it->offset) + 8;// + (((size_t)serializableClassInterface) - ((size_t)raw));
+				serializableObjectBase = dynamic_cast<SerializableObjectBase*>(this);
+				serializableObjectBase = (SerializableObjectBase* ) (((size_t)serializableObjectBase) + it->offset);
 				
 				serializableObjectBase->OnGUI_caller();
 			}
 			else if( it->jsonSerializeFunc == bfu::SerializerBase::Serialize_v_SerializableClassInterface )
 			{
-				bfu::SerializableVector<bfu::SerializableClassInterface>* serializableObjectBaseVector = (bfu::SerializableVector<bfu::SerializableClassInterface>*) (void*) 
-				((size_t)raw + it->offset);// + ((size_t)serializableObjectBase - (size_t)raw) );
+				CRTP* p_obj = dynamic_cast<CRTP*>(this);
 
-					//printf("size:%d", serializableObjectBaseVector->size() );
+				bfu::SerializableVector<bfu::SerializableClassInterface>* serializableObjectBaseVector 
+					= //dynamic_cast<bfu::SerializableVector<bfu::SerializableClassInterface>*>( (void*) 
+					(bfu::SerializableVector<bfu::SerializableClassInterface>*) (((size_t)p_obj) + it->offset);
+
 
 				if( serializableObjectBaseVector->begin() != serializableObjectBaseVector->end() ) 
 				{
-					for(auto it = serializableObjectBaseVector->begin(); ; ) 
+					for(auto vec_it = serializableObjectBaseVector->begin(); ; ) 
 					{
-						SerializableObjectBase* serializableObjectBase = (SerializableObjectBase*) (*it);
+						SerializableObjectBase* serializableObjectBase = nullptr;// = (SerializableObjectBase*) (*vec_it);
 						//some pointer magic to get to corect vtable
-						serializableObjectBase = (SerializableObjectBase*) (((size_t)serializableObjectBase) + sizeof(void*));
-						serializableObjectBase->OnGUI_caller(); 
+						// = (SerializableObjectBase*) (((size_t)serializableObjectBase) + sizeof(void*));
+						
+						serializableObjectBase = dynamic_cast<SerializableObjectBase*>(*vec_it);
+						//serializableObjectBase = (SerializableObjectBase* ) (((size_t)serializableObjectBase) + vec_it->offset);
+						
+						serializableObjectBase->OnGUI_caller();
 		 		 
-						++it; 
+						++vec_it; 
 		 		 
-						if( it != serializableObjectBaseVector->end() ) 
+						if( vec_it != serializableObjectBaseVector->end() ) 
 						{ 
 							printf(", "); 
 						} 
