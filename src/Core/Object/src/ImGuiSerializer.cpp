@@ -23,6 +23,8 @@
 #define GENERATE_SERIALIZE_BODY(T)\
 	ARGS_new* args = (ARGS_new*)data;\
 	T* _data = (T*)args->dataPtr;\
+	char taggedName[128];\
+	snprintf(taggedName,128,"%s##%llu", args->name, (size_t)_data);\
 	T buff;\
 	\
 	buff = *_data;\
@@ -111,11 +113,19 @@ namespace asapi
 			
 			if( ImGui::InputScalar(args->it->name, ImGuiDataType_U32, &size, &step, NULL, "%d") )
 			{
-				_data->resize( size );
+				const int oldSize = _data->size();
+
+				if(size > oldSize)
+					_data->reserve( size );
+				else if(size < oldSize)
+					_data->resize( size );
+
+				for(int i=oldSize; i<size; i++)
+				{
+					bfu::SerializableClassInterface* cache = _data->allocateAndInit( _data->mBlock() );
+					_data->emplace_back( cache );
+				}
 			}
-
-
-            
 
 		#endif
 	}
@@ -131,7 +141,7 @@ namespace asapi
 
 		#else
 
-			if( ImGui::InputScalar(args->name, ImGuiDataType_Float, &buff) )
+			if( ImGui::InputScalar(taggedName, ImGuiDataType_Float, &buff) )
 			{
 				*_data = buff;
 			}
