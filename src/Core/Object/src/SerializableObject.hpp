@@ -10,7 +10,8 @@ namespace asapi
 	{
 	#ifdef IS_EDITOR
 	protected:
-		void NextImGUIRow();
+		static void NextImGUIVecRow(const int column);
+		static void NextImGUIRow();
 	public:
 
 		virtual void OnGUI(){}
@@ -99,6 +100,7 @@ namespace asapi
 
 				if( serializableObjectBaseVector->begin() != serializableObjectBaseVector->end() ) 
 				{
+					int i=0;
 					for(auto vec_it = serializableObjectBaseVector->begin(); ; ) 
 					{
 						SerializableObjectBase* serializableObjectBase = nullptr;// = (SerializableObjectBase*) (*vec_it);
@@ -108,7 +110,7 @@ namespace asapi
 						serializableObjectBase = dynamic_cast<SerializableObjectBase*>(*vec_it);
 						//serializableObjectBase = (SerializableObjectBase* ) (((size_t)serializableObjectBase) + vec_it->offset);
 						
-						NextImGUIRow();
+						NextImGUIVecRow(i); ++i;
 						serializableObjectBase->OnGUI_caller();
 		 		 
 						++vec_it; 

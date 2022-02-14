@@ -86,6 +86,7 @@ namespace asapi
 
 	void ImGUISerializer::Serialize( bfu::SerializableVector<bfu::SerializableClassInterface>* data )
 	{
+		
 		ARGS_new* args = (ARGS_new*)data;
 		bfu::SerializableVector<bfu::SerializableClassInterface>* _data = 
 			(bfu::SerializableVector<bfu::SerializableClassInterface>*)args->dataPtr;
@@ -102,14 +103,12 @@ namespace asapi
 			snprintf(id, 32, "%llu", (size_t)_data);
 
 
-       		ImGui::BeginTable(id, 1, ImGuiTableFlags_BordersOuter);
+       		ImGui::BeginTable(id, 2, ImGuiTableFlags_Borders);
     
-            ImGui::TableSetupColumn(args->name);
+            ImGui::TableSetupColumn(args->name, ImGuiTableColumnFlags_WidthFixed, 100.0f);
+            ImGui::TableSetupColumn("Vector size:", ImGuiTableColumnFlags_WidthStretch);
+
             ImGui::TableHeadersRow();
-
-
-			
-			ImGui::Text("Vector size:");
 			
 			if( ImGui::InputScalar(args->it->name, ImGuiDataType_U32, &size, &step, NULL, "%d") )
 			{
@@ -127,7 +126,9 @@ namespace asapi
 				}
 			}
 
+
 		#endif
+		
 	}
 
 
@@ -156,11 +157,74 @@ namespace asapi
 
 	void ImGUISerializer::Serialize( bool* data )
 	{
+		GENERATE_SERIALIZE_BODY(bool);
 
+		#ifdef SERIALIZATIO_NOBJECT_TESTS
+
+			printf("\n%s: %f", args->name, buff);
+
+		#else
+
+			if( ImGui::Checkbox(taggedName, &buff) )
+			{
+				*_data = buff;
+			}
+
+		#endif
 	}
 
 	void ImGUISerializer::Serialize( bfu::SerializableVector<bool>* data )
 	{
+		ARGS_new* args = (ARGS_new*)data;
+		bfu::SerializableVector<bool>* _data = 
+			(bfu::SerializableVector<bool>*)args->dataPtr;
+
+		#ifdef SERIALIZATIO_NOBJECT_TESTS
+
+			printf( "\n%s:", args->name );
+
+		#else
+			
+			uint32_t size = _data->size();
+			uint32_t step = 1;
+			char id[32];
+			snprintf(id, 32, "%s##%llu",  args->name, (size_t)data);
+
+
+       		if(ImGui::BeginTable(id, 2, ImGuiTableFlags_Borders))
+       		{			
+	            ImGui::TableSetupColumn(args->name, ImGuiTableColumnFlags_WidthFixed, 100.0f);
+	            ImGui::TableSetupColumn("Vector size:", ImGuiTableColumnFlags_WidthStretch);
+
+	            ImGui::TableHeadersRow();
+				
+				if( ImGui::InputScalar(args->it->name, ImGuiDataType_U32, &size, &step, NULL, "%d") )
+				{
+					_data->resize( size );
+				}
+
+				for(int i=0; i<_data->size(); ++i)
+				{
+					bool buff = (*_data)[i];
+					char name[16];
+					snprintf(name, 16, "%d", i);
+
+			        ImGui::TableNextRow();
+				    ImGui::TableSetColumnIndex( 0 );
+				    ImGui::Text("%d", i);
+				    ImGui::TableSetColumnIndex( 1 );
+
+					if( ImGui::Checkbox(name, &buff) )
+					{
+						(*_data)[i] = buff;
+					}
+				}
+				
+	            ImGui::EndTable();
+       		}
+ 
+
+		#endif
 
 	}
 

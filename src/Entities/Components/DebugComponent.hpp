@@ -29,6 +29,7 @@ namespace asapi
 		SERIALIZABLE_VAR_VEC(DebugComponent, string, m_meshName );
 		SERIALIZABLE_OBJ(DebugComponent, UniqueID, m_test );
 		//SERIALIZABLE_OBJ(DebugComponent, ResourceTXTSharedReference, m_testResource );
+		SERIALIZABLE_VAR(DebugComponent, bool, m_bool );
 		SERIALIZABLE_VAR_VEC(DebugComponent, bool, m_boolV );
 
 		SERIALIZABLE_OBJ_VEC(DebugComponent, TestSerialization, m_testobj );
