@@ -30,10 +30,10 @@ namespace asapi
 		SERIALIZABLE_VAR_VEC(DebugComponent, stream, m_stream );
 		SERIALIZABLE_VAR(DebugComponent, stream, m_stream1 );
 		SERIALIZABLE_VAR_VEC(DebugComponent, string, m_string );
-		SERIALIZABLE_OBJ(DebugComponent, UniqueID, m_test );
+		SERIALIZABLE_VAR(DebugComponent, string, m_string1 );
+		SERIALIZABLE_OBJ(DebugComponent, UniqueID, m_id );
 		//SERIALIZABLE_OBJ(DebugComponent, ResourceTXTSharedReference, m_testResource );
-		SERIALIZABLE_VAR(DebugComponent, bool, m_bool );
-		SERIALIZABLE_VAR_VEC(DebugComponent, bool, m_boolV );
+
 
 		SERIALIZABLE_OBJ_VEC(DebugComponent, TestSerialization, m_testobj );
 
