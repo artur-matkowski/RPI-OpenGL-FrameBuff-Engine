@@ -1,6 +1,8 @@
 #ifndef H_ComponentInterface
 #define H_ComponentInterface
-#include "EntityBase.hpp"
+#include "bfu.hpp"
+#include "SerializableObject.hpp"
+#include "UniqueID.hpp"
 
 namespace asapi
 {
@@ -10,7 +12,9 @@ namespace asapi
 	struct ComponentTranslatePointers
 	{
 		ComponentInterface* 				p_ComponentInterface = nullptr;
+		SerializableObjectBase* 			p_SerializableObject = nullptr;
 		bfu::SerializableClassInterface* 	p_SerializableClassInterface = nullptr;
+		void* 								p_raw = nullptr;
 	};
 
 	typedef void (*InitFuncPtr)(bfu::MemBlockBase*, ComponentTranslatePointers&);
@@ -31,7 +35,7 @@ namespace asapi
 	};
 
 
-	class ComponentInterface: public object
+	class ComponentInterface
 	{
 	protected:
 		GameObject *m_owner = nullptr;
@@ -46,7 +50,7 @@ namespace asapi
 		{
 			TypeInfo::GetTypeInfo(hash)->fPtr(mBlock, ret);
 		}
-
+/*
 		#ifdef IS_EDITOR
 		void OnGUI_caller()
 		{
@@ -54,7 +58,7 @@ namespace asapi
 		}
 		virtual void OnGUI();
 		#endif
-
+*/
 		virtual void OnAttach(){};
 		virtual void OnDetach(){};
 		virtual void OnIsDirty(){};

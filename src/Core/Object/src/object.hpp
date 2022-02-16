@@ -31,7 +31,9 @@
 
 namespace asapi
 {
-	class object{};
+	class object{
+		int i;
+	};
 }
 
 #ifdef IS_EDITOR

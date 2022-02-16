@@ -5,7 +5,8 @@
 #ifdef IS_EDITOR
 #include "imgui.h"
 #endif
-#include "ImGUI_Serializer.hpp"
+#include "SerializableObject.hpp"
+#include "ImGuiSerializer.hpp"
 #include "ResourceSystem.hpp"
 
 namespace asapi
@@ -24,7 +25,7 @@ namespace asapi
 
 
 	template<class T, class ResourceProcessorT>
-	class ResourceSharedReferenceBase: public bfu::SerializableClassBase<T>, public ResourceSharedReferenceInterface
+	class ResourceSharedReferenceBase: public SerializableObject<T>, public ResourceSharedReferenceInterface
 	{
 	protected:
 		SERIALIZABLE_OBJ( T, UniqueID, m_binaryResourceID );
@@ -86,7 +87,17 @@ namespace asapi
 
 			if( m_resourcePtr!=nullptr )
 			{
-				ResourceProcessorT::OnGUI( m_resourcePtr->GetRawHandle() );
+				void* handle = m_resourcePtr->GetRawHandle();
+				if( handle!=nullptr )
+					ResourceProcessorT::OnGUI( m_resourcePtr->GetRawHandle() );
+				else
+				{
+					ImGui::TextColored(
+						ImVec4(1.0f, 1.0f, 0.0f, 1.0f)
+						, "No valid reference for %s resource"
+						, ResourceProcessorT::GetSuportedResourceFileExtension() );
+				}
+				
 				this->OnGUI();
 				m_resourcePtr->OnGUI();
 			}

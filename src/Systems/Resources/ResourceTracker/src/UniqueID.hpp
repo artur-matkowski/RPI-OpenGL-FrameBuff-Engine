@@ -2,10 +2,11 @@
 #define _H_UniqueID
 #include <cstdint>
 #include "bfu.hpp"
+#include "SerializableObject.hpp"
 
 namespace asapi
 {
-	class UniqueID: public bfu::SerializableClassBase<UniqueID>
+	class UniqueID: public SerializableObject<UniqueID>
 	{
 		SERIALIZABLE_VAR(UniqueID, uint64_t, m_ID);
 

@@ -64,6 +64,24 @@ namespace asapi
 		return -1;
 	}
 
+	int PersistanceSystem::FindAssetByID(const char* assetType, const UniqueID& id)
+	{
+		auto vec = m_assetsTypeToAssetInfoMap.find( assetType );
+
+		if( vec==m_assetsTypeToAssetInfoMap.end() )
+			return -1;
+
+		for(int i=0; i<vec->second.size(); ++i)
+		{
+			if( vec->second[i].m_assetID.ID() == id.ID() )
+			{
+				return i;
+			}
+		}
+
+		return -1;
+	}
+
 
 	#ifdef IS_EDITOR
 	bool PersistanceSystem::SaveAsset(const char* assetType, const UniqueID& id, bfu::SerializerBase& in)
@@ -179,6 +197,9 @@ namespace asapi
 
 	void PersistanceSystem::RefreshResources()
 	{
+		if( m_projectPath.size()==0 )
+			return;
+
 		std::vector< std::string > paths;
 
 		ListFiles( paths
@@ -226,7 +247,6 @@ namespace asapi
 
 	void PersistanceSystem::OnGUI()
 	{
-
 		ImGui::Text("PersistanceSystem:");
 
 		for(auto it = m_assetsTypeToAssetInfoMap.begin(); it!=m_assetsTypeToAssetInfoMap.end(); it++)
@@ -244,9 +264,85 @@ namespace asapi
 			ImGui::Separator();
 		}
 	}
-	void PersistanceSystem::OnGUI_select(const char* assetType, const UniqueID& currentID, UniqueID* newID)
-	{
 
+	struct CombaData
+	{
+		const char* asset_type = 0;
+		PersistanceSystem* persistanceSys = 0;
+	};
+
+
+	bool PersistanceSystem::ResourceComboGetter(void* data, int idx, const char** out_text)
+	{
+		CombaData* combodata = (CombaData*) data;
+
+		auto vec = combodata->persistanceSys->m_assetsTypeToAssetInfoMap.find( combodata->asset_type );
+
+		*out_text = vec->second[ idx ].m_assetDisplayName.c_str();
+
+		return true;
+	}
+
+	void PersistanceSystem::OnGUI_select( UniqueID* out_newID, const UniqueID& in_oldId, const char* asset_type)
+	{
+		CombaData combodata;
+
+		*out_newID = in_oldId;
+
+		int currentIndex = FindAssetByID( asset_type, in_oldId );
+		char text[512];
+		snprintf(text, 512, "Select resource of type: %s", asset_type);
+		combodata.asset_type = asset_type;
+		combodata.persistanceSys = this;
+
+		auto vec = m_assetsTypeToAssetInfoMap.find( asset_type );
+
+		int size = vec!=m_assetsTypeToAssetInfoMap.end() ? vec->second.size() : 0;
+
+		if( ImGui::Combo( text
+						, &currentIndex
+						, &PersistanceSystem::ResourceComboGetter
+						, &combodata
+						, size) )
+		{
+			*out_newID = vec->second[ currentIndex ].m_assetID;
+		}
 	}
 	#endif
+
+
+	bool PersistanceSystem::Serialize(const char* path, bfu::SerializableClassInterface* obj)
+	{
+		bfu::JSONSerializer json;
+		FILE::STREAM file;
+
+		file.InitForWrite(path);
+		if( !file.IsValid() )
+		{
+			return false;
+		}
+
+		json.Serialize( obj );
+		file.Write( json.data(), json.size() );
+		file.Close();
+
+		return true;
+	}
+
+	bool PersistanceSystem::Deserialize(const char* path, bfu::SerializableClassInterface* obj)
+	{
+		bfu::JSONSerializer json;
+		FILE::MMAP file;
+
+		if( !file.TryInitForRead(path) )
+		{
+			return false;
+		}
+
+		json.assignData( (char*)file.Data(), file.Size() );
+		json.Deserialize( obj );
+		file.Close();
+
+		return true;
+	}
 }

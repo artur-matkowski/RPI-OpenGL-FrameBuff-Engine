@@ -1,41 +1,14 @@
 #ifndef _H_ComponentBase
 #define _H_ComponentBase
-#include "ComponentInterface.hpp"
 #include <cxxabi.h>
 #include <vector>
 #include "bfu.hpp"
-#include "ImGUI_Serializer.hpp"
+#include "SerializableObject.hpp"
+#include "ImGuiSerializer.hpp"
+#include "ComponentInterface.hpp"
 
 namespace asapi
 {
-#define SERIALIZABLE_GUI_OBJ(C, T, i) \
-	T i; \
-	static inline void initVar_##i() __attribute__((constructor, used)) \
-	{ \
-		static bool isRegistered = false; \
-		if( isRegistered==false ) \
-		{ \
-			/*printf("%s offset: %d in class %s hash: %zu\n", #i, offsetOf(&C::i), #C, typeid(T).hash_code());*/ \
-			FeedInfo(#i, offsetOf(&C::i), typeid(T).hash_code(), &C::sp_first, \
-			OnGUI_caller_##i, \
-			bfu::SerializerBase::Deserialize_SerializableClassInterface); \
-			isRegistered = true; \
-		} \
-	} \
-	static inline void OnGUI_caller_##i(bfu::SerializerBase* serializer, void* data) \
-	{ \
-		if( dynamic_cast<ImGUI_Serializer*>(serializer) != nullptr ) \
-		{ \
-			ARGS* args = (ARGS*)data;\
-			T* _data = (T*)args->dataPtr;\
-			_data->OnGUI_caller();\
-		} \
-		else \
-		{ \
-			bfu::SerializerBase::Serialize_SerializableClassInterface( serializer, data ); \
-		} \
-	} \
-
 
 	template<class T>
 	static void AllocateAndInit( bfu::MemBlockBase* mBlock, ComponentTranslatePointers& ret )
@@ -44,12 +17,14 @@ namespace asapi
 		obj->Init(mBlock);
 
 		ret.p_ComponentInterface = obj;
+		ret.p_SerializableObject = obj;
 		ret.p_SerializableClassInterface = obj;
+		ret.p_raw = obj;
 	}
 
 
 	template<class T>
-	class ComponentBase: public bfu::SerializableClassBase<T>, public ComponentInterface
+	class ComponentBase: public SerializableObject<T>, public ComponentInterface
 	{
 		static char ClassName[255];
 
@@ -97,16 +72,6 @@ namespace asapi
 			T* _obj = (T*)this;
 			bfu::MemBlockBase::DeallocateUnknown(_obj);
 		}
-
-		
-		#ifdef IS_EDITOR
-		virtual void OnGUI()
-		{
-			ImGUI_Serializer imgui_serializer;
-
-			imgui_serializer.Serialize( this );
-		}
-		#endif
 	};
 
 	template<class T>

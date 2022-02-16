@@ -15,8 +15,11 @@ void signalHandler( int signum )
 	//exit(0);
 }
 
+
 int main(const int argc, const char** argv)
 {
+
+
 	PRIFILE( signal(SIGINT, signalHandler);   );
 	PRIFILE( SYSTEMS::GetObject().init( argc, argv ); );
 

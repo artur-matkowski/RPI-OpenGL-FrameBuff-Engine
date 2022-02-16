@@ -1,6 +1,7 @@
 #include "GameObject.hpp"
 #include "Systems.hpp"
 #include "PrefabLoaderComponent.hpp"
+#include "imgui.h"
 
 namespace asapi
 {
@@ -26,13 +27,14 @@ namespace asapi
 		}
 	}
 
-	GameObject::GameObject( bfu::MemBlockBase* mBlock )
-		:EntityBase(mBlock)
-		,m_myName(mBlock)
-		,forwardMemBlock(mBlock)
-		,v_children(&forwardMemBlock)
-		,v_componentsInfo(mBlock)
-		,v_components(mBlock)
+	GameObject::GameObject( bfu::MemBlockBase* mBlock ):
+		//EntityBase(mBlock),
+		m_mBlock(mBlock),
+		m_myName(mBlock),
+		forwardMemBlock(mBlock),
+		v_children(&forwardMemBlock),
+		v_componentsInfo(mBlock),
+		v_components(mBlock)
 	{
 		m_myName = "GameObject";
 
@@ -255,4 +257,38 @@ namespace asapi
 	}
 
 
+	#ifdef IS_EDITOR
+	void GameObject::OnGUI()
+	{
+		ComponentInterface* p_forRemoval = nullptr;
+		
+		ImGui::Spacing();
+		ImGui::Text( GetName() );
+
+		for(int i=0; i<GetComponentsCount(); ++i)
+		{
+			ImGui::Spacing();
+			ImGui::Separator();
+			ImGui::Spacing();
+
+			ImGui::LabelText( "Component", GetComponent(i)->p_ComponentInterface->TypeName() ); 
+			ImGui::SameLine();
+			ImGui::PushItemWidth(-(ImGui::GetWindowContentRegionWidth() - ImGui::CalcItemWidth()));
+			ImGui::PushID( GetComponent(i)->p_ComponentInterface );
+			if( ImGui::Button("Remove Component") )
+			{
+				p_forRemoval = GetComponent(i)->p_ComponentInterface;
+			}
+			ImGui::PopID();
+			ImGui::PopItemWidth();
+
+			GetComponent(i)->p_SerializableObject->OnGUI_caller();
+		}
+
+		if( p_forRemoval!=nullptr )
+		{
+			RemoveComponent( p_forRemoval );
+		}
+	}
+	#endif
 }

@@ -5,6 +5,7 @@
 #include <sys/mman.h>
 #include <stdio.h>
 #include <unistd.h>
+#include "PersistanceObjectReference.hpp"
 
 #define HELP \
 "Parameters accepted by this executable:"\
@@ -122,6 +123,7 @@ namespace asapi
 		ASSETS.SetProjectPath( path );
 		RESOURCES.SetProjectPath( path );
 		PERSISTANCE.SetProjectPath( path );
+		PersistanceObjectBase::SetProjectPath( path );
 	}
 
 	void SYSTEMS::RefreshResources()

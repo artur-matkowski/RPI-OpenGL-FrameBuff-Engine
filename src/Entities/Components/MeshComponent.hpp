@@ -3,7 +3,7 @@
 #include "ComponentBase.hpp"
 #include "ResourcePtr.hpp"
 #include "Mesh_old.hpp"
-#include "ResourceFBXProcessor.hpp"
+#include "_ResourceProcessorsInclude.hpp"
 #include "glm.hpp"
 
 
@@ -16,7 +16,7 @@ namespace asapi
 	{
 	protected:
 
-		SERIALIZABLE_GUI_OBJ(MeshComponent, ResourceFBXSharedReference, m_meshReference );
+		SERIALIZABLE_OBJ(MeshComponent, ResourceFBXSharedReference, m_meshReference );
 		
 	public:
 		MeshComponent(bfu::MemBlockBase* mBlock);

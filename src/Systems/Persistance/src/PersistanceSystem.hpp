@@ -26,12 +26,15 @@ namespace asapi
 
 	class PersistanceSystem
 	{
-		std::string  m_projectPath;
+		std::string  		m_projectPath;
 		const char* 		m_assetExtension = ".json.asset";
 
 		std::map< std::string, std::vector<AssetInfo> > m_assetsTypeToAssetInfoMap;
 
 		int FindAssetByName(const char* assetType, const char* displayname);
+		int FindAssetByID(const char* assetType, const UniqueID& id);
+		
+		static bool ResourceComboGetter(void* data, int idx, const char** out_text);
 
 	public:
 		void SetProjectPath( const char* path );
@@ -50,8 +53,11 @@ namespace asapi
 
 		void RefreshResources();
 		void OnGUI();
-		void OnGUI_select(const char* assetType, const UniqueID& currentID, UniqueID* newID);
+		void OnGUI_select( UniqueID* out_newID, const UniqueID& in_oldId, const char* asset_type);
 		#endif
+
+		static bool Serialize(const char* path, bfu::SerializableClassInterface* obj);
+		static bool Deserialize(const char* path, bfu::SerializableClassInterface* obj);
 	};
 
 
