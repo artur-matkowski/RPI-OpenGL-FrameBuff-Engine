@@ -61,7 +61,8 @@
 }, {
 "m_componentTypeName": "asapi::DebugComponent", 
 "m_recreationString": "{
-\"m_meshName\": [], 
+\"m_stream\": [\"12342\", \"asd\"], 
+\"m_string\": [], 
 \"m_test\": {
 \"m_ID\": 7811228912315150203
 }, 

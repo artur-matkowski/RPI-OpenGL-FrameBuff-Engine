@@ -4,21 +4,7 @@
 #include "imgui.h"
 #endif
 
-#define GENERATE_VECTOR_SERIALIZE_BODY(T) \
-	ARGS_new* args = (ARGS_new*)data;\
-	bfu::SerializableVector<T>* _data = (bfu::SerializableVector<T>*)args->dataPtr;\
-	\
-	uint32_t size = _data->size();\
-	uint32_t step = 1;\
-	int i = 0;\
-	\
-	ImGui::Text("Vector size:");\
-	\
-	if( ImGui::InputScalar(args->it->name, ImGuiDataType_U32, &size, &step, NULL, "%d") )\
-	{\
-		_data->resize( size );\
-	}\
-	\
+
 
 #define GENERATE_SERIALIZE_BODY(T)\
 	ARGS_new* args = (ARGS_new*)data;\
@@ -184,19 +170,18 @@ namespace asapi
 			printf( "\n%s:", args->name );
 
 		#else
-			
+
 			uint32_t size = _data->size();
 			uint32_t step = 1;
 			char id[32];
 			snprintf(id, 32, "%s##%llu",  args->name, (size_t)data);
 
 
-       		if(ImGui::BeginTable(id, 2, ImGuiTableFlags_Borders))
-       		{			
-	            ImGui::TableSetupColumn(args->name, ImGuiTableColumnFlags_WidthFixed, 100.0f);
-	            ImGui::TableSetupColumn("Vector size:", ImGuiTableColumnFlags_WidthStretch);
+			if(ImGui::BeginTable(id, 1, ImGuiTableFlags_Borders))
+			{
+			    ImGui::TableSetupColumn("Vector size:", ImGuiTableColumnFlags_WidthStretch);
 
-	            ImGui::TableHeadersRow();
+				ImGui::TableHeadersRow();
 				
 				if( ImGui::InputScalar(args->it->name, ImGuiDataType_U32, &size, &step, NULL, "%d") )
 				{
@@ -211,8 +196,6 @@ namespace asapi
 
 			        ImGui::TableNextRow();
 				    ImGui::TableSetColumnIndex( 0 );
-				    ImGui::Text("%d", i);
-				    ImGui::TableSetColumnIndex( 1 );
 
 					if( ImGui::Checkbox(name, &buff) )
 					{
@@ -220,9 +203,8 @@ namespace asapi
 					}
 				}
 				
-	            ImGui::EndTable();
-       		}
- 
+			    ImGui::EndTable();
+			}
 
 		#endif
 
@@ -230,11 +212,108 @@ namespace asapi
 
 	void ImGUISerializer::Serialize( bfu::stream* data )
 	{
+		ARGS_new* args = (ARGS_new*)data;
+		bfu::stream* _data = (bfu::stream*)args->dataPtr;
+		char taggedName[128];
+		snprintf(taggedName,128,"%s##%llu", args->name, (size_t)_data);
 
+		#ifdef SERIALIZATIO_NOBJECT_TESTS
+
+			printf("\n%s: %s", args->name, _data->c_str());
+
+		#else
+
+			static int buffsize = 4;
+			static char* buff = new char[buffsize];
+
+			if( buffsize-2 < (*_data).capacity() )
+			{
+				buffsize = (*_data).capacity()*2;
+				delete buff;
+				buff = new char[buffsize];
+			}
+
+			strncpy(buff, (*_data).c_str(), buffsize);
+
+			if( ImGui::InputText(taggedName, buff, buffsize ) )
+			{
+				const int bufflength = strlen(buff);
+				if( bufflength > (*_data).capacity()-2 )
+				{
+					(*_data).grow(bufflength);
+				}
+				(*_data).clear();
+				(*_data).sprintf( buff );
+			}
+
+		#endif
 	}
 
 	void ImGUISerializer::Serialize( bfu::SerializableVector<bfu::stream>* data )
 	{
+		ARGS_new* args = (ARGS_new*)data;
+		bfu::SerializableVector<bfu::stream>* _data = 
+			(bfu::SerializableVector<bfu::stream>*)args->dataPtr;
+
+		#ifdef SERIALIZATIO_NOBJECT_TESTS
+
+			printf( "\n%s:", args->name );
+
+		#else
+
+			uint32_t size = _data->size();
+			uint32_t step = 1;
+			char id[32];
+			snprintf(id, 32, "%s##%llu",  args->name, (size_t)data);
+
+
+			if(ImGui::BeginTable(id, 1, ImGuiTableFlags_Borders))
+			{
+			    ImGui::TableSetupColumn("Vector size:", ImGuiTableColumnFlags_WidthStretch);
+
+				ImGui::TableHeadersRow();
+				
+				if( ImGui::InputScalar(args->it->name, ImGuiDataType_U32, &size, &step, NULL, "%d") )
+				{
+					_data->resize( size );
+				}
+
+				for(int i=0; i<_data->size(); ++i)
+				{
+					char name[16];
+					snprintf(name, 16, "%d", i);
+
+					static int buffsize = 4;
+					static char* buff = new char[buffsize];
+
+					if( buffsize-2 < (*_data)[i].capacity() )
+					{
+						buffsize = (*_data)[i].capacity()*2;
+						delete buff;
+						buff = new char[buffsize];
+					}
+
+					strncpy(buff, (*_data)[i].c_str(), buffsize);
+
+			        ImGui::TableNextRow();
+				    ImGui::TableSetColumnIndex( 0 );
+
+            		if( ImGui::InputText(name, buff, buffsize ) )
+            		{
+            			const int bufflength = strlen(buff);
+            			if( bufflength > (*_data)[i].capacity()-2 )
+            			{
+            				(*_data)[i].grow(bufflength);
+            			}
+            			(*_data)[i].clear();
+            			(*_data)[i].sprintf( buff );
+            		}
+				}
+				
+			    ImGui::EndTable();
+			}
+
+		#endif
 
 	}
 

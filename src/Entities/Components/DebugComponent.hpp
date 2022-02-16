@@ -21,12 +21,15 @@ namespace asapi
 
 
 	using bfu::string;
+	using bfu::stream;
 	class DebugComponent: public ComponentBase<DebugComponent>
 	{
 	protected:
 		//ResourceTXTSharedReference m_txtResourceRef;
 
-		SERIALIZABLE_VAR_VEC(DebugComponent, string, m_meshName );
+		SERIALIZABLE_VAR_VEC(DebugComponent, stream, m_stream );
+		SERIALIZABLE_VAR(DebugComponent, stream, m_stream1 );
+		SERIALIZABLE_VAR_VEC(DebugComponent, string, m_string );
 		SERIALIZABLE_OBJ(DebugComponent, UniqueID, m_test );
 		//SERIALIZABLE_OBJ(DebugComponent, ResourceTXTSharedReference, m_testResource );
 		SERIALIZABLE_VAR(DebugComponent, bool, m_bool );
