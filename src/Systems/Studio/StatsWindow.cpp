@@ -107,11 +107,6 @@ namespace asapi
                 SYSTEMS::GetObject().RESOURCES.OnGUI();
                 ImGui::EndTabItem();
             }
-            if (ImGui::BeginTabItem("Persistance System"))
-            {
-                SYSTEMS::GetObject().PERSISTANCE.OnGUI();
-                ImGui::EndTabItem();
-            }
             ImGui::EndTabBar();
         }
 

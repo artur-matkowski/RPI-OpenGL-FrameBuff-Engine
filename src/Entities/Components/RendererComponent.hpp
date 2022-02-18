@@ -4,8 +4,6 @@
 #include "MaterialType.hpp"
 #include "MeshComponent.hpp"
 #include "ResourcePtr.hpp"
-#include "Material.hpp"
-#include "PersistanceObjectReference.hpp"
 
 
 namespace asapi
@@ -21,7 +19,6 @@ namespace asapi
 
 		char buffMat[255];
 		SERIALIZABLE_VAR(RendererComponent, stream, m_MaterialName );
-		SERIALIZABLE_OBJ(RendererComponent, MaterialReference, m_materialReference );
 
 	public:
 		RendererComponent(bfu::MemBlockBase* mBlock);
