@@ -16,6 +16,7 @@
 #include "TimeSystem.hpp"
 #include "MemoryManagmentSystem.hpp"
 #include "SceneSystem.hpp"
+#include "MaterialsSystem.hpp"
 #ifdef IS_EDITOR
 #include "StudioSystem.hpp"
 #endif
@@ -38,6 +39,7 @@ namespace asapi
 			, ResourceFBXProcessor
 			, ResourceGLSLProcessor
 			>		 			RESOURCES;
+		MaterialsSystem 		MATERIALSSYSTEM;
 		TimeSystem				TIME;
 		SceneSystem				SCENE;
 

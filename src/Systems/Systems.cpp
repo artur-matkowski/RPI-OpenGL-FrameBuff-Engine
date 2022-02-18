@@ -121,12 +121,14 @@ namespace asapi
 	{
 		ASSETS.SetProjectPath( path );
 		RESOURCES.SetProjectPath( path );
+		MATERIALSSYSTEM.SetProjectPath( path );
 	}
 
 	void SYSTEMS::RefreshResources()
 	{		
 		ASSETS.RefreshResources();
 		RESOURCES.RefreshResources();
+		MATERIALSSYSTEM.RefreshResources();
 	}
 
 	void SYSTEMS::IO::MMAP::InitForRead(const char* filename)

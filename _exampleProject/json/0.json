@@ -27,12 +27,7 @@
 }, {
 "m_componentTypeName": "asapi::RendererComponent", 
 "m_recreationString": "{
-\"m_MaterialName\": \"sdg\", 
-\"m_materialReference\": {
-\"m_PersistanceObjectID\": {
-\"m_ID\": 6598772993413993871
-}
-}
+\"m_MaterialName\": \"sdg\"
 }"
 }]
 }, {
@@ -68,8 +63,6 @@
 \"m_id\": {
 \"m_ID\": 1059345507585703681
 }, 
-\"m_test\": 0.000000, 
-\"m_testV\": [3.140000, 0.000000], 
 \"m_testobj\": [{
 \"b\": 0.000000
 }, {

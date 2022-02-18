@@ -107,6 +107,11 @@ namespace asapi
                 SYSTEMS::GetObject().RESOURCES.OnGUI();
                 ImGui::EndTabItem();
             }
+            if (ImGui::BeginTabItem("Materials System"))
+            {
+                SYSTEMS::GetObject().MATERIALSSYSTEM.OnGUI();
+                ImGui::EndTabItem();
+            }
             ImGui::EndTabBar();
         }
 
