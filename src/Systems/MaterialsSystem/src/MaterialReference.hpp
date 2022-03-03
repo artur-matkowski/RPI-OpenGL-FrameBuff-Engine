@@ -3,16 +3,16 @@
 
 #include "SerializableObject.hpp"
 #include "UniqueID.hpp"
-#include "MaterialType2.hpp"
+#include "MaterialInstance.hpp"
 
 namespace asapi
 {
 	class MaterialReference: public SerializableObject<MaterialReference>
 	{
 	protected:
-		SERIALIZABLE_OBJ(MaterialReference, UniqueID, m_materialTypeID);
+		SERIALIZABLE_OBJ(MaterialReference, UniqueID, m_materialInstanceID);
 
-		MaterialType2* 		m_materialType = nullptr;
+		MaterialInstance* 	m_materialType = nullptr;
 		uint16_t* 			m_referenceCounter = nullptr;
 
 
@@ -21,6 +21,8 @@ namespace asapi
 		static MaterialReference LoadMaterial(const std::string projectPath, const UniqueID& uuid);
 		MaterialReference(const MaterialReference& cp);
 		~MaterialReference();
+
+		inline UniqueID GetMaterialInstanceID(){ return m_materialInstanceID; }
 
 		#ifndef IS_EDITOR
 		static MaterialReference CreateNewMaterial();

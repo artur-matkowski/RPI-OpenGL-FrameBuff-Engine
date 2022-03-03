@@ -4,17 +4,30 @@
 #endif
 #include "MaterialsSystem.hpp"
 #include "File.hpp"
+#include "ResourceTracker.hpp"
 
-#define MATERIALS_DIR "/materials"
+
+#define MATERIAL_ASSET_EXTENSION ".mat"
+#define MATERIAL_DATA_EXTENSION ".mat.json"
 
 namespace asapi
 {
 	std::string MaterialsSystem::s_projectPath;
 
 
-	MaterialReference MaterialsSystem::GetMaterialReference(const UniqueID& id)
+	MaterialReference* MaterialsSystem::GetMaterialReference(const UniqueID& id)
 	{
+		MaterialReference* ret = nullptr;
 
+		for(auto it = m_materialsReference.begin(); it!=m_materialsReference.end(); it++)
+		{
+			if( it->GetMaterialInstanceID() == id )
+			{
+				ret = &(*it);
+			}
+		}
+
+		return ret;
 	}
 
 	void MaterialsSystem::DispouseMaterialReference( const MaterialReference& matRef )
@@ -26,33 +39,84 @@ namespace asapi
 	void MaterialsSystem::SetProjectPath( const std::string& path )
 	{
 		s_projectPath = path;
+		RefreshResources();
 	}
+
+	void MirrorMaterialDataFilesFromAssetsMaterials(const std::vector<std::string>& materialAssetsPaths,
+								 const std::string& projectPath )
+	{
+		FILE::MMAP materialAssetFile;
+		std::vector<std::string> materialAssetUuids_str;
+		std::vector<std::string> materialDataPaths;
+		std::string materialDatasPath = projectPath + RESOURCE_BINARIES_DIR;
+		materialAssetUuids_str.resize( materialAssetsPaths.size() );
+
+		for(int i=0; i<materialAssetsPaths.size(); ++i)
+		{
+			std::string path = projectPath + std::string(ASSETS_DIR "/") + materialAssetsPaths[i];
+			uint64_t uuid_raw;
+
+			materialAssetFile.InitForRead( path.c_str() );
+
+			const char* uuid_cstr = (const char*) materialAssetFile.Data();
+
+			sscanf( uuid_cstr, "%llu", &uuid_raw );
+			materialAssetFile.Close();
+			materialAssetUuids_str[i] = std::to_string( uuid_raw );
+
+
+			std::string materialDataPath = projectPath + RESOURCE_BINARIES_DIR + "/";
+			materialDataPath += materialAssetUuids_str[i] + MATERIAL_DATA_EXTENSION;
+
+			if( !FILE::FileExist( materialDataPath.c_str() ) )
+			{
+				FILE::Touch( materialDataPath.c_str() );
+				std::string materialDatasPath = projectPath + RESOURCE_BINARIES_DIR;
+				ListFiles( materialDataPaths, {MATERIAL_DATA_EXTENSION}, ListingStrategy::whitelist, materialDatasPath.c_str() );
+
+				log::debug << "Touching material" << " --- " << materialDataPath.c_str() << std::endl;
+			}
+		}
+
+		ListFiles( materialDataPaths, {MATERIAL_DATA_EXTENSION}, ListingStrategy::whitelist, materialDatasPath.c_str() );
+
+		for(int i=0; i<materialDataPaths.size(); i++)
+		{
+			bool dataFileFound = false;
+			for(int j=0; j<materialAssetUuids_str.size(); j++)
+			{
+				if( strstr( materialDataPaths[i].c_str(), materialAssetUuids_str[j].c_str() ) != nullptr )
+				{
+					dataFileFound = true;
+				}
+			}
+			if( !dataFileFound )
+			{
+				std::string dataFilePath = projectPath 
+							+ std::string(RESOURCE_BINARIES_DIR "/") 
+							+ materialDataPaths[i].c_str();
+
+				FILE::Remove( dataFilePath.c_str() );
+				log::debug << "Removing material" << " --- " << dataFilePath.c_str() << std::endl;				
+			}
+		}
+	}
+
 
 	void MaterialsSystem::RefreshResources()
 	{
-		m_materialTypesIds.clear();
+		std::vector<std::string> materialAssetsPaths;
+		//std::vector<std::string> materialDataPaths;
+		std::string materialAssetsPath = s_projectPath + ASSETS_DIR;
+		//std::string materialDatasPath = s_projectPath + RESOURCE_BINARIES_DIR;
 
-		std::vector<std::string> filePaths;
+		ListFiles( materialAssetsPaths, {MATERIAL_ASSET_EXTENSION}, ListingStrategy::whitelist, materialAssetsPath.c_str() );
+		//ListFiles( materialDataPaths, {MATERIAL_DATA_EXTENSION}, ListingStrategy::whitelist, materialDatasPath.c_str() );
 
-		std::string materialsPath = s_projectPath + MATERIALS_DIR;
 
-		ListFiles( filePaths, {".mat.json"}, ListingStrategy::whitelist, materialsPath.c_str() );
+		MirrorMaterialDataFilesFromAssetsMaterials( materialAssetsPaths, s_projectPath );
 
-		for(int i=0; i<filePaths.size(); ++i)
-		{
-			const char* sID = filePaths[i].c_str();
 
-			for( int s=filePaths[i].size()-1; s>=0; --s)
-			{
-				if( sID[s] == '\\' || sID[s]=='/' )
-				{
-					sID += (s+1);
-					break;
-				}
-			}
-
-			log::debug << filePaths[i] << " --- " << sID << std::endl;
-		}
 	}
 
 	#ifdef IS_EDITOR
@@ -61,18 +125,26 @@ namespace asapi
 		if( ImGui::Button("Create new Material Type") )
 		{
 			FILE::STREAM file;
+			int IntanceNameCounter = 0;
+			UniqueID uuid;
+			std::string uuidStr = std::to_string( uuid.ID() );
 
-			std::string materialPath = s_projectPath + MATERIALS_DIR + "/";
-			materialPath += std::to_string(UniqueID()) + ".mat.json";
+			std::string materialPath = s_projectPath + ASSETS_DIR + "/New Material" MATERIAL_ASSET_EXTENSION;
+
+
+			while( FILE::FileExist( materialPath.c_str() ) )
+			{
+				IntanceNameCounter++;
+				materialPath = s_projectPath + ASSETS_DIR + "/New Material ";
+				materialPath += std::to_string(IntanceNameCounter) + MATERIAL_ASSET_EXTENSION;
+			}
 
 
 			file.InitForWrite( materialPath.c_str() );
 
+			file.Write( uuidStr.c_str(), uuidStr.size() );
+
 			RefreshResources();
-		}
-		if( ImGui::Button("Create new Material Instance") )
-		{
-			//m_materialsReference.emplace_back( MaterialReference:: )
 		}
 	}
 	#endif

@@ -381,4 +381,25 @@ namespace asapi
 
 		return (nameSize+1)<filename_size;
 	}
+
+	bool FILE::FileExist(const char* path)
+	{
+		bool ret = true;
+		struct stat attribExt;
+    	
+    	if( stat(path, &attribExt)!=0 )
+    	{
+    		ret = false;
+    	}
+
+    	return ret;
+	}
+
+	bool FILE::Touch(const char* path)
+	{
+		int fd = open(path, O_RDWR | O_CREAT, (mode_t)0666);
+		close(fd);
+
+		return fd != -1;
+	}
 }

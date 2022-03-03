@@ -15,7 +15,6 @@ namespace asapi
 		m_referenceCounter = new uint16_t;
 		*m_referenceCounter = 0;
 
-		m_materialType = new MaterialType2();
 	}
 
 	MaterialReference::~MaterialReference()
