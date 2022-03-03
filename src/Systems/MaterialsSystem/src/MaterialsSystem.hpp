@@ -12,8 +12,8 @@ namespace asapi
 
 	struct MaterialInfo
 	{
-		std::string 		m_materialPath;
-		UniqueID 			m_materialuuid;
+		std::string 		m_materialName;
+		UniqueID 			m_materialUuid;
 	};
 
 	class MaterialsSystem
@@ -22,6 +22,10 @@ namespace asapi
 
 		std::vector<MaterialReference> 			m_materialsReference;
 		std::vector<MaterialInstance> 			m_materialTypes;
+
+		#ifdef IS_EDITOR
+		std::vector<MaterialInfo>				m_selectableMaterials;
+		#endif
 
 
 	public:

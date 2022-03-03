@@ -43,13 +43,16 @@ namespace asapi
 	}
 
 	void MirrorMaterialDataFilesFromAssetsMaterials(const std::vector<std::string>& materialAssetsPaths,
-								 const std::string& projectPath )
+								 const std::string& projectPath,
+								 std::vector<MaterialInfo>* selectableMaterials )
 	{
 		FILE::MMAP materialAssetFile;
 		std::vector<std::string> materialAssetUuids_str;
 		std::vector<std::string> materialDataPaths;
 		std::string materialDatasPath = projectPath + RESOURCE_BINARIES_DIR;
 		materialAssetUuids_str.resize( materialAssetsPaths.size() );
+		selectableMaterials->clear();
+		selectableMaterials->resize( materialAssetsPaths.size() );
 
 		for(int i=0; i<materialAssetsPaths.size(); ++i)
 		{
@@ -76,6 +79,11 @@ namespace asapi
 
 				log::debug << "Touching material" << " --- " << materialDataPath.c_str() << std::endl;
 			}
+
+
+			
+			(*selectableMaterials)[i].m_materialName = materialAssetsPaths[i];
+			(*selectableMaterials)[i].m_materialUuid = uuid_raw;
 		}
 
 		ListFiles( materialDataPaths, {MATERIAL_DATA_EXTENSION}, ListingStrategy::whitelist, materialDatasPath.c_str() );
@@ -114,7 +122,7 @@ namespace asapi
 		//ListFiles( materialDataPaths, {MATERIAL_DATA_EXTENSION}, ListingStrategy::whitelist, materialDatasPath.c_str() );
 
 
-		MirrorMaterialDataFilesFromAssetsMaterials( materialAssetsPaths, s_projectPath );
+		MirrorMaterialDataFilesFromAssetsMaterials( materialAssetsPaths, s_projectPath, &m_selectableMaterials );
 
 
 	}
@@ -145,6 +153,14 @@ namespace asapi
 			file.Write( uuidStr.c_str(), uuidStr.size() );
 
 			RefreshResources();
+		}
+
+		if( ImGui::CollapsingHeader("Selectable Materials:") )
+		{
+			for(int i=0; i<m_selectableMaterials.size(); i++)
+			{
+				ImGui::Text( m_selectableMaterials[i].m_materialName.c_str() );
+			}
 		}
 	}
 	#endif
