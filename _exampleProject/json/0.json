@@ -56,20 +56,11 @@
 }, {
 "m_componentTypeName": "asapi::DebugComponent", 
 "m_recreationString": "{
-\"m_stream\": [\"12342\", \"asd\"], 
-\"m_stream1\": \"streamva\", 
-\"m_string\": [\"123\", \"casd13\"], 
-\"m_string1\": \"stringval\", 
-\"m_id\": {
-\"m_ID\": 1059345507585703681
-}, 
-\"m_testobj\": [{
-\"b\": 0.000000
-}, {
-\"b\": 3.000000
-}, {
-\"b\": 0.000000
-}]
+\"m_material\": {
+\"m_materialInstanceID\": {
+\"m_ID\": 6393136728154090400
+}
+}
 }"
 }]
 }]

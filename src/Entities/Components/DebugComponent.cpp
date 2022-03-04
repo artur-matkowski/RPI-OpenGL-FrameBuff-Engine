@@ -41,13 +41,5 @@ namespace asapi
 	{
 
 	}
-	/*
-	#ifdef IS_EDITOR
-	void DebugComponent::OnGUI()
-	{
-		ImGui::Text("DebugComponent::OnGUI()");
-	}
-	#endif
-	*/
 
 }

@@ -12,20 +12,26 @@ namespace asapi
 	protected:
 		SERIALIZABLE_OBJ(MaterialReference, UniqueID, m_materialInstanceID);
 
-		MaterialInstance* 	m_materialType = nullptr;
+		MaterialInstance* 	m_materialInstance = nullptr;
 		uint16_t* 			m_referenceCounter = nullptr;
 
-
-		MaterialReference();
+		void CleanUp();
 	public:
-		static MaterialReference LoadMaterial(const std::string projectPath, const UniqueID& uuid);
+		MaterialReference();
+		MaterialReference& operator=(const MaterialReference& cp);
 		MaterialReference(const MaterialReference& cp);
 		~MaterialReference();
 
+
+		bool LoadMaterialInstance(const UniqueID& uuid);
+
 		inline UniqueID GetMaterialInstanceID(){ return m_materialInstanceID; }
 
-		#ifndef IS_EDITOR
+		virtual void PostDeserializationCallback() override;
+
+		#ifdef IS_EDITOR
 		static MaterialReference CreateNewMaterial();
+		virtual void OnGUI() override;
 		#endif
 	};
 }

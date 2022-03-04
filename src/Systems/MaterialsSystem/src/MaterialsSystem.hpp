@@ -21,7 +21,6 @@ namespace asapi
 		static std::string s_projectPath;
 
 		std::vector<MaterialReference> 			m_materialsReference;
-		std::vector<MaterialInstance> 			m_materialTypes;
 
 		#ifdef IS_EDITOR
 		std::vector<MaterialInfo>				m_selectableMaterials;
@@ -29,7 +28,7 @@ namespace asapi
 
 
 	public:
-		MaterialReference* GetMaterialReference(const UniqueID& id);
+		bool UpdateMaterialReference(const UniqueID& id, MaterialReference* out);
 		void DispouseMaterialReference( const MaterialReference& matRef );
 
 		void SetProjectPath( const std::string& path );
@@ -39,6 +38,8 @@ namespace asapi
 
 		#ifdef IS_EDITOR
 		void OnGUI();
+
+		void SelectMaterialReference( MaterialReference* materialReference );
 		#endif
 	};
 }

@@ -5,18 +5,20 @@
 #include "Mesh_old.hpp"
 #include "_ResourceProcessorsInclude.hpp"
 #include "SerializableObject.hpp"
+#include "MaterialsSystem.hpp"
 
 namespace asapi
 {
 	class TestSerialization: public SerializableObject<TestSerialization>
 	{
 	public:
-		SERIALIZABLE_VAR(TestSerialization, float, b);
+		//SERIALIZABLE_VAR(TestSerialization, float, b);
+		SERIALIZABLE_OBJ(TestSerialization, UniqueID, m_materialInstanceID);
 
-		/*virtual void OnGUI() override
+		virtual void OnGUI() override
 		{
-			printf("b is equal to %f", b);
-		}*/
+			ImGui::Text("CoKURWA???");
+		}
 	};
 
 
@@ -27,15 +29,15 @@ namespace asapi
 	protected:
 		//ResourceTXTSharedReference m_txtResourceRef;
 
-		SERIALIZABLE_VAR_VEC(DebugComponent, stream, m_stream );
-		SERIALIZABLE_VAR(DebugComponent, stream, m_stream1 );
-		SERIALIZABLE_VAR_VEC(DebugComponent, string, m_string );
-		SERIALIZABLE_VAR(DebugComponent, string, m_string1 );
-		SERIALIZABLE_OBJ(DebugComponent, UniqueID, m_id );
-		//SERIALIZABLE_OBJ(DebugComponent, ResourceTXTSharedReference, m_testResource );
+		//SERIALIZABLE_VAR_VEC(DebugComponent, stream, m_stream );
+		//SERIALIZABLE_VAR(DebugComponent, stream, m_stream1 );
+		//SERIALIZABLE_VAR_VEC(DebugComponent, string, m_string );
+		//SERIALIZABLE_VAR(DebugComponent, string, m_string1 );
+		//SERIALIZABLE_OBJ(DebugComponent, UniqueID, m_id );
+		//SERIALIZABLE_OBJ(DebugComponent, TestSerialization, m_testResource );
 
 
-		SERIALIZABLE_OBJ_VEC(DebugComponent, TestSerialization, m_testobj );
+		SERIALIZABLE_OBJ(DebugComponent, MaterialReference, m_material );
 
 		//SERIALIZABLE_OBJ(DebugComponent, ResourceGLSLSharedReference, m_testShader );
 	public:
@@ -46,12 +48,6 @@ namespace asapi
 
 		//virtual void OnAttach() override;
 		virtual void OnIsDirty() override;
-		
-		/*
-		#ifdef IS_EDITOR
-		virtual void OnGUI() override;
-		#endif
-		*/
 	};
 }
 

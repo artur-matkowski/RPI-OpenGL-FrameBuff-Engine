@@ -15,19 +15,34 @@ namespace asapi
 	std::string MaterialsSystem::s_projectPath;
 
 
-	MaterialReference* MaterialsSystem::GetMaterialReference(const UniqueID& id)
+	bool MaterialsSystem::UpdateMaterialReference(const UniqueID& id, MaterialReference* out)
 	{
-		MaterialReference* ret = nullptr;
+		bool materialFound = false;
 
 		for(auto it = m_materialsReference.begin(); it!=m_materialsReference.end(); it++)
 		{
 			if( it->GetMaterialInstanceID() == id )
 			{
-				ret = &(*it);
+				*out = (*it);
+				materialFound = true;
 			}
 		}
 
-		return ret;
+		if( !materialFound )
+		{
+			m_materialsReference.emplace_back();
+			materialFound = m_materialsReference.back().LoadMaterialInstance(id);
+			if(materialFound)
+			{
+				*out = m_materialsReference.back();
+			}
+			else
+			{
+				m_materialsReference.pop_back();
+			}
+		}
+
+		return materialFound;
 	}
 
 	void MaterialsSystem::DispouseMaterialReference( const MaterialReference& matRef )
@@ -161,6 +176,46 @@ namespace asapi
 			{
 				ImGui::Text( m_selectableMaterials[i].m_materialName.c_str() );
 			}
+		}
+
+
+		if( ImGui::CollapsingHeader("Material References:") )
+		{
+			for(int i=0; i<m_materialsReference.size(); i++)
+			{
+				ImGui::Text( m_selectableMaterials[i].m_materialName.c_str() );
+			}
+		}
+	}
+
+	bool items_getter(void* data, int idx, const char** out_text)
+	{
+		std::vector<MaterialInfo>* selectableMaterials = (std::vector<MaterialInfo>*)data;
+
+		*out_text = (*selectableMaterials)[idx].m_materialName.c_str();
+
+		return true;
+	}
+
+	void MaterialsSystem::SelectMaterialReference( MaterialReference* materialReference )
+	{
+		int currentItem = -1;
+		int oldItem = -1;
+
+		for(int i=0; i<m_selectableMaterials.size(); i++)
+		{
+			if( m_selectableMaterials[i].m_materialUuid == materialReference->GetMaterialInstanceID() )
+			{
+				oldItem = currentItem = i;
+				break;
+			}
+		}
+
+		ImGui::Combo("Material", &currentItem, items_getter, &m_selectableMaterials, m_selectableMaterials.size() );
+
+		if( oldItem!=currentItem )
+		{
+			UpdateMaterialReference( m_selectableMaterials[currentItem].m_materialUuid, materialReference );
 		}
 	}
 	#endif

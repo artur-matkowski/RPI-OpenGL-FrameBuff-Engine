@@ -21,6 +21,7 @@ namespace asapi
 
 	public:
 		MaterialInstance(const UniqueID& uuid);
+		~MaterialInstance();
 
 		static void SetProjectPath(const char* path);
 	};
