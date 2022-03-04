@@ -67,6 +67,11 @@ namespace asapi
 		SYSTEMS::GetObject().MATERIALSSYSTEM.UpdateMaterialReference(m_materialInstanceID, this);
 	}
 
+	bool MaterialReference::operator==(const MaterialReference& cp) const
+	{
+		return m_materialInstance==cp.m_materialInstance;
+	}
+
 	#ifdef IS_EDITOR
 	MaterialReference MaterialReference::CreateNewMaterial()
 	{

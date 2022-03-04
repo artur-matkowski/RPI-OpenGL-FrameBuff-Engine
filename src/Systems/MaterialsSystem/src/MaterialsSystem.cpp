@@ -47,13 +47,21 @@ namespace asapi
 
 	void MaterialsSystem::DispouseMaterialReference( const MaterialReference& matRef )
 	{
-
+		for(auto it=m_materialsReference.begin(); it!=m_materialsReference.end(); it++)
+		{
+			if( matRef == *it )
+			{
+				m_materialsReference.erase(it);
+				break;
+			}
+		}
 	}
 
 
 	void MaterialsSystem::SetProjectPath( const std::string& path )
 	{
 		s_projectPath = path;
+		MaterialInstance::SetProjectPath(path);
 		RefreshResources();
 	}
 
@@ -138,8 +146,22 @@ namespace asapi
 
 
 		MirrorMaterialDataFilesFromAssetsMaterials( materialAssetsPaths, s_projectPath, &m_selectableMaterials );
+	}
+	
+	const char* MaterialsSystem::GetMaterialNameByUuid(const UniqueID& uuid) const
+	{
+		const char* ret = 0;
 
+		for(int i=0; i<m_selectableMaterials.size(); i++)
+		{
+			if( m_selectableMaterials[i].m_materialUuid==uuid )
+			{
+				ret = m_selectableMaterials[i].m_materialName.c_str();
+				break;
+			}
+		}
 
+		return ret;
 	}
 
 	#ifdef IS_EDITOR
@@ -181,9 +203,35 @@ namespace asapi
 
 		if( ImGui::CollapsingHeader("Material References:") )
 		{
-			for(int i=0; i<m_materialsReference.size(); i++)
+			const ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg;
+
+			if (ImGui::BeginTable("MaterialReferences", 4, flags))
 			{
-				ImGui::Text( m_selectableMaterials[i].m_materialName.c_str() );
+
+				ImGui::TableSetupColumn("n");
+                ImGui::TableSetupColumn("Name");
+                ImGui::TableSetupColumn("uuid");
+                ImGui::TableSetupColumn("references in use");
+                ImGui::TableHeadersRow();
+
+                for (int row = 0; row < m_materialsReference.size(); row++)
+	            {
+	                ImGui::TableNextRow();
+
+
+	                ImGui::TableSetColumnIndex(0);
+	                ImGui::Text("%d", row);
+
+	                ImGui::TableSetColumnIndex(1);
+	                ImGui::Text("%s", GetMaterialNameByUuid(m_materialsReference[row].GetMaterialInstanceID()) );
+
+	                ImGui::TableSetColumnIndex(2);
+	                ImGui::Text("%llu", m_materialsReference[row].GetMaterialInstanceID().ID() );
+
+	                ImGui::TableSetColumnIndex(3);
+	                ImGui::Text("%d", m_materialsReference[row].GetReferencesCount() );
+	            }
+	            ImGui::EndTable();
 			}
 		}
 	}

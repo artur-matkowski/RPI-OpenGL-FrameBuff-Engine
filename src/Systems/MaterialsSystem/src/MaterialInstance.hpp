@@ -12,7 +12,6 @@ namespace asapi
 		SERIALIZABLE_OBJ(MaterialInstance, UniqueID, 	m_uuid);
 		SERIALIZABLE_OBJ(MaterialInstance, UniqueID, 	m_shaderID);
 
-		std::string 									m_MaterialName;
 		static std::string 								s_projectPath;
 
 		//std::vector<UniformInterface> v_uniforms;
@@ -23,7 +22,8 @@ namespace asapi
 		MaterialInstance(const UniqueID& uuid);
 		~MaterialInstance();
 
-		static void SetProjectPath(const char* path);
+		static void SetProjectPath(const std::string& path);
+
 	};
 }
 

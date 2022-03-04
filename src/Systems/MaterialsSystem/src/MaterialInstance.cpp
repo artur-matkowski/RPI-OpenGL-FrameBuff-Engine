@@ -23,7 +23,7 @@ namespace asapi
 		log::debug << "Destroying MaterialInstance (data) " << materialDataPath.c_str() << std::endl;
 	}
 	
-	void MaterialInstance::SetProjectPath(const char* path)
+	void MaterialInstance::SetProjectPath(const std::string& path)
 	{
 		s_projectPath = path;
 	}

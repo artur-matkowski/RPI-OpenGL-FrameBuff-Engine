@@ -34,6 +34,8 @@ namespace asapi
 		void SetProjectPath( const std::string& path );
 		void RefreshResources();
 
+		const char* GetMaterialNameByUuid(const UniqueID& uuid) const;
+
 
 
 		#ifdef IS_EDITOR

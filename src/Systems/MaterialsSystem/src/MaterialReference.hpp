@@ -29,6 +29,10 @@ namespace asapi
 
 		virtual void PostDeserializationCallback() override;
 
+		const int GetReferencesCount() const { return *m_referenceCounter; }
+
+		bool operator==(const MaterialReference& cp) const;
+
 		#ifdef IS_EDITOR
 		static MaterialReference CreateNewMaterial();
 		virtual void OnGUI() override;
