@@ -26,10 +26,11 @@ namespace asapi
 		bool LoadMaterialInstance(const UniqueID& uuid);
 
 		inline UniqueID GetMaterialInstanceID(){ return m_materialInstanceID; }
+		inline const int GetReferencesCount() const { return *m_referenceCounter; }
+		inline MaterialInstance* GetMaterialInstance() { return m_materialInstance; }
 
 		virtual void PostDeserializationCallback() override;
 
-		const int GetReferencesCount() const { return *m_referenceCounter; }
 
 		bool operator==(const MaterialReference& cp) const;
 

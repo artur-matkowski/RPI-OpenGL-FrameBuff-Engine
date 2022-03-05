@@ -7,8 +7,6 @@
 #include "ResourceTracker.hpp"
 
 
-#define MATERIAL_ASSET_EXTENSION ".mat"
-#define MATERIAL_DATA_EXTENSION ".mat.json"
 
 namespace asapi
 {
@@ -199,13 +197,14 @@ namespace asapi
 		{
 			const ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg;
 
-			if (ImGui::BeginTable("MaterialReferences", 4, flags))
+			if (ImGui::BeginTable("MaterialReferences", 5, flags))
 			{
 
 				ImGui::TableSetupColumn("n");
                 ImGui::TableSetupColumn("Name");
                 ImGui::TableSetupColumn("uuid");
                 ImGui::TableSetupColumn("references in use");
+                ImGui::TableSetupColumn("shader");
                 ImGui::TableHeadersRow();
 
                 for (int row = 0; row < m_materialsReference.size(); row++)
@@ -224,6 +223,12 @@ namespace asapi
 
 	                ImGui::TableSetColumnIndex(3);
 	                ImGui::Text("%d", m_materialsReference[row].GetReferencesCount()-1 );
+
+	                ImGui::TableSetColumnIndex(4);
+	                if( m_materialsReference[row].GetMaterialInstance() != nullptr )
+	                {
+	                	m_materialsReference[row].GetMaterialInstance()->OnGUI_SelectShader();
+	                }
 	            }
 	            ImGui::EndTable();
 			}
@@ -258,6 +263,31 @@ namespace asapi
 		if( oldItem!=currentItem )
 		{
 			UpdateMaterialReference( m_selectableMaterials[currentItem].m_materialUuid, materialReference );
+		}
+	}
+
+	void MaterialsSystem::SaveMaterialInstances()
+	{
+		bfu::JSONSerializer serializer;
+
+		for (int i = 0; i < m_materialsReference.size(); i++)
+		{
+			MaterialInstance* materialInstance = m_materialsReference[i].GetMaterialInstance();
+
+			if( materialInstance!=nullptr )
+			{
+				FILE::STREAM materialDataFile;
+				std::string materialDataPath = s_projectPath 
+											+ std::string( RESOURCE_BINARIES_DIR "/" )
+											+ std::to_string( m_materialsReference[i].GetMaterialInstanceID().ID() )
+											+ MATERIAL_DATA_EXTENSION;
+
+				serializer.clear();
+				serializer.Serialize( materialInstance );
+
+				materialDataFile.InitForWrite( materialDataPath.c_str() );
+				materialDataFile.Write( serializer.data(), serializer.size() );
+			}
 		}
 	}
 	#endif

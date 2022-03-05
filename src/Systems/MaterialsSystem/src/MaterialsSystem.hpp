@@ -18,7 +18,7 @@ namespace asapi
 
 	class MaterialsSystem
 	{
-		static std::string s_projectPath;
+		static std::string 						s_projectPath;
 
 		std::vector<MaterialReference> 			m_materialsReference;
 
@@ -42,6 +42,8 @@ namespace asapi
 		void OnGUI();
 
 		void SelectMaterialReference( MaterialReference* materialReference );
+
+		void SaveMaterialInstances();
 		#endif
 	};
 }

@@ -61,6 +61,8 @@ namespace asapi
 			    { 
 			    	PrefabLoaderComponent* cmp = (PrefabLoaderComponent*) SCENE.GetRootNode().GET_COMPONENT(PrefabLoaderComponent);
 			    	cmp->Save_JSON(); 
+
+			    	SYSTEMS::GetObject().MATERIALSSYSTEM.SaveMaterialInstances();
 			    }
 			    ImGui::Separator();
 

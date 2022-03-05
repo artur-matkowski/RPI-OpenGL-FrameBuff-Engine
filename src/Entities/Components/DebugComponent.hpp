@@ -17,7 +17,7 @@ namespace asapi
 
 		virtual void OnGUI() override
 		{
-			ImGui::Text("CoKURWA???");
+			ImGui::Text("Co...??");
 		}
 	};
 
