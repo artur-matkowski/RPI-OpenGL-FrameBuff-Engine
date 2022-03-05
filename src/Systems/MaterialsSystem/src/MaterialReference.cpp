@@ -20,11 +20,13 @@ namespace asapi
 			delete m_materialInstance;
 			m_referenceCounter = nullptr;
 			m_materialInstance = nullptr;
+			m_materialInstanceID = 0;
 		}
 	}
 
 	MaterialReference::MaterialReference()
 	{
+		m_materialInstanceID = 0;
 	}
 
 	MaterialReference::~MaterialReference()
@@ -36,7 +38,7 @@ namespace asapi
 		CleanUp();
 
 		m_referenceCounter = new uint16_t;
-		*m_referenceCounter = 0;
+		*m_referenceCounter = 1;
 
 		m_materialInstance = new MaterialInstance(uuid);
 		m_materialInstanceID = uuid;

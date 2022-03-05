@@ -30,15 +30,9 @@ namespace asapi
 
 		if( !materialFound )
 		{
-			m_materialsReference.emplace_back();
-			materialFound = m_materialsReference.back().LoadMaterialInstance(id);
-			if(materialFound)
+			if( out->LoadMaterialInstance(id) )
 			{
-				*out = m_materialsReference.back();
-			}
-			else
-			{
-				m_materialsReference.pop_back();
+				m_materialsReference.emplace_back(*out);
 			}
 		}
 
@@ -229,7 +223,7 @@ namespace asapi
 	                ImGui::Text("%llu", m_materialsReference[row].GetMaterialInstanceID().ID() );
 
 	                ImGui::TableSetColumnIndex(3);
-	                ImGui::Text("%d", m_materialsReference[row].GetReferencesCount() );
+	                ImGui::Text("%d", m_materialsReference[row].GetReferencesCount()-1 );
 	            }
 	            ImGui::EndTable();
 			}
