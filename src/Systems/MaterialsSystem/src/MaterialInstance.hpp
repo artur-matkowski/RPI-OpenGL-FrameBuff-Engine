@@ -24,8 +24,8 @@ namespace asapi
 
 		static std::string 								s_projectPath;
 
-		//std::vector<UniformInterface> v_uniforms;
 
+		//std::vector<UniformInterface> v_uniforms;
 		//ResourceGLSLProcessor			m_shader;
 
 		static void OnShaderDirtyCallback(void* data);

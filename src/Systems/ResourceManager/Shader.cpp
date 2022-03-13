@@ -19,12 +19,12 @@ namespace asapi
 		snprintf(buff, MAX_PATH_SIZE, "%s/assets_int/shaders/%s.frag.glsl", SYSTEMS::GetObject().ASSETS.GetProjectPath(), filename);
 		frag.InitForRead(buff);
 
-		return RendererSystem::ProcessShader((char*)vert.Data(), (char*)frag.Data(), filename);
+		return RendererSystem::ProcessShader_obsolete((char*)vert.Data(), (char*)frag.Data(), filename);
 	}
 
 	Shader::~Shader()
 	{
-		RendererSystem::DispouseShader(this);
+		RendererSystem::DispouseShader_obsolete(this);
 	}
 
 	void Shader::Compile(const char* dest, const char* source)

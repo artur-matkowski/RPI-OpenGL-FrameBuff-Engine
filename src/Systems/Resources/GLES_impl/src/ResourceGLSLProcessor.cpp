@@ -127,4 +127,12 @@ namespace asapi
 	{
 		return ".glsl";
 	}
+
+
+
+
+	bool ResourceGLSLSharedReference::CompileShader()
+	{
+		
+	}
 }
