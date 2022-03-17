@@ -78,6 +78,9 @@ namespace asapi
 			}
 		}
 
+		inline bool IsValid() { return m_shader.IsValid(); }
+		Uniform<glm::mat4>* GetModelViewMatrix(){ return p_modelViewUniform; }
+
 		#ifdef IS_EDITOR
 		void OnGUI_SelectShader();
 		virtual void OnGUI() override;

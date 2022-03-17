@@ -17,13 +17,12 @@ namespace asapi
 	protected:
 		uint32_t 				m_location 	= -1;
 		bool 					m_isDirty 	= false;
-		stream					m_name;
+		std::string				m_name;
 	public:
-		UniformInterface(uint32_t location, const char* uniformName, bfu::MemBlockBase* metadataMemBlock)
+		UniformInterface(uint32_t location, const char* uniformName, bfu::MemBlockBase* metadataMemBlock = nullptr)
 			:m_location(location)
-			,m_name(metadataMemBlock)
 		{
-			m_name.sprintf(uniformName);
+			m_name = uniformName;
 		};
 		virtual ~UniformInterface();
 
@@ -48,8 +47,8 @@ namespace asapi
 	{
 		T		m_data;
 	public:
-		Uniform(uint32_t location, const char* uniformName, bfu::MemBlockBase* metadataMemBlock)
-			:UniformInterface(location, uniformName, metadataMemBlock)
+		Uniform(uint32_t location, const char* uniformName, bfu::MemBlockBase* metadataMemBlock = nullptr)
+			:UniformInterface(location, uniformName)
 		{
 		};
 		Uniform(const Uniform& cp) = delete;

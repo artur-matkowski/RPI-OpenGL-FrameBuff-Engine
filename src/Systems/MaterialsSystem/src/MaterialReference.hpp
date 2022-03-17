@@ -29,10 +29,14 @@ namespace asapi
 		inline const int GetReferencesCount() const { return *m_referenceCounter; }
 		inline MaterialInstance* GetMaterialInstance() { return m_materialInstance; }
 
+
+
 		virtual void PostDeserializationCallback() override;
 
 
 		bool operator==(const MaterialReference& cp) const;
+
+		bool IsValid();
 
 		#ifdef IS_EDITOR
 		static MaterialReference CreateNewMaterial();

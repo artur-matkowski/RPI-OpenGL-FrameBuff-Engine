@@ -27,6 +27,11 @@
 }, {
 "m_componentTypeName": "asapi::RendererComponent", 
 "m_recreationString": "{
+\"m_incomingMaterialImpl\": {
+\"m_materialInstanceID\": {
+\"m_ID\": 6393136728154090400
+}
+}, 
 \"m_MaterialName\": \"sdg\"
 }"
 }]

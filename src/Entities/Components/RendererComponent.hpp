@@ -31,6 +31,7 @@ namespace asapi
 		virtual void OnIsDirty() override;
 
 		virtual void PreSerializationCallback() override;
+		virtual void PostDeserializationCallback() override;
 	
 	
 		void Render(glm::mat4* projectionMatrix, glm::mat4* viewMatrix);

@@ -74,6 +74,16 @@ namespace asapi
 		return m_materialInstance==cp.m_materialInstance;
 	}
 
+	bool MaterialReference::IsValid()
+	{
+		bool ret = false;
+		if( m_materialInstance!=nullptr )
+		{
+			ret = m_materialInstance->IsValid();
+		}
+		return ret;
+	}
+
 	#ifdef IS_EDITOR
 	MaterialReference MaterialReference::CreateNewMaterial()
 	{

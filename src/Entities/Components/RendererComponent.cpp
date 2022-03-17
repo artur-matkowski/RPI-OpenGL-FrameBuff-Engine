@@ -49,21 +49,21 @@ namespace asapi
 
 		p_meshComponent = (MeshComponent*)m_owner->GET_COMPONENT(MeshComponent);
 
-		if( m_material.GetRawPtr() != nullptr 
-			&& m_material->IsValid() 
+		if( m_incomingMaterialImpl.IsValid() 
 			&& p_meshComponent != nullptr
 			&& p_meshComponent->GetMeshHandle() != nullptr )
 		{
 			//if you would ever try to update renderer component on the fly, you need to first unregister it from 
 			//renderer system, to unbound mesh from material render queue.
+			SYSTEMS::GetObject().RENDERER.UnRegisterRenderer( this );
 			SYSTEMS::GetObject().RENDERER.RegisterRenderer( this );
 		}
 	}
 
 	void RendererComponent::Render(glm::mat4* projectionMatrix, glm::mat4* viewMatrix)
 	{
-		m_material->GetModelViewMatrix()->SetUniform( *projectionMatrix * *viewMatrix * *p_modelViewMat );
-		m_material->BindMaterial();
+		m_incomingMaterialImpl.GetMaterialInstance()->GetModelViewMatrix()->SetUniform( *projectionMatrix * *viewMatrix * *p_modelViewMat );
+		m_incomingMaterialImpl.GetMaterialInstance()->BindMaterial();
 
 		uint32_t* config = (uint32_t*)p_meshComponent->GetMeshHandle();
 
@@ -98,6 +98,10 @@ namespace asapi
 		#ifdef IS_EDITOR
 		m_MaterialName.sprintf(m_material->GetMaterialName());
 		#endif
+	}
+	void RendererComponent::PostDeserializationCallback()
+	{
+		OnIsDirty();
 	}
 
 	#ifdef IS_EDITOR
@@ -142,7 +146,6 @@ namespace asapi
             ImGui::EndCombo();
         }
 
-        m_incomingMaterialImpl.OnGUI_caller();
 
 
 		// {
@@ -162,6 +165,8 @@ namespace asapi
 		// }
 		if(m_material.GetRawPtr()!=nullptr)
 			m_material->OnGUI();
+
+        m_incomingMaterialImpl.OnGUI_caller();
 	}
 	#endif
 
