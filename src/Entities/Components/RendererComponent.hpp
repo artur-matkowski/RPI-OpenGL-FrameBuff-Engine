@@ -4,7 +4,7 @@
 #include "MaterialType.hpp"
 #include "MeshComponent.hpp"
 #include "ResourcePtr.hpp"
-
+#include "MaterialReference.hpp"
 
 namespace asapi
 {
@@ -13,6 +13,8 @@ namespace asapi
 	class RendererComponent: public ComponentBase<RendererComponent>
 	{
 		ResourcePtr< MaterialType > 				m_material;
+		SERIALIZABLE_OBJ(RendererComponent, MaterialReference,
+													m_incomingMaterialImpl);
 
 		MeshComponent*								p_meshComponent;
 		glm::mat4* 									p_modelViewMat;

@@ -49,7 +49,6 @@ namespace asapi
 
 	class ResourceGLSLSharedReference: public asapi::ResourceSharedReferenceBase<ResourceGLSLSharedReference, ResourceGLSLProcessor>
 	{
-		int32_t m_shaderProgramID = -1;
 	public:
 		ResourceGLSLSharedReference(){}
 
@@ -58,9 +57,6 @@ namespace asapi
 			m_resourcePtr = cp.m_resourcePtr;
 			cp.m_resourcePtr = nullptr;
 		}
-
-		bool CompileShader();
-		inline int32_t GetShaderID(){ return m_shaderProgramID; }
 	};
 
 }

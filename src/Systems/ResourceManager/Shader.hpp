@@ -13,10 +13,10 @@ namespace asapi
 
 		tShaderHandle 			h_shaderHandle = nullptr;
 
-		Shader();
 
 		static Shader* LinkShader(GLuint vertex, GLuint fragment);
 	public:
+		Shader();
 		~Shader();
 
 		inline void UseProgram()
@@ -28,8 +28,14 @@ namespace asapi
 		{
 			return (uint32_t)(size_t)h_shaderHandle;
 		}
+
+		inline bool IsValid()
+		{
+			return h_shaderHandle!=nullptr;
+		}
 		
 		static Shader* LoadShaderFromFile(const char* filename);
+		bool LoadShaderFromResourceRawHandle(const void* resourceHandle);
 
 		
 		static void Compile(const char* dest, const char* source);

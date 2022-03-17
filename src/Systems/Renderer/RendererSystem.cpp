@@ -288,7 +288,7 @@ namespace asapi{
 		return shader;
 	}
 
-	Shader* RendererSystem::ProcessShader_obsolete(const char* vertex_source, const char* fragment_source, const char* shaderName)
+	Shader* RendererSystem::ProcessShader_obsolete(const char* vertex_source, const char* fragment_source, const char* shaderName, Shader* out)
 	{
 		GLuint vertex, fragment;
 		GLint isCompiled = GL_FALSE;
@@ -371,12 +371,14 @@ namespace asapi{
 
 		glDeleteShader(vertex);
 		glDeleteShader(fragment);
+
+		if(out==nullptr)
+			out = new Shader();
 			
-		Shader* ret = new Shader();
-		ret->h_shaderHandle = (tShaderHandle)(size_t)programID;
+		out->h_shaderHandle = (tShaderHandle)(size_t)programID;
 
 
-		return ret;
+		return out;
 	}
 	void RendererSystem::DispouseShader_obsolete(Shader* shader)
 	{

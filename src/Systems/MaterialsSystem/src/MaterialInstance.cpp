@@ -11,7 +11,7 @@ namespace asapi
 		bfu::JSONSerializer serializer;
 
 		m_uuid = uuid;
-		m_shader.BindOnDirtyCallback(OnShaderDirtyCallback, this);
+		m_shaderResource.BindOnDirtyCallback(OnShaderDirtyCallback, this);
 
 		std::string materialDataPath = s_projectPath + RESOURCE_BINARIES_DIR "/";
 		materialDataPath += std::to_string( uuid.ID() ) + MATERIAL_DATA_EXTENSION;
@@ -35,6 +35,9 @@ namespace asapi
 	
 	void MaterialInstance::OnShaderDirtyCallback(void* data)
 	{
+		MaterialInstance* _this = (MaterialInstance*)data;
+
+		_this->m_shader.LoadShaderFromResourceRawHandle( _this->m_shaderResource.GetRawHandle() );
 		log::debug << "MaterialInstance::OnShaderDirtyCallback" << std::endl;
 	}
 
@@ -43,9 +46,19 @@ namespace asapi
 	{
 		if (ImGui::BeginCombo("Shader resource", "m_shaderName"))
         {
-            m_shader.OnGUI_caller();
+            m_shaderResource.OnGUI_caller();
             ImGui::EndCombo();
         }
+	}
+	void MaterialInstance::OnGUI()
+	{
+		if( m_shader.IsValid() )
+			ImGui::Text("Material Instance is valid.");
+		else
+		{
+			const ImVec4 warningColor(1.0, 1.0, 0.0, 1.0);
+			ImGui::TextColored(warningColor, "Material Instance is not valid.");
+		}
 	}
 	#endif
 }

@@ -22,6 +22,25 @@ namespace asapi
 		return RendererSystem::ProcessShader_obsolete((char*)vert.Data(), (char*)frag.Data(), filename);
 	}
 
+	bool Shader::LoadShaderFromResourceRawHandle(const void* resourceHandle)
+	{		
+		asapi::FILE::MMAP* file = (asapi::FILE::MMAP*) resourceHandle;
+			
+		uint16_t* p_vertSize = (uint16_t*)file->Data();
+		uint16_t* p_fragSize = &p_vertSize[1];
+		uint16_t* p_shaderNameSize = &p_vertSize[2];
+		char* vertex_source = (char*)&p_vertSize[3];
+		char* fragment_source = vertex_source+*p_vertSize+1;
+		char* p_nameBuff = fragment_source+*p_fragSize+1;
+
+		if(IsValid())
+			RendererSystem::DispouseShader_obsolete(this);
+
+		RendererSystem::ProcessShader_obsolete(vertex_source, fragment_source, p_nameBuff, this);
+
+		return IsValid();
+	}
+
 	Shader::~Shader()
 	{
 		RendererSystem::DispouseShader_obsolete(this);

@@ -16,7 +16,7 @@ namespace asapi
 	{
 		ResourcePtr< Shader > 						m_shader;
 
-		int32_t										m_uniformsCount = 0;											
+		int32_t										m_uniformsCount = 0;
 		UniformInterface**							p_uniforms = nullptr;
 		Uniform<glm::mat4>*							p_modelViewUniform = nullptr;
 

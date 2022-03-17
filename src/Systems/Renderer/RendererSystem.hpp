@@ -54,7 +54,7 @@ namespace asapi{
 		static void ProcessMesh(Mesh_old*, void*);
 		static void DispouseMesh(Mesh_old*);
 
-		static Shader* ProcessShader_obsolete(const char* vertex_source, const char* gragment_source, const char* shader_name);
+		static Shader* ProcessShader_obsolete(const char* vertex_source, const char* gragment_source, const char* shader_name, Shader* out = nullptr);
 		static void DispouseShader_obsolete(Shader*);
 
 

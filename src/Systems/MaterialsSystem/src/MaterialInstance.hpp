@@ -3,6 +3,8 @@
 #include <vector>
 #include "UniqueID.hpp"
 #include "_ResourceProcessorsInclude.hpp"
+#include "Shader.hpp"
+#include "_UniformsList.hpp"
 
 using bfu::string;
 
@@ -16,13 +18,19 @@ namespace asapi
 
 	class MaterialInstance: public SerializableObject<MaterialInstance>
 	{
+		static std::string 								s_projectPath;
+
+
 		bool 											m_isDirty = true; //on init shader need to be compiled and processed
-		SERIALIZABLE_OBJ(MaterialInstance, ResourceGLSLSharedReference, 
-														m_shader );
 
 		SERIALIZABLE_OBJ(MaterialInstance, UniqueID, 	m_uuid);
+		SERIALIZABLE_OBJ(MaterialInstance, ResourceGLSLSharedReference, 
+														m_shaderResource );
+		Shader 											m_shader;
+		int32_t											m_uniformsCount = 0;
+		UniformInterface**								p_uniforms = nullptr;
+		Uniform<glm::mat4>*								p_modelViewUniform = nullptr;
 
-		static std::string 								s_projectPath;
 
 
 		//std::vector<UniformInterface> v_uniforms;
@@ -36,8 +44,43 @@ namespace asapi
 
 		static void SetProjectPath(const std::string& path);
 
+		inline UniformInterface* GetUniformPtr(const char* uniformName)
+		{
+			UniformInterface* ret = nullptr;
+
+			for(int i=0; i<m_uniformsCount; ++i)
+			{
+				if( p_uniforms[i]->Is(uniformName))
+				{
+					ret = p_uniforms[i];
+					break;
+				}
+			}
+
+			#ifdef IS_EDITOR
+			if(ret==nullptr)
+			{
+				log::warning << "Could not find uniform " << uniformName << std::endl;
+			}
+			#endif
+
+			return ret;
+		}
+
+
+		inline void BindMaterial()
+		{
+			m_shader.UseProgram();
+
+			for(int i=0; i<m_uniformsCount; ++i)
+			{
+				p_uniforms[i]->SendUniform();
+			}
+		}
+
 		#ifdef IS_EDITOR
 		void OnGUI_SelectShader();
+		virtual void OnGUI() override;
 		#endif
 	};
 }
