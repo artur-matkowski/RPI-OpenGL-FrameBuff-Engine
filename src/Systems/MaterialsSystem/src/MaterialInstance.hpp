@@ -27,7 +27,7 @@ namespace asapi
 		SERIALIZABLE_OBJ(MaterialInstance, ResourceGLSLSharedReference, 
 														m_shaderResource );
 		Shader 											m_shader;
-		int32_t											m_uniformsCount = 0;
+		int16_t											m_uniformsCount = 0;
 		UniformInterface**								p_uniforms = nullptr;
 		Uniform<glm::mat4>*								p_modelViewUniform = nullptr;
 
@@ -48,7 +48,7 @@ namespace asapi
 		{
 			UniformInterface* ret = nullptr;
 
-			for(int i=0; i<m_uniformsCount; ++i)
+			for(int16_t i=0; i<m_uniformsCount; ++i)
 			{
 				if( p_uniforms[i]->Is(uniformName))
 				{

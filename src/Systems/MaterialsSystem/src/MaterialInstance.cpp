@@ -143,7 +143,14 @@ namespace asapi
 	void MaterialInstance::OnGUI()
 	{
 		if( m_shader.IsValid() )
+		{
 			ImGui::Text("Material Instance is valid.");
+
+			for(int16_t i=0; i<m_uniformsCount; ++i)
+			{
+				p_uniforms[i]->OnGUI();
+			}
+		}
 		else
 		{
 			const ImVec4 warningColor(1.0, 1.0, 0.0, 1.0);

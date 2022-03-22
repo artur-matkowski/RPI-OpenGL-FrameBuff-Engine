@@ -12,15 +12,11 @@ namespace asapi
 
 	class RendererComponent: public ComponentBase<RendererComponent>
 	{
-		ResourcePtr< MaterialType > 				m_material;
 		SERIALIZABLE_OBJ(RendererComponent, MaterialReference,
 													m_incomingMaterialImpl);
 
 		MeshComponent*								p_meshComponent;
 		glm::mat4* 									p_modelViewMat;
-
-		char buffMat[255];
-		SERIALIZABLE_VAR(RendererComponent, stream, m_MaterialName );
 
 	public:
 		RendererComponent(bfu::MemBlockBase* mBlock);
