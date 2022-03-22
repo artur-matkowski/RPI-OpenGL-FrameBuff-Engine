@@ -14,7 +14,6 @@
 
 #include "Texture.hpp"
 #include "Shader.hpp"
-#include "Mesh_old.hpp"
 
 
 
@@ -102,125 +101,7 @@ namespace asapi{
     	_this->m_resolution.x = args->m_width; 
     	_this->m_resolution.y = args->m_height;
 	}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                                                                            //
-//                                                                                                            //
-//                                                                                                            //
-//                                                                                                            //
-// Mesh_old processing section                                                                                    //
-//                                                                                                            //
-//                                                                                                            //
-//                                                                                                            //
-//                                                                                                            //
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	void RendererSystem::ProcessMesh(Mesh_old* mesh, void* data)
-	{
-		
-        bool*       fp_hasPosition = (bool*) data;
-        bool*       fp_hasNormals = &fp_hasPosition[1];
-        uint32_t*   fp_arraySize = (uint32_t*) &fp_hasPosition[2];
-        uint32_t*   fp_numUvChannels = &fp_arraySize[1];
-        uint32_t*   fp_indiciesCount = &fp_numUvChannels[1];
-        float*      fp_vertexData = (float*) &fp_indiciesCount[1];
-        int*        fp_indiciesData = (int*) &fp_vertexData[*fp_arraySize];
-        
-        const uint32_t vertexfields = (*fp_hasPosition ? 3 : 0)
-                                + (*fp_hasNormals ? 3 : 0)
-                                + *fp_numUvChannels * 2;
-
-        const uint32_t atributesInUse = (*fp_hasPosition ? 1 : 0)
-                                + (*fp_hasNormals ? 1 : 0)
-                                + *fp_numUvChannels;
-
-
-
-       	uint32_t* config = STD_NEW(atributesInUse*5+4, uint32_t);
-       	uint32_t index = 3;
-
-        config[2] = atributesInUse; // present attributes count
-
-        glGenBuffers(1, &config[0]);
-        glBindBuffer(GL_ARRAY_BUFFER, config[0]);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * *fp_arraySize * vertexfields, 0, GL_STATIC_DRAW);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * *fp_arraySize * vertexfields, fp_vertexData);
-
-
-        glGenBuffers(1, &config[1]);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, config[1]);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)* *fp_indiciesCount, NULL, GL_STATIC_DRAW);
-        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLuint)* *fp_indiciesCount, fp_indiciesData);
-
-
-       int attrPtrOffset = 0;
-
-        if(fp_hasPosition)
-        {
-            config[index] = ATTR_LOC_position; 
-            ++index;
-            config[index] = 0; 
-            ++index;
-            config[index] = 3; 
-            ++index;
-            config[index] = vertexfields; 
-            ++index;
-            config[index] = attrPtrOffset;
-            attrPtrOffset += 3;
-            ++index;
-            //glEnableVertexAttribArray(0);
-            //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT)*9, nullptr);
-        }
-
-        if(*fp_hasNormals)
-        {
-            config[index] = ATTR_LOC_normal;
-            ++index;
-            config[index] = 0;
-            ++index;
-            config[index] = 3;
-            ++index;
-            config[index] = vertexfields;
-            ++index;
-            config[index] = attrPtrOffset;
-            attrPtrOffset += 3;
-            ++index;
-        }
-
-        for(uint32_t UVchannel = 0; UVchannel<*fp_numUvChannels; ++UVchannel)
-        {
-            config[index] = ATTR_LOC_uv0 + UVchannel;
-            ++index;
-            config[index] = 2;
-            ++index;
-            config[index] = 2;
-            ++index;
-            config[index] = vertexfields;
-            ++index;
-            config[index] = attrPtrOffset;
-            attrPtrOffset += 2;
-            ++index;
-            // glEnableVertexAttribArray(2);
-            // glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT)*9, (void*) (sizeof(GL_FLOAT)*3) );
-        }
-
-        config[index] = *fp_indiciesCount;
-
-        mesh->h_meshHandle = (tMeshHandle)config;
-	}
-
-	void RendererSystem::DispouseMesh(Mesh_old* mesh)
-	{
-		uint32_t* config = (uint32_t*)mesh->h_meshHandle;
-		if( config != nullptr)
-		{
-			glDeleteBuffers(1, &config[0]);
-			glDeleteBuffers(1, &config[1]);
-			DELETE(config);
-		}
-	}
-
+	
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                                            //

@@ -1,9 +1,6 @@
 #ifndef _H_EditorSystem
 #define _H_EditorSystem
 #ifdef IS_EDITOR
-#include "glm.hpp"
-#include "Mesh_old.hpp"
-#include "UniformBase.hpp"
 
 namespace asapi
 {

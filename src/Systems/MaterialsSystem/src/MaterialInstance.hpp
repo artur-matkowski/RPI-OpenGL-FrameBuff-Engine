@@ -32,10 +32,6 @@ namespace asapi
 		Uniform<glm::mat4>*								p_modelViewUniform = nullptr;
 
 
-
-		//std::vector<UniformInterface> v_uniforms;
-		//ResourceGLSLProcessor			m_shader;
-
 		static void OnShaderDirtyCallback(void* data);
 
 	public:
