@@ -78,10 +78,6 @@ namespace asapi
 	
 	void RendererComponent::PreSerializationCallback()
 	{
-		m_MaterialName.clear();
-		#ifdef IS_EDITOR
-		m_MaterialName.sprintf(m_material->GetMaterialName());
-		#endif
 	}
 	void RendererComponent::PostDeserializationCallback()
 	{
@@ -91,9 +87,6 @@ namespace asapi
 	#ifdef IS_EDITOR
 	void RendererComponent::OnGUI()
 	{
-		if(m_material.GetRawPtr()!=nullptr)
-			m_material->OnGUI();
-
         m_incomingMaterialImpl.OnGUI_caller();
 	}
 	#endif

@@ -3,7 +3,6 @@
 #ifdef IS_EDITOR
 #include "glm.hpp"
 #include "Mesh_old.hpp"
-#include "MaterialType.hpp"
 #include "UniformBase.hpp"
 
 namespace asapi

@@ -4,8 +4,6 @@
 #include <map>
 #include "ResourcePtr.hpp"
 #include "Texture.hpp"
-#include "Shader.hpp"
-#include "MaterialType.hpp"
 #include "Mesh_old.hpp"
 
 namespace asapi
@@ -16,17 +14,13 @@ namespace asapi
 		bfu::MemBlockBase* 									p_materialsMemBlock;
 
 		std::map<bfu::string, ResourcePtr<Texture> > 		m_textures;
-		std::map<bfu::string, ResourcePtr<Shader> > 		m_shaders;
-		std::map<bfu::string, ResourcePtr<MaterialType> > 	m_materials;
-		std::map<bfu::string, ResourcePtr<Mesh_old> > 			m_meshes;
+		std::map<bfu::string, ResourcePtr<Mesh_old> > 		m_meshes;
 
 		char 												m_ProjectPath[MAX_PATH_SIZE] = ".";
 
 		#ifdef IS_EDITOR
 
 		std::vector<std::string>							v_TexturesPaths;
-		std::vector<std::string>							v_MaterialsPaths;
-		std::vector<std::string>							v_ShadersPaths;
 		std::vector<std::string>							v_MeshesPaths;
 
 		std::vector<RendererComponent*>						v_rendererComponentsOnScene;
@@ -44,10 +38,8 @@ namespace asapi
 
 		void RefreshResources();
 		std::vector<std::string>* GetTexturesPaths(){ return &v_TexturesPaths; }
-		std::vector<std::string>* GetMaterialsPaths(){ return &v_MaterialsPaths; }
-		std::vector<std::string>* GetShadersPaths(){ return &v_ShadersPaths; }
 		std::vector<std::string>* GetMeshesPaths(){ return &v_MeshesPaths; }
-		void OnGUI();
+		
 		void RegisterRendererComponent(RendererComponent*);
 		void UnRegisterRendererComponent(RendererComponent*);
 		void OnRenderersDirty();
@@ -91,85 +83,6 @@ namespace asapi
 			}
 		}
 
-		bool requestResource(ResourcePtr<Shader>* res, const char* str)
-		{
-			bfu::string id(str);
-
-			std::map<bfu::string, ResourcePtr<Shader> >::iterator it = m_shaders.find(id);
-
-			if( it==m_shaders.end() )
-			{
-				Shader* newShader = Shader::LoadShaderFromFile(str);
-				if( newShader==0 )
-				{
-					log::warning << "Could not load shader '" << str << "' reattemping with 'debug' shader" << std::endl;
-					//already done in renderer system
-				}
-				res->Rebuild( newShader );
-				m_shaders[id] = *res;
-			}
-			else
-			{
-				*res = m_shaders[id];
-			}
-			
-			return true;
-		}
-
-		void dispouseResource(ResourcePtr<Shader>* res)
-		{
-			for(std::map<bfu::string, ResourcePtr<Shader> >::iterator it = m_shaders.begin() ;
-				it!=m_shaders.end();
-				++it)
-			{
-				void* A = it->second.GetRawPtr();
-				void* B = res->GetRawPtr();
-
-				if( A == B )
-				{
-					m_shaders.erase(it);
-					break;
-				}
-			}
-		}
-
-		bool requestResource(ResourcePtr<MaterialType>* res, const char* str)
-		{
-			bfu::string id(str);
-
-			std::map<bfu::string, ResourcePtr<MaterialType> >::iterator it = m_materials.find(id);
-
-			if( it==m_materials.end() )
-			{
-				MaterialType* mat = (MaterialType*)p_materialsMemBlock->allocate(1, sizeof(MaterialType), alignof(MaterialType));
-				new (mat) MaterialType(str);
-				res->Rebuild( mat );
-				m_materials[id] = *res;
-			}
-			else
-			{
-				*res = m_materials[id];
-			}
-			
-			return (*res)->IsValid();
-		}
-
-		void dispouseResource(ResourcePtr<MaterialType>* res)
-		{
-			for(std::map<bfu::string, ResourcePtr<MaterialType> >::iterator it = m_materials.begin() ;
-				it!=m_materials.end();
-				++it)
-			{
-				void* A = it->second.GetRawPtr();
-				void* B = res->GetRawPtr();
-
-				if( A == B )
-				{
-					m_materials.erase(it);
-					break;
-				}
-			}
-		}
 
 		bool requestResource(ResourcePtr<Mesh_old>* res, const char* str)
 		{

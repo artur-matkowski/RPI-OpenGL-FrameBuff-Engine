@@ -214,14 +214,6 @@ namespace asapi{
 		mkdir(dir_path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
 		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
-		strncat(dir_path, "/assets_int/materials", MAX_PATH_SIZE-1);
-		mkdir(dir_path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-
-		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
-		strncat(dir_path, "/assets_int/shaders", MAX_PATH_SIZE-1);
-		mkdir(dir_path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-
-		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
 		strncat(dir_path, "/assets_int/meshes", MAX_PATH_SIZE-1);
 		mkdir(dir_path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 	}
@@ -239,8 +231,6 @@ namespace asapi{
 
 
 		std::vector<std::string> TexturesPaths;
-		std::vector<std::string> MaterialsPaths;
-		std::vector<std::string> ShadersPaths;
 		std::vector<std::string> MeshesPaths;
 
 		char dir_path[MAX_PATH_SIZE];
@@ -249,14 +239,6 @@ namespace asapi{
 		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
 		strncat(dir_path, "/assets_ext/textures", MAX_PATH_SIZE-1);
 		ScanDirForPaths(TexturesPaths, dir_path);
-
-		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
-		strncat(dir_path, "/assets_ext/materials", MAX_PATH_SIZE-1);
-		ScanDirForPaths(MaterialsPaths, dir_path);
-
-		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
-		strncat(dir_path, "/assets_ext/shaders", MAX_PATH_SIZE-1);
-		ScanDirForPaths(ShadersPaths, dir_path);
 
 		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
 		strncat(dir_path, "/assets_ext/meshes", MAX_PATH_SIZE-1);
@@ -270,20 +252,6 @@ namespace asapi{
 			if( ! IsInternalAssetUpToDate(TexturesPaths[i].c_str(), buff) )
 			{
 				Texture::Compile(buff, TexturesPaths[i].c_str());
-			}
-		}
-		for(int i=0; i<MaterialsPaths.size(); ++i)
-		{
-			if( ! IsInternalAssetUpToDate(MaterialsPaths[i].c_str(), buff) )
-			{
-				MaterialType::Compile(buff, MaterialsPaths[i].c_str());
-			}
-		}
-		for(int i=0; i<ShadersPaths.size(); ++i)
-		{
-			if( ! IsInternalAssetUpToDate(ShadersPaths[i].c_str(), buff) )
-			{
-				Shader::Compile(buff, ShadersPaths[i].c_str());
 			}
 		}
 		for(int i=0; i<MeshesPaths.size(); ++i)
@@ -300,62 +268,13 @@ namespace asapi{
 		strncat(dir_path, "/assets_int/textures", MAX_PATH_SIZE-1);
 		ScanDirForPaths(v_TexturesPaths, dir_path);
 
-		v_MaterialsPaths.clear();
-		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
-		strncat(dir_path, "/assets_int/materials", MAX_PATH_SIZE-1);
-		ScanDirForPaths(v_MaterialsPaths, dir_path);
-		RemoveExtensions(v_MaterialsPaths);
-
-		v_ShadersPaths.clear();
-		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
-		strncat(dir_path, "/assets_int/shaders", MAX_PATH_SIZE-1);
-		ScanDirForPaths(v_ShadersPaths, dir_path, "vert.glsl");
-		RemoveExtensions(v_ShadersPaths);
-
 		v_MeshesPaths.clear();
 		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
 		strncat(dir_path, "/assets_int/meshes", MAX_PATH_SIZE-1);
 		ScanDirForPaths(v_MeshesPaths, dir_path, ".mmp");
 	}
 
-	void AssetSystem::OnGUI()
-	{
-		static char  namebuff[MATERIAL_MAX_NAME_LENGTH] = {'\0'};
-		bool doRefreshResources = false;
-
-		if (!ImGui::CollapsingHeader("Materials"))
-        	return;
-
-		for(auto it=m_materials.begin(); it!=m_materials.end(); ++it)
-		{
-			if (ImGui::TreeNode( it->second->GetMaterialName() ))
-		    {
-		    	if (ImGui::TreeNode( "Rename Material" ))
-		    	{
-		    		if(namebuff[0]=='\0')
-		    			strncpy(namebuff, it->second->GetMaterialName(), MATERIAL_MAX_NAME_LENGTH-1);
-
-	    			if( ImGui::InputText( "Material name", namebuff, MATERIAL_MAX_NAME_LENGTH-1, ImGuiInputTextFlags_EnterReturnsTrue) )
-	    			{
-	    				unlink( it->second->GetMaterialName() );
-		    			strncpy((char*)it->second->GetMaterialName(), namebuff, MATERIAL_MAX_NAME_LENGTH-1);
-		    			it->second->OnIsDirty();
-		    			doRefreshResources = true;
-						SYSTEMS::GetObject().ASSETS.OnRenderersDirty();
-	    			}
-		        	ImGui::TreePop();		    		
-		    	}
-				it->second->OnGUI();
-		        ImGui::TreePop();
-		    }
-
-			//ImGui::Spacing();
-        	ImGui::Separator();
-		}
-
-		// if(doRefreshResources)
-		//     RefreshResources();
-	}
+	
 	void AssetSystem::RegisterRendererComponent(RendererComponent* obj)
 	{
 		v_rendererComponentsOnScene.push_back(obj);
