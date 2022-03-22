@@ -1,6 +1,7 @@
 #include "Shader.hpp"
 #include "Systems.hpp"
 #include "bfu.hpp"
+#include "File.hpp"
 
 namespace asapi
 {
@@ -11,7 +12,7 @@ namespace asapi
 	Shader* Shader::LoadShaderFromFile(const char* filename)
 	{
 		char buff[MAX_PATH_SIZE];
-		SYSTEMS::IO::MMAP vert, frag;
+		FILE::MMAP vert, frag;
 
 		snprintf(buff, MAX_PATH_SIZE, "%s/assets_int/shaders/%s.vert.glsl", SYSTEMS::GetObject().ASSETS.GetProjectPath(), filename);
 		vert.InitForRead(buff);

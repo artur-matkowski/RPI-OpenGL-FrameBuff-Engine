@@ -62,48 +62,6 @@ namespace asapi
 
 		void SetProjectPath(const char* path);
 		void RefreshResources();
-
-
-		
-
-		struct IO
-		{
-			class MMAP
-			{
-				void* data = nullptr;
-				int fd = -1;
-				struct stat sb;
-
-			public:
-				MMAP(){};
-				~MMAP();
-
-				void InitForRead(const char* filename);
-				bool TryInitForRead(const char* filename);
-				void InitForWrite(const char* filename, size_t size);
-
-				void Close();
-
-				bool IsValid(){ return fd!=-1; }
-				void* Data(){ return data; }
-				uint32_t Size(){ return sb.st_size; }
-
-			};
-
-			class STREAM
-			{
-				int fd = -1;
-
-			public:
-				STREAM(){};
-				~STREAM();
-
-				void Close();
-
-				void InitForWrite(const char* filename);
-				void Write(const char* buff, const int size);
-			};
-		};
 	};
 
 }

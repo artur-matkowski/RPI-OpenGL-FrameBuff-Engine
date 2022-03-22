@@ -4,6 +4,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include "Systems.hpp"
+#include "File.hpp"
 
 namespace asapi
 {
@@ -12,7 +13,7 @@ namespace asapi
         char buff[MAX_PATH_SIZE];
         sprintf(buff, "%s", path);
 
-        SYSTEMS::IO::MMAP mmap;
+        FILE::MMAP mmap;
         mmap.InitForRead(buff);
 
         if( mmap.IsValid() )
@@ -62,7 +63,7 @@ namespace asapi
             , mesh->mName.C_Str());
 
         //allocte memory maped file to convert the data
-        SYSTEMS::IO::MMAP mmap;
+        FILE::MMAP mmap;
         mmap.InitForWrite(buff,
                 sizeof(bool) * 2
                 + sizeof(uint32_t) * 3
@@ -208,7 +209,7 @@ namespace asapi
 		loadModel(std::string(source));
 
         //mark asset as processed
-        SYSTEMS::IO::MMAP mmap;
+        FILE::MMAP mmap;
         mmap.InitForWrite(dest, 1);
 	}
 }

@@ -262,7 +262,7 @@ namespace asapi
 
 
         //allocte memory maped file to convert the data
-        SYSTEMS::IO::MMAP mmap;
+        FILE::MMAP mmap;
         mmap.InitForWrite(subresourcePath.c_str(),
                 sizeof(bool) * 2
                 + sizeof(uint32_t) * 3
