@@ -28,12 +28,16 @@ namespace asapi
 	class ResourceSharedReferenceBase: public SerializableObject<T>, public ResourceSharedReferenceInterface
 	{
 	protected:
-		SERIALIZABLE_OBJ( T, UniqueID, m_binaryResourceID );
-		ResourceReference<ResourceProcessorT>*			m_resourcePtr = nullptr;
+		typedef void (*t_callback)(void* data);
 
+
+		SERIALIZABLE_OBJ( T, UniqueID, 					m_binaryResourceID );
+		ResourceReference<ResourceProcessorT>*			m_resourcePtr = nullptr;
+		t_callback 										m_callback = nullptr;
+		void* 											m_callbackData = nullptr;
 
 	public:
-
+		void BindOnDirtyCallback(t_callback callback, void* callbackData){ m_callback = callback; m_callbackData = callbackData;}
 
 		static void InitializeObject(UniqueID binaryResourceID, T* out)
 		{
@@ -112,6 +116,9 @@ namespace asapi
 
 			m_resourcePtr = ResourceProcessorT::RequestResourceByProxy( s_resourceSystem, m_binaryResourceID );
 			m_resourcePtr->IncreaseReferenceCounter();
+
+			if(m_callback!=nullptr)
+				m_callback(m_callbackData);
 		}
 		
 	};

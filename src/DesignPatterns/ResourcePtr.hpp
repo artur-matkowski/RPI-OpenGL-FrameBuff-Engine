@@ -1,6 +1,5 @@
 #ifndef _H_ResourcePtr
 #define _H_ResourcePtr
-//#include "Systems.hpp"
 
 template < typename T > class ResourcePtr
 {

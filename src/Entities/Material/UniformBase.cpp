@@ -1,5 +1,4 @@
 #include "UniformBase.hpp"
-#include "MaterialType.hpp"
 #include "Systems.hpp"
 #include <GLES2/gl2.h>
 #include <gtc/type_ptr.hpp>

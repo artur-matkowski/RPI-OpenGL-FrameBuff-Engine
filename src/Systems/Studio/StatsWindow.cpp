@@ -61,6 +61,8 @@ namespace asapi
 			    { 
 			    	PrefabLoaderComponent* cmp = (PrefabLoaderComponent*) SCENE.GetRootNode().GET_COMPONENT(PrefabLoaderComponent);
 			    	cmp->Save_JSON(); 
+
+			    	SYSTEMS::GetObject().MATERIALSSYSTEM.SaveMaterialInstances();
 			    }
 			    ImGui::Separator();
 
@@ -97,19 +99,14 @@ namespace asapi
                 ImGui::LabelText("Currently opened project", SYSTEMS::GetObject().ASSETS.GetProjectPath());
                 ImGui::EndTabItem();
             }
-            if (ImGui::BeginTabItem("Assets in use"))
-            {
-                SYSTEMS::GetObject().ASSETS.OnGUI();
-                ImGui::EndTabItem();
-            }
             if (ImGui::BeginTabItem("Resource System"))
             {
                 SYSTEMS::GetObject().RESOURCES.OnGUI();
                 ImGui::EndTabItem();
             }
-            if (ImGui::BeginTabItem("Persistance System"))
+            if (ImGui::BeginTabItem("Materials System"))
             {
-                SYSTEMS::GetObject().PERSISTANCE.OnGUI();
+                SYSTEMS::GetObject().MATERIALSSYSTEM.OnGUI();
                 ImGui::EndTabItem();
             }
             ImGui::EndTabBar();

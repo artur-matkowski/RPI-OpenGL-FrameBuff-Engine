@@ -85,8 +85,6 @@ namespace asapi
 
 		if( _selected!=0 )
 		{
-			//OnGUI(_selected);
-
 			_selected->OnGUI_caller();
 
 			ImGui::Spacing();

@@ -50,15 +50,7 @@ namespace asapi
 		{
 			TypeInfo::GetTypeInfo(hash)->fPtr(mBlock, ret);
 		}
-/*
-		#ifdef IS_EDITOR
-		void OnGUI_caller()
-		{
-			OnGUI();
-		}
-		virtual void OnGUI();
-		#endif
-*/
+
 		virtual void OnAttach(){};
 		virtual void OnDetach(){};
 		virtual void OnIsDirty(){};

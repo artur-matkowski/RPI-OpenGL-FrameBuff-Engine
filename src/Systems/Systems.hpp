@@ -11,12 +11,12 @@
 
 #include "ResourceSystem.hpp"
 #include "_ResourceProcessorsInclude.hpp"
-#include "PersistanceSystem.hpp"
 
 #include "ResourceTrackerManager.hpp"
 #include "TimeSystem.hpp"
 #include "MemoryManagmentSystem.hpp"
 #include "SceneSystem.hpp"
+#include "MaterialsSystem.hpp"
 #ifdef IS_EDITOR
 #include "StudioSystem.hpp"
 #endif
@@ -27,6 +27,8 @@ namespace asapi
 	{
 		static SYSTEMS _this;
 		SYSTEMS();
+
+		bool IsCorrectProjectPathSet = false;
 	public:
 		MemoryManagmentSystem 	MEMORY;
 
@@ -39,7 +41,7 @@ namespace asapi
 			, ResourceFBXProcessor
 			, ResourceGLSLProcessor
 			>		 			RESOURCES;
-		PersistanceSystem 		PERSISTANCE;
+		MaterialsSystem 		MATERIALSSYSTEM;
 		TimeSystem				TIME;
 		SceneSystem				SCENE;
 

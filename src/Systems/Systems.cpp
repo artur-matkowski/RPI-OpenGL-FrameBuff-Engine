@@ -5,7 +5,6 @@
 #include <sys/mman.h>
 #include <stdio.h>
 #include <unistd.h>
-#include "PersistanceObjectReference.hpp"
 
 #define HELP \
 "Parameters accepted by this executable:"\
@@ -120,17 +119,22 @@ namespace asapi
 	
 	void SYSTEMS::SetProjectPath(const char* path)
 	{
+		IsCorrectProjectPathSet = true;
+		//TODO check if project path is actually correct
+
 		ASSETS.SetProjectPath( path );
 		RESOURCES.SetProjectPath( path );
-		PERSISTANCE.SetProjectPath( path );
-		PersistanceObjectBase::SetProjectPath( path );
+		MATERIALSSYSTEM.SetProjectPath( path );
 	}
 
 	void SYSTEMS::RefreshResources()
-	{		
+	{
+		if( ! IsCorrectProjectPathSet )
+			return;
+		
 		ASSETS.RefreshResources();
 		RESOURCES.RefreshResources();
-		PERSISTANCE.RefreshResources();
+		MATERIALSSYSTEM.RefreshResources();
 	}
 
 	void SYSTEMS::IO::MMAP::InitForRead(const char* filename)

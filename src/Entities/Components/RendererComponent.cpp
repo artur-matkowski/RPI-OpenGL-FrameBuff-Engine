@@ -11,7 +11,6 @@ namespace asapi
 {
 	RendererComponent::RendererComponent(bfu::MemBlockBase* mBlock)
 		:ComponentBase<RendererComponent>(mBlock)
-		,m_MaterialName(buffMat, 255, mBlock)
 	{
 	};
 
@@ -32,39 +31,23 @@ namespace asapi
 	}
 	void RendererComponent::OnIsDirty()
 	{
-		SYSTEMS& systems = SYSTEMS::GetObject();
-		m_materialReference.PostDeserializationCallback();
-		
-		if( m_material.IsValid() )
-		{
-			/* TODO
-			if( strcmp( m_material->GetMaterialName(), m_MaterialName.c_str() )!=0 )
-			{
-				systems.ASSETS.requestResource( &m_material, m_MaterialName.c_str() );
-			}*/
-		}
-		else
-		{
-			systems.ASSETS.requestResource( &m_material, m_MaterialName.c_str() );			
-		}
-
 		p_meshComponent = (MeshComponent*)m_owner->GET_COMPONENT(MeshComponent);
 
-		if( m_material.GetRawPtr() != nullptr 
-			&& m_material->IsValid() 
+		if( m_incomingMaterialImpl.IsValid() 
 			&& p_meshComponent != nullptr
 			&& p_meshComponent->GetMeshHandle() != nullptr )
 		{
 			//if you would ever try to update renderer component on the fly, you need to first unregister it from 
 			//renderer system, to unbound mesh from material render queue.
+			SYSTEMS::GetObject().RENDERER.UnRegisterRenderer( this );
 			SYSTEMS::GetObject().RENDERER.RegisterRenderer( this );
 		}
 	}
 
 	void RendererComponent::Render(glm::mat4* projectionMatrix, glm::mat4* viewMatrix)
 	{
-		m_material->GetModelViewMatrix()->SetUniform( *projectionMatrix * *viewMatrix * *p_modelViewMat );
-		m_material->BindMaterial();
+		m_incomingMaterialImpl.GetMaterialInstance()->GetModelViewMatrix()->SetUniform( *projectionMatrix * *viewMatrix * *p_modelViewMat );
+		m_incomingMaterialImpl.GetMaterialInstance()->BindMaterial();
 
 		uint32_t* config = (uint32_t*)p_meshComponent->GetMeshHandle();
 
@@ -95,81 +78,16 @@ namespace asapi
 	
 	void RendererComponent::PreSerializationCallback()
 	{
-		m_MaterialName.clear();
-		#ifdef IS_EDITOR
-		m_MaterialName.sprintf(m_material->GetMaterialName());
-		#endif
+	}
+	void RendererComponent::PostDeserializationCallback()
+	{
+		OnIsDirty();
 	}
 
 	#ifdef IS_EDITOR
 	void RendererComponent::OnGUI()
 	{
-        if( ImGui::Button("Create new material") )
-        {
-        	SYSTEMS::GetObject().PERSISTANCE.CreateAsset(".mat", "New Material");
-        }
-
-        m_materialReference.OnGUI();
-
-		std::vector<std::string>* items = SYSTEMS::GetObject().ASSETS.GetMaterialsPaths();
-        bool isAltered = false;
-
-
-        if( strcmp(m_MaterialName.c_str(), m_material->GetMaterialName())!=0 )
-        {
-			m_MaterialName.clear();
-			m_MaterialName.sprintf(m_material->GetMaterialName());
-        }
-
-		if (ImGui::BeginCombo("Material resource", m_MaterialName.c_str() ))
-        {
-            for (int n = 0; n < items->size(); n++)
-            {
-            	const char* displayName = strstr( (*items)[n].c_str(), "/materials/") + strlen("/materials/");
-                const bool is_selected = strcmp( m_MaterialName.c_str(), (*items)[n].c_str() ) == 0;
-                if (ImGui::Selectable(displayName, is_selected))
-                {
-                	if( strcmp(m_MaterialName.c_str(), displayName)!=0 )
-                	{
-						log::debug << "updating material name from: " << m_MaterialName.c_str() << " to: " << displayName << std::endl;
-
-						m_MaterialName.clear();
-						m_MaterialName.sprintf(displayName);
-
-
-						OnIsDirty();
-
-						isAltered = true;
-                	}
-                }
-
-                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-                if (is_selected)
-                    ImGui::SetItemDefaultFocus();
-            }
-            ImGui::EndCombo();
-        }
-
-
-
-
-		// {
-		// 	char buff1[255];
-		// 	strncpy(buff1, m_MaterialName.c_str(), 255 );
-
-		// 	if( ImGui::InputText("Material name",     buff1, 255, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue) )
-		// 	{
-		// 		log::debug << "updated material name " << buff1 << std::endl;
-
-		// 		m_MaterialName.clear();
-		// 		m_MaterialName.sprintf(buff1);
-
-		// 		OnIsDirty();
-		// 	}
-
-		// }
-		if(m_material.GetRawPtr()!=nullptr)
-			m_material->OnGUI();
+        m_incomingMaterialImpl.OnGUI_caller();
 	}
 	#endif
 

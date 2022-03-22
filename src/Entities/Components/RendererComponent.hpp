@@ -1,12 +1,9 @@
 #ifndef _H_MaterialComponent
 #define _H_MaterialComponent
 #include "ComponentBase.hpp"
-#include "MaterialType.hpp"
 #include "MeshComponent.hpp"
 #include "ResourcePtr.hpp"
-#include "Material.hpp"
-#include "PersistanceObjectReference.hpp"
-
+#include "MaterialReference.hpp"
 
 namespace asapi
 {
@@ -14,14 +11,11 @@ namespace asapi
 
 	class RendererComponent: public ComponentBase<RendererComponent>
 	{
-		ResourcePtr< MaterialType > 				m_material;
+		SERIALIZABLE_OBJ(RendererComponent, MaterialReference,
+													m_incomingMaterialImpl);
 
 		MeshComponent*								p_meshComponent;
 		glm::mat4* 									p_modelViewMat;
-
-		char buffMat[255];
-		SERIALIZABLE_VAR(RendererComponent, stream, m_MaterialName );
-		SERIALIZABLE_OBJ(RendererComponent, MaterialReference, m_materialReference );
 
 	public:
 		RendererComponent(bfu::MemBlockBase* mBlock);
@@ -32,6 +26,7 @@ namespace asapi
 		virtual void OnIsDirty() override;
 
 		virtual void PreSerializationCallback() override;
+		virtual void PostDeserializationCallback() override;
 	
 	
 		void Render(glm::mat4* projectionMatrix, glm::mat4* viewMatrix);
