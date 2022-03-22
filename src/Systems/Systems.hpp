@@ -27,6 +27,8 @@ namespace asapi
 	{
 		static SYSTEMS _this;
 		SYSTEMS();
+
+		bool IsCorrectProjectPathSet = false;
 	public:
 		MemoryManagmentSystem 	MEMORY;
 

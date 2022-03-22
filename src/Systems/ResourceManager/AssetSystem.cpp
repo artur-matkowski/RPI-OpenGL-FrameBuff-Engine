@@ -226,10 +226,6 @@ namespace asapi{
 	{
 		char buff[MAX_PATH_SIZE];
 
-		if(strcmp(m_ProjectPath, ".")==0)
-			return;
-
-
 		std::vector<std::string> TexturesPaths;
 		std::vector<std::string> MeshesPaths;
 

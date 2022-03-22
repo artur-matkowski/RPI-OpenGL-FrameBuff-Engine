@@ -119,13 +119,19 @@ namespace asapi
 	
 	void SYSTEMS::SetProjectPath(const char* path)
 	{
+		IsCorrectProjectPathSet = true;
+		//TODO check if project path is actually correct
+
 		ASSETS.SetProjectPath( path );
 		RESOURCES.SetProjectPath( path );
 		MATERIALSSYSTEM.SetProjectPath( path );
 	}
 
 	void SYSTEMS::RefreshResources()
-	{		
+	{
+		if( ! IsCorrectProjectPathSet )
+			return;
+		
 		ASSETS.RefreshResources();
 		RESOURCES.RefreshResources();
 		MATERIALSSYSTEM.RefreshResources();
