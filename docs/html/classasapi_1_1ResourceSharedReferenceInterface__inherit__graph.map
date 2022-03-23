@@ -1,0 +1,11 @@
+<map id="asapi::ResourceSharedReferenceInterface" name="asapi::ResourceSharedReferenceInterface">
+<area shape="rect" id="node1" title=" " alt="" coords="5,133,241,174"/>
+<area shape="rect" id="node2" href="$classasapi_1_1ResourceSharedReferenceBase.html" title=" " alt="" coords="292,5,563,61"/>
+<area shape="rect" id="node4" href="$classasapi_1_1ResourceSharedReferenceBase.html" title=" " alt="" coords="289,85,565,141"/>
+<area shape="rect" id="node6" href="$classasapi_1_1ResourceSharedReferenceBase.html" title=" " alt="" coords="293,165,562,221"/>
+<area shape="rect" id="node9" href="$classasapi_1_1ResourceSharedReferenceBase.html" title=" " alt="" coords="309,246,545,287"/>
+<area shape="rect" id="node3" href="$classasapi_1_1ResourceFBXSharedReference.html" title=" " alt="" coords="625,13,821,54"/>
+<area shape="rect" id="node5" href="$classasapi_1_1ResourceGLSLSharedReference.html" title=" " alt="" coords="621,93,824,134"/>
+<area shape="rect" id="node7" href="$classResourceTXTSharedReference.html" title=" " alt="" coords="613,169,832,196"/>
+<area shape="rect" id="node8" href="$classasapi_1_1ResourceTXTSharedReference.html" title=" " alt="" coords="625,221,820,262"/>
+</map>

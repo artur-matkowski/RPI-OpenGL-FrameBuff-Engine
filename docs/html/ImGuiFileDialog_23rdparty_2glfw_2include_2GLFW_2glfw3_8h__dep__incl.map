@@ -1,0 +1,40 @@
+<map id="vendor/ImGuiFileDialog/3rdparty/glfw/include/GLFW/glfw3.h" name="vendor/ImGuiFileDialog/3rdparty/glfw/include/GLFW/glfw3.h">
+<area shape="rect" id="node1" title="The header of the GLFW 3 API." alt="" coords="3565,5,3740,61"/>
+<area shape="rect" id="node2" href="$internal_8h_source.html" title=" " alt="" coords="3552,109,3753,151"/>
+<area shape="rect" id="node3" href="$cocoa__init_8m_source.html" title=" " alt="" coords="5,199,183,255"/>
+<area shape="rect" id="node4" href="$cocoa__joystick_8m_source.html" title=" " alt="" coords="207,199,384,255"/>
+<area shape="rect" id="node5" href="$cocoa__monitor_8m_source.html" title=" " alt="" coords="408,199,585,255"/>
+<area shape="rect" id="node6" href="$cocoa__time_8c_source.html" title=" " alt="" coords="609,199,787,255"/>
+<area shape="rect" id="node7" href="$cocoa__window_8m_source.html" title=" " alt="" coords="811,199,988,255"/>
+<area shape="rect" id="node8" href="$context_8c_source.html" title=" " alt="" coords="1012,206,1211,247"/>
+<area shape="rect" id="node9" href="$egl__context_8c_source.html" title=" " alt="" coords="1235,199,1409,255"/>
+<area shape="rect" id="node10" href="$glx__context_8c_source.html" title=" " alt="" coords="1433,199,1608,255"/>
+<area shape="rect" id="node11" href="$init_8c_source.html" title=" " alt="" coords="1632,206,1807,247"/>
+<area shape="rect" id="node12" href="$input_8c_source.html" title=" " alt="" coords="1831,206,2013,247"/>
+<area shape="rect" id="node13" href="$linux__joystick_8c_source.html" title=" " alt="" coords="2037,199,2212,255"/>
+<area shape="rect" id="node14" href="$monitor_8c_source.html" title=" " alt="" coords="2237,206,2437,247"/>
+<area shape="rect" id="node15" href="$nsgl__context_8m_source.html" title=" " alt="" coords="2461,199,2636,255"/>
+<area shape="rect" id="node16" href="$null__init_8c_source.html" title=" " alt="" coords="2660,199,2835,255"/>
+<area shape="rect" id="node17" href="$null__joystick_8c_source.html" title=" " alt="" coords="2859,199,3033,255"/>
+<area shape="rect" id="node18" href="$null__monitor_8c_source.html" title=" " alt="" coords="3057,199,3232,255"/>
+<area shape="rect" id="node19" href="$null__window_8c_source.html" title=" " alt="" coords="3256,199,3431,255"/>
+<area shape="rect" id="node20" href="$osmesa__context_8c_source.html" title=" " alt="" coords="3455,199,3645,255"/>
+<area shape="rect" id="node21" href="$posix__thread_8c_source.html" title=" " alt="" coords="3669,199,3844,255"/>
+<area shape="rect" id="node22" href="$posix__time_8c_source.html" title=" " alt="" coords="3868,199,4043,255"/>
+<area shape="rect" id="node23" href="$vulkan_8c_source.html" title=" " alt="" coords="4067,206,4260,247"/>
+<area shape="rect" id="node24" href="$wgl__context_8c_source.html" title=" " alt="" coords="4284,199,4459,255"/>
+<area shape="rect" id="node25" href="$win32__init_8c_source.html" title=" " alt="" coords="4483,199,4662,255"/>
+<area shape="rect" id="node26" href="$win32__joystick_8c_source.html" title=" " alt="" coords="4686,199,4865,255"/>
+<area shape="rect" id="node27" href="$win32__monitor_8c_source.html" title=" " alt="" coords="4889,199,5067,255"/>
+<area shape="rect" id="node28" href="$win32__thread_8c_source.html" title=" " alt="" coords="5091,199,5270,255"/>
+<area shape="rect" id="node29" href="$win32__time_8c_source.html" title=" " alt="" coords="5294,199,5473,255"/>
+<area shape="rect" id="node30" href="$win32__window_8c_source.html" title=" " alt="" coords="5497,199,5675,255"/>
+<area shape="rect" id="node31" href="$window_8c_source.html" title=" " alt="" coords="5700,206,5899,247"/>
+<area shape="rect" id="node32" href="$wl__init_8c_source.html" title=" " alt="" coords="5923,199,6097,255"/>
+<area shape="rect" id="node33" href="$wl__monitor_8c_source.html" title=" " alt="" coords="6121,199,6296,255"/>
+<area shape="rect" id="node34" href="$wl__window_8c_source.html" title=" " alt="" coords="6320,199,6495,255"/>
+<area shape="rect" id="node35" href="$x11__init_8c_source.html" title=" " alt="" coords="6519,199,6693,255"/>
+<area shape="rect" id="node36" href="$x11__monitor_8c_source.html" title=" " alt="" coords="6717,199,6892,255"/>
+<area shape="rect" id="node37" href="$x11__window_8c_source.html" title=" " alt="" coords="6916,199,7091,255"/>
+<area shape="rect" id="node38" href="$xkb__unicode_8c_source.html" title=" " alt="" coords="7115,199,7289,255"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="bfu::SerializerBase" name="bfu::SerializerBase">
+<area shape="rect" id="node1" title=" " alt="" coords="202,5,346,32"/>
+<area shape="rect" id="node2" href="$classasapi_1_1ImGUISerializer.html" title=" " alt="" coords="5,80,172,107"/>
+<area shape="rect" id="node3" href="$classbfu_1_1BinarySerializer.html" title=" " alt="" coords="197,80,351,107"/>
+<area shape="rect" id="node4" href="$classbfu_1_1JSONSerializer.html" title=" " alt="" coords="375,80,519,107"/>
+</map>

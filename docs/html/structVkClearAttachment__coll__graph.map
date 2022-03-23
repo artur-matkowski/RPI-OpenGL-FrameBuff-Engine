@@ -1,0 +1,6 @@
+<map id="VkClearAttachment" name="VkClearAttachment">
+<area shape="rect" id="node1" title=" " alt="" coords="98,184,247,211"/>
+<area shape="rect" id="node2" href="$unionVkClearValue.html" title=" " alt="" coords="118,95,227,121"/>
+<area shape="rect" id="node3" href="$unionVkClearColorValue.html" title=" " alt="" coords="5,5,148,32"/>
+<area shape="rect" id="node4" href="$structVkClearDepthStencilValue.html" title=" " alt="" coords="173,5,365,32"/>
+</map>
