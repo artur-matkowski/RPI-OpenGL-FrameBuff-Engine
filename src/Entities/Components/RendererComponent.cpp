@@ -46,6 +46,13 @@ namespace asapi
 
 	void RendererComponent::Render(glm::mat4* projectionMatrix, glm::mat4* viewMatrix)
 	{
+		//#ifdef IS_EDITOR
+		if( !m_incomingMaterialImpl.GetMaterialInstance()->IsValid() )
+		{
+			return;
+		}
+		//#endif
+
 		m_incomingMaterialImpl.GetMaterialInstance()->GetModelViewMatrix()->SetUniform( *projectionMatrix * *viewMatrix * *p_modelViewMat );
 		m_incomingMaterialImpl.GetMaterialInstance()->BindMaterial();
 

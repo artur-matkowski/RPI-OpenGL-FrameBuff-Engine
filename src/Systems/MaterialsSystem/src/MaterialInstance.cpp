@@ -131,10 +131,42 @@ namespace asapi
 		log::debug << "MaterialInstance::OnShaderDirtyCallback" << std::endl;
 	}
 
+
+	void MaterialInstance::PreSerializationCallback()
+	{
+		for( int i = m_uniformsData.size(); i<m_uniformsCount; ++i )
+		{
+			m_uniformsData.push_back( new UniformInfo() );
+		}
+		while( m_uniformsData.size() > m_uniformsCount )
+		{
+			delete m_uniformsData.back();
+			m_uniformsData.erase( m_uniformsData.end()-- );
+		}
+
+		char buff[1024];
+
+		for(int16_t i=0; i<m_uniformsCount; ++i)
+		{
+			m_uniformsData[i].m_uniformName = p_uniforms[i]->GetName();
+			p_uniforms[i]->sprintf( buff );
+			m_uniformsData[i].m_recreationString = buff;
+		}
+	}
+	void MaterialInstance::PostDeserializationCallback()
+	{
+		for(int i=0; i<m_uniformsData.size(); ++i)
+		{
+			GetUniformPtr( m_uniformsData[i].m_uniformName.c_str() )->sscanf( m_uniformsData[i].m_recreationString.c_str() );
+		}
+	}
+
 	#ifdef IS_EDITOR
 	void MaterialInstance::OnGUI_SelectShader()
 	{
-		if (ImGui::BeginCombo("Shader resource", "m_shaderName"))
+		char buff[256];
+		snprintf(buff, 256, "Shader resource##%llu", m_uuid.ID());
+		if (ImGui::BeginCombo(buff, "m_shaderName"))
         {
             m_shaderResource.OnGUI_caller();
             ImGui::EndCombo();
@@ -142,20 +174,49 @@ namespace asapi
 	}
 	void MaterialInstance::OnGUI()
 	{
+		const ImVec4 warningColor(1.0, 1.0, 0.0, 1.0);
+
 		if( m_shader.IsValid() )
 		{
 			ImGui::Text("Material Instance is valid.");
 
 			for(int16_t i=0; i<m_uniformsCount; ++i)
 			{
-				p_uniforms[i]->OnGUI();
+				const bool uniformUpdated = p_uniforms[i]->OnGUI();
+				m_uniformsChanged = m_uniformsChanged || uniformUpdated;
+			}
+
+			if( m_uniformsChanged )
+			{
+				ImGui::TextColored(warningColor, "Material Uniforms not serialized.");
+			}
+			if( ImGui::Button("Save Material") )
+			{
+				m_uniformsChanged = false;
+
+				SerializeMaterial();
 			}
 		}
 		else
 		{
-			const ImVec4 warningColor(1.0, 1.0, 0.0, 1.0);
 			ImGui::TextColored(warningColor, "Material Instance is not valid.");
 		}
+	}
+
+	void MaterialInstance::SerializeMaterial()
+	{
+		FILE::STREAM materialDataFile;
+		bfu::JSONSerializer serializer;
+
+
+		serializer.Serialize( this );
+
+		std::string materialDataPath = s_projectPath + RESOURCE_BINARIES_DIR "/";
+		materialDataPath += std::to_string( m_uuid.ID() ) + MATERIAL_DATA_EXTENSION;
+
+
+		materialDataFile.InitForWrite( materialDataPath.c_str() );
+		materialDataFile.Write( serializer.data(), serializer.size() );
 	}
 	#endif
 }
