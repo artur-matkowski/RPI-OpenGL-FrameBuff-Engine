@@ -25,6 +25,10 @@ namespace asapi
 
 		virtual BinaryResourceTracker* RequestBinaryResourceTracker( const UniqueID& ) = 0;
 		inline void ScheduleGarbageCollection() { m_needGarbageCollection = true; }		
+
+		#ifdef IS_EDITOR
+		static void RefreshResourceReferences();
+		#endif
 	};
 
 
@@ -153,6 +157,10 @@ namespace asapi
 
 			constexpr int tupleSize = std::tuple_size<std::tuple<ResourceProcessorsTs ...> >();
 			RefreshBinaryResourceTrackers_Is( std::make_integer_sequence<int, tupleSize>{} );
+
+			#ifdef IS_EDITOR
+			ResourceSystemBase::RefreshResourceReferences();
+			#endif
 		}
 
 		#ifdef IS_EDITOR

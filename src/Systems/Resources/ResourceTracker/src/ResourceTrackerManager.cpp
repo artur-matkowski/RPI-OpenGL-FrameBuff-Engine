@@ -215,6 +215,7 @@ namespace asapi
 				asapi::FILE::MMAP _in;
 				_in.InitForRead( v_ResourceTrackers[i].GetFullPath().c_str() );
 				
+			log::debug << "jestem tu" << std::endl;
 				const bool resourceBinaryChanged = ProcessResource( v_ResourceTrackers[i]
 																, &_in
 																, s_projectDirectoryPath.c_str()

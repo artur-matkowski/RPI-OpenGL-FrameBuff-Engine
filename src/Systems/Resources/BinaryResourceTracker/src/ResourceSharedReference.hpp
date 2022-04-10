@@ -28,22 +28,39 @@ namespace asapi
 	class ResourceSharedReferenceBase: public SerializableObject<T>, public ResourceSharedReferenceInterface
 	{
 	protected:
+		#ifdef IS_EDITOR
 		typedef void (*t_callback)(void* data);
+		t_callback 										m_callback = nullptr;
+		void* 											m_callbackData = nullptr;
+		#endif
 
 
 		SERIALIZABLE_OBJ( T, UniqueID, 					m_binaryResourceID );
 		ResourceReference<ResourceProcessorT>*			m_resourcePtr = nullptr;
-		t_callback 										m_callback = nullptr;
-		void* 											m_callbackData = nullptr;
 
 	public:
-		void BindOnDirtyCallback(t_callback callback, void* callbackData){ m_callback = callback; m_callbackData = callbackData;}
+		#ifdef IS_EDITOR
+		void BindOnDirtyCallback(t_callback callback, void* callbackData)
+		{
+			m_callback = callback;
+			m_callbackData = callbackData;
+			if(m_resourcePtr!=nullptr)
+				m_resourcePtr->BindOnDirtyCallback(callback, callbackData);
+		}
+		#endif
 
 		static void InitializeObject(UniqueID binaryResourceID, T* out)
 		{
 			out->m_binaryResourceID = std::move( binaryResourceID );
 			out->m_resourcePtr = ResourceProcessorT::RequestResourceByProxy( s_resourceSystem, binaryResourceID );
 			out->m_resourcePtr->IncreaseReferenceCounter();
+			#ifdef IS_EDITOR
+			out->m_resourcePtr->BindOnDirtyCallback(out->m_callback, out->m_callbackData);
+
+
+			if( out->m_callback!=nullptr )
+				out->m_callback( out->m_callbackData );
+			#endif
 		}
 
 
@@ -116,9 +133,13 @@ namespace asapi
 
 			m_resourcePtr = ResourceProcessorT::RequestResourceByProxy( s_resourceSystem, m_binaryResourceID );
 			m_resourcePtr->IncreaseReferenceCounter();
+			#ifdef IS_EDITOR
+			m_resourcePtr->BindOnDirtyCallback(m_callback, m_callbackData);
 
-			if(m_callback!=nullptr)
-				m_callback(m_callbackData);
+
+			if( m_callback!=nullptr )
+				m_callback( m_callbackData );
+			#endif
 		}
 		
 	};

@@ -5,6 +5,7 @@
 #include "object.hpp"
 #ifdef IS_EDITOR
 #include "imgui.h"
+#include <vector>
 #endif
 
 namespace asapi
@@ -16,11 +17,27 @@ namespace asapi
 	protected:
 		static std::string 				s_projectPath;
 		static ResourceSystemBase* 		s_resourceSystem;
+
+		#ifdef IS_EDITOR
+		static std::vector<IResourceReferenceBase*> 	s_resourceReferences;
+		#endif
+
 	public:
 		inline static void SetProjectPath(const char* path) { s_projectPath = path; }
 		inline static void SetResourceSystemReference( ResourceSystemBase* input ) { s_resourceSystem = input; }
 		static BinaryResourceTracker* RequestBinaryResourceTracker( UniqueID );
 		inline void* GetRawHandle() const { return m_rawHandle; }
+
+
+		#ifdef IS_EDITOR
+		typedef void (*t_callback)(void* data);
+		t_callback 										m_callback = nullptr;
+		void* 											m_callbackData = nullptr;
+
+		void BindOnDirtyCallback(t_callback callback, void* callbackData){ m_callback = callback; m_callbackData = callbackData;}
+		static void RefreshResourceReference();
+
+		#endif
 
 
 	protected:
@@ -40,6 +57,8 @@ namespace asapi
 			ImGui::Text("\tReference counter: %d", m_referenceCounter);
 			ImGui::Text("\tRawHandle: %llu", (uint64_t)m_rawHandle);
 		}
+
+		virtual void ReloadResourceReference() = 0;
 		#endif
 	};
 
@@ -57,10 +76,12 @@ namespace asapi
 	{
 	protected:
 		#ifdef IS_EDITOR
-		BinaryResourceTracker* m_binrestracker = nullptr;
+		BinaryResourceTracker* 							m_binrestracker = nullptr;
+		UniqueID 										m_resourceId = 0;
 		#endif
 
 	public:
+
 		ResourceReference( const UniqueID& id)
 		{
 			#ifdef IS_EDITOR
@@ -70,6 +91,10 @@ namespace asapi
 				return;
 			}
 			m_binrestracker = RequestBinaryResourceTracker( id );
+
+			s_resourceReferences.push_back( this );
+
+			m_resourceId = id;
 			#endif
 
 			char buff[MAX_PATH_SIZE];
@@ -87,6 +112,18 @@ namespace asapi
 			#ifdef IS_EDITOR
 			m_binrestracker = cp.m_binrestracker;
 			cp.m_binrestracker = 0;
+			
+			m_resourceId = cp.m_resourceId;
+			cp.m_resourceId = 0;
+
+			for(int i=0; i<s_resourceReferences.size(); ++i)
+			{
+				if( s_resourceReferences[i]==&cp )
+				{
+					s_resourceReferences[i] = this;
+					break;
+				}
+			}
 			#endif
 		}
 
@@ -98,7 +135,34 @@ namespace asapi
 			}
 			if( m_referenceCounter==0 ) 
 				T::UnloadResource( m_rawHandle );
+
+			#ifdef IS_EDITOR
+			for(auto it = s_resourceReferences.begin(); it!=s_resourceReferences.end(); it++)
+			{
+				if( (*it)==this )
+				{
+					s_resourceReferences.erase( it );
+					break;
+				}
+			}
+			#endif
 		}
+
+
+		#ifdef IS_EDITOR
+		virtual void ReloadResourceReference() override
+		{
+			T::UnloadResource( m_rawHandle );
+
+			char buff[MAX_PATH_SIZE];
+			snprintf(buff, MAX_PATH_SIZE, "%s" RESOURCE_BINARIES_DIR "/%llu%s.bin", s_projectPath.c_str(), m_resourceId.ID(), T::GetBinaryOutputFileExtension());
+			
+			m_rawHandle = T::LoadResource( buff );
+
+			if( m_callback!=nullptr )
+				m_callback( m_callbackData );
+		}
+		#endif
 
 		static inline bool ProcessResource2Binary(const asapi::ResourceTracker& in_currentResource
 											, asapi::FILE::MMAP* in_resourceFile
