@@ -78,6 +78,7 @@ namespace asapi
 		#ifdef IS_EDITOR
 		BinaryResourceTracker* 							m_binrestracker = nullptr;
 		UniqueID 										m_resourceId = 0;
+		uint64_t 										m_modificationDate = 0;
 		#endif
 
 	public:
@@ -100,6 +101,10 @@ namespace asapi
 			char buff[MAX_PATH_SIZE];
 			snprintf(buff, MAX_PATH_SIZE, "%s" RESOURCE_BINARIES_DIR "/%llu%s.bin", s_projectPath.c_str(), id.ID(), T::GetBinaryOutputFileExtension());
 			
+			#ifdef IS_EDITOR
+			m_modificationDate = FILE::GetModificationTime( buff );
+			#endif
+
 			m_rawHandle = T::LoadResource( buff );
 		}
 
@@ -115,6 +120,9 @@ namespace asapi
 			
 			m_resourceId = cp.m_resourceId;
 			cp.m_resourceId = 0;
+
+			m_modificationDate = cp.m_modificationDate;
+			cp.m_modificationDate = 0;
 
 			for(int i=0; i<s_resourceReferences.size(); ++i)
 			{
@@ -152,12 +160,20 @@ namespace asapi
 		#ifdef IS_EDITOR
 		virtual void ReloadResourceReference() override
 		{
-			T::UnloadResource( m_rawHandle );
-
 			char buff[MAX_PATH_SIZE];
 			snprintf(buff, MAX_PATH_SIZE, "%s" RESOURCE_BINARIES_DIR "/%llu%s.bin", s_projectPath.c_str(), m_resourceId.ID(), T::GetBinaryOutputFileExtension());
 			
+			uint64_t modificationDate = FILE::GetModificationTime( buff );
+			const bool wasResourceModified = modificationDate != m_modificationDate;
+
+			if(!wasResourceModified)
+				return;
+
+
+			T::UnloadResource( m_rawHandle );			
 			m_rawHandle = T::LoadResource( buff );
+
+			m_modificationDate = modificationDate;
 
 			if( m_callback!=nullptr )
 				m_callback( m_callbackData );

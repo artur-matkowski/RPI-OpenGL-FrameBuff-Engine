@@ -30,8 +30,6 @@ namespace asapi
 
 	void IResourceReferenceBase::RefreshResourceReference()
 	{
-		log::debug << "IResourceReferenceBase::RefreshResourceReference()" << std::endl;
-
 		for( auto it = IResourceReferenceBase::s_resourceReferences.begin(); it!=IResourceReferenceBase::s_resourceReferences.end(); it++ )
 		{
 			(*it)->ReloadResourceReference();

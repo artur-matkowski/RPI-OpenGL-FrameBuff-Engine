@@ -87,7 +87,6 @@ namespace asapi
 
 			const char* resourceExtension = std::tuple_element_t<i, ResourceProcesors>::GetSuportedResourceFileExtension();
 
-			log::debug << "jestem tu" << std::endl;
 			
 			if(IsCompatible(resourceExtension, in_currentResource))
 			{
@@ -107,8 +106,7 @@ namespace asapi
 		{
 			using unused = int[];
 			bool updatedBinaries = false;
-			log::debug << "jestem tu" << std::endl;
-
+			
 			(void)unused { 0, (ProcessResourseForType<Is>(in_currentResource
 													, in_resourceFile
 													, in_projectPath
@@ -126,8 +124,7 @@ namespace asapi
 		{
 			constexpr int tupleSize = std::tuple_size<ResourceProcesors>();
 
-			log::debug << "jestem tu" << std::endl;
-
+			
 			const bool rebuildedBinarie = ProcesorClassIterator(std::make_integer_sequence<int, tupleSize>{}
 																, in_currentResource
 																, in_resourceFile
