@@ -16,6 +16,21 @@ namespace asapi
 {
 	using bfu::string;
 
+	class UniformInfo: public SerializableObject<UniformInfo>
+	{
+	public:
+		SERIALIZABLE_VAR( UniformInfo, string, m_uniformName );
+		SERIALIZABLE_VAR( UniformInfo, string, m_recreationString );
+
+		UniformInfo()
+			{};
+		UniformInfo( const UniformInfo& cp )
+			{ 
+				m_uniformName = cp.m_uniformName; 
+				m_recreationString = cp.m_recreationString;
+			};
+	};
+
 	class MaterialInstance: public SerializableObject<MaterialInstance>
 	{
 		static std::string 								s_projectPath;
@@ -26,15 +41,15 @@ namespace asapi
 		SERIALIZABLE_OBJ(MaterialInstance, UniqueID, 	m_uuid);
 		SERIALIZABLE_OBJ(MaterialInstance, ResourceGLSLSharedReference, 
 														m_shaderResource );
+		SERIALIZABLE_OBJ_VEC(MaterialInstance, UniformInfo, 		
+														m_uniformsData);
 		Shader 											m_shader;
 		int16_t											m_uniformsCount = 0;
 		UniformInterface**								p_uniforms = nullptr;
 		Uniform<glm::mat4>*								p_modelViewUniform = nullptr;
-
-
-
-		//std::vector<UniformInterface> v_uniforms;
-		//ResourceGLSLProcessor			m_shader;
+		#ifdef IS_EDITOR
+		bool 											m_uniformsChanged = false;
+		#endif
 
 		static void OnShaderDirtyCallback(void* data);
 
@@ -43,6 +58,9 @@ namespace asapi
 		~MaterialInstance();
 
 		static void SetProjectPath(const std::string& path);
+
+		virtual void PreSerializationCallback() override;
+		virtual void PostDeserializationCallback() override;
 
 		inline UniformInterface* GetUniformPtr(const char* uniformName)
 		{
@@ -84,6 +102,8 @@ namespace asapi
 		#ifdef IS_EDITOR
 		void OnGUI_SelectShader();
 		virtual void OnGUI() override;
+
+		void SerializeMaterial();
 		#endif
 	};
 }

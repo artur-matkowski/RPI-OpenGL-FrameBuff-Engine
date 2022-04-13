@@ -2,6 +2,7 @@
 #include <dirent.h> 
 #include <sys/stat.h>
 #include "Systems.hpp"
+#include "bfu.hpp"
 
 #ifdef IS_EDITOR
 #include "imgui.h"
@@ -212,10 +213,6 @@ namespace asapi{
 		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
 		strncat(dir_path, "/assets_int/textures", MAX_PATH_SIZE-1);
 		mkdir(dir_path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-
-		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
-		strncat(dir_path, "/assets_int/meshes", MAX_PATH_SIZE-1);
-		mkdir(dir_path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 	}
 
 
@@ -227,7 +224,6 @@ namespace asapi{
 		char buff[MAX_PATH_SIZE];
 
 		std::vector<std::string> TexturesPaths;
-		std::vector<std::string> MeshesPaths;
 
 		char dir_path[MAX_PATH_SIZE];
 
@@ -236,9 +232,6 @@ namespace asapi{
 		strncat(dir_path, "/assets_ext/textures", MAX_PATH_SIZE-1);
 		ScanDirForPaths(TexturesPaths, dir_path);
 
-		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
-		strncat(dir_path, "/assets_ext/meshes", MAX_PATH_SIZE-1);
-		ScanDirForPaths(MeshesPaths, dir_path);
 
 		BuildDirectoryStructure();
 
@@ -250,24 +243,12 @@ namespace asapi{
 				Texture::Compile(buff, TexturesPaths[i].c_str());
 			}
 		}
-		for(int i=0; i<MeshesPaths.size(); ++i)
-		{
-			if( ! IsInternalAssetUpToDate(MeshesPaths[i].c_str(), buff) )
-			{
-				Mesh_old::Compile(buff, MeshesPaths[i].c_str());
-			}
-		}
 
 
 		v_TexturesPaths.clear();
 		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
 		strncat(dir_path, "/assets_int/textures", MAX_PATH_SIZE-1);
 		ScanDirForPaths(v_TexturesPaths, dir_path);
-
-		v_MeshesPaths.clear();
-		strncpy(dir_path, m_ProjectPath, MAX_PATH_SIZE-1);
-		strncat(dir_path, "/assets_int/meshes", MAX_PATH_SIZE-1);
-		ScanDirForPaths(v_MeshesPaths, dir_path, ".mmp");
 	}
 
 	

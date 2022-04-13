@@ -68,6 +68,7 @@ namespace asapi
 		static bool GetFileNameWithoutExtension(char* out_filename, const int filename_size, const char* buff, const int buff_size);
 		static bool FileExist(const char* path);
 		static bool Touch(const char* path);
+		static uint64_t GetModificationTime(const char* path);
 	};
 }
 

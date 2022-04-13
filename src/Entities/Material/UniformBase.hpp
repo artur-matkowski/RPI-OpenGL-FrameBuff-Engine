@@ -36,6 +36,7 @@ namespace asapi
 			m_location = location;
 		}
 		bool Is(const char* name) { return (strcmp(name, m_name.c_str())==0); }
+		const char* GetName(){ return m_name.c_str(); }
 		virtual void sscanf(const char*) = 0;
 		virtual int sprintf(char*) = 0;
 	};

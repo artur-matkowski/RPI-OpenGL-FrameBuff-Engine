@@ -4,7 +4,8 @@
 #include <map>
 #include "ResourcePtr.hpp"
 #include "Texture.hpp"
-#include "Mesh_old.hpp"
+#include "object.hpp"
+#include "RendererComponent.hpp"
 
 namespace asapi
 {
@@ -14,14 +15,12 @@ namespace asapi
 		bfu::MemBlockBase* 									p_materialsMemBlock;
 
 		std::map<bfu::string, ResourcePtr<Texture> > 		m_textures;
-		std::map<bfu::string, ResourcePtr<Mesh_old> > 		m_meshes;
 
 		char 												m_ProjectPath[MAX_PATH_SIZE] = ".";
 
 		#ifdef IS_EDITOR
 
 		std::vector<std::string>							v_TexturesPaths;
-		std::vector<std::string>							v_MeshesPaths;
 
 		std::vector<RendererComponent*>						v_rendererComponentsOnScene;
 
@@ -38,7 +37,6 @@ namespace asapi
 
 		void RefreshResources();
 		std::vector<std::string>* GetTexturesPaths(){ return &v_TexturesPaths; }
-		std::vector<std::string>* GetMeshesPaths(){ return &v_MeshesPaths; }
 		
 		void RegisterRendererComponent(RendererComponent*);
 		void UnRegisterRendererComponent(RendererComponent*);
@@ -78,45 +76,6 @@ namespace asapi
 				if( A == B )
 				{
 					m_textures.erase(it);
-					break;
-				}
-			}
-		}
-
-
-		bool requestResource(ResourcePtr<Mesh_old>* res, const char* str)
-		{
-			bfu::string id(str);
-
-			std::map<bfu::string, ResourcePtr<Mesh_old> >::iterator it = m_meshes.find(id);
-
-			if( it==m_meshes.end() )
-			{
-				char buff[MAX_PATH_SIZE];
-				snprintf(buff, MAX_PATH_SIZE, "%s/assets_int/meshes/%s", m_ProjectPath, str);
-				res->Rebuild( new Mesh_old(buff) );
-				m_meshes[id] = *res;
-			}
-			else
-			{
-				*res = m_meshes[id];
-			}
-			
-			return true;
-		}
-
-		void dispouseResource(ResourcePtr<Mesh_old>* res)
-		{
-			for(std::map<bfu::string, ResourcePtr<Mesh_old> >::iterator it = m_meshes.begin() ;
-				it!=m_meshes.end();
-				++it)
-			{
-				void* A = it->second.GetRawPtr();
-				void* B = res->GetRawPtr();
-
-				if( A == B )
-				{
-					m_meshes.erase(it);
 					break;
 				}
 			}

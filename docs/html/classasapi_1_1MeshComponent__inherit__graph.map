@@ -1,0 +1,10 @@
+<map id="asapi::MeshComponent" name="asapi::MeshComponent">
+<area shape="rect" id="node1" title=" " alt="" coords="265,333,439,360"/>
+<area shape="rect" id="node2" href="$classasapi_1_1ComponentBase.html" title=" " alt="" coords="266,244,438,285"/>
+<area shape="rect" id="node3" href="$classasapi_1_1SerializableObject.html" title=" " alt="" coords="154,155,337,196"/>
+<area shape="rect" id="node4" href="$classbfu_1_1SerializableClassBase.html" title=" " alt="" coords="5,80,237,107"/>
+<area shape="rect" id="node5" href="$classbfu_1_1SerializableClassInterface.html" title=" " alt="" coords="11,5,231,32"/>
+<area shape="rect" id="node6" href="$classasapi_1_1SerializableObjectBase.html" title=" " alt="" coords="262,80,477,107"/>
+<area shape="rect" id="node7" href="$classasapi_1_1object.html" title=" " alt="" coords="317,5,422,32"/>
+<area shape="rect" id="node8" href="$classasapi_1_1ComponentInterface.html" title=" " alt="" coords="361,162,559,189"/>
+</map>

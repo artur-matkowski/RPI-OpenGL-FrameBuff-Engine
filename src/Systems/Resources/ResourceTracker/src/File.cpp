@@ -402,4 +402,17 @@ namespace asapi
 
 		return fd != -1;
 	}
+
+	uint64_t FILE::GetModificationTime(const char* path)
+	{
+		struct stat attrib;
+
+		if( stat(path, &attrib)!=0 )
+    	{
+    		log::warning << "Could not find file " << path << std::endl;
+    		return 0;
+    	}
+
+    	return static_cast<uint64_t>(attrib.st_mtim.tv_sec);
+	}
 }

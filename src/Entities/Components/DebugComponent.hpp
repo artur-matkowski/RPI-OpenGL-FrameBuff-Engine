@@ -2,7 +2,6 @@
 #define H_DebugComponent
 #include "ComponentBase.hpp"
 #include "glm.hpp"
-#include "Mesh_old.hpp"
 #include "_ResourceProcessorsInclude.hpp"
 #include "SerializableObject.hpp"
 #include "MaterialsSystem.hpp"

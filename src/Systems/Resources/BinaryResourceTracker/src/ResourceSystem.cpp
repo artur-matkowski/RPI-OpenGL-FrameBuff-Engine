@@ -1,5 +1,5 @@
 #include "ResourceSystem.hpp"
-
+#include "ResourceReference.hpp"
 
 namespace asapi
 {
@@ -9,4 +9,11 @@ namespace asapi
 		ResourceSharedReferenceInterface::SetResourceSystemReference( this );
 	}
 	
+
+	#ifdef IS_EDITOR
+	void ResourceSystemBase::RefreshResourceReferences()
+	{
+		IResourceReferenceBase::RefreshResourceReference();
+	}
+	#endif
 }

@@ -1,6 +1,4 @@
 #include "Texture.hpp"
-#include "Shader.hpp"
-#include "Mesh_old.hpp"
 
 #include "ResourcePtr.hpp"
 #include "Systems.hpp"
@@ -80,4 +78,3 @@ ResourcePtr<T>& ResourcePtr<T>::operator = (const ResourcePtr<T>& sp)
 
 
 template class ResourcePtr<asapi::Texture>;
-template class ResourcePtr<asapi::Mesh_old>;

@@ -42,7 +42,7 @@ namespace asapi
 	template<>
 	bool Uniform<float>::OnGUI()
 	{
-		return ImGui::InputFloat(m_name.c_str(), &m_data );
+		return m_isDirty = ImGui::InputFloat(m_name.c_str(), &m_data );
 	}
 	#endif
 	template<>
@@ -78,7 +78,7 @@ namespace asapi
 	template<>
 	bool Uniform<glm::vec3>::OnGUI()
 	{
-		return ImGui::InputFloat3(m_name.c_str(), glm::value_ptr(m_data) );
+		return m_isDirty = ImGui::InputFloat3(m_name.c_str(), glm::value_ptr(m_data) );
 	}
 	#endif
 	template<>
@@ -113,7 +113,7 @@ namespace asapi
 	template<>
 	bool Uniform<glm::vec4>::OnGUI()
 	{
-		return ImGui::InputFloat4(m_name.c_str(), glm::value_ptr(m_data) );
+		return m_isDirty = ImGui::InputFloat4(m_name.c_str(), glm::value_ptr(m_data) );
 	}
 	#endif
 	template<>
@@ -217,7 +217,7 @@ namespace asapi
 	template<>
 	bool Uniform<int32_t>::OnGUI()
 	{
-		return ImGui::InputInt(m_name.c_str(), &m_data );
+		return m_isDirty = ImGui::InputInt(m_name.c_str(), &m_data );
 	}
 	#endif
 	template<>

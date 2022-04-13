@@ -113,6 +113,8 @@ namespace asapi
 
 
 		out_resourceBinaries->push_back( subresource );
+
+		log::debug << "ResourceGLSLProcessor::ProcessResource2Binary" << std::endl;
 		
 		return true;
 	}

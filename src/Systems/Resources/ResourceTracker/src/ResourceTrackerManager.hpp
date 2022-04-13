@@ -87,6 +87,7 @@ namespace asapi
 
 			const char* resourceExtension = std::tuple_element_t<i, ResourceProcesors>::GetSuportedResourceFileExtension();
 
+			
 			if(IsCompatible(resourceExtension, in_currentResource))
 			{
 				*updatedBinaries = std::tuple_element_t<i, ResourceProcesors>::ProcessResource2Binary(in_currentResource
@@ -105,7 +106,7 @@ namespace asapi
 		{
 			using unused = int[];
 			bool updatedBinaries = false;
-
+			
 			(void)unused { 0, (ProcessResourseForType<Is>(in_currentResource
 													, in_resourceFile
 													, in_projectPath
@@ -123,6 +124,7 @@ namespace asapi
 		{
 			constexpr int tupleSize = std::tuple_size<ResourceProcesors>();
 
+			
 			const bool rebuildedBinarie = ProcesorClassIterator(std::make_integer_sequence<int, tupleSize>{}
 																, in_currentResource
 																, in_resourceFile
