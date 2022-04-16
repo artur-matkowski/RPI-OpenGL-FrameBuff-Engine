@@ -75,13 +75,6 @@ namespace asapi
 				}
 			}
 
-			#ifdef IS_EDITOR
-			if(ret==nullptr)
-			{
-				log::warning << "Could not find uniform " << uniformName << std::endl;
-			}
-			#endif
-
 			return ret;
 		}
 

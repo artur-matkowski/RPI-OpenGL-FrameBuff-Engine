@@ -8,10 +8,10 @@
 }
 }, 
 "m_uniformsData": [{
-"m_uniformName": "blend", 
-"m_recreationString": "0.500000"
-}, {
 "m_uniformName": "modelViewMat", 
 "m_recreationString": "0.000000:0.000000:0.000000:0.000000:0.000000:0.000000:0.000000:0.000000:0.000000:0.000000:0.000000:0.000000:0.000000:0.000000:0.000000:0.000000:"
+}, {
+"m_uniformName": "texUnit", 
+"m_recreationString": "debug.png"
 }]
 }
