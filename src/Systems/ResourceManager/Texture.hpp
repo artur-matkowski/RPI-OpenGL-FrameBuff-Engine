@@ -7,9 +7,18 @@
 
 namespace asapi
 {
+	struct TextureData
+	{
+		uint32_t* 	width;
+		uint32_t* 	height;
+		uint8_t* 	encoding;
+		void* 		data;
+	};
+
 	class Texture
 	{
-		uint32_t m_textureID = -1;
+		uint32_t 		m_textureID = -1;
+		TextureData 	m_textureData;
 
 		#ifdef IS_EDITOR
 		char name[256];
