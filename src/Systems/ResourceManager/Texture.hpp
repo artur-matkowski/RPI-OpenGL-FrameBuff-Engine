@@ -9,24 +9,19 @@ namespace asapi
 {
 	class Texture
 	{
-		int m_width, m_height;
-		uint8_t m_encoding = 0; //channels count
-	    int bit_depth;
-	    int color_type;
-
 		uint32_t m_textureID = -1;
 
 		#ifdef IS_EDITOR
 		char name[256];
 		#endif
 
-		void* LoadPNG(const char*);
+		void* LoadPNG(const char*, uint32_t*, uint32_t*, uint8_t*);
+		void SendTextureToGPU(void*, uint32_t, uint32_t, uint8_t);
 
 	public:
 		Texture(const char* fileName);
 		~Texture();
 
-		void SendTextureToGPU(void *textureImage);
 
 		inline const void BindTexture() const
 		{
@@ -44,7 +39,6 @@ namespace asapi
 		#endif
 		
 		uint32_t GetTextureID() {return m_textureID; } 
-		uint8_t GetTextureEncoding() { return m_encoding; }
 
 		static void Compile(const char* dest, const char* source);
 	};
