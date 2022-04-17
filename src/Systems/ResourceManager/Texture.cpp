@@ -5,7 +5,7 @@
 
 namespace asapi
 {
-	void* Texture::LoadPNG(const char* filename, uint32_t *out_width, uint32_t *out_height, uint8_t *out_encoding)
+	void Texture::LoadPNG(const char* filename, TextureData& out_textureData)
 	{
 		png_structp png_ptr;
 	    png_infop info_ptr;
@@ -16,7 +16,7 @@ namespace asapi
 	    if ((fp = fopen(filename, "rb")) == NULL)
 	    {
 	        log::warning << "File \""<< filename <<"\" not founded" << std::endl;
-	        return 0;
+	        return;
 	    }
 	 
 	    /* Create and initialize the png_struct
@@ -37,7 +37,7 @@ namespace asapi
 	    {
 	        log::warning << "Failed to create png_read_struct" << std::endl;
 	        fclose(fp);
-	        return 0;
+	        return;
 	    }
 	 
 	    /* Allocate/initialize the memory
@@ -47,7 +47,7 @@ namespace asapi
 	        fclose(fp);
 	        png_destroy_read_struct(&png_ptr, NULL, NULL);
 	        log::warning << "Failed to create png_info_struct" << std::endl;
-	        return 0;
+	        return;
 	    }
 	 
 	    /* Set error handling if you are
@@ -67,7 +67,7 @@ namespace asapi
 	        /* If we get here, we had a
 	         * problem reading the file */
 	        log::warning << "Failed libpng" << std::endl;
-	        return 0;
+	        return;
 	    }
 	 
 	    /* Set up the output control if
@@ -109,14 +109,13 @@ namespace asapi
 
 
 
-	    GLubyte* textureData = (unsigned char*) malloc(row_bytes * height);
-	    m_textureData.width = (uint32_t*) malloc(row_bytes * height + sizeof(uint32_t)*2 + sizeof(uint8_t));
-	    m_textureData.height = &(m_textureData.width[1]);
-	    m_textureData.encoding = (uint8_t*) &(m_textureData.height[1]);
-	    m_textureData.data = (void*) &(m_textureData.encoding[1]);
+	    out_textureData.width = (uint32_t*) malloc(row_bytes * height + sizeof(uint32_t)*2 + sizeof(uint8_t));
+	    out_textureData.height = &(out_textureData.width[1]);
+	    out_textureData.encoding = (uint8_t*) &(out_textureData.height[1]);
+	    out_textureData.data = (void*) &(out_textureData.encoding[1]);
 
 
-	    *m_textureData.encoding = *out_encoding = (uint8_t) png_get_channels(png_ptr, info_ptr);
+	    *out_textureData.encoding = (uint8_t) png_get_channels(png_ptr, info_ptr);
 	 
 	    png_bytepp row_pointers = png_get_rows(png_ptr, info_ptr);
 	 
@@ -124,8 +123,7 @@ namespace asapi
 	        // note that png is ordered top to
 	        // bottom, but OpenGL expect it bottom to top
 	        // so the order or swapped
-	        memcpy(textureData+(row_bytes * (i)), row_pointers[i], row_bytes);
-	        memcpy(((GLubyte*)m_textureData.data)+(row_bytes * (i)), row_pointers[i], row_bytes);
+	        memcpy(((GLubyte*)out_textureData.data)+(row_bytes * (i)), row_pointers[i], row_bytes);
 	    }
 	 
 	    /* Clean up after the read,
@@ -134,10 +132,8 @@ namespace asapi
 	 
 	    /* Close the file */
 	    fclose(fp);
-	    *m_textureData.width = *out_width = width;
-	    *m_textureData.height = *out_height = height;
-
-		return (void*) textureData;
+	    *out_textureData.width = width;
+	    *out_textureData.height = height;
 	}
 
 
@@ -151,13 +147,12 @@ namespace asapi
 		name[255] = '\0';
 		#endif
 
-		void *textureData = 0;
-		uint32_t width, height;
-		uint8_t encoding;
 
-		textureData = LoadPNG(path, &width, &height, &encoding);
+		TextureData textureData;
 
-		SendTextureToGPU( textureData, width, height, encoding );
+		LoadPNG(path, textureData);
+
+		SendTextureToGPU(textureData);
 	}
 
 	Texture::~Texture()
@@ -165,7 +160,7 @@ namespace asapi
 
 	}
 
-	void Texture::SendTextureToGPU(void *textureData, uint32_t width, uint32_t height, uint8_t encoding)
+	void Texture::SendTextureToGPU(TextureData& textureData)
 	{
 		//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
@@ -178,24 +173,23 @@ namespace asapi
 	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	    if(encoding == 3)
+	    if(*textureData.encoding == 3)
 	    {
 	    	//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, *m_textureData.width,
-		             *m_textureData.height, 0, GL_RGB, GL_UNSIGNED_BYTE,
-		             m_textureData.data);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, *textureData.width,
+		             *textureData.height, 0, GL_RGB, GL_UNSIGNED_BYTE,
+		             textureData.data);
 			log::debug << "founded encodeing is 3 " << std::endl; 
 	    }
 	    else
 	    {
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, *m_textureData.width,
-		             *m_textureData.height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-		             m_textureData.data);
-			log::debug << "founded encodeing is: " << encoding << std::endl;
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, *textureData.width,
+		             *textureData.height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+		             textureData.data);
+			log::debug << "founded encodeing is: " << *textureData.encoding << std::endl;
 	    }
 
-	    free(textureData);
-	    free(m_textureData.width);
+	    free(textureData.width);
 	}
 
 

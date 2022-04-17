@@ -18,14 +18,13 @@ namespace asapi
 	class Texture
 	{
 		uint32_t 		m_textureID = -1;
-		TextureData 	m_textureData;
 
 		#ifdef IS_EDITOR
 		char name[256];
 		#endif
 
-		void* LoadPNG(const char*, uint32_t*, uint32_t*, uint8_t*);
-		void SendTextureToGPU(void*, uint32_t, uint32_t, uint8_t);
+		void LoadPNG(const char*, TextureData& out_textureData);
+		void SendTextureToGPU(TextureData& textureData);
 
 		Texture(const Texture&){};
 
