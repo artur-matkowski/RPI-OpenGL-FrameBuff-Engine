@@ -36,7 +36,7 @@ namespace asapi
 		//SERIALIZABLE_OBJ(DebugComponent, TestSerialization, m_testResource );
 
 
-		SERIALIZABLE_OBJ(DebugComponent, MaterialReference, m_material );
+		//SERIALIZABLE_OBJ(DebugComponent, MaterialReference, m_material );
 
 		//SERIALIZABLE_OBJ(DebugComponent, ResourceGLSLSharedReference, m_testShader );
 	public:
