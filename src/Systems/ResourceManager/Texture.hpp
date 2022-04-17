@@ -18,6 +18,8 @@ namespace asapi
 		void* LoadPNG(const char*, uint32_t*, uint32_t*, uint8_t*);
 		void SendTextureToGPU(void*, uint32_t, uint32_t, uint8_t);
 
+		Texture(const Texture&){};
+
 	public:
 		Texture(const char* fileName);
 		~Texture();
