@@ -246,7 +246,7 @@ namespace asapi
 		}
 
 		const int pageSize = getpagesize();
-		sb.st_size = size / pageSize + pageSize;
+		sb.st_size = (size / pageSize) * pageSize + pageSize;
 
 		data = mmap(NULL, sb.st_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
 		ftruncate(fd, sb.st_size);

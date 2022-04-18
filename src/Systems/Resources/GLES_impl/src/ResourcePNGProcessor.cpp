@@ -267,8 +267,10 @@ namespace asapi
 
 		asapi::UniqueID subresourceID;
 		std::string binaryResource;
+		char filenameBuff[256];
 
-		bool subresourcePreviouslyExisted = in_currentResource.FindSubResourceByInternalID( std::to_string(0), subresourceID );
+
+		bool subresourcePreviouslyExisted = in_currentResource.FindSubResourceByInternalID( in_currentResource.GetFilename(), subresourceID );
 
 
 
@@ -292,7 +294,7 @@ namespace asapi
 
 		asapi::SubResourceData subresource(
 								subresourceID
-								, std::to_string(0));
+								, in_currentResource.GetFilename());
 
 		binaryResource = binaryResourceDir + binaryResource;
 

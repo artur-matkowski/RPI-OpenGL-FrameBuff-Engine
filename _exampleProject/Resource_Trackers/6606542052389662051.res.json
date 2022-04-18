@@ -1,13 +1,18 @@
 {
 "m_resourceID": {
-"m_ID": 7507869715727389814
+"m_ID": 6606542052389662051
 }, 
 "m_filename": "debug.png", 
-"m_resTrackerFilename": "7507869715727389814.res.json", 
+"m_resTrackerFilename": "6606542052389662051.res.json", 
 "m_path": "debug.png", 
 "m_content_hash": "b962157d42e7374e2a9a5d2e4cda38571fbc2f853082c045273916f522d4565a", 
 "m_size": 61686, 
 "m_modified_epoch": 1623912250, 
 "m_modified_ns": 99998000, 
-"v_subresources": []
+"v_subresources": [{
+"m_resourceID": {
+"m_ID": 6728596424417455459
+}, 
+"m_internalID": "debug.png"
+}]
 }
