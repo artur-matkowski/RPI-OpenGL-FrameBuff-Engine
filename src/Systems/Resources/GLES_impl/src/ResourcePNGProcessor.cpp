@@ -45,8 +45,6 @@ namespace asapi
 			log::debug << "founded encodeing is: " << *textureData.encoding << std::endl;
 	    }
 
-	    free(textureData.width);
-
 	    return (void*)(size_t)m_textureID;
 	}
 

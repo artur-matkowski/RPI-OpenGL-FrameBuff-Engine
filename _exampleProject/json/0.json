@@ -60,11 +60,6 @@
 }, {
 "m_componentTypeName": "asapi::DebugComponent", 
 "m_recreationString": "{
-\"m_material\": {
-\"m_materialInstanceID\": {
-\"m_ID\": 6393136728154090400
-}
-}
 }"
 }]
 }]

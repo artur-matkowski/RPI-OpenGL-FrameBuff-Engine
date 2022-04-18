@@ -117,7 +117,8 @@ namespace asapi
 		    		break;
 		    	case GL_SAMPLER_2D:
 		    		//_this->p_uniforms[i] = (UniformInterface*)materialsMemBlock->allocate(1, sizeof(Uniform<ResourcePtr<Texture>>), alignof(Uniform<ResourcePtr<Texture>>));
-		    		_this->p_uniforms[i] = new Uniform<ResourcePtr<Texture>>(location, name);
+		    		//_this->p_uniforms[i] = new Uniform<ResourcePtr<Texture>>(location, name);
+		    		_this->p_uniforms[i] = new Uniform<ResourcePNGSharedReference>(location, name);
 		    		break;		    		
 		    	default:
 		    		char buff[128];

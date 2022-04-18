@@ -13,7 +13,6 @@ namespace asapi
 {
 	class ResourcePNGProcessor: public ResourceProcessorBase<ResourcePNGProcessor>
 	{
-		static std::vector<std::string*> data;
 	public:
 		static void* LoadResource(const char* path);
 
@@ -33,10 +32,7 @@ namespace asapi
 		#ifdef IS_EDITOR
 		static void OnGUI(void* handle)
 		{
-			ImGui::Text( "Referenced Test Resource: %s", (char*)handle );
-
-			for(int i=0; i<data.size(); i++)
-				ImGui::Text( data[i]->c_str() );
+			ImGui::Text( "Referenced T2D Resource: unknown" );
 		}
 		#endif
 	};
@@ -50,8 +46,22 @@ namespace asapi
 		ResourcePNGSharedReference( ResourcePNGSharedReference&& cp )
 		{
 			m_resourcePtr = cp.m_resourcePtr;
+			m_binaryResourceID = std::move( cp.m_binaryResourceID );
 			cp.m_resourcePtr = nullptr;
 		}
+
+		ResourcePNGSharedReference& operator=( const ResourcePNGSharedReference& cp )
+		{
+			if(m_resourcePtr!=nullptr)
+				m_resourcePtr->DecreaseReferenceCounter();
+			m_resourcePtr = cp.m_resourcePtr;
+			m_binaryResourceID = cp.m_binaryResourceID;
+			m_resourcePtr->IncreaseReferenceCounter();
+
+			return *this;
+		}
+
+		uint64_t GetUuid(){ return m_binaryResourceID.ID(); }
 	};
 
 }

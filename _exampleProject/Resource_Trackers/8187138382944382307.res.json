@@ -2,9 +2,9 @@
 "m_resourceID": {
 "m_ID": 8187138382944382307
 }, 
-"m_filename": "debug (kopia).png", 
+"m_filename": "debug.png", 
 "m_resTrackerFilename": "8187138382944382307.res.json", 
-"m_path": "debug (kopia).png", 
+"m_path": "debug.png", 
 "m_content_hash": "b962157d42e7374e2a9a5d2e4cda38571fbc2f853082c045273916f522d4565a", 
 "m_size": 61686, 
 "m_modified_epoch": 1623912250, 
@@ -13,6 +13,6 @@
 "m_resourceID": {
 "m_ID": 6620426436117114211
 }, 
-"m_internalID": "debug (kopia).png"
+"m_internalID": "debug.png"
 }]
 }
