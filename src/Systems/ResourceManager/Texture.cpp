@@ -5,15 +5,40 @@
 
 namespace asapi
 {
+
+	struct UserReadInfo
+	{
+		FILE::MMAP png_file;
+		void* read_ptr = 0;
+	};
+
+	void read_fn(png_structp png_ptr, png_bytep ptr, uint64_t size)
+	{
+		UserReadInfo* p_info = (UserReadInfo*)png_get_io_ptr(png_ptr);
+
+		if( ((size_t)p_info->png_file.Data()+(size_t)p_info->png_file.Size()) < ((size_t)p_info->read_ptr + (size_t)size) )
+		{
+			png_error(png_ptr,"read error");
+		}
+		else
+		{
+			memcpy(ptr, p_info->read_ptr, size);
+			p_info->read_ptr = (void*) ((size_t)p_info->read_ptr + (size_t)size);
+		}
+	}
+
 	void Texture::LoadPNG(const char* filename, TextureData& out_textureData)
 	{
 		png_structp png_ptr;
 	    png_infop info_ptr;
 	    unsigned int sig_read = 0;
 	    int interlace_type;
-	    ::FILE *fp;
+	    UserReadInfo userReadInfo;
+
+	    userReadInfo.png_file.InitForRead(filename);
+	    userReadInfo.read_ptr = userReadInfo.png_file.Data();
 	 
-	    if ((fp = fopen(filename, "rb")) == NULL)
+	    if ( !userReadInfo.png_file.IsValid() )
 	    {
 	        log::warning << "File \""<< filename <<"\" not founded" << std::endl;
 	        return;
@@ -36,7 +61,6 @@ namespace asapi
 	    if (png_ptr == NULL) 
 	    {
 	        log::warning << "Failed to create png_read_struct" << std::endl;
-	        fclose(fp);
 	        return;
 	    }
 	 
@@ -44,7 +68,6 @@ namespace asapi
 	     * for image information.  REQUIRED. */
 	    info_ptr = png_create_info_struct(png_ptr);
 	    if (info_ptr == NULL) {
-	        fclose(fp);
 	        png_destroy_read_struct(&png_ptr, NULL, NULL);
 	        log::warning << "Failed to create png_info_struct" << std::endl;
 	        return;
@@ -63,7 +86,6 @@ namespace asapi
 	        /* Free all of the memory associated
 	         * with the png_ptr and info_ptr */
 	        png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
-	        fclose(fp);
 	        /* If we get here, we had a
 	         * problem reading the file */
 	        log::warning << "Failed libpng" << std::endl;
@@ -72,7 +94,9 @@ namespace asapi
 	 
 	    /* Set up the output control if
 	     * you are using standard C streams */
-	    png_init_io(png_ptr, fp);
+	    //png_init_io(png_ptr, fp);
+
+	    png_set_read_fn(png_ptr, (void*)&userReadInfo, read_fn);
 	 
 	    /* If we have already
 	     * read some of the signature */
@@ -130,8 +154,6 @@ namespace asapi
 	     * and free any memory allocated */
 	    png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
 	 
-	    /* Close the file */
-	    fclose(fp);
 	    *out_textureData.width = width;
 	    *out_textureData.height = height;
 	}
