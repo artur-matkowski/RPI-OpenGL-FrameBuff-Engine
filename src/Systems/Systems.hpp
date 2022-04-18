@@ -40,6 +40,7 @@ namespace asapi
 			  ResourceTXTProcessor
 			, ResourceFBXProcessor
 			, ResourceGLSLProcessor
+			, ResourcePNGProcessor
 			>		 			RESOURCES;
 		MaterialsSystem 		MATERIALSSYSTEM;
 		TimeSystem				TIME;

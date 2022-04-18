@@ -50,20 +50,40 @@ namespace asapi
 	    return (void*)(size_t)m_textureID;
 	}
 
-	void LoadPNG(const char* filename)
+
+	struct ReadInfoStruct
+	{
+		FILE::MMAP png_file;
+		void* read_ptr = 0;
+	};
+
+	void read_fn(png_structp png_ptr, png_bytep ptr, uint64_t size)
+	{
+		ReadInfoStruct* p_info = (ReadInfoStruct*)png_get_io_ptr(png_ptr);
+
+		if( ((size_t)p_info->png_file.Data()+(size_t)p_info->png_file.Size()) < ((size_t)p_info->read_ptr + (size_t)size) )
+		{
+			png_error(png_ptr,"read error");
+		}
+		else
+		{
+			memcpy(ptr, p_info->read_ptr, size);
+			p_info->read_ptr = (void*) ((size_t)p_info->read_ptr + (size_t)size);
+		}
+	}
+
+	void ConvertPNG2BinaryResource(FILE::MMAP& png_file, const char* out_path)
 	{
 		png_structp png_ptr;
 	    png_infop info_ptr;
 	    unsigned int sig_read = 0;
 	    int interlace_type;
-	    ::FILE *fp;
-		TextureData textureData;
+	    ReadInfoStruct userReadInfo;
+	    FILE::MMAP out_file;
+
+	    userReadInfo.png_file = std::move(png_file);
+	    userReadInfo.read_ptr = userReadInfo.png_file.Data();
 	 
-	    if ((fp = fopen(filename, "rb")) == NULL)
-	    {
-	        log::warning << "File \""<< filename <<"\" not founded" << std::endl;
-	        return;
-	    }
 	 
 	    /* Create and initialize the png_struct
 	     * with the desired error handler
@@ -81,8 +101,8 @@ namespace asapi
 	 
 	    if (png_ptr == NULL) 
 	    {
+	    	png_file = std::move(userReadInfo.png_file);
 	        log::warning << "Failed to create png_read_struct" << std::endl;
-	        fclose(fp);
 	        return;
 	    }
 	 
@@ -90,8 +110,8 @@ namespace asapi
 	     * for image information.  REQUIRED. */
 	    info_ptr = png_create_info_struct(png_ptr);
 	    if (info_ptr == NULL) {
-	        fclose(fp);
 	        png_destroy_read_struct(&png_ptr, NULL, NULL);
+	        png_file = std::move(userReadInfo.png_file);
 	        log::warning << "Failed to create png_info_struct" << std::endl;
 	        return;
 	    }
@@ -109,7 +129,7 @@ namespace asapi
 	        /* Free all of the memory associated
 	         * with the png_ptr and info_ptr */
 	        png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
-	        fclose(fp);
+	        png_file = std::move(userReadInfo.png_file);
 	        /* If we get here, we had a
 	         * problem reading the file */
 	        log::warning << "Failed libpng" << std::endl;
@@ -118,7 +138,9 @@ namespace asapi
 	 
 	    /* Set up the output control if
 	     * you are using standard C streams */
-	    png_init_io(png_ptr, fp);
+	    //png_init_io(png_ptr, fp);
+
+	    png_set_read_fn(png_ptr, (void*)&userReadInfo, read_fn);
 	 
 	    /* If we have already
 	     * read some of the signature */
@@ -154,11 +176,22 @@ namespace asapi
 	    unsigned int row_bytes = png_get_rowbytes(png_ptr, info_ptr);
 
 
+	    out_file.InitForWrite(out_path, row_bytes * height + sizeof(uint32_t)*2 + sizeof(uint8_t));
 
-	    textureData.width = (uint32_t*) malloc(row_bytes * height + sizeof(uint32_t)*2 + sizeof(uint8_t));
+	    if( !out_file.IsValid() )
+	    {
+	    	log::warning << "Can not initialize binary resource file: " << out_path << std::endl;
+	    	return;
+	    }
+
+		TextureData textureData; 
+
+	    textureData.width = (uint32_t*) out_file.Data();
 	    textureData.height = &(textureData.width[1]);
 	    textureData.encoding = (uint8_t*) &(textureData.height[1]);
 	    textureData.data = (void*) &(textureData.encoding[1]);
+
+
 
 
 	    *textureData.encoding = (uint8_t) png_get_channels(png_ptr, info_ptr);
@@ -176,12 +209,11 @@ namespace asapi
 	     * and free any memory allocated */
 	    png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
 	 
-	    /* Close the file */
-	    fclose(fp);
 	    *textureData.width = width;
 	    *textureData.height = height;
-	}
 
+	    png_file = std::move(userReadInfo.png_file);
+	}
 
 	
 	void* ResourcePNGProcessor::LoadResource(const char* path)
@@ -233,7 +265,6 @@ namespace asapi
 		std::string databuff( (char*)in_resourceFile->Data(), (char*)in_resourceFile->Data()+in_resourceFile->Size() );
 		std::istringstream iss(databuff);
 
-		asapi::FILE::MMAP _out;
 		asapi::UniqueID subresourceID;
 		std::string binaryResource;
 
@@ -265,8 +296,8 @@ namespace asapi
 
 		binaryResource = binaryResourceDir + binaryResource;
 
-		//_out.InitForWrite( binaryResource.c_str(), in_resourceFile->Size());
-		//memcpy( _out.Data(), (void*)line.c_str(), line.size() );
+
+		ConvertPNG2BinaryResource(*in_resourceFile, binaryResource.c_str());
 
 		out_resourceBinaries->push_back( subresource );
 		

@@ -12,7 +12,7 @@ namespace asapi
 		void* read_ptr = 0;
 	};
 
-	void read_fn(png_structp png_ptr, png_bytep ptr, uint64_t size)
+	void read_fn0(png_structp png_ptr, png_bytep ptr, uint64_t size)
 	{
 		UserReadInfo* p_info = (UserReadInfo*)png_get_io_ptr(png_ptr);
 
@@ -96,7 +96,7 @@ namespace asapi
 	     * you are using standard C streams */
 	    //png_init_io(png_ptr, fp);
 
-	    png_set_read_fn(png_ptr, (void*)&userReadInfo, read_fn);
+	    png_set_read_fn(png_ptr, (void*)&userReadInfo, read_fn0);
 	 
 	    /* If we have already
 	     * read some of the signature */
