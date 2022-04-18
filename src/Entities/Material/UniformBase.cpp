@@ -360,37 +360,10 @@ namespace asapi
 	bool Uniform<ResourcePNGSharedReference>::OnGUI()
 	{
         bool ret = false;
+        uint64_t oldID = m_data.GetUuid();
         m_data.OnGUI_caller();
-/*
-        const bool hasSelectedTexture = m_data.GetRawPtr()!=nullptr;
 
-		if (ImGui::BeginCombo("Texture resource", m_data->GetName()))
-        {
-			std::vector<std::string>* items = SYSTEMS::GetObject().ASSETS.GetTexturesPaths();
-
-            for (int n = 0; n < items->size(); n++)
-            {
-            	const char* displayName = strstr( (*items)[n].c_str(), "/textures/") + strlen("/textures/");
-                const bool is_selected = hasSelectedTexture && (strcmp( m_data->GetName(), (*items)[n].c_str() ) == 0);
-                if (ImGui::Selectable(displayName, is_selected))
-                {
-                	if( strcmp(m_data->GetName(), displayName)!=0 )
-                	{
-						log::debug << "updating texture name from: " << m_data->GetName() << " to: " << displayName << std::endl;
-
-						SYSTEMS::GetObject().ASSETS.requestResource( &m_data, displayName );
-			    		m_isDirty = true;
-			    		ret = true;
-                	}
-                }
-
-                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-                if (is_selected)
-                    ImGui::SetItemDefaultFocus();
-            }
-            ImGui::EndCombo();
-        }
-*/
+        ret = oldID!=m_data.GetUuid();
 
 		if( m_data.GetRawHandle()!=nullptr )
 		{

@@ -52,7 +52,7 @@ namespace asapi
 		static void InitializeObject(UniqueID binaryResourceID, T* out)
 		{
 			out->m_binaryResourceID = std::move( binaryResourceID );
-			out->m_resourcePtr = ResourceProcessorT::RequestResourceByProxy( s_resourceSystem, binaryResourceID );
+			out->m_resourcePtr = ResourceProcessorT::RequestResourceByProxy( s_resourceSystem, out->m_binaryResourceID );
 			out->m_resourcePtr->IncreaseReferenceCounter();
 			#ifdef IS_EDITOR
 			out->m_resourcePtr->BindOnDirtyCallback(out->m_callback, out->m_callbackData);
