@@ -1,6 +1,4 @@
 #include "MaterialInstance.hpp"
-#include "ResourcePtr.hpp"
-#include "Texture.hpp"
 #include "imgui.h"
 
 namespace asapi
@@ -32,6 +30,7 @@ namespace asapi
 	
 	void MaterialInstance::SetProjectPath(const std::string& path)
 	{
+		Shader::s_projectPath = path;
 		s_projectPath = path;
 	}
 	

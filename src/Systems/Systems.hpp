@@ -7,7 +7,6 @@
 #include "object.hpp"
 #include "RendererSystem.hpp"
 #include "Context.hpp"
-#include "AssetSystem.hpp"
 
 #include "ResourceSystem.hpp"
 #include "_ResourceProcessorsInclude.hpp"
@@ -35,7 +34,6 @@ namespace asapi
 		bfu::EventSystem 		EVENTS;
 		RendererSystem 			RENDERER;
 		ContextBase				*CONTEXT;
-		AssetSystem				ASSETS;
 		ResourceSystem<
 			  ResourceTXTProcessor
 			, ResourceFBXProcessor

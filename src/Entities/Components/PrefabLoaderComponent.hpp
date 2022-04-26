@@ -6,6 +6,8 @@ namespace asapi
 {
 	class PrefabLoaderComponent: public ComponentBase<PrefabLoaderComponent>
 	{
+	public:
+		static std::string s_projectPath; //TODO fix that crap
 	protected:	
 		SERIALIZABLE_OBJ( PrefabLoaderComponent, UniqueID, m_prefabID );
 		bfu::MemBlockBase* 				m_prefabMemBlock = nullptr;

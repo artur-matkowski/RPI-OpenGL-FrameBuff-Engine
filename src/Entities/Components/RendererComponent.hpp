@@ -2,7 +2,6 @@
 #define _H_MaterialComponent
 #include "ComponentBase.hpp"
 #include "MeshComponent.hpp"
-#include "ResourcePtr.hpp"
 #include "MaterialReference.hpp"
 
 namespace asapi
