@@ -51,6 +51,14 @@ all:
 	make debug-player
 	make release-player
 
+build-easy:
+	./prebuild.sh
+	make lib
+	make debug-editor
+
+run:
+	./build/dbg/editor/asapi
+
 print:
 	$(OBJECTS)
 
