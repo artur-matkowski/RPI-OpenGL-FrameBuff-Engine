@@ -6,6 +6,9 @@
 
 namespace asapi
 {
+	std::string PrefabLoaderComponent::s_projectPath;
+
+
 	#ifdef IS_EDITOR
 	void PrefabLoaderComponent::OnGUI()
 	{
@@ -50,7 +53,7 @@ namespace asapi
 
 		buff.clear();
 		buff.sprintf( "%s/json/%lld.json"
-						, SYSTEMS::GetObject().ASSETS.GetProjectPath()
+						, s_projectPath.c_str()
 						, GetPrefabID() );
 
 		bfu::JSONSerializer &jsonSerializer = SYSTEMS::GetObject().SCENE.GetJSONSerializer();
@@ -77,7 +80,7 @@ namespace asapi
 
 		buff.clear();
 		buff.sprintf( "%s/json/%lld.json"
-						, SYSTEMS::GetObject().ASSETS.GetProjectPath()
+						, s_projectPath.c_str()
 						, GetPrefabID() );
 
 		

@@ -1,5 +1,4 @@
 #include "MaterialInstance.hpp"
-#include "ResourcePtr.hpp"
 #include "imgui.h"
 
 namespace asapi
