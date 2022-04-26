@@ -1,4 +1,6 @@
 #include "MaterialInstance.hpp"
+#include "ResourcePtr.hpp"
+#include "Texture.hpp"
 #include "imgui.h"
 
 namespace asapi
@@ -113,10 +115,11 @@ namespace asapi
 		    		//_this->p_uniforms[i] = (UniformInterface*)materialsMemBlock->allocate(1, sizeof(Uniform<glm::mat4>), alignof(Uniform<glm::mat4>));
 		    		_this->p_uniforms[i] = new Uniform<glm::mat4>(location, name);
 		    		break;
-		    	//case GL_SAMPLER_2D:
+		    	case GL_SAMPLER_2D:
 		    		//_this->p_uniforms[i] = (UniformInterface*)materialsMemBlock->allocate(1, sizeof(Uniform<ResourcePtr<Texture>>), alignof(Uniform<ResourcePtr<Texture>>));
-		    		//new Uniform<ResourcePtr<Texture>>(location, name);
-		    		//break;		    		
+		    		//_this->p_uniforms[i] = new Uniform<ResourcePtr<Texture>>(location, name);
+		    		_this->p_uniforms[i] = new Uniform<ResourcePNGSharedReference>(location, name);
+		    		break;		    		
 		    	default:
 		    		char buff[128];
 		    		sprintf(buff, "%#04X", type);
@@ -157,6 +160,14 @@ namespace asapi
 	{
 		for(int i=0; i<m_uniformsData.size(); ++i)
 		{
+			#ifdef IS_EDITOR
+			if( GetUniformPtr( m_uniformsData[i].m_uniformName.c_str() ) == nullptr )
+			{
+				log::error << "Could not find uniform " << m_uniformsData[i].m_uniformName.c_str() << std::endl;
+				continue;
+			}
+			#endif
+
 			GetUniformPtr( m_uniformsData[i].m_uniformName.c_str() )->sscanf( m_uniformsData[i].m_recreationString.c_str() );
 		}
 	}

@@ -52,7 +52,7 @@ namespace asapi
 		static void InitializeObject(UniqueID binaryResourceID, T* out)
 		{
 			out->m_binaryResourceID = std::move( binaryResourceID );
-			out->m_resourcePtr = ResourceProcessorT::RequestResourceByProxy( s_resourceSystem, binaryResourceID );
+			out->m_resourcePtr = ResourceProcessorT::RequestResourceByProxy( s_resourceSystem, out->m_binaryResourceID );
 			out->m_resourcePtr->IncreaseReferenceCounter();
 			#ifdef IS_EDITOR
 			out->m_resourcePtr->BindOnDirtyCallback(out->m_callback, out->m_callbackData);
@@ -72,7 +72,17 @@ namespace asapi
 	
 		ResourceSharedReferenceBase( const ResourceSharedReferenceBase& cp )
 		{
-			m_resourcePtr->DecreaseReferenceCounter();
+			if(m_resourcePtr!=nullptr)
+				m_resourcePtr->DecreaseReferenceCounter();
+			m_resourcePtr = cp.m_resourcePtr;
+			m_binaryResourceID = cp.m_binaryResourceID;
+			m_resourcePtr->IncreaseReferenceCounter();
+		}
+
+		void operator=( const ResourceSharedReferenceBase& cp )
+		{
+			if(m_resourcePtr!=nullptr)
+				m_resourcePtr->DecreaseReferenceCounter();
 			m_resourcePtr = cp.m_resourcePtr;
 			m_binaryResourceID = cp.m_binaryResourceID;
 			m_resourcePtr->IncreaseReferenceCounter();
@@ -90,7 +100,7 @@ namespace asapi
 				m_resourcePtr->DecreaseReferenceCounter();
 		}
 
-		inline void* GetRawHandle() { return m_resourcePtr==nullptr ? nullptr : m_resourcePtr->GetRawHandle(); }
+		inline void* GetRawHandle() const { return m_resourcePtr==nullptr ? nullptr : m_resourcePtr->GetRawHandle(); }
 
 		#ifdef IS_EDITOR
 		virtual void OnGUI(){}

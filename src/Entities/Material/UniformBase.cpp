@@ -3,6 +3,7 @@
 #include <GLES2/gl2.h>
 #include <gtc/type_ptr.hpp>
 #include <cstdio>
+#include "ResourcePNGProcessor.hpp"
 #ifdef IS_EDITOR
 #include "imgui.h"
 #endif
@@ -236,6 +237,7 @@ namespace asapi
 
 
 
+
 	template class Uniform<ResourcePtr<Texture>>;
 	template<>
 	void Uniform<ResourcePtr<Texture>>::SendUniform()
@@ -318,4 +320,90 @@ namespace asapi
 
 		return ret;
 	}
+
+
+
+
+
+
+	template class Uniform<ResourcePNGSharedReference>;
+	template<>
+	void Uniform<ResourcePNGSharedReference>::SendUniform()
+	{
+		if(m_isDirty)
+		{
+			GLuint texId = (GLuint)(size_t) m_data.GetRawHandle();
+			glActiveTexture( GL_TEXTURE0 );
+			glBindTexture( GL_TEXTURE_2D, texId );
+
+			glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+			glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+		    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		}
+	}
+	template<>
+	void Uniform<ResourcePNGSharedReference>::SendUniform(const ResourcePNGSharedReference& override) const
+	{
+		GLuint texId = (GLuint)(size_t) m_data.GetRawHandle();
+
+		glActiveTexture( GL_TEXTURE0 );
+		glBindTexture( GL_TEXTURE_2D, texId );
+
+		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	}
+	#ifdef IS_EDITOR
+	template<>
+	bool Uniform<ResourcePNGSharedReference>::OnGUI()
+	{
+        bool ret = false;
+        uint64_t oldID = m_data.GetUuid();
+        m_data.OnGUI_caller();
+
+        ret = oldID!=m_data.GetUuid();
+
+		if( m_data.GetRawHandle()!=nullptr )
+		{
+			//ImGui::LabelText(m_name.c_str(), m_data->GetName());
+			void* my_void_ptr = (void*)(intptr_t)m_data.GetRawHandle();
+			ImGui::Image(my_void_ptr, ImVec2(100.0f, 100.0f));
+
+		}
+		return ret;
+	}
+	#endif
+	template<>
+	void Uniform<ResourcePNGSharedReference>::sscanf(const char* str )
+	{
+		uint64_t uuid;
+		UniqueID ID;
+
+		::sscanf(str, "%llu", &uuid);
+		ID = uuid;
+
+		ResourcePNGSharedReference::InitializeObject( ID, &m_data );
+
+		m_isDirty = true;
+	}
+	template<>
+	int Uniform<ResourcePNGSharedReference>::sprintf(char* str)
+	{
+		int ret = -1;
+
+		#ifdef IS_EDITOR
+		ret = ::sprintf(str, "%llu", m_data.GetUuid());
+		#else
+		log::error << "can not save material in player" << std::endl;
+		#endif
+
+		return ret;
+	}
+
+
+
+
+
 }

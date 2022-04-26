@@ -7,26 +7,31 @@
 
 namespace asapi
 {
+	struct TextureData
+	{
+		uint32_t* 	width;
+		uint32_t* 	height;
+		uint8_t* 	encoding;
+		void* 		data;
+	};
+
 	class Texture
 	{
-		int m_width, m_height;
-		uint8_t m_encoding = 0; //channels count
-	    int bit_depth;
-	    int color_type;
-
-		uint32_t m_textureID = -1;
+		uint32_t 		m_textureID = -1;
 
 		#ifdef IS_EDITOR
 		char name[256];
 		#endif
 
-		void* LoadPNG(const char*);
+		void LoadPNG(const char*, TextureData& out_textureData);
+		void SendTextureToGPU(TextureData& textureData);
+
+		Texture(const Texture&){};
 
 	public:
 		Texture(const char* fileName);
 		~Texture();
 
-		void SendTextureToGPU(void *textureImage);
 
 		inline const void BindTexture() const
 		{
@@ -35,6 +40,8 @@ namespace asapi
 
 			glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 			glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+		    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		}
 
 
@@ -44,7 +51,6 @@ namespace asapi
 		#endif
 		
 		uint32_t GetTextureID() {return m_textureID; } 
-		uint8_t GetTextureEncoding() { return m_encoding; }
 
 		static void Compile(const char* dest, const char* source);
 	};

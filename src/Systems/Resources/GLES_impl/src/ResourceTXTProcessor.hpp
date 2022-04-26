@@ -50,6 +50,7 @@ namespace asapi
 		ResourceTXTSharedReference( ResourceTXTSharedReference&& cp )
 		{
 			m_resourcePtr = cp.m_resourcePtr;
+			m_binaryResourceID = std::move( cp.m_binaryResourceID );
 			cp.m_resourcePtr = nullptr;
 		}
 	};
