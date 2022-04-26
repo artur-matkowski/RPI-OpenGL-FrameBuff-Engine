@@ -12,7 +12,6 @@
 #include "DebugComponent.hpp"
 
 
-#include "Texture.hpp"
 #include "Shader.hpp"
 
 

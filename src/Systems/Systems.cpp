@@ -82,7 +82,7 @@ namespace asapi
 
 		PRIFILE( SCENE.Init( SYSTEMS::SYSTEMS_ALLOCATOR, argc, argv ); );
 
-		ASSETS.Init(argc, argv);
+		
 		RESOURCES.Init();
 		if( projectPath!=0 )
 		{
@@ -122,7 +122,7 @@ namespace asapi
 		IsCorrectProjectPathSet = true;
 		//TODO check if project path is actually correct
 
-		ASSETS.SetProjectPath( path );
+		
 		RESOURCES.SetProjectPath( path );
 		MATERIALSSYSTEM.SetProjectPath( path );
 	}
@@ -132,7 +132,7 @@ namespace asapi
 		if( ! IsCorrectProjectPathSet )
 			return;
 		
-		ASSETS.RefreshResources();
+		
 		RESOURCES.RefreshResources();
 		MATERIALSSYSTEM.RefreshResources();
 	}

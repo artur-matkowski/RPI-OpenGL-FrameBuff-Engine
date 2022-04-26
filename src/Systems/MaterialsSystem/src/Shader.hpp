@@ -13,11 +13,12 @@ namespace asapi
 
 		tShaderHandle 			h_shaderHandle = nullptr;
 
-
 		static Shader* LinkShader(GLuint vertex, GLuint fragment);
 	public:
 		Shader();
 		~Shader();
+
+		static std::string 		s_projectPath; //tmp TODO remove that crap
 
 		inline void UseProgram()
 		{
