@@ -3,7 +3,59 @@
 
 namespace asapi
 {
-	std::string MaterialInstance::s_projectPath;
+
+#define VERTEX_SOURCE  \
+			"#version 100\n" \
+			"precision mediump float;\n" \
+			"attribute vec4 position;\n" \
+			"uniform mat4 modelViewMat;\n" \
+			"\n" \
+			"void main()\n" \
+			"{\n" \
+			"  gl_Position = modelViewMat * position;\n" \
+			"}\n"
+
+#define FRAGMENT_SOURCE  \
+			"#version 100\n" \
+			"precision mediump float;\n" \
+			"varying vec4 vcolor;\n" \
+			"\n" \
+			"void main()\n" \
+			"{\n" \
+			"  gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);\n" \
+			"}\n"
+
+#define SHADER_NAME "Pointer Colision Shader"
+
+
+
+	MaterialInstance::MaterialInstance()
+	{
+		log::debug << "Instanciating pointer colider material" << std::endl;
+
+		const size_t size = strlen(VERTEX_SOURCE) 
+							+ strlen(FRAGMENT_SOURCE) 
+							+ strlen(SHADER_NAME)
+							+ sizeof(uint16_t) * 3;
+
+		char stackBuff[size];
+
+
+		uint16_t* p_vertSize = (uint16_t*)stackBuff;
+		uint16_t* p_fragSize = &p_vertSize[1];
+		uint16_t* p_shaderNameSize = &p_vertSize[2];
+
+		*p_vertSize = strlen(VERTEX_SOURCE);
+		*p_fragSize = strlen(FRAGMENT_SOURCE);
+		*p_shaderNameSize = strlen(SHADER_NAME);
+
+		char* vertex_source = (char*)&p_vertSize[3];
+		char* fragment_source = vertex_source+*p_vertSize+1;
+		char* p_nameBuff = fragment_source+*p_fragSize+1;
+
+
+		OnShaderDirtyCallback(stackBuff);
+	}
 
 	MaterialInstance::MaterialInstance(const UniqueID& uuid)
 	{
@@ -13,7 +65,8 @@ namespace asapi
 		m_uuid = uuid;
 		m_shaderResource.BindOnDirtyCallback(OnShaderDirtyCallback, this);
 
-		std::string materialDataPath = s_projectPath + RESOURCE_BINARIES_DIR "/";
+		std::string materialDataPath = ResourceSystemBase::GetProjectPath();
+		materialDataPath += RESOURCE_BINARIES_DIR "/";
 		materialDataPath += std::to_string( uuid.ID() ) + MATERIAL_DATA_EXTENSION;
 
 
@@ -27,12 +80,6 @@ namespace asapi
 
 	MaterialInstance::~MaterialInstance()
 	{}
-	
-	void MaterialInstance::SetProjectPath(const std::string& path)
-	{
-		Shader::s_projectPath = path;
-		s_projectPath = path;
-	}
 	
 	void MaterialInstance::OnShaderDirtyCallback(void* data)
 	{
@@ -221,7 +268,8 @@ namespace asapi
 
 		serializer.Serialize( this );
 
-		std::string materialDataPath = s_projectPath + RESOURCE_BINARIES_DIR "/";
+		std::string materialDataPath = ResourceSystemBase::GetProjectPath();
+		materialDataPath += RESOURCE_BINARIES_DIR "/";
 		materialDataPath += std::to_string( m_uuid.ID() ) + MATERIAL_DATA_EXTENSION;
 
 

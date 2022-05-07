@@ -60,9 +60,8 @@ namespace asapi
 	{
 		for( auto it = v_components.begin(); it!=v_components.end(); ++it )
 		{
-			ComponentInterface* ptr = it->p_ComponentInterface;
-			ptr->Detached();
-			ptr->Dispouse();
+			(*it)->Detached();
+			(*it)->Dispouse();
 		}
 		v_components.clear();
 	}
@@ -106,11 +105,11 @@ namespace asapi
 			if(recreationString.size() > 0)
 			{
 				bfu::JSONSerializer serializer( std::move( v_componentsInfo[i].m_recreationString ) );
-				serializer.Deserialize( v_components[i].p_SerializableClassInterface );
+				serializer.Deserialize( dynamic_cast<bfu::SerializableClassInterface*>(v_components[i]) );
 				v_componentsInfo[i].m_recreationString = std::move( serializer );
 
-				v_components.back().p_ComponentInterface->Attached( this );
-				v_components.back().p_ComponentInterface->OnIsDirty();
+				v_components.back()->Attached( this );
+				v_components.back()->OnIsDirty();
 			}
 		}
 		v_componentsInfo.clear();
@@ -129,10 +128,10 @@ namespace asapi
 			ComponentInfo* obj = (ComponentInfo*) ComponentInfo::AllocateAndInit( bfu::StdAllocatorMemBlock::GetMemBlock() );
 			v_componentsInfo.push_back( obj );
 
-			obj->m_componentTypeName.sprintf( v_components[i].p_ComponentInterface->TypeName() );
+			obj->m_componentTypeName.sprintf( v_components[i]->TypeName() );
 
 			bfu::JSONSerializer serializer( std::move( obj->m_recreationString ) );
-			serializer.Serialize( v_components[i].p_SerializableClassInterface );
+			serializer.Serialize( dynamic_cast<bfu::SerializableClassInterface*>(v_components[i]) );
 			obj->m_recreationString = std::move( serializer );
 		}
 
@@ -193,13 +192,9 @@ namespace asapi
 		if( GetComponentOfTypeHash(typeHash) != nullptr)
 			return nullptr;
 
-		ComponentTranslatePointers copmponentInterfaces;
+		ComponentInterface* newComp = ComponentInterface::AllocateAndInitObjectFromTypeHash(typeHash, m_mBlock);
 
-		ComponentInterface::AllocateAndInitObjectFromTypeHash(typeHash, m_mBlock, copmponentInterfaces);
-
-		v_components.emplace_back( copmponentInterfaces );
-
-		ComponentInterface* newComp = v_components.back().p_ComponentInterface;
+		v_components.emplace_back( newComp );
 
 		newComp->Attached(this);
 
@@ -215,7 +210,7 @@ namespace asapi
 
 		for(auto it = v_components.begin(); it!=v_components.end(); ++it)
 		{
-			if(it->p_ComponentInterface==ptr)
+			if(*it==ptr)
 			{
 				v_components.erase(it);
 				ptr->Detached();
@@ -228,9 +223,9 @@ namespace asapi
 	{
 		for(auto it = v_components.begin(); it!=v_components.end(); ++it)
 		{
-			if( it->p_ComponentInterface->TypeHash() == typeHash)
+			if( (*it)->TypeHash() == typeHash)
 			{
-				return it->p_ComponentInterface;
+				return *it;
 			}
 		}
 
@@ -240,7 +235,7 @@ namespace asapi
 	{
 		for(GameObject* ptr = this; ptr!=nullptr; ptr = ptr->GetParent())
 		{
-			PrefabLoaderComponent* ret = (PrefabLoaderComponent*)ptr->GET_COMPONENT(PrefabLoaderComponent);
+			PrefabLoaderComponent* ret = dynamic_cast<PrefabLoaderComponent*>(ptr->GET_COMPONENT(PrefabLoaderComponent));
 			if( ret!= nullptr )
 			{
 				return ret;
@@ -271,18 +266,18 @@ namespace asapi
 			ImGui::Separator();
 			ImGui::Spacing();
 
-			ImGui::LabelText( "Component", GetComponent(i)->p_ComponentInterface->TypeName() ); 
+			ImGui::LabelText( "Component", GetComponent(i)->TypeName() ); 
 			ImGui::SameLine();
 			ImGui::PushItemWidth(-(ImGui::GetWindowContentRegionWidth() - ImGui::CalcItemWidth()));
-			ImGui::PushID( GetComponent(i)->p_ComponentInterface );
+			ImGui::PushID( GetComponent(i) );
 			if( ImGui::Button("Remove Component") )
 			{
-				p_forRemoval = GetComponent(i)->p_ComponentInterface;
+				p_forRemoval = GetComponent(i);
 			}
 			ImGui::PopID();
 			ImGui::PopItemWidth();
 
-			GetComponent(i)->p_SerializableObject->OnGUI_caller();
+			dynamic_cast<SerializableObjectBase*>(GetComponent(i))->OnGUI_caller();
 		}
 
 		if( p_forRemoval!=nullptr )

@@ -46,6 +46,21 @@ namespace asapi
 		return true;
 	}
 
+	bool MaterialReference::LoadPointerColiderMaterialInstance()
+	{
+		CleanUp();
+
+		m_referenceCounter = new uint16_t;
+		*m_referenceCounter = 1;
+
+		m_materialInstance = new MaterialInstance();
+		m_materialInstanceID = POINTER_COLIDER_MATERIAL;
+		
+		SYSTEMS::GetObject().MATERIALSSYSTEM.UpdateMaterialReferenceWithPointerColider(this);
+
+		return true;
+	}
+
 	MaterialReference& MaterialReference::operator=(const MaterialReference& cp)
 	{
 		CleanUp();

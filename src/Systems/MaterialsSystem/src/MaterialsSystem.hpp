@@ -18,8 +18,6 @@ namespace asapi
 
 	class MaterialsSystem
 	{
-		static std::string 						s_projectPath;
-
 		std::vector<MaterialReference> 			m_materialsReference;
 
 		#ifdef IS_EDITOR
@@ -29,9 +27,9 @@ namespace asapi
 
 	public:
 		bool UpdateMaterialReference(const UniqueID& id, MaterialReference* out);
+		bool UpdateMaterialReferenceWithPointerColider(MaterialReference* out);
 		void DispouseMaterialReference( const MaterialReference& matRef );
 
-		void SetProjectPath( const std::string& path );
 		void RefreshResources();
 
 		const char* GetMaterialNameByUuid(const UniqueID& uuid) const;

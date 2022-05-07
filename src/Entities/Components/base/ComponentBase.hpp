@@ -11,15 +11,12 @@ namespace asapi
 {
 
 	template<class T>
-	static void AllocateAndInit( bfu::MemBlockBase* mBlock, ComponentTranslatePointers& ret )
+	static ComponentInterface* AllocateAndInit( bfu::MemBlockBase* mBlock )
 	{
 		T* obj = (T*) mBlock->allocate(1, sizeof(T), alignof(T) );
 		obj->Init(mBlock);
 
-		ret.p_ComponentInterface = obj;
-		ret.p_SerializableObject = obj;
-		ret.p_SerializableClassInterface = obj;
-		ret.p_raw = obj;
+		return dynamic_cast<T*>(obj);
 	}
 
 

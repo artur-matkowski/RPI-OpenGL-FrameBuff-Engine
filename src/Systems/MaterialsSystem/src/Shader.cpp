@@ -5,8 +5,6 @@
 
 namespace asapi
 {
-	std::string Shader::s_projectPath;
-
 	Shader::Shader()
 	{}
 
@@ -15,10 +13,10 @@ namespace asapi
 		char buff[MAX_PATH_SIZE];
 		FILE::MMAP vert, frag;
 
-		snprintf(buff, MAX_PATH_SIZE, "%s/assets_int/shaders/%s.vert.glsl", s_projectPath.c_str(), filename);
+		snprintf(buff, MAX_PATH_SIZE, "%s/assets_int/shaders/%s.vert.glsl", ResourceSystemBase::GetProjectPath(), filename);
 		vert.InitForRead(buff);
 
-		snprintf(buff, MAX_PATH_SIZE, "%s/assets_int/shaders/%s.frag.glsl", s_projectPath.c_str(), filename);
+		snprintf(buff, MAX_PATH_SIZE, "%s/assets_int/shaders/%s.frag.glsl", ResourceSystemBase::GetProjectPath(), filename);
 		frag.InitForRead(buff);
 
 		return RendererSystem::ProcessShader_obsolete((char*)vert.Data(), (char*)frag.Data(), filename);

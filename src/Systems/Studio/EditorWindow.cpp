@@ -45,6 +45,10 @@ namespace asapi
 	{
 		_selected = ptr;
 	}
+	GameObject* EditorWindow::GetSelectedGameObject()
+	{
+		return _selected;
+	}
 
 	void OnGUI(Node<size_t>* obj)
 	{

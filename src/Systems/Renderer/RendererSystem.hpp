@@ -19,6 +19,7 @@
 
 namespace asapi{
 
+	class PointerColider;
 	class RendererComponent;
 
 	struct _RendererHandle{};
@@ -41,6 +42,7 @@ namespace asapi{
 
 		bfu::MemBlockBase*	p_materialsMemBlock;
 
+
 	static void ResizeWidowCallback(void* _this, void* data);
 
 	public:
@@ -49,10 +51,14 @@ namespace asapi{
 
 		void Init();
 		void Render();
+		void RenderPointerColisions();
 
 		static Shader* ProcessShader_obsolete(const char* vertex_source, const char* gragment_source, const char* shader_name, Shader* out = nullptr);
 		static void DispouseShader_obsolete(Shader*);
 
+
+		void RegisterPointerColider(PointerColider*);
+		void UnRegisterPointerColider(PointerColider*);
 
 		void RegisterRenderer(RendererComponent*);
 		void UnRegisterRenderer(RendererComponent*);

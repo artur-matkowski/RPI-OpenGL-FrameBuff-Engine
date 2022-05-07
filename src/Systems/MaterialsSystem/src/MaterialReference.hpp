@@ -5,6 +5,9 @@
 #include "UniqueID.hpp"
 #include "MaterialInstance.hpp"
 
+
+#define POINTER_COLIDER_MATERIAL 1
+
 namespace asapi
 {
 	class MaterialReference: public SerializableObject<MaterialReference>
@@ -24,6 +27,7 @@ namespace asapi
 
 
 		bool LoadMaterialInstance(const UniqueID& uuid);
+		bool LoadPointerColiderMaterialInstance();
 
 		inline UniqueID GetMaterialInstanceID(){ return m_materialInstanceID; }
 		inline const int GetReferencesCount() const { return *m_referenceCounter; }

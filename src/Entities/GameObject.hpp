@@ -68,7 +68,7 @@ namespace asapi
 		bfu::ForwardAllocatorMemBlock forwardMemBlock;
 		SERIALIZABLE_OBJ_VEC( GameObject, ComponentInfo, v_componentsInfo );
 
-		std::vector<ComponentTranslatePointers, bfu::custom_allocator<ComponentTranslatePointers>> 
+		std::vector<ComponentInterface*, bfu::custom_allocator<ComponentInterface*>> 
 														v_components;
 
 		Transform3D										*p_myTransform = nullptr;
@@ -109,6 +109,8 @@ namespace asapi
 		ComponentInterface* AddComponent(const char* componentName);
 		void RemoveComponent(ComponentInterface* ptr);
 		ComponentInterface* GetComponentOfTypeHash(size_t typeHash);
+
+
 		PrefabLoaderComponent* GetRegionalPrefabLoader();
 
 
@@ -123,8 +125,8 @@ namespace asapi
 		inline GameObject* GetParent()					{ return p_parent; 				}
 
 		inline int GetComponentsCount()					{ return v_components.size(); 	}
-		inline ComponentTranslatePointers* GetComponent(int i)	
-														{ return &v_components[i]; 	}
+		inline ComponentInterface* GetComponent(int i)	
+														{ return v_components[i]; 	}
 
 		#ifdef IS_EDITOR
 		virtual void OnGUI() override;

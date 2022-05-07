@@ -18,8 +18,6 @@ namespace asapi
 		Shader();
 		~Shader();
 
-		static std::string 		s_projectPath; //tmp TODO remove that crap
-
 		inline void UseProgram()
 		{
 			glUseProgram((uint32_t)(size_t)h_shaderHandle);

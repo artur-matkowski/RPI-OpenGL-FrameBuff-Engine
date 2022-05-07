@@ -96,7 +96,7 @@ namespace asapi
             }
             if (ImGui::BeginTabItem("Opened project info"))
             {
-                ImGui::LabelText("Currently opened project", Shader::s_projectPath.c_str());
+                ImGui::LabelText("Currently opened project", ResourceSystemBase::GetProjectPath());
                 ImGui::EndTabItem();
             }
             if (ImGui::BeginTabItem("Resource System"))

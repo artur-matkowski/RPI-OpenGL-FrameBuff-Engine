@@ -33,9 +33,6 @@ namespace asapi
 
 	class MaterialInstance: public SerializableObject<MaterialInstance>
 	{
-		static std::string 								s_projectPath;
-
-
 		bool 											m_isDirty = true; //on init shader need to be compiled and processed
 
 		SERIALIZABLE_OBJ(MaterialInstance, UniqueID, 	m_uuid);
@@ -54,10 +51,9 @@ namespace asapi
 		static void OnShaderDirtyCallback(void* data);
 
 	public:
+		MaterialInstance();
 		MaterialInstance(const UniqueID& uuid);
 		~MaterialInstance();
-
-		static void SetProjectPath(const std::string& path);
 
 		virtual void PreSerializationCallback() override;
 		virtual void PostDeserializationCallback() override;
