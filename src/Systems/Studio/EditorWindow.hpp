@@ -24,6 +24,7 @@ namespace asapi
 
 	public:
 		static void SetSelectedGameObject( GameObject* );
+		static GameObject* GetSelectedGameObject();
 		static void OnGUI();
 
 	};

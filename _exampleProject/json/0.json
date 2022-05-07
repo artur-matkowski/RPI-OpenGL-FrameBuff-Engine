@@ -33,6 +33,10 @@
 }
 }
 }"
+}, {
+"m_componentTypeName": "asapi::PointerColider", 
+"m_recreationString": "{
+}"
 }]
 }, {
 "m_myName": "Camera", 

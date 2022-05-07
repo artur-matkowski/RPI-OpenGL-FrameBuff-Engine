@@ -9,19 +9,19 @@
 
 namespace asapi
 {
-
+//  ResourceSystemBase::GetProjectPath()
 
 	class ResourceSystemBase
 	{
 	protected:
-		std::string 										s_projectPath;
+		static std::string									s_projectPath;
 		bool 												m_needGarbageCollection = false;
 
 	public:
 		~ResourceSystemBase(){};
 
 		void Init();
-		inline const char* GetProjectPath() const { return s_projectPath.c_str(); }
+		static const char* GetProjectPath() { return s_projectPath.c_str(); }
 
 		virtual BinaryResourceTracker* RequestBinaryResourceTracker( const UniqueID& ) = 0;
 		inline void ScheduleGarbageCollection() { m_needGarbageCollection = true; }		

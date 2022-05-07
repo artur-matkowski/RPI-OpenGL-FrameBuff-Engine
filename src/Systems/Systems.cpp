@@ -124,16 +124,14 @@ namespace asapi
 
 		
 		RESOURCES.SetProjectPath( path );
-		MATERIALSSYSTEM.SetProjectPath( path );
 
-		PrefabLoaderComponent::s_projectPath = path;
+		SYSTEMS::GetObject().RefreshResources();
 	}
 
 	void SYSTEMS::RefreshResources()
 	{
 		if( ! IsCorrectProjectPathSet )
-			return;
-		
+			return;		
 		
 		RESOURCES.RefreshResources();
 		MATERIALSSYSTEM.RefreshResources();

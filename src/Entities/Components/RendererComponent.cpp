@@ -17,6 +17,9 @@ namespace asapi
 	void RendererComponent::OnAttach()
 	{
 		p_modelViewMat = ((Transform3D*)m_owner->GET_COMPONENT(Transform3D))->GetModelMatrix();
+		#ifdef IS_EDITOR
+		OnIsDirty();
+		#endif
 
 	}
 	void RendererComponent::OnDetach()
@@ -88,6 +91,22 @@ namespace asapi
 	#ifdef IS_EDITOR
 	void RendererComponent::OnGUI()
 	{
+		if( m_incomingMaterialImpl.IsValid() 
+			&& p_meshComponent != nullptr
+			&& p_meshComponent->GetMeshHandle() != nullptr )
+		{
+			ImGui::TextColored(
+						ImVec4(0.0f, 1.0f, 0.0f, 1.0f)
+						, "PointerColider is Valid");
+		}
+		else
+		{
+			ImGui::TextColored(
+						ImVec4(1.0f, 0.0f, 0.0f, 1.0f)
+						, "PointerColider is Invalid");			
+		}
+
+
         m_incomingMaterialImpl.OnGUI_caller();
 	}
 	#endif

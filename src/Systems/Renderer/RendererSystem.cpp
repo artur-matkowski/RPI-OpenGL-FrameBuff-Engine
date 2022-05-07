@@ -18,6 +18,9 @@
 
 namespace asapi{
 
+		std::vector<PointerColider*> 
+							v_pointerColiderComponents;
+
 		std::vector<RendererComponent*> 
 							v_rendererComponents;
 
@@ -45,6 +48,7 @@ namespace asapi{
 	RendererSystem::RendererSystem()
 	{
 		v_rendererComponents.reserve(1024);
+		v_pointerColiderComponents.reserve(1024);
 	}
 	RendererSystem::~RendererSystem()
 	{
@@ -72,9 +76,42 @@ namespace asapi{
 				(*it)->Render(&m_projectionMatrix, &viewMatrix);
 			}
 		}
+	}
+	void RendererSystem::RenderPointerColisions()
+	{
+		glViewport(0, 0, m_resolution.x, m_resolution.y);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
 
+		glEnable(GL_CULL_FACE);
+		glFrontFace(GL_CW);
+
+		if(m_viewMatrix!=nullptr)
+		{
+			glm::mat4 viewMatrix = glm::inverse(*m_viewMatrix);
+
+			for(auto it = v_pointerColiderComponents.begin(); it!=v_pointerColiderComponents.end(); ++it)
+			{
+				(*it)->Render(&m_projectionMatrix, &viewMatrix);
+			}
+		}
 	}
 			
+	void RendererSystem::RegisterPointerColider(PointerColider* element)
+	{
+		v_pointerColiderComponents.push_back(element);
+	}
+	void RendererSystem::UnRegisterPointerColider(PointerColider* element)
+	{
+		for(auto it = v_pointerColiderComponents.begin(); it!=v_pointerColiderComponents.end(); ++it)
+		{
+			if(element==*it)
+			{
+				v_pointerColiderComponents.erase(it);
+				break;
+			}
+		}
+	}
 	
 	void RendererSystem::RegisterRenderer(RendererComponent* element)
 	{

@@ -10,9 +10,6 @@
 
 namespace asapi
 {
-	std::string MaterialsSystem::s_projectPath;
-
-
 	bool MaterialsSystem::UpdateMaterialReference(const UniqueID& id, MaterialReference* out)
 	{
 		bool materialFound = false;
@@ -36,6 +33,29 @@ namespace asapi
 
 		return materialFound;
 	}
+	bool MaterialsSystem::UpdateMaterialReferenceWithPointerColider(MaterialReference* out)
+	{
+		bool materialFound = false;
+
+		for(auto it = m_materialsReference.begin(); it!=m_materialsReference.end(); it++)
+		{
+			if( it->GetMaterialInstanceID() == UniqueID(POINTER_COLIDER_MATERIAL) )
+			{
+				*out = (*it);
+				materialFound = true;
+			}
+		}
+
+		if( !materialFound )
+		{
+			if( out->LoadPointerColiderMaterialInstance() )
+			{
+				m_materialsReference.emplace_back(*out);
+			}
+		}
+
+		return materialFound;
+	}
 
 	void MaterialsSystem::DispouseMaterialReference( const MaterialReference& matRef )
 	{
@@ -47,14 +67,6 @@ namespace asapi
 				break;
 			}
 		}
-	}
-
-
-	void MaterialsSystem::SetProjectPath( const std::string& path )
-	{
-		s_projectPath = path;
-		MaterialInstance::SetProjectPath(path);
-		RefreshResources();
 	}
 
 	void MirrorMaterialDataFilesFromAssetsMaterials(const std::vector<std::string>& materialAssetsPaths,
@@ -129,15 +141,13 @@ namespace asapi
 	void MaterialsSystem::RefreshResources()
 	{
 		std::vector<std::string> materialAssetsPaths;
-		//std::vector<std::string> materialDataPaths;
-		std::string materialAssetsPath = s_projectPath + ASSETS_DIR;
-		//std::string materialDatasPath = s_projectPath + RESOURCE_BINARIES_DIR;
+		std::string materialAssetsPath = ResourceSystemBase::GetProjectPath();
+		materialAssetsPath += ASSETS_DIR;
 
 		ListFiles( materialAssetsPaths, {MATERIAL_ASSET_EXTENSION}, ListingStrategy::whitelist, materialAssetsPath.c_str() );
-		//ListFiles( materialDataPaths, {MATERIAL_DATA_EXTENSION}, ListingStrategy::whitelist, materialDatasPath.c_str() );
+		
 
-
-		MirrorMaterialDataFilesFromAssetsMaterials( materialAssetsPaths, s_projectPath, &m_selectableMaterials );
+		MirrorMaterialDataFilesFromAssetsMaterials( materialAssetsPaths, ResourceSystemBase::GetProjectPath(), &m_selectableMaterials );
 	}
 	
 	const char* MaterialsSystem::GetMaterialNameByUuid(const UniqueID& uuid) const
@@ -166,13 +176,15 @@ namespace asapi
 			UniqueID uuid;
 			std::string uuidStr = std::to_string( uuid.ID() );
 
-			std::string materialPath = s_projectPath + ASSETS_DIR + "/New Material" MATERIAL_ASSET_EXTENSION;
+			std::string materialPath = ResourceSystemBase::GetProjectPath();
+			materialPath += ASSETS_DIR "/New Material" MATERIAL_ASSET_EXTENSION;
 
 
 			while( FILE::FileExist( materialPath.c_str() ) )
 			{
 				IntanceNameCounter++;
-				materialPath = s_projectPath + ASSETS_DIR + "/New Material ";
+				materialPath = ResourceSystemBase::GetProjectPath();
+				materialPath += ASSETS_DIR "/New Material ";
 				materialPath += std::to_string(IntanceNameCounter) + MATERIAL_ASSET_EXTENSION;
 			}
 
@@ -277,7 +289,7 @@ namespace asapi
 			if( materialInstance!=nullptr )
 			{
 				FILE::STREAM materialDataFile;
-				std::string materialDataPath = s_projectPath 
+				std::string materialDataPath = ResourceSystemBase::GetProjectPath() 
 											+ std::string( RESOURCE_BINARIES_DIR "/" )
 											+ std::to_string( m_materialsReference[i].GetMaterialInstanceID().ID() )
 											+ MATERIAL_DATA_EXTENSION;

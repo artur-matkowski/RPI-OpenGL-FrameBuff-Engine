@@ -9,15 +9,7 @@ namespace asapi
 	class GameObject;
 	class ComponentInterface;
 
-	struct ComponentTranslatePointers
-	{
-		ComponentInterface* 				p_ComponentInterface = nullptr;
-		SerializableObjectBase* 			p_SerializableObject = nullptr;
-		bfu::SerializableClassInterface* 	p_SerializableClassInterface = nullptr;
-		void* 								p_raw = nullptr;
-	};
-
-	typedef void (*InitFuncPtr)(bfu::MemBlockBase*, ComponentTranslatePointers&);
+	typedef ComponentInterface* (*InitFuncPtr)(bfu::MemBlockBase*);
 
 	#define TYPE_INFO_CAPACITY 1024
 	struct TypeInfo
@@ -46,9 +38,9 @@ namespace asapi
 		void Attached(GameObject* owner);
 		void Detached();
 
-		static void AllocateAndInitObjectFromTypeHash(size_t hash, bfu::MemBlockBase* mBlock, ComponentTranslatePointers& ret)
+		static ComponentInterface* AllocateAndInitObjectFromTypeHash(size_t hash, bfu::MemBlockBase* mBlock)
 		{
-			TypeInfo::GetTypeInfo(hash)->fPtr(mBlock, ret);
+			return TypeInfo::GetTypeInfo(hash)->fPtr(mBlock);
 		}
 
 		virtual void OnAttach(){};

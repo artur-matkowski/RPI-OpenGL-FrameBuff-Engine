@@ -17,7 +17,7 @@ namespace asapi
 		PrefabLoaderComponent* rootLoader = (PrefabLoaderComponent*) p_root->ADD_COMPONENT( PrefabLoaderComponent );
 		rootLoader->SetPrefabID(0);
 
-		Transform3D* trans = (Transform3D*) p_root->GET_COMPONENT( Transform3D );
+		Transform3D* trans = dynamic_cast<Transform3D*>(p_root->GET_COMPONENT( Transform3D ));
 		*trans->GetModelMatrix() = glm::mat4(1.0f);
 	}
 

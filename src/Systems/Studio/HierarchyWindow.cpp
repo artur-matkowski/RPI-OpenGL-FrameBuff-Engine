@@ -50,10 +50,17 @@ namespace asapi
 	{
 		parrent->AddChild();
 	}
-	void RemoveGameObject(GameObject* obj)
+
+	GameObject* go2remove = 0;
+
+	void RemoveQuedGameObject()
 	{
-		obj->Detach();
-		obj->DispouseAndDeallocate();
+		if( go2remove==nullptr )
+			return;
+		
+		go2remove->Detach();
+		go2remove->DispouseAndDeallocate();
+		go2remove = nullptr;
 	}
 
 	void RenameGameObject(GameObject* obj)
@@ -77,7 +84,6 @@ namespace asapi
         const ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_OpenOnArrow | 
         										ImGuiTreeNodeFlags_OpenOnDoubleClick | 
         										ImGuiTreeNodeFlags_SpanAvailWidth;
-        GameObject* go2remove = 0;
 
 
 		const int size = obj->GetChildCount();
@@ -101,7 +107,7 @@ namespace asapi
 	        {
 	        	is_GOContextMenuOpen = true;
 	            if (ImGui::MenuItem("Add GameObject")) { AddGameObject( child ); }
-	            if (ImGui::MenuItem("Remove GameObject")) { go2remove = child; }
+	            if (ImGui::MenuItem("Remove GameObject")) { go2remove = child; DeselectNode( child ); }
 	            RenameGameObject( child );
 	            ImGui::EndPopup();
 	        }
@@ -123,8 +129,6 @@ namespace asapi
             
         }
 
-        if( go2remove!=0 )
-        	RemoveGameObject( go2remove );
 	}
 
 	// Make the UI compact because there are so many fields
@@ -170,6 +174,7 @@ namespace asapi
         	EditorWindow::SetSelectedGameObject( nullptr );
         }
 
+        RemoveQuedGameObject();
 	}
 }
 
